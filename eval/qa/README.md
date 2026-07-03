@@ -111,6 +111,17 @@ aggregator never corroborates itself), and encode by verdict — confirmed facts
 never claimed. Entries must carry `truthDomain` + a `corroboration` matrix (compile-enforced
 alongside `why`/`evidence`/`rootCause`).
 
+**Consistency register (`consistency-register.json`).** The corpus's cross-question
+contradiction log. Both ancestor corpora's dominant silent-drift failure was pairs of goldens
+that individually pass verification but cannot both be true, so each sweep clusters cases by
+shared entities/ids, compares their numeric/status claims against each other (corpus-internal
+— no live calls), and records contradictions (→ golden-truth review), tensions (→ grader
+caution), and verified-consistent clusters. Settled clusters are not re-litigated in later
+sweeps unless a member case changed; overridden cases (`cases.json → overrides.applied`) are
+the more-verified side in any conflict. Re-run method is in the file's `$comment`. First
+sweep 2026-07-03 (todo 829): 102 clusters examined → 1 contradiction, 5 tensions, 17
+verified-consistent clusters.
+
 **Overrides are stop-gaps, not fixes.** An override corrects the eval's *copy* of the truth;
 the defect that made it necessary lives somewhere else and must be captured where it can
 actually get fixed — an upstream service gap goes to `improvements/`, an eval-side
