@@ -54,7 +54,9 @@ coordinated via Solo MCP project 49 (todos + scratchpads; backlog items tracked 
   copy code in, never modify them.
 - **Evals' primary artifact is upstream findings** — this server's own tuning ceiling is
   limited; every eval run files evidence-backed service-improvement recommendations in
-  `improvements/` (charter there; own-repo fixes go to Solo todos instead).
+  `improvements/` (charter there; own-repo fixes go to Solo todos instead). To run a
+  round, use the `run-evals` skill (`.claude/skills/run-evals/SKILL.md` — agent-agnostic
+  runbook: instrument selection, gates, agentic verdict review, failure triage, filing).
 
 ## Neighboring repos
 
