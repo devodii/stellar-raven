@@ -34,8 +34,12 @@ import type { AuthRequest, OAuthHelpers } from "@cloudflare/workers-oauth-provid
 import {
   CONSENT_HEADERS,
   LANDING_HEADERS,
+  ROBOTS_HEADERS,
+  SITEMAP_HEADERS,
   consentPage,
-  landingPage
+  landingPage,
+  robotsTxt,
+  sitemapXml
 } from "../site";
 import { OG_PNG_BASE64 } from "../og";
 
@@ -80,6 +84,14 @@ export const WorkOSAuthHandler = {
 
     if (request.method === "GET" && url.pathname === "/og.png") {
       return ogImageResponse();
+    }
+
+    if (request.method === "GET" && url.pathname === "/robots.txt") {
+      return new Response(robotsTxt(), { headers: ROBOTS_HEADERS });
+    }
+
+    if (request.method === "GET" && url.pathname === "/sitemap.xml") {
+      return new Response(sitemapXml(), { headers: SITEMAP_HEADERS });
     }
 
     if (request.method === "GET" && url.pathname === "/health") {

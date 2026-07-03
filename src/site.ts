@@ -349,7 +349,7 @@ const SCRIPT = `
 // Page shells
 // ---------------------------------------------------------------------------
 
-function head(title: string, description: string, css: string): string {
+function head(title: string, description: string, css: string, headExtra: string = ""): string {
   return `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -370,7 +370,7 @@ function head(title: string, description: string, css: string): string {
 <link rel="icon" href="${FAVICON}"/>
 <link rel="apple-touch-icon" href="${FAVICON}"/>
 <link rel="canonical" href="https://${HOST}/"/>
-<style>${FONT_FACE}${TOKENS}${css}</style>
+<style>${FONT_FACE}${TOKENS}${css}</style>${headExtra}
 </head><body>`;
 }
 
@@ -471,12 +471,49 @@ function brand(): string {
   return `<a class="brand" href="/">${ravenSvg("rv")}<span class="wm"><b>Stellar Raven</b><i>codemode</i></span></a>`;
 }
 
+// JSON-LD structured data — landing page only (the consent page stays
+// script-free). `<` / `>` / `&` are unicode-escaped so the serialized JSON can
+// never break out of the <script> element.
+const JSONLD =
+  `<script type="application/ld+json">` +
+  JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `https://${HOST}/#website`,
+        url: `https://${HOST}/`,
+        name: "Stellar Raven",
+        description: "One MCP endpoint over the whole Stellar ecosystem, for AI agents."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": `https://${HOST}/#app`,
+        name: "Stellar Raven",
+        url: `https://${HOST}/`,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Any (remote MCP server)",
+        description:
+          "A remote MCP server for AI agents: search discovers across the Stellar ecosystem " +
+          "(Lumenloop, Stellar Light/Scout, the docs, and a curated skills library) and execute " +
+          "runs the code that composes it, sandboxed with no network.",
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        author: { "@type": "Organization", name: "Stellar", url: "https://stellar.org" }
+      }
+    ]
+  })
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026") +
+  `</script>`;
+
 export function landingPage(): string {
   return (
     head(
       "Stellar Raven — all of Stellar, one MCP endpoint for your agent",
       "Give your AI agent all of Stellar in one connection. search discovers across Lumenloop, Stellar Light/Scout, the docs, and a curated skills library; execute runs the code that composes them, sandboxed with no network. Point Claude, Cursor, Codex, or any MCP client at Raven — one OAuth sign-in, no keys.",
-      BASE
+      BASE,
+      JSONLD
     ) +
     `<div class="stage"><canvas id="gl"></canvas></div><div class="scrim"></div>` +
     `<header class="top"><div class="wrap top-in">${brand()}</div></header>` +
@@ -654,6 +691,43 @@ export const CONSENT_HEADERS: Record<string, string> = {
     "frame-ancestors 'none'; base-uri 'none'",
   "x-frame-options": "DENY",
   "x-content-type-options": "nosniff"
+};
+
+// ---------------------------------------------------------------------------
+// Crawler surfaces — robots.txt + sitemap.xml. Canonical host is HOST
+// (raven.stellar.buzz); the OAuth/API paths are disallowed since they carry no
+// indexable content. Wired to routes in auth/workos.ts.
+// ---------------------------------------------------------------------------
+
+export function robotsTxt(): string {
+  return [
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /authorize",
+    "Disallow: /callback",
+    "Disallow: /mcp",
+    `Sitemap: https://${HOST}/sitemap.xml`,
+    ""
+  ].join("\n");
+}
+
+export function sitemapXml(): string {
+  return (
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `  <url><loc>https://${HOST}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n` +
+    `</urlset>\n`
+  );
+}
+
+export const ROBOTS_HEADERS: Record<string, string> = {
+  "content-type": "text/plain; charset=utf-8",
+  "cache-control": "public, max-age=86400"
+};
+
+export const SITEMAP_HEADERS: Record<string, string> = {
+  "content-type": "application/xml; charset=utf-8",
+  "cache-control": "public, max-age=86400"
 };
 
 function escapeHtml(value: string): string {
