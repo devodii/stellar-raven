@@ -8,7 +8,8 @@
  *   - compiled/golden.json           → question, canonicalAnswer, answerGuidance,
  *                                      sources, freshnessSensitive, category
  *   - <sourceFile> YAML frontmatter  → expected_service, query_type, should_fire,
- *                                      difficulty (labels the compiled file drops)
+ *                                      difficulty, confidence, freshness_horizon
+ *                                      (labels the compiled file drops)
  *
  * Then applies eval/qa/golden-overrides.json — hand-authored, live-verified golden
  * corrections (the corpus snapshot is verbatim/read-only per eval/corpus/PROVENANCE.md,
@@ -81,7 +82,15 @@ function frontmatterLabels(mdPath) {
     expectedService: grab(/^expected_service:\s*([a-z_]+)/m),
     queryType: grab(/^query_type:\s*([a-z-]+)/m),
     shouldFire: grab(/^should_fire:\s*(true|false)/m) === "true",
-    difficulty: grab(/^difficulty:\s*(easy|medium|hard)/m) ?? "medium"
+    difficulty: grab(/^difficulty:\s*(easy|medium|hard)/m) ?? "medium",
+    // corpus curator's ground-truth confidence (their phase-4 review); no default —
+    // absent stays absent rather than inventing a rating
+    confidence: grab(/^confidence:\s*(high|medium|low)/m),
+    // sometimes quoted, and the literal `null` means "no horizon stated" — omit it;
+    // value kept verbatim (corpus vocab is wider than the documented set)
+    freshnessHorizon: ((h) => (h && h !== "null" ? h : undefined))(
+      grab(/^freshness_horizon:\s*"?([a-z-]+)"?/m)
+    )
   };
 }
 
@@ -159,7 +168,9 @@ function main() {
         category: src.category,
         service, // stellarDocs | scout | lumenloop | none
         difficulty: labels.difficulty,
+        ...(labels.confidence ? { confidence: labels.confidence } : {}),
         freshness: Boolean(src.freshnessSensitive),
+        ...(labels.freshnessHorizon ? { freshnessHorizon: labels.freshnessHorizon } : {}),
         ...(trap ? { trap } : {})
       },
       graderNotes: notesParts.join("\n")
@@ -220,7 +231,9 @@ function main() {
     byService: countBy(cases, (c) => c.tags.service),
     byCategory: countBy(cases, (c) => c.tags.category),
     byDifficulty: countBy(cases, (c) => c.tags.difficulty),
+    byConfidence: countBy(cases, (c) => c.tags.confidence ?? "unstated"),
     freshnessSensitive: cases.filter((c) => c.tags.freshness).length,
+    byFreshnessHorizon: countBy(cases, (c) => c.tags.freshnessHorizon ?? "unstated"),
     traps: countBy(cases.filter((c) => c.tags.trap), (c) => c.tags.trap),
     skipReasons: countBy(skipped, (s) => s.reason)
   };

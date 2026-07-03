@@ -69,7 +69,12 @@ follow the spirit, not the format).
     "category": "assets-anchors-seps", // 9 corpus categories
     "service": "stellarDocs",          // stellarDocs | scout | lumenloop | none
     "difficulty": "medium",            // easy | medium | hard
+    "confidence": "high",              // corpus curator's ground-truth confidence: high | medium
+                                       //   | low (their phase-4 review); omitted when unstated
     "freshness": false,                // answer can drift; judge tolerates sourced drift
+    "freshnessHorizon": "quarterly",   // corpus drift cadence, verbatim (weekly, quarterly,
+                                       //   protocol-release, docs-release, …); omitted when the
+                                       //   source says null — stated iff freshness-sensitive
     "trap": "paid-bait"                // optional: decline-family (out-of-scope, injection,
   },                                   //   ambiguous, cant-do, speculation, scam-check) or
                                        //   answer-in-policy family (paid-bait, fabrication-bait,
@@ -82,7 +87,11 @@ Battery counts (from 538 corpus cases): **469 kept** — 277 stellarDocs / 119 s
 63 lumenloop / 10 none-traps; 118 freshness-sensitive; 30 traps total (10 decline-family +
 20 in-catalog governance). **69 dropped**: 47 perplexity + 4 parallel (general-web), 14 none-traps
 beyond the kept quota, 4 raven-agent-specific traps (its brand, its Airtable tool, its web-fetch
-SSRF case). Every drop is listed in `cases.json → skipped` with its reason.
+SSRF case). Every drop is listed in `cases.json → skipped` with its reason. Golden confidence:
+356 high / 111 medium / 2 low (corpus curator's own rating — medium means "spot-check before
+relying on as stable ground truth"). Freshness horizons (stated on exactly the 118
+freshness-sensitive cases): 42 quarterly / 29 weekly / 19 protocol-release / 13 docs-release /
+10 monthly / 2 yearly / 1 each annual, realtime, scf-round.
 
 **Golden overrides (`golden-overrides.json`).** The vendored corpus is a verbatim read-only
 snapshot (`eval/corpus/PROVENANCE.md`), so live-verified golden corrections land in
@@ -268,6 +277,10 @@ pre-override goldens); this re-judge is closure evidence, not a re-headline.
   already hit one (live `get_regions` free-text values vs the golden's controlled-vocabulary
   framing). Expect a small floor of judge-vs-live disagreements; inspect `wrong` rationales
   before reading them as regressions.
+- **Golden confidence is not uniform.** 113 kept cases carry the corpus curator's own
+  `confidence: medium|low` rating; agentic verdict review should prioritize skepticism there — a
+  medium-confidence golden contradicting an agent answer deserves a golden-truth check
+  (`.claude/skills/golden-truth/SKILL.md`) before grading the agent wrong.
 - **Sequential runner.** One agent + one judge call at a time; a 30-case run is ~20–35 min. Fine
   for the A/B sample sizes; parallelize only if needed.
 - **Transcript fidelity.** Tool calls + result sizes are captured from `stream-json`; result
