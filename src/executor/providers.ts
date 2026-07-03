@@ -44,7 +44,7 @@
  */
 import type { Catalog, CatalogEntry } from "../catalog/types.ts";
 import { searchCatalog, renderSignature } from "../catalog/search.ts";
-import { lastIdSegment } from "../catalog/id.ts";
+import { lastIdSegment, VALID_IDENT } from "../catalog/id.ts";
 import { callService } from "../adapters/index.ts";
 import type { AdapterEnv, FetchLike } from "../adapters/types.ts";
 import { guard } from "../policy/guard.ts";
@@ -59,8 +59,6 @@ export type SandboxProvider = {
   fns: Record<string, (...args: unknown[]) => Promise<unknown>>;
   prelude?: string;
 };
-
-const VALID_IDENT = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
 
 const SKILL_PRELUDE =
   "    codemode.skill = { read: (name, opts) => codemode.skill_read(name, opts) };";
@@ -146,17 +144,21 @@ function envelopeGuardPrelude(opsByService: Map<string, string[]>): string {
 export function buildProviders(
   catalog: Catalog,
   env: AdapterEnv,
-  deps?: { fetchImpl?: FetchLike }
+  deps?: { fetchImpl?: FetchLike; correlationId?: string }
 ): SandboxProvider[] {
   const secrets = secretsFromEnv(env as Record<string, unknown>);
   const fetchImpl = deps?.fetchImpl;
+  const correlationId = deps?.correlationId;
 
   // --- service namespaces: one fn per operation entry ---------------------
   const byService = new Map<string, Record<string, (...args: unknown[]) => Promise<unknown>>>();
   for (const entry of catalog.entries) {
     if (entry.kind !== "operation") continue;
     const name = lastIdSegment(entry.id);
-    if (!VALID_IDENT.test(entry.service) || !VALID_IDENT.test(name)) continue; // builder invariant
+    // loadManifest (catalog/search.ts) already THROWS on an invalid ident, so a
+    // real manifest can't reach here with a bad one; this stays as a belt for
+    // hand-built test catalogs that skip loadManifest.
+    if (!VALID_IDENT.test(entry.service) || !VALID_IDENT.test(name)) continue;
     let fns = byService.get(entry.service);
     if (!fns) {
       fns = {};
@@ -170,6 +172,7 @@ export function buildProviders(
       if (refused) {
         // guard only ever returns the error variant; narrow for the compiler.
         logEvent("op", {
+          correlationId,
           id: entry.id,
           outcome: refused.ok ? "ok" : refused.error.kind,
           ms: Date.now() - t0
@@ -183,6 +186,7 @@ export function buildProviders(
         fetchImpl
       );
       logEvent("op", {
+        correlationId,
         id: entry.id,
         outcome: result.ok ? "ok" : result.error.kind,
         ms: Date.now() - t0
@@ -246,6 +250,7 @@ export function buildCodemodeProvider(
   bundle: SkillBundle,
   superSpec?: unknown,
   hooks?: {
+    correlationId?: string;
     /**
      * Fired when skill_read successfully returns skill content. ADVICE-ONLY
      * signal: run.ts uses it to append section-read advice to the truncation
@@ -271,8 +276,13 @@ export function buildCodemodeProvider(
       spec: async () => {
         if (superSpec === undefined) {
           return {
-            error:
-              "the unified super spec is not wired on this server instance — use codemode.catalog() / codemode.search instead"
+            ok: false,
+            error: {
+              service: "codemode",
+              kind: "error",
+              message:
+                "the unified super spec is not wired on this server instance — use codemode.catalog() / codemode.search instead"
+            }
           };
         }
         // $refs resolved lazily on first use, then cached per spec object
@@ -289,6 +299,7 @@ export function buildCodemodeProvider(
       catalog: async () => catalogView,
 
       search: async (arg?: unknown) => {
+        const t0 = Date.now();
         const opts = (typeof arg === "string" ? { query: arg } : (arg ?? {})) as Exclude<
           SearchArg,
           string
@@ -308,6 +319,17 @@ export function buildCodemodeProvider(
           kind: opts.kind as never,
           service: typeof opts.service === "string" ? opts.service : undefined,
           limit: typeof opts.limit === "number" ? opts.limit : undefined
+        });
+        logEvent("search", {
+          correlationId: hooks?.correlationId,
+          source: "codemode",
+          query: opts.query,
+          kind: typeof opts.kind === "string" ? opts.kind : null,
+          service: typeof opts.service === "string" ? opts.service : null,
+          hits: hits.length,
+          top: hits.slice(0, 3).map((h) => h.id),
+          responseChars: JSON.stringify(hits).length,
+          ms: Date.now() - t0
         });
         return { ok: true, hits, total: hits.length };
       },
@@ -366,10 +388,18 @@ export function buildSandbox(
   catalog: Catalog,
   bundle: SkillBundle,
   env: AdapterEnv,
-  deps?: { fetchImpl?: FetchLike; superSpec?: unknown; onSkillRead?: () => void }
+  deps?: {
+    fetchImpl?: FetchLike;
+    superSpec?: unknown;
+    correlationId?: string;
+    onSkillRead?: () => void;
+  }
 ): SandboxProvider[] {
   return [
     ...buildProviders(catalog, env, deps),
-    buildCodemodeProvider(catalog, bundle, deps?.superSpec, { onSkillRead: deps?.onSkillRead })
+    buildCodemodeProvider(catalog, bundle, deps?.superSpec, {
+      correlationId: deps?.correlationId,
+      onSkillRead: deps?.onSkillRead
+    })
   ];
 }

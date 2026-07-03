@@ -397,9 +397,15 @@ describe("codemode fns", () => {
     expect(await fnsOf(withSpec, "codemode").spec!()).toBe(spec);
   });
 
-  it("spec() without a wired super spec answers with an error object as data", async () => {
-    const r = (await codemode.spec!()) as { error?: string };
-    expect(r.error).toMatch(/super spec is not wired/i);
+  it("spec() without a wired super spec answers with the standard failure envelope", async () => {
+    const r = (await codemode.spec!()) as {
+      ok: boolean;
+      error: { service: string; kind: string; message: string };
+    };
+    expect(r.ok).toBe(false);
+    expect(r.error.kind).toBe("error");
+    expect(r.error.service).toBe("codemode");
+    expect(r.error.message).toMatch(/super spec is not wired/i);
   });
 
   it("skill_read serves bundled content", async () => {
