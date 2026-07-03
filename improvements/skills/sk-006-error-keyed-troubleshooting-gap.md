@@ -1,0 +1,47 @@
+---
+id: sk-006
+service: skills
+status: proposed
+discovered: 2026-07-03
+evidence:
+  - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-cli-rust-windows-troubleshooting)
+  - live zero-hit probes for exact error strings across search_docs + skill sections (2026-07-03 evening)
+  - Solo project 49, todo 807, scratchpad 521
+---
+
+## Finding
+
+Neither the `stellar-dev/smart-contracts` skill's troubleshooting table
+(`development.md` §Troubleshooting) nor the docs corpus carries
+error-message-keyed guidance for common CLI/build failures. Probed this
+round: "No such file or directory" on a missing `.wasm` output path
+(build succeeded in the wrong workspace/package, or silently produced no
+wasm), "alias already exists", link.exe/MSVC setup on Windows, "Unable to
+fund account". `stellarDocs.search_docs` on the exact strings returns
+irrelevant hits (XDR/Lab pages) and the skill table has no
+missing-wasm/wrong-path row. Agents answering troubleshooting questions
+must fall back on general knowledge, and graders can't distinguish a
+good general answer from a corpus-grounded one. Distinct from sk-001
+(stale build target — which the agent in this round correctly avoided by
+preferring docs).
+
+## Evidence
+
+Live probes 2026-07-03: `search_docs({query:'"No such file or
+directory" wasm'})` → XDR/Lab pages only; `search_sdk_cli_tools_docs`
+build/output/workspace queries → cookbook lifecycle pages only; local
+read of `development.md` troubleshooting table → no matching row. The QA
+case was graded partial for missing exactly the diagnostic branch
+(build-succeeded-but-wrong-path) that no corpus source prompts. Round
+record: Solo scratchpad 521 (batch-3 review report).
+
+## Recommendation
+
+In the upstream skill source, extend the `development.md` troubleshooting
+table with rows keyed by the *verbatim error text* a builder will paste
+("no such file or directory: target/wasm32v1-none/release/*.wasm",
+"alias already exists", "linker `link.exe` not found", "Unable to fund
+account"), each with the two-branch diagnosis (did the build produce a
+wasm at all? is the path/workspace the one the command reads?). Verbatim
+error strings are what agents and humans search by; today those searches
+zero-hit.

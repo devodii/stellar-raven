@@ -173,6 +173,23 @@ judge-variance-level noise, confirming the post-audit deploy quality-neutral end
 remaining wrongs are the round's one real agent failure (`q-protocol-24-whisk-incident`) and the
 one mixed retrieval shortfall (`q-scf-regional-india`).
 
+**Results — 2026-07-03 post-nudge checkpoint** (`results/2026-07-03T16-06-45-variantA.json`,
+same 30-case sample, rubric v2 native, post-op-keywords catalog + execute-description
+progression nudge): **20 correct / 9 partial / 1 wrong / 0 errors** (81.7% weighted) — best run
+on this sample; traps 2/2, stellarDocs 15C/3P/0W. Agentic review (every wrong/partial
+live-re-executed, Solo scratchpad 521) **overturned the one wrong** — `q-scf-regional-india`'s
+"fabricated" events all exist verbatim in the live corpus — so the round has zero true agent
+wrongs; `q-protocol-24-whisk-incident` (the prior round's real failure) graded correct. All 9
+partials upheld; root causes: 4 mild agent synthesis/scoping slips, 3 upstream data gaps
+(sls-007 new, sk-001/sk-002 recurrences), 1 upstream retrieval gap pair (ll-006 + sls-006),
+1 wrong golden (todo 827).
+
+**Second judge-artifact class (2026-07-03 evening, Solo todo 826):** the rubric-v2 addendum can
+be bypassed by **avoid-clause phrasing** — a golden must-avoid banning claims "beyond corpus
+support" makes a corpus-blind judge read beyond-golden specifics as avoid-matched, wrong again.
+Treat any wrong verdict whose rationale cites a support-relative avoid item as suspect-artifact
+until live-verified.
+
 ## Known limitations
 
 - **Judge variance.** One Sonnet call per grade, temperature not pinned; borderline

@@ -8,6 +8,7 @@ evidence:
   - eval/qa/results/2026-07-03T04-13-42-variantA.json
   - caused 1 baseline QA verdict in the 2026-07-03 round
   - Solo project 49, todo 822, comments 2204-2210
+  - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-soroban-reentrancy, partial) — recurred; re-verified at rs-soroban-env source (reentry_mode Prohibited default, sole __check_auth exception) and docs corpus reliable-negative on "reentrancy" (Solo scratchpad 521)
 ---
 
 ## Finding

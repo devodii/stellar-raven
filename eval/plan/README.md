@@ -125,3 +125,29 @@ Plan grades:
 Conclusion for todo 799: multi-tool set-grading is live and the acceptable-sets hold up (93%
 coverage with honest misses); progression is measurable but not (yet) predictive. Revisit
 progression weighting only if a future run shows detail-starved wrong answers.
+
+## Results — 2026-07-03 post-nudge checkpoint (same 30 cases, variant A;
+`eval/qa/results/2026-07-03T16-06-45-variantA{,.plan}.json`, git-ignored/local-only)
+
+Answer quality (context): **20 correct / 9 partial / 1 wrong** — the wrong overturned as a
+judge artifact on live review (see `eval/qa/README.md`), so zero true wrongs. This run is the
+checkpoint todo 807 was waiting for: the `execute` description now carries a broad→detail
+progression nudge (todo 824 item 7), deployed between the 07-02 run and this one.
+
+| metric | 2026-07-02 (pre-nudge) | this run |
+|---|---|---|
+| requiredCovered | 28/30 (93%) | 28/30 (93%) |
+| mean onPlanRatio | 0.97 | 0.97 |
+| progression (11 expected) | 4 used / 7 skipped | **7 used / 4 skipped** |
+| verdict × used | 1C/2P/1W | 3C/4P/0W |
+| verdict × skipped | 3C/3P/1W | 1C/2P/1W |
+
+- **The nudge moved behavior** (36% → 64% progression usage) at zero coverage cost.
+- **The tripwire never fired.** The one skipped-bucket wrong was live-dissected
+  (Solo scratchpad 521): the broad payloads carried every needed specific
+  (`detailStarvation: NO` — the case is a counterexample to progression-gating, and the
+  verdict itself was a judge artifact). Cumulatively, across three graded runs no
+  detail-starved wrong answer has ever been observed.
+- **Decision:** progression stays informational, never gated — now evidence-backed at the
+  post-nudge checkpoint, not just provisional. Todo 807 closed 2026-07-03; reopen only if a
+  future run produces an actual detail-starvation transcript.

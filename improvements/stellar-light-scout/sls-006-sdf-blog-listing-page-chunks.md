@@ -1,0 +1,40 @@
+---
+id: sls-006
+service: stellar-light-scout
+status: verified
+discovered: 2026-07-03
+evidence:
+  - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-eco-stellar-rwa-stablecoin-volume)
+  - live searchResearch probes source:sdf-blog + source:dev-docs (2026-07-03 evening, production)
+  - Solo project 49, todo 807, scratchpad 521
+---
+
+## Finding
+
+The scout research corpus's `sdf-blog` source indexes blog **listing,
+filter, and tag pages** rather than article bodies. Queries for SDF's
+"Q1 2026: Execution at network scale" report return "Stellar | News from
+the SDF" index-page chunks that merely *list* the article title; the
+article body (which carries the quarter's headline figures — $5.5B
+payment volume, 86% YoY developer growth) appears absent from the corpus
+entirely. The same probes also returned the same meeting content indexed
+3× via duplicated `/meetings/tags/developer` tag-page chunks — listing
+pages both crowd out and duplicate real content.
+
+## Evidence
+
+Live probes 2026-07-03 (production, free ops): `searchResearch` with
+source:sdf-blog ×2 → index/tag pages only, no article-body chunk for the
+Q1 report; source:dev-docs → the Apr 23 2026 dev-meeting chunk (different
+figures) is the closest substantive hit; triplicate tag-page chunks
+observed. Round record: Solo scratchpad 521 (batch-1 review report).
+
+## Recommendation
+
+In the sdf-blog crawler, follow listing pages to article URLs and index
+the article bodies; exclude listing/filter/tag URL patterns
+(`/news$`, `/tags/`, paginated indexes) from chunk output, or
+canonical-dedupe chunks whose content hash repeats across tag pages.
+Flagship SDF reporting is exactly what agents cite for
+ecosystem-size questions; today the corpus can name the report but not
+quote it.
