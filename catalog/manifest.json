@@ -33,6 +33,10 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "end",
+        "query"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -142,6 +146,20 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "end",
+        "field",
+        "publishing",
+        "created",
+        "start",
+        "sources",
+        "types",
+        "twitter",
+        "accounts",
+        "scf",
+        "submissions",
+        "knowledge"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -248,6 +266,12 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "date",
+        "end",
+        "start",
+        "min"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -489,6 +513,10 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "jobs",
+        "status"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -747,6 +775,12 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "type",
+        "video",
+        "videos",
+        "proposal"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -964,6 +998,18 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "jobs",
+        "order",
+        "asc",
+        "desc",
+        "all",
+        "sort",
+        "wp",
+        "published",
+        "unpublished",
+        "items"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1102,6 +1148,23 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "style",
+        "tweet",
+        "thread",
+        "long",
+        "form",
+        "sources",
+        "structured",
+        "since",
+        "source",
+        "draft",
+        "ai",
+        "ready",
+        "processed",
+        "failed",
+        "count"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1183,6 +1246,9 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "note"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1252,6 +1318,9 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "reason"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1399,6 +1468,19 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "end",
+        "field",
+        "publishing",
+        "created",
+        "start",
+        "sources",
+        "twitter",
+        "accounts",
+        "scf",
+        "submissions",
+        "knowledge"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1547,6 +1629,12 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "jobs",
+        "query",
+        "items",
+        "pagination"
+      ],
       "kind": "operation",
       "outputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -2037,6 +2125,20 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "alternate",
+        "meta",
+        "generated",
+        "note2",
+        "archived",
+        "last",
+        "commit",
+        "score",
+        "label",
+        "stars",
+        "via",
+        "sources"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -2191,6 +2293,9 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "offset"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -2233,6 +2338,21 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "since",
+        "entries",
+        "date",
+        "detail",
+        "summary",
+        "surfaces",
+        "skill",
+        "type",
+        "added",
+        "fixed",
+        "generated",
+        "meta",
+        "service"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -2338,6 +2458,9 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "min"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -2406,6 +2529,13 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "returned",
+        "total",
+        "filters",
+        "generated",
+        "source"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -2501,6 +2631,14 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "counts",
+        "returned",
+        "filters",
+        "generated",
+        "url",
+        "summary"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -2649,6 +2787,9 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "json"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -2758,6 +2899,13 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "protocol",
+        "wallet",
+        "legal",
+        "agency",
+        "other"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -2820,6 +2968,9 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "offset"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -2888,6 +3039,14 @@
         "properties": {},
         "type": "object"
       },
+      "keywords": [
+        "docs",
+        "skill",
+        "name",
+        "last24h",
+        "last7d",
+        "total"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -3034,6 +3193,9 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "external"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -3129,6 +3291,12 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "messages",
+        "content",
+        "role",
+        "user"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -3193,6 +3361,11 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "content",
+        "role",
+        "user"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -3256,6 +3429,72 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "user",
+        "facing",
+        "app",
+        "protocol",
+        "contract",
+        "anchor",
+        "partner",
+        "integration",
+        "offset",
+        "references",
+        "builder",
+        "reputation",
+        "canonical",
+        "deep",
+        "wiki",
+        "url",
+        "description",
+        "full",
+        "name",
+        "hackathon",
+        "winner",
+        "homepage",
+        "archived",
+        "fork",
+        "judge",
+        "judged",
+        "last",
+        "commit",
+        "open",
+        "issues",
+        "owner",
+        "primary",
+        "language",
+        "slug",
+        "repo",
+        "label",
+        "stars",
+        "topics",
+        "meta",
+        "returned",
+        "filters",
+        "generated",
+        "mode",
+        "strict",
+        "loose",
+        "majority",
+        "all",
+        "age",
+        "days",
+        "authority",
+        "freshness",
+        "relevance",
+        "placement",
+        "prize",
+        "track",
+        "id",
+        "activity",
+        "discord",
+        "github",
+        "twitter",
+        "website",
+        "logo",
+        "rank",
+        "short"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -3789,6 +4028,37 @@
         },
         "type": "object"
       },
+      "keywords": [
+        "offset",
+        "meta",
+        "counts",
+        "returned",
+        "total",
+        "filters",
+        "generated",
+        "canonical",
+        "note",
+        "reputation",
+        "deep",
+        "wiki",
+        "url",
+        "full",
+        "name",
+        "winner",
+        "homepage",
+        "archived",
+        "judge",
+        "judged",
+        "last",
+        "commit",
+        "issues",
+        "owner",
+        "primary",
+        "slug",
+        "label",
+        "awarded",
+        "stars"
+      ],
       "kind": "operation",
       "outputSchema": {
         "properties": {
@@ -4027,6 +4297,12 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "paper",
+        "proposal",
+        "developer",
+        "report"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -4095,6 +4371,18 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "context",
+        "agent",
+        "name",
+        "version",
+        "kind",
+        "bug",
+        "answer",
+        "suggestion",
+        "other",
+        "message"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -4142,6 +4430,10 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "org",
+        "name"
+      ],
       "kind": "operation",
       "outputSchema": {
         "type": "object"
@@ -18760,6 +19052,38 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "ecosystem",
+        "proposals",
+        "seps",
+        "sdf",
+        "architecture",
+        "clients",
+        "delivery",
+        "guarantees",
+        "configuration",
+        "example",
+        "faq",
+        "production",
+        "server",
+        "accounts",
+        "45",
+        "cli",
+        "manual",
+        "deployment",
+        "embedded",
+        "wallets",
+        "making",
+        "ready",
+        "monitoring",
+        "security",
+        "troubleshooting",
+        "analytics",
+        "circle",
+        "dashboard",
+        "home",
+        "receivers"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -18871,6 +19195,19 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "deploy",
+        "within",
+        "integrate",
+        "comparison",
+        "design",
+        "considerations",
+        "cctp",
+        "tutorial",
+        "publish",
+        "information",
+        "quickstart"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -18982,6 +19319,9 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "meetings"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -19108,6 +19448,9 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "meetings"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -19469,6 +19812,46 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "smart",
+        "authorization",
+        "interactions",
+        "tests",
+        "simulation",
+        "lifecycle",
+        "environment",
+        "errors",
+        "debugging",
+        "modes",
+        "rust",
+        "dialect",
+        "persisting",
+        "archival",
+        "types",
+        "built",
+        "fully",
+        "typed",
+        "json",
+        "signatures",
+        "master",
+        "fast",
+        "cheap",
+        "0ut",
+        "0f",
+        "control",
+        "quest",
+        "migrate",
+        "another",
+        "chain",
+        "introduction",
+        "summary",
+        "soroban",
+        "hardhat",
+        "solidity",
+        "support",
+        "via",
+        "solang"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -19579,6 +19962,96 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "key",
+        "parameters",
+        "symbol",
+        "retrieve",
+        "entry",
+        "connecting",
+        "creating",
+        "visualizations",
+        "optimizing",
+        "queries",
+        "like",
+        "viewing",
+        "metadata",
+        "backfill",
+        "js",
+        "udf",
+        "use",
+        "source",
+        "sdf",
+        "etl",
+        "curation",
+        "architecture",
+        "scheduling",
+        "orchestration",
+        "system",
+        "visualization",
+        "apis",
+        "introduction",
+        "configuring",
+        "filtering",
+        "installing",
+        "monitoring",
+        "prerequisites",
+        "upgrading",
+        "error",
+        "handling",
+        "specific",
+        "before",
+        "stale",
+        "timeout",
+        "failed",
+        "malformed",
+        "standard",
+        "merge",
+        "allow",
+        "trust",
+        "bump",
+        "sequence",
+        "change",
+        "create",
+        "passive",
+        "sell",
+        "offer",
+        "manage",
+        "buy",
+        "payment",
+        "strict",
+        "receive",
+        "options",
+        "consistency",
+        "arguments",
+        "migrate",
+        "lake",
+        "indexers",
+        "exporting",
+        "setup",
+        "example",
+        "usages",
+        "export",
+        "gcs",
+        "backends",
+        "buffered",
+        "backend",
+        "captive",
+        "core",
+        "readers",
+        "changes",
+        "within",
+        "range",
+        "count",
+        "each",
+        "archive",
+        "successful",
+        "processors",
+        "transfer",
+        "processor",
+        "filter",
+        "oracle"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -19689,6 +20162,80 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "asset",
+        "add",
+        "meta",
+        "wasm",
+        "argument",
+        "types",
+        "lifecycle",
+        "uploaded",
+        "bytecode",
+        "extend",
+        "instance",
+        "ttl",
+        "entry",
+        "restore",
+        "archived",
+        "keys",
+        "tx",
+        "commands",
+        "create",
+        "claimable",
+        "balance",
+        "op",
+        "upload",
+        "smart",
+        "plugins",
+        "more",
+        "meet",
+        "stella",
+        "analytics",
+        "platforms",
+        "sandbox",
+        "block",
+        "explorers",
+        "jupyter",
+        "notebooks",
+        "insights",
+        "status",
+        "node",
+        "operator",
+        "online",
+        "ide",
+        "security",
+        "chain",
+        "saved",
+        "keypairs",
+        "requests",
+        "dashboard",
+        "diff",
+        "xdrs",
+        "json",
+        "toolings",
+        "usage",
+        "container",
+        "modes",
+        "ports",
+        "service",
+        "options",
+        "cloud",
+        "deployment",
+        "digital",
+        "ocean",
+        "fly",
+        "io",
+        "debugging",
+        "diagnostic",
+        "viewing",
+        "logs",
+        "faucet",
+        "connect",
+        "money",
+        "gram",
+        "own"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -19798,6 +20345,173 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "create",
+        "restoration",
+        "footprint",
+        "manually",
+        "restore",
+        "java",
+        "script",
+        "extend",
+        "entry",
+        "test",
+        "extension",
+        "logic",
+        "interesting",
+        "ways",
+        "starter",
+        "basics",
+        "automating",
+        "futurenet",
+        "reset",
+        "add",
+        "support",
+        "verify",
+        "trustlines",
+        "patterns",
+        "examples",
+        "wallets",
+        "making",
+        "installed",
+        "bytecode",
+        "deployer",
+        "sac",
+        "asset",
+        "organize",
+        "error",
+        "enum",
+        "extending",
+        "deployed",
+        "upgrading",
+        "write",
+        "metadata",
+        "workspace",
+        "conversions",
+        "convert",
+        "address",
+        "other",
+        "types",
+        "bytes",
+        "sc",
+        "val",
+        "string",
+        "dapp",
+        "comprehensive",
+        "frontend",
+        "dapps",
+        "initialize",
+        "scripts",
+        "develop",
+        "templates",
+        "implement",
+        "spec",
+        "work",
+        "specs",
+        "python",
+        "php",
+        "consume",
+        "previously",
+        "ingested",
+        "ingest",
+        "published",
+        "publish",
+        "analyzing",
+        "cost",
+        "efficiency",
+        "freighter",
+        "connect",
+        "enable",
+        "integrate",
+        "react",
+        "prompt",
+        "sign",
+        "js",
+        "xdrs",
+        "rpc",
+        "key",
+        "parameters",
+        "symbol",
+        "retrieve",
+        "choose",
+        "right",
+        "use",
+        "case",
+        "migrate",
+        "structures",
+        "coverage",
+        "differential",
+        "fork",
+        "snapshot",
+        "mocking",
+        "within",
+        "channel",
+        "claimable",
+        "balances",
+        "clawbacks",
+        "fee",
+        "bump",
+        "install",
+        "invoke",
+        "function",
+        "sdks",
+        "pooled",
+        "muxed",
+        "memos",
+        "receive",
+        "signing",
+        "invocations",
+        "method",
+        "sponsored",
+        "reserves",
+        "submit",
+        "web",
+        "assembly",
+        "allocator",
+        "batched",
+        "atomic",
+        "swaps",
+        "swap",
+        "bls",
+        "signature",
+        "complex",
+        "fungible",
+        "fuzz",
+        "liquidity",
+        "pool",
+        "logging",
+        "mint",
+        "lock",
+        "non",
+        "simple",
+        "single",
+        "offer",
+        "sale",
+        "timelock",
+        "upgradeable",
+        "increment",
+        "interactions",
+        "lifecycle",
+        "concepts",
+        "modes",
+        "dialect",
+        "persisting",
+        "built",
+        "fully",
+        "typed",
+        "cookbook",
+        "management",
+        "meta",
+        "argument",
+        "uploaded",
+        "keys",
+        "tx",
+        "commands",
+        "balance",
+        "op",
+        "upload",
+        "plugins"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {
@@ -19910,6 +20624,63 @@
         ],
         "type": "object"
       },
+      "keywords": [
+        "develop",
+        "templates",
+        "creation",
+        "toml",
+        "10",
+        "authentication",
+        "hosted",
+        "api",
+        "setup",
+        "anchored",
+        "confirmation",
+        "modal",
+        "contacts",
+        "manage",
+        "trust",
+        "querying",
+        "bindings",
+        "walkthrough",
+        "prerequisites",
+        "network",
+        "ingestion",
+        "pipeline",
+        "cdp",
+        "consumer",
+        "sample",
+        "recovery",
+        "quote",
+        "programmatic",
+        "uri",
+        "scheme",
+        "facilitate",
+        "delegated",
+        "signing",
+        "proofs",
+        "comprehensive",
+        "initialize",
+        "scripts",
+        "implement",
+        "spec",
+        "work",
+        "specs",
+        "java",
+        "python",
+        "php",
+        "connect",
+        "testnet",
+        "enable",
+        "soroban",
+        "integrate",
+        "react",
+        "prompt",
+        "sign",
+        "authorization",
+        "entries",
+        "xdrs"
+      ],
       "kind": "operation",
       "outputSchema": null,
       "policy": {

@@ -1,0 +1,2540 @@
+{
+  "fetchedAt": "2026-07-03T15:11:15.794Z",
+  "index": "crawler_Stellar Docs - Docusaurus",
+  "service": "stellar-docs",
+  "source": {
+    "authEnv": [
+      "ALGOLIA_APPLICATION_ID",
+      "ALGOLIA_API_KEY"
+    ],
+    "method": "empty-query POST filtered to type:lvl1 (one record per page title); title = hierarchy.lvl1, path = url_without_anchor without origin; deduped, sorted by path then title",
+    "query": "https://{ALGOLIA_APPLICATION_ID}-dsn.algolia.net/1/indexes/crawler_Stellar%20Docs%20-%20Docusaurus/query"
+  },
+  "titles": [
+    {
+      "path": "/",
+      "title": "Welcome to Stellar Developer Docs"
+    },
+    {
+      "path": "/docs",
+      "title": "Stellar Developer Docs"
+    },
+    {
+      "path": "/docs/build",
+      "title": "Introduction"
+    },
+    {
+      "path": "/docs/build/agentic-payments",
+      "title": "Agentic Payments"
+    },
+    {
+      "path": "/docs/build/agentic-payments/mpp",
+      "title": "MPP on Stellar"
+    },
+    {
+      "path": "/docs/build/agentic-payments/mpp/channel-guide",
+      "title": "MPP Session Guide"
+    },
+    {
+      "path": "/docs/build/agentic-payments/mpp/charge-guide",
+      "title": "MPP Charge Guide"
+    },
+    {
+      "path": "/docs/build/agentic-payments/x402",
+      "title": "x402 on Stellar"
+    },
+    {
+      "path": "/docs/build/agentic-payments/x402/built-on-stellar",
+      "title": "Built on Stellar x402 Facilitator"
+    },
+    {
+      "path": "/docs/build/agentic-payments/x402/quickstart-guide",
+      "title": "x402 Quickstart Guide"
+    },
+    {
+      "path": "/docs/build/apps",
+      "title": "Build Applications"
+    },
+    {
+      "path": "/docs/build/apps/application-design-considerations",
+      "title": "Application Design Considerations"
+    },
+    {
+      "path": "/docs/build/apps/dapp-frontend",
+      "title": "Develop a Contract with Frontend Templates"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial",
+      "title": "Build a Payment App with the JS SDK"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/account-creation",
+      "title": "Account Creation"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/anchor-integration",
+      "title": "Anchor Integration"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+      "title": "SEP-1: Stellar TOML"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/anchor-integration/sep10",
+      "title": "SEP-10: Stellar Web Authentication"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/anchor-integration/sep24",
+      "title": "SEP-24: Hosted Deposit and Withdrawal"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/anchor-integration/sep6",
+      "title": "SEP-6: Deposit and Withdrawal API"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/anchor-integration/setup",
+      "title": "Setup for Anchored Assets"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/confirmation-modal",
+      "title": "Confirmation Modal"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/contacts-list",
+      "title": "Contacts List"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/manage-trust",
+      "title": "Manage Trust"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/path-payment",
+      "title": "Path Payment"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/payment",
+      "title": "Payment"
+    },
+    {
+      "path": "/docs/build/apps/example-application-tutorial/querying-data",
+      "title": "Querying Data"
+    },
+    {
+      "path": "/docs/build/apps/guestbook",
+      "title": "Build a Passkey Powered Guestbook Dapp"
+    },
+    {
+      "path": "/docs/build/apps/guestbook/bindings",
+      "title": "Generate Bindings"
+    },
+    {
+      "path": "/docs/build/apps/guestbook/frontend",
+      "title": "Dapp Frontend Walkthrough"
+    },
+    {
+      "path": "/docs/build/apps/guestbook/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/build/apps/guestbook/passkeys-prerequisites",
+      "title": "Passkeys Prerequisites"
+    },
+    {
+      "path": "/docs/build/apps/guestbook/setup-passkeys",
+      "title": "Setup Passkeys"
+    },
+    {
+      "path": "/docs/build/apps/guestbook/smart-contract",
+      "title": "The Guestbook Contract"
+    },
+    {
+      "path": "/docs/build/apps/ingest-sdk",
+      "title": "Build Custom Network Ingestion Pipeline"
+    },
+    {
+      "path": "/docs/build/apps/ingest-sdk/ingestion-pipeline-code",
+      "title": "CDP Consumer Pipeline Sample Code"
+    },
+    {
+      "path": "/docs/build/apps/ingest-sdk/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/build/apps/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/build/apps/privacy",
+      "title": "Privacy on Stellar"
+    },
+    {
+      "path": "/docs/build/apps/swift-payment-app",
+      "title": "Build a Payment App with Swift"
+    },
+    {
+      "path": "/docs/build/apps/wallet",
+      "title": "Build a Wallet with the Wallet SDK"
+    },
+    {
+      "path": "/docs/build/apps/wallet/intro",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/build/apps/wallet/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/build/apps/wallet/sep10",
+      "title": "Stellar Authentication"
+    },
+    {
+      "path": "/docs/build/apps/wallet/sep24",
+      "title": "Hosted Deposit and Withdrawal"
+    },
+    {
+      "path": "/docs/build/apps/wallet/sep30",
+      "title": "Recovery"
+    },
+    {
+      "path": "/docs/build/apps/wallet/sep38",
+      "title": "Quote"
+    },
+    {
+      "path": "/docs/build/apps/wallet/sep6",
+      "title": "Programmatic Deposit and Withdrawal"
+    },
+    {
+      "path": "/docs/build/apps/wallet/sep7",
+      "title": "URI Scheme to facilitate delegated signing"
+    },
+    {
+      "path": "/docs/build/apps/wallet/stellar",
+      "title": "Stellar Network"
+    },
+    {
+      "path": "/docs/build/apps/zk",
+      "title": "ZK Proofs on Stellar"
+    },
+    {
+      "path": "/docs/build/building-with-ai",
+      "title": "Building with AI"
+    },
+    {
+      "path": "/docs/build/guides",
+      "title": "How-To Guides"
+    },
+    {
+      "path": "/docs/build/guides/archival",
+      "title": "State Archival"
+    },
+    {
+      "path": "/docs/build/guides/archival/create-restoration-footprint-js",
+      "title": "Create a restoration footprint manually to restore archived data using the JavaScript SDK"
+    },
+    {
+      "path": "/docs/build/guides/archival/extend-persistent-entry-js",
+      "title": "Extend a persistent entry and contract using the JavaScript SDK"
+    },
+    {
+      "path": "/docs/build/guides/archival/restore-contract-js",
+      "title": "Restore a contract using the JavaScript SDK"
+    },
+    {
+      "path": "/docs/build/guides/archival/restore-data-js",
+      "title": "Restore archived contract data using the JavaScript SDK"
+    },
+    {
+      "path": "/docs/build/guides/archival/test-ttl-extension",
+      "title": "Test TTL extension logic in smart contracts"
+    },
+    {
+      "path": "/docs/build/guides/auth",
+      "title": "Contract Authorization"
+    },
+    {
+      "path": "/docs/build/guides/auth/check-auth-tutorials",
+      "title": "Using __check_auth in interesting ways"
+    },
+    {
+      "path": "/docs/build/guides/auth/contract-authorization",
+      "title": "Smart contract authorization starter guide"
+    },
+    {
+      "path": "/docs/build/guides/basics",
+      "title": "Stellar Basics"
+    },
+    {
+      "path": "/docs/build/guides/basics/automate-reset-data",
+      "title": "Automating Testnet and Futurenet reset data"
+    },
+    {
+      "path": "/docs/build/guides/basics/classic-transition",
+      "title": "Add support for smart contracts"
+    },
+    {
+      "path": "/docs/build/guides/basics/verify-trustlines",
+      "title": "Verify Trustlines"
+    },
+    {
+      "path": "/docs/build/guides/contract-accounts",
+      "title": "Contract Accounts"
+    },
+    {
+      "path": "/docs/build/guides/contract-accounts/advanced-patterns",
+      "title": "Advanced contract account patterns"
+    },
+    {
+      "path": "/docs/build/guides/contract-accounts/examples",
+      "title": "Contract account examples"
+    },
+    {
+      "path": "/docs/build/guides/contract-accounts/smart-wallets",
+      "title": "Smart wallets"
+    },
+    {
+      "path": "/docs/build/guides/conventions",
+      "title": "Contract Conventions"
+    },
+    {
+      "path": "/docs/build/guides/conventions/cross-contract",
+      "title": "Making cross-contract calls"
+    },
+    {
+      "path": "/docs/build/guides/conventions/deploy-contract",
+      "title": "Deploy a contract from installed Wasm bytecode using a deployer contract"
+    },
+    {
+      "path": "/docs/build/guides/conventions/deploy-sac-with-code",
+      "title": "Deploy a SAC for a Stellar asset using code"
+    },
+    {
+      "path": "/docs/build/guides/conventions/error-enum",
+      "title": "Organize contract errors with an error enum type"
+    },
+    {
+      "path": "/docs/build/guides/conventions/extending-wasm-ttl",
+      "title": "Extending a deployed contract's TTL using code"
+    },
+    {
+      "path": "/docs/build/guides/conventions/upgrading-contracts",
+      "title": "Upgrading Wasm bytecode for a deployed contract"
+    },
+    {
+      "path": "/docs/build/guides/conventions/wasm-metadata",
+      "title": "Write metadata for your contract"
+    },
+    {
+      "path": "/docs/build/guides/conventions/workspace",
+      "title": "Workspace"
+    },
+    {
+      "path": "/docs/build/guides/conversions",
+      "title": "Type Conversions"
+    },
+    {
+      "path": "/docs/build/guides/conversions/address-conversions",
+      "title": "Convert an address to other types"
+    },
+    {
+      "path": "/docs/build/guides/conversions/bytes-conversions",
+      "title": "Convert from bytes to other types"
+    },
+    {
+      "path": "/docs/build/guides/conversions/scval-conversions",
+      "title": "Convert a ScVal to other type"
+    },
+    {
+      "path": "/docs/build/guides/conversions/string-conversions",
+      "title": "Convert a string to other types"
+    },
+    {
+      "path": "/docs/build/guides/dapps",
+      "title": "Dapp Development"
+    },
+    {
+      "path": "/docs/build/guides/dapps/frontend-guide",
+      "title": "Comprehensive frontend guide for Stellar dapps"
+    },
+    {
+      "path": "/docs/build/guides/dapps/initialization",
+      "title": "Initialize a dapp using scripts"
+    },
+    {
+      "path": "/docs/build/guides/dapps/soroban-contract-init-template",
+      "title": "Develop contract with frontend templates"
+    },
+    {
+      "path": "/docs/build/guides/dapps/state-archival",
+      "title": "Implement state archival in dapps"
+    },
+    {
+      "path": "/docs/build/guides/dapps/working-with-contract-specs",
+      "title": "Stellar Contract Spec"
+    },
+    {
+      "path": "/docs/build/guides/dapps/working-with-contract-specs",
+      "title": "Work with contract specs in Java, Python, and PHP"
+    },
+    {
+      "path": "/docs/build/guides/events",
+      "title": "Contract Events"
+    },
+    {
+      "path": "/docs/build/guides/events/consume",
+      "title": "Consume previously ingested events"
+    },
+    {
+      "path": "/docs/build/guides/events/ingest",
+      "title": "Ingest events published from a contract"
+    },
+    {
+      "path": "/docs/build/guides/events/publish",
+      "title": "Publish events from a Rust contract"
+    },
+    {
+      "path": "/docs/build/guides/fees",
+      "title": "Fees &amp; Metering"
+    },
+    {
+      "path": "/docs/build/guides/fees/analyzing-smart-contract-cost",
+      "title": "Analyzing smart contract cost and efficiency"
+    },
+    {
+      "path": "/docs/build/guides/freighter",
+      "title": "Freighter Wallet"
+    },
+    {
+      "path": "/docs/build/guides/freighter/connect-testnet",
+      "title": "Connect to the Testnet"
+    },
+    {
+      "path": "/docs/build/guides/freighter/enable-soroban-tokens",
+      "title": "Enable Soroban tokens"
+    },
+    {
+      "path": "/docs/build/guides/freighter/integrate-freighter-react",
+      "title": "Integrate Freighter with a React dapp"
+    },
+    {
+      "path": "/docs/build/guides/freighter/prompt-to-sign-tx",
+      "title": "Prompt Freighter to sign transactions as a JS dapp developer"
+    },
+    {
+      "path": "/docs/build/guides/freighter/send-token-payments",
+      "title": "Send Soroban token payments"
+    },
+    {
+      "path": "/docs/build/guides/freighter/sign-auth-entries",
+      "title": "Sign authorization entries"
+    },
+    {
+      "path": "/docs/build/guides/freighter/sign-soroban-xdrs",
+      "title": "Sign Soroban XDRs"
+    },
+    {
+      "path": "/docs/build/guides/rpc",
+      "title": "RPC"
+    },
+    {
+      "path": "/docs/build/guides/rpc/generate-ledger-keys-python",
+      "title": "Generate ledger key parameters with a symbol key using the Python SDK"
+    },
+    {
+      "path": "/docs/build/guides/rpc/retrieve-contract-code-js",
+      "title": "Retrieve a contract code ledger entry using the JavaScript SDK"
+    },
+    {
+      "path": "/docs/build/guides/rpc/retrieve-contract-code-python",
+      "title": "Retrieve a contract code ledger entry using the Python SDK"
+    },
+    {
+      "path": "/docs/build/guides/storage",
+      "title": "Contract Storage"
+    },
+    {
+      "path": "/docs/build/guides/storage/choosing-the-right-storage",
+      "title": "How to choose the right storage type for your use case"
+    },
+    {
+      "path": "/docs/build/guides/storage/migrate-contract-storage",
+      "title": "Migrate contract storage data when upgrading data structures"
+    },
+    {
+      "path": "/docs/build/guides/storage/use-instance",
+      "title": "Use instance storage in a contract"
+    },
+    {
+      "path": "/docs/build/guides/storage/use-persistent",
+      "title": "Use persistent storage in a contract"
+    },
+    {
+      "path": "/docs/build/guides/storage/use-temporary",
+      "title": "Use temporary storage in a contract"
+    },
+    {
+      "path": "/docs/build/guides/testing",
+      "title": "Contract Testing"
+    },
+    {
+      "path": "/docs/build/guides/testing/code-coverage",
+      "title": "Code Coverage"
+    },
+    {
+      "path": "/docs/build/guides/testing/differential-tests",
+      "title": "Differential Tests"
+    },
+    {
+      "path": "/docs/build/guides/testing/differential-tests-with-test-snapshots",
+      "title": "Differential Tests with Test Snapshots"
+    },
+    {
+      "path": "/docs/build/guides/testing/fork-testing",
+      "title": "Fork Testing"
+    },
+    {
+      "path": "/docs/build/guides/testing/fuzzing",
+      "title": "Fuzzing"
+    },
+    {
+      "path": "/docs/build/guides/testing/integration-tests",
+      "title": "Integration Tests"
+    },
+    {
+      "path": "/docs/build/guides/testing/ledger-snapshot-testing",
+      "title": "Testing with Ledger Snapshot"
+    },
+    {
+      "path": "/docs/build/guides/testing/mocking",
+      "title": "Mocking"
+    },
+    {
+      "path": "/docs/build/guides/testing/mutation-testing",
+      "title": "Mutation Testing"
+    },
+    {
+      "path": "/docs/build/guides/testing/test-contract-auth",
+      "title": "Test Authorization"
+    },
+    {
+      "path": "/docs/build/guides/testing/test-contract-events",
+      "title": "Test Events"
+    },
+    {
+      "path": "/docs/build/guides/testing/unit-tests",
+      "title": "Unit Tests"
+    },
+    {
+      "path": "/docs/build/guides/tokens",
+      "title": "Stellar Asset Contract (SAC) Tokens"
+    },
+    {
+      "path": "/docs/build/guides/tokens/custom-sac-admin",
+      "title": "Set a custom admin account for a Stellar Asset Contract (SAC)"
+    },
+    {
+      "path": "/docs/build/guides/tokens/deploying-a-sac",
+      "title": "Deploy a Stellar Asset Contract (SAC) from within a contract"
+    },
+    {
+      "path": "/docs/build/guides/tokens/stellar-asset-contract",
+      "title": "Integrate Stellar Assets Contracts"
+    },
+    {
+      "path": "/docs/build/guides/transactions",
+      "title": "Transactions"
+    },
+    {
+      "path": "/docs/build/guides/transactions/channel-accounts",
+      "title": "Channel accounts"
+    },
+    {
+      "path": "/docs/build/guides/transactions/claimable-balances",
+      "title": "Claimable balances"
+    },
+    {
+      "path": "/docs/build/guides/transactions/clawbacks",
+      "title": "Clawbacks"
+    },
+    {
+      "path": "/docs/build/guides/transactions/create-account",
+      "title": "Create an Account"
+    },
+    {
+      "path": "/docs/build/guides/transactions/fee-bump-transactions",
+      "title": "Fee-bump transactions"
+    },
+    {
+      "path": "/docs/build/guides/transactions/install-deploy-contract-with-code",
+      "title": "Install and deploy a smart contract with code"
+    },
+    {
+      "path": "/docs/build/guides/transactions/invoke-contract-tx-sdk",
+      "title": "Invoke a contract function in a transaction using SDKs"
+    },
+    {
+      "path": "/docs/build/guides/transactions/path-payments",
+      "title": "Path payments"
+    },
+    {
+      "path": "/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+      "title": "Pooled accounts: muxed accounts and memos"
+    },
+    {
+      "path": "/docs/build/guides/transactions/send-and-receive-c-accounts",
+      "title": "Send to and receive payments from Contract Accounts"
+    },
+    {
+      "path": "/docs/build/guides/transactions/send-and-receive-payments",
+      "title": "Send and receive payments"
+    },
+    {
+      "path": "/docs/build/guides/transactions/signing-soroban-invocations",
+      "title": "Signing Soroban contract invocations"
+    },
+    {
+      "path": "/docs/build/guides/transactions/simulateTransaction-Deep-Dive",
+      "title": "simulateTransaction RPC method guide"
+    },
+    {
+      "path": "/docs/build/guides/transactions/sponsored-reserves",
+      "title": "Sponsored reserves"
+    },
+    {
+      "path": "/docs/build/guides/transactions/submit-transaction-wait-js",
+      "title": "Submit a transaction to Stellar RPC using the JavaScript SDK"
+    },
+    {
+      "path": "/docs/build/guides/transactions/upload-wasm-bytecode",
+      "title": "Install WebAssembly (Wasm) bytecode using code"
+    },
+    {
+      "path": "/docs/build/security-docs",
+      "title": "Security Best Practices"
+    },
+    {
+      "path": "/docs/build/security-docs/securing-web-based-projects",
+      "title": "Securing Web-Based Projects"
+    },
+    {
+      "path": "/docs/build/security-docs/threat-modeling",
+      "title": "Threat Modeling Readiness How-To Guide"
+    },
+    {
+      "path": "/docs/build/security-docs/threat-modeling/STRIDE-template",
+      "title": "STRIDE Threat Model Template"
+    },
+    {
+      "path": "/docs/build/security-docs/threat-modeling/pizza-restaurant-example",
+      "title": "Pizza Restaurant Example STRIDE Threat Model"
+    },
+    {
+      "path": "/docs/build/security-docs/threat-modeling/threat-modeling-description",
+      "title": "Threat Modeling Readiness"
+    },
+    {
+      "path": "/docs/build/security-docs/threat-modeling/threat-modeling-how-to",
+      "title": "Threat Modeling How-To Guide"
+    },
+    {
+      "path": "/docs/build/smart-contracts",
+      "title": "Write Smart Contracts"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts",
+      "title": "Example Contracts"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/alloc",
+      "title": "Allocator"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/atomic-multi-swap",
+      "title": "Batched Atomic Swaps"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/atomic-swap",
+      "title": "Atomic Swap"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/auth",
+      "title": "Auth"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/bls-signature",
+      "title": "BLS Signature"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/complex-account",
+      "title": "Complex Account"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/cross-contract-call",
+      "title": "Cross Contract Calls"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/custom-types",
+      "title": "Custom Types"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/deployer",
+      "title": "Deployer"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/errors",
+      "title": "Errors"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/events",
+      "title": "Events"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/fungible-token",
+      "title": "Fungible Token"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/fuzzing",
+      "title": "Fuzz Testing"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/liquidity-pool",
+      "title": "Liquidity Pool"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/logging",
+      "title": "Logging"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/mint-lock",
+      "title": "Mint Lock"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/non-fungible-token",
+      "title": "Non-Fungible Token"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/simple-account",
+      "title": "Simple Account"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/single-offer-sale",
+      "title": "Single Offer Sale"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/storage",
+      "title": "Storage"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/timelock",
+      "title": "Timelock"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/tokens",
+      "title": "Tokens"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/upgradeable-contract",
+      "title": "Upgradeable Contract"
+    },
+    {
+      "path": "/docs/build/smart-contracts/example-contracts/workspace",
+      "title": "Workspace"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started/deploy-increment-contract",
+      "title": "4. Deploy the Increment Contract"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started/deploy-to-testnet",
+      "title": "2. Deploy to Testnet"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started/hello-world",
+      "title": "Hello World"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started/hello-world-frontend",
+      "title": "5. Build a Hello World Frontend"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started/setup",
+      "title": "Setup"
+    },
+    {
+      "path": "/docs/build/smart-contracts/getting-started/storing-data",
+      "title": "3. Storing Data"
+    },
+    {
+      "path": "/docs/build/smart-contracts/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/data",
+      "title": "Data Overview"
+    },
+    {
+      "path": "/docs/data/analytics",
+      "title": "Analytics Overview"
+    },
+    {
+      "path": "/docs/data/analytics/analytics-providers",
+      "title": "Data Analytics Providers"
+    },
+    {
+      "path": "/docs/data/analytics/hubble",
+      "title": "Hubble"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide",
+      "title": "Analyst Guide"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide/connecting",
+      "title": "Connecting"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide/creating-visualizations",
+      "title": "Creating Visualizations"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide/history-vs-state-tables",
+      "title": "History VS State Tables"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide/optimizing-queries",
+      "title": "Optimizing Queries"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide/queries-for-horizon-like-data",
+      "title": "Queries for Horizon/RPC-like Data"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/analyst-guide/viewing-metadata",
+      "title": "Viewing Metadata"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide",
+      "title": "Developer Guide"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/backfill",
+      "title": "Backfill"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/backfill/JS-UDF",
+      "title": "Backfill using JS UDF"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/backfill/data-import",
+      "title": "Use Galexie as a Source"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/backfill/data-import",
+      "title": "Use SDF ETL Data as a Source"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/connecting-to-bigquery",
+      "title": "Connecting"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/data-curation",
+      "title": "Data Curation"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/data-curation/architecture",
+      "title": "Architecture"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/data-curation/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/data-curation/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/scheduling-and-orchestration",
+      "title": "Scheduling and Orchestration"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/scheduling-and-orchestration/architecture",
+      "title": "Architecture"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/scheduling-and-orchestration/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/scheduling-and-orchestration/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/source-system-ingestion",
+      "title": "Source System Ingestion"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/source-system-ingestion/architecture",
+      "title": "Architecture"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/source-system-ingestion/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/source-system-ingestion/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/visualization",
+      "title": "Visualization"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/visualization/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/data/analytics/hubble/developer-guide/visualization/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/data/apis",
+      "title": "APIs Overview"
+    },
+    {
+      "path": "/docs/data/apis/horizon",
+      "title": "Horizon Introduction"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide",
+      "title": "Admin Guide"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/configuring",
+      "title": "Configuring"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/ingestion",
+      "title": "Ingestion"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/ingestion-filtering",
+      "title": "Ingestion Filtering"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/installing",
+      "title": "Installing"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/monitoring",
+      "title": "Monitoring"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/prerequisites",
+      "title": "Prerequisites"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/running",
+      "title": "Running"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/scaling",
+      "title": "Scaling"
+    },
+    {
+      "path": "/docs/data/apis/horizon/admin-guide/upgrading",
+      "title": "Upgrading"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors",
+      "title": "Errors"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/error-handling",
+      "title": "Error Handling"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes",
+      "title": "HTTP Status Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/horizon-specific",
+      "title": "Horizon-Specific Status Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/horizon-specific/before-history",
+      "title": "Before History"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/horizon-specific/stale-history",
+      "title": "Stale History"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/horizon-specific/timeout",
+      "title": "Timeout"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/horizon-specific/transaction-failed",
+      "title": "Transaction Failed"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/horizon-specific/transaction-malformed",
+      "title": "Transaction Malformed"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/http-status-codes/standard",
+      "title": "Standard Status Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/response",
+      "title": "Error Response"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes",
+      "title": "Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific",
+      "title": "Operation-Specific Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/account-merge",
+      "title": "Account Merge Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/allow-trust",
+      "title": "Allow Trust Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/bump-sequence",
+      "title": "Bump Sequence Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/change-trust",
+      "title": "Change Trust Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/create-account",
+      "title": "Create Account Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/create-passive-sell-offer",
+      "title": "Create Passive Sell Offer Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/manage-buy-offer",
+      "title": "Manage Buy Offer Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/manage-data",
+      "title": "Manage Data Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/manage-sell-offer",
+      "title": "Manage Sell Offer Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/path-payment-strict-receive",
+      "title": "Path Payment Strict Receive Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/path-payment-strict-send",
+      "title": "Path Payment Strict Send Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/payment",
+      "title": "Payment Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operation-specific/set-options",
+      "title": "Set Options Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/operations",
+      "title": "Operation Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/errors/result-codes/transactions",
+      "title": "Transaction Result Codes"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure",
+      "title": "Horizon API Reference"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/consistency",
+      "title": "Consistency"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/pagination",
+      "title": "Pagination"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/pagination/page-arguments",
+      "title": "Page Arguments"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/rate-limiting",
+      "title": "Rate Limiting"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/response-format",
+      "title": "Response Format"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/streaming",
+      "title": "Streaming"
+    },
+    {
+      "path": "/docs/data/apis/horizon/api-reference/structure/xdr",
+      "title": "XDR"
+    },
+    {
+      "path": "/docs/data/apis/horizon/providers",
+      "title": "Providers"
+    },
+    {
+      "path": "/docs/data/apis/migrate-from-horizon-to-rpc",
+      "title": "Migrate from Horizon to RPC"
+    },
+    {
+      "path": "/docs/data/apis/rpc",
+      "title": "RPC Introduction"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide",
+      "title": "Admin Guide"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/configuring",
+      "title": "Configuring"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/data-lake-integration",
+      "title": "Data Lake Integration"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/development",
+      "title": "Development"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/installing",
+      "title": "Installing"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/monitoring",
+      "title": "Monitoring"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/prerequisites",
+      "title": "Prerequisites"
+    },
+    {
+      "path": "/docs/data/apis/rpc/admin-guide/running",
+      "title": "Running"
+    },
+    {
+      "path": "/docs/data/apis/rpc/api-reference/structure",
+      "title": "RPC API Reference"
+    },
+    {
+      "path": "/docs/data/apis/rpc/api-reference/structure/data-format",
+      "title": "Data Formats"
+    },
+    {
+      "path": "/docs/data/apis/rpc/api-reference/structure/json-rpc",
+      "title": "JSON-RPC"
+    },
+    {
+      "path": "/docs/data/apis/rpc/api-reference/structure/pagination",
+      "title": "Pagination"
+    },
+    {
+      "path": "/docs/data/apis/rpc/providers",
+      "title": "Providers"
+    },
+    {
+      "path": "/docs/data/indexers",
+      "title": "Indexers Overview"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own",
+      "title": "Build Your Own"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie",
+      "title": "Galexie"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide",
+      "title": "Admin Guide"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/configuring",
+      "title": "Configuring"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/full-history-exporting",
+      "title": "Full History Exporting"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/installing",
+      "title": "Installing"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/monitoring",
+      "title": "Monitoring"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/prerequisites",
+      "title": "Prerequisites"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/running",
+      "title": "Running"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/admin_guide/setup",
+      "title": "Setup"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/examples",
+      "title": "Example Usages"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/examples/gcs-export",
+      "title": "Export to GCS"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/galexie/providers",
+      "title": "Providers"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk",
+      "title": "Ingest SDK"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide",
+      "title": "Developer Guide"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/architecture",
+      "title": "Architecture"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/ledgerbackends",
+      "title": "Ledger Backends"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/ledgerbackends/bufferedstoragebackend",
+      "title": "BufferedStorageBackend"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/ledgerbackends/captivecore",
+      "title": "Captive Core"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/ledgerbackends/rpcledgerbackend",
+      "title": "RPC Ledger Backend"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/ledgerreaders",
+      "title": "Ledger Readers"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/developer_guide/prerequisites",
+      "title": "Prerequisites"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/examples",
+      "title": "Example Usages"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/examples/changes",
+      "title": "Retrieve ledger entry changes within a range"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/examples/ledger_entry_statistics",
+      "title": "Get count of each ledger entry type from history archive"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/ingest-sdk/examples/transaction_statistics",
+      "title": "Get successful/failed transactions from a ledger range"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/processors",
+      "title": "Processors"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/processors/token-transfer-processor",
+      "title": "Token Transfer Processor"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/processors/token-transfer-processor/examples",
+      "title": "Example Usages"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/processors/token-transfer-processor/examples/event_stats",
+      "title": "Retrieve token transfer events from a ledger"
+    },
+    {
+      "path": "/docs/data/indexers/build-your-own/processors/token-transfer-processor/examples/filter_events",
+      "title": "Filter events from transaction"
+    },
+    {
+      "path": "/docs/data/oracles",
+      "title": "Oracles"
+    },
+    {
+      "path": "/docs/data/oracles/oracle-providers",
+      "title": "Oracle Providers"
+    },
+    {
+      "path": "/docs/learn/fundamentals",
+      "title": "Core Concepts"
+    },
+    {
+      "path": "/docs/learn/fundamentals/anchors",
+      "title": "Anchors"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development",
+      "title": "Smart Contracts"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/authorization",
+      "title": "Authorization"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-interactions",
+      "title": "Contract Interactions"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-interactions/cross-contract",
+      "title": "Cross-Contract"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-interactions/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-interactions/stellar-transaction",
+      "title": "Stellar Transaction"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-interactions/tests",
+      "title": "Tests"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-interactions/transaction-simulation",
+      "title": "Transaction Simulation"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/contract-lifecycle",
+      "title": "Contract Lifecycle"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/environment-concepts",
+      "title": "Environment Concepts"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/errors-and-debugging",
+      "title": "Errors and Debugging"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/errors-and-debugging/debugging",
+      "title": "Debugging Modes"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/errors-and-debugging/debugging-errors",
+      "title": "Debugging Contract Errors"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/errors-and-debugging/errors",
+      "title": "Generate Contract Errors"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/rust-dialect",
+      "title": "Contract Rust Dialect"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/storage",
+      "title": "Storage"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/storage/persisting-data",
+      "title": "Persisting Data"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/storage/state-archival",
+      "title": "State Archival"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/types",
+      "title": "Types"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/types/built-in-types",
+      "title": "Built-In Types"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/types/custom-types",
+      "title": "Custom Types"
+    },
+    {
+      "path": "/docs/learn/fundamentals/contract-development/types/fully-typed-contracts",
+      "title": "Fully-Typed Contracts"
+    },
+    {
+      "path": "/docs/learn/fundamentals/data-format",
+      "title": "Data Format"
+    },
+    {
+      "path": "/docs/learn/fundamentals/data-format/xdr",
+      "title": "XDR"
+    },
+    {
+      "path": "/docs/learn/fundamentals/data-format/xdr-json",
+      "title": "XDR-JSON"
+    },
+    {
+      "path": "/docs/learn/fundamentals/fees-resource-limits-metering",
+      "title": "Fees, Resource Limits, and Metering"
+    },
+    {
+      "path": "/docs/learn/fundamentals/liquidity-on-stellar-sdex-liquidity-pools",
+      "title": "Liquidity on Stellar: SDEX &amp; Liquidity Pools"
+    },
+    {
+      "path": "/docs/learn/fundamentals/lumens",
+      "title": "Lumens (XLM)"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-consensus-protocol",
+      "title": "Stellar Consensus Protocol"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-data-structures",
+      "title": "Stellar Data Structures"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-data-structures/accounts",
+      "title": "Accounts"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-data-structures/assets",
+      "title": "Assets"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-data-structures/contracts",
+      "title": "Smart Contracts"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-data-structures/events",
+      "title": "Events"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-data-structures/ledgers",
+      "title": "Ledgers"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-ecosystem-proposals",
+      "title": "Stellar Ecosystem Proposals (SEPs)"
+    },
+    {
+      "path": "/docs/learn/fundamentals/stellar-stack",
+      "title": "Stellar Stack"
+    },
+    {
+      "path": "/docs/learn/fundamentals/transactions",
+      "title": "Operations &amp; Transactions"
+    },
+    {
+      "path": "/docs/learn/fundamentals/transactions/list-of-operations",
+      "title": "List of Operations"
+    },
+    {
+      "path": "/docs/learn/fundamentals/transactions/operations-and-transactions",
+      "title": "Operations and Transactions"
+    },
+    {
+      "path": "/docs/learn/fundamentals/transactions/signatures-multisig",
+      "title": "Signatures and Multisig"
+    },
+    {
+      "path": "/docs/learn/fundamentals/transactions/transaction-lifecycle",
+      "title": "Transaction Lifecycle"
+    },
+    {
+      "path": "/docs/learn/glossary",
+      "title": "Glossary"
+    },
+    {
+      "path": "/docs/learn/interactive",
+      "title": "Interactive Learning"
+    },
+    {
+      "path": "/docs/learn/interactive/dapp-world",
+      "title": "Master Rust Smart Contract Development on Stellar"
+    },
+    {
+      "path": "/docs/learn/interactive/fca00c",
+      "title": "Fast, Cheap, and 0ut 0f Control"
+    },
+    {
+      "path": "/docs/learn/interactive/quest",
+      "title": "Stellar Quest"
+    },
+    {
+      "path": "/docs/learn/migrate",
+      "title": "Migrate from Another Chain"
+    },
+    {
+      "path": "/docs/learn/migrate/evm",
+      "title": "EVM Networks"
+    },
+    {
+      "path": "/docs/learn/migrate/evm/introduction-to-solidity-and-rust",
+      "title": "Introduction"
+    },
+    {
+      "path": "/docs/learn/migrate/evm/introduction-to-solidity-and-rust",
+      "title": "Summary"
+    },
+    {
+      "path": "/docs/learn/migrate/evm/smart-contract-deployment",
+      "title": "Smart Contract Development with Soroban and Hardhat"
+    },
+    {
+      "path": "/docs/learn/migrate/evm/solidity-and-rust-advanced-concepts",
+      "title": "Advanced Smart Contract Concepts with Solidity and Rust"
+    },
+    {
+      "path": "/docs/learn/migrate/evm/solidity-and-rust-basics",
+      "title": "Getting Started with Rust and Solidity"
+    },
+    {
+      "path": "/docs/learn/migrate/evm/solidity-support-via-solang",
+      "title": "Solidity support via Solang"
+    },
+    {
+      "path": "/docs/networks",
+      "title": "Networks"
+    },
+    {
+      "path": "/docs/networks/resource-limits-fees",
+      "title": "Resource Limits &amp; Fees"
+    },
+    {
+      "path": "/docs/platforms",
+      "title": "SDF Platforms"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform",
+      "title": "Anchor Platform"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide",
+      "title": "Admin Guide"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/architecture",
+      "title": "Architecture"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/assets-and-client-wallets",
+      "title": "Assets and Wallet Clients"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/events",
+      "title": "Event Handling"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/events/delivery",
+      "title": "Delivery Guarantees"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/events/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/events/integration",
+      "title": "Integration"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/admin-guide/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide",
+      "title": "SEP Guides"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep1",
+      "title": "Stellar Info File (SEP-1)"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep10",
+      "title": "Stellar Authentication (SEP-10)"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24",
+      "title": "Hosted Deposits and Withdrawals (SEP-24)"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24/configuration",
+      "title": "Configuration"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24/example",
+      "title": "Example"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24/faq",
+      "title": "FAQ"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24/integration",
+      "title": "Integration"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep24/setting-up-production-server",
+      "title": "Set Up a Production Server"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep31",
+      "title": "Cross-Border Payments (SEP-31)"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep31/configuration",
+      "title": "Configuration"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep31/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep31/integration",
+      "title": "Integration"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep45",
+      "title": "Stellar Authentication for Contract Accounts (SEP-45)"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep6",
+      "title": "Programmatic Deposits and Withdrawals (SEP-6)"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep6/configuration",
+      "title": "Configuration"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep6/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/platforms/anchor-platform/sep-guide/sep6/integration",
+      "title": "Integration"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform",
+      "title": "Stellar Disbursement Platform"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide",
+      "title": "Admin Guide"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/advanced-configuration",
+      "title": "Advanced Configuration"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/cli-manual",
+      "title": "CLI Manual"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/configuring-sdp",
+      "title": "Configuration"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/deploy-the-sdp",
+      "title": "Deployment"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/design-and-architecture",
+      "title": "Architecture"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/embedded-wallets",
+      "title": "Embedded Wallets"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/making-your-wallet-sdp-ready",
+      "title": "Making Your Wallet SDP-Ready"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/monitoring",
+      "title": "Monitoring"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/overview",
+      "title": "Overview"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/security",
+      "title": "Security"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/troubleshooting",
+      "title": "Troubleshooting"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface",
+      "title": "User Interface"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/analytics",
+      "title": "Analytics"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/circle-configuration",
+      "title": "Circle Configuration"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/dashboard-home",
+      "title": "Dashboard Home"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/disbursements",
+      "title": "Disbursements"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/payments",
+      "title": "Payments"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/receivers",
+      "title": "Receivers"
+    },
+    {
+      "path": "/docs/platforms/stellar-disbursement-platform/admin-guide/user-interface/wallets",
+      "title": "Wallets"
+    },
+    {
+      "path": "/docs/tokens",
+      "title": "Stellar Assets and Contract Tokens"
+    },
+    {
+      "path": "/docs/tokens/anatomy-of-an-asset",
+      "title": "Assets Overview &amp; Comparison"
+    },
+    {
+      "path": "/docs/tokens/control-asset-access",
+      "title": "Asset Design Considerations"
+    },
+    {
+      "path": "/docs/tokens/cross-chain-transfers",
+      "title": "Cross-Chain USDC Transfers with CCTP"
+    },
+    {
+      "path": "/docs/tokens/how-to-issue-an-asset",
+      "title": "Issue an Asset Tutorial"
+    },
+    {
+      "path": "/docs/tokens/publishing-asset-info",
+      "title": "Publish Information About An Asset"
+    },
+    {
+      "path": "/docs/tokens/quickstart",
+      "title": "Quickstart"
+    },
+    {
+      "path": "/docs/tokens/stellar-asset-contract",
+      "title": "Stellar Asset Contract (SAC)"
+    },
+    {
+      "path": "/docs/tokens/token-interface",
+      "title": "Token Interface"
+    },
+    {
+      "path": "/docs/tools",
+      "title": "Tools Overview"
+    },
+    {
+      "path": "/docs/tools/cli",
+      "title": "Stellar CLI"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook",
+      "title": "Cookbook"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/asset-management",
+      "title": "Asset Management"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/contract-build-meta",
+      "title": "Add meta data to contract WASM on build"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/contract-invoke-arguments",
+      "title": "Contract Invoke: Argument Types"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/contract-lifecycle",
+      "title": "Contract Lifecycle"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/deploy-contract",
+      "title": "Deploy a contract from uploaded Wasm bytecode"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/deploy-stellar-asset-contract",
+      "title": "Deploy the Stellar Asset Contract for a Stellar asset"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/extend-contract-instance",
+      "title": "Extend a deployed contract instance's TTL"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/extend-contract-storage",
+      "title": "Extend a deployed contract's storage entry TTL"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/extend-contract-wasm",
+      "title": "Extend a deployed contract's Wasm code TTL"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/payments-and-assets",
+      "title": "Payments and Assets"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/restore-contract-instance",
+      "title": "Restore an archived contract using the Stellar CLI"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/restore-contract-storage",
+      "title": "Restore archived contract data using the Stellar CLI"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/stellar-keys",
+      "title": "Stellar Keys"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/tx-new",
+      "title": "tx Commands"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/tx-new-create-claimable-balance",
+      "title": "Create Claimable Balance"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/tx-op-add",
+      "title": "tx op add"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/tx-sign",
+      "title": "tx sign and tx send"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/upload-deploy",
+      "title": "Upload and deploy a smart contract"
+    },
+    {
+      "path": "/docs/tools/cli/cookbook/upload-wasm",
+      "title": "Upload Wasm bytecode"
+    },
+    {
+      "path": "/docs/tools/cli/install-cli",
+      "title": "Install the Stellar CLI"
+    },
+    {
+      "path": "/docs/tools/cli/plugins",
+      "title": "Plugins"
+    },
+    {
+      "path": "/docs/tools/cli/plugins-list",
+      "title": "Plugins List"
+    },
+    {
+      "path": "/docs/tools/developer-tools",
+      "title": "More Developer Tools"
+    },
+    {
+      "path": "/docs/tools/developer-tools/ai-bot",
+      "title": "Meet Stella"
+    },
+    {
+      "path": "/docs/tools/developer-tools/analytics-platforms",
+      "title": "Analytics Platforms"
+    },
+    {
+      "path": "/docs/tools/developer-tools/anchor-tools",
+      "title": "Anchor Tools"
+    },
+    {
+      "path": "/docs/tools/developer-tools/asset-tools",
+      "title": "Asset Sandbox"
+    },
+    {
+      "path": "/docs/tools/developer-tools/block-explorers",
+      "title": "Block Explorers"
+    },
+    {
+      "path": "/docs/tools/developer-tools/jupyter-notebooks",
+      "title": "Jupyter Notebooks"
+    },
+    {
+      "path": "/docs/tools/developer-tools/network-insights",
+      "title": "Network Insights"
+    },
+    {
+      "path": "/docs/tools/developer-tools/network-status",
+      "title": "Network Status"
+    },
+    {
+      "path": "/docs/tools/developer-tools/node-operator-tools",
+      "title": "Node Operator Tools"
+    },
+    {
+      "path": "/docs/tools/developer-tools/online-ide",
+      "title": "Online IDE"
+    },
+    {
+      "path": "/docs/tools/developer-tools/security-tools",
+      "title": "Security Tools"
+    },
+    {
+      "path": "/docs/tools/developer-tools/wallets",
+      "title": "Wallet Integration"
+    },
+    {
+      "path": "/docs/tools/infra-tools",
+      "title": "Infrastructure Tools"
+    },
+    {
+      "path": "/docs/tools/infra-tools/cross-chain",
+      "title": "Cross-Chain"
+    },
+    {
+      "path": "/docs/tools/lab",
+      "title": "Lab"
+    },
+    {
+      "path": "/docs/tools/lab/account",
+      "title": "Account"
+    },
+    {
+      "path": "/docs/tools/lab/api-explorer",
+      "title": "Developer Tools"
+    },
+    {
+      "path": "/docs/tools/lab/api-explorer/horizon-endpoint",
+      "title": "Horizon Endpoints"
+    },
+    {
+      "path": "/docs/tools/lab/api-explorer/rpc-methods",
+      "title": "RPC Methods"
+    },
+    {
+      "path": "/docs/tools/lab/quickstart-with-lab",
+      "title": "Using Lab with Quickstart"
+    },
+    {
+      "path": "/docs/tools/lab/saved",
+      "title": "Saved"
+    },
+    {
+      "path": "/docs/tools/lab/saved/keypairs",
+      "title": "Keypairs"
+    },
+    {
+      "path": "/docs/tools/lab/saved/requests",
+      "title": "Requests"
+    },
+    {
+      "path": "/docs/tools/lab/saved/transactions",
+      "title": "Transactions"
+    },
+    {
+      "path": "/docs/tools/lab/smart-contracts",
+      "title": "Smart Contracts"
+    },
+    {
+      "path": "/docs/tools/lab/smart-contracts/contract-explorer",
+      "title": "Contract Explorer"
+    },
+    {
+      "path": "/docs/tools/lab/smart-contracts/smart-contract-list",
+      "title": "Smart Contract List"
+    },
+    {
+      "path": "/docs/tools/lab/smart-contracts/upload-deploy-contract",
+      "title": "Upload and Deploy Contract"
+    },
+    {
+      "path": "/docs/tools/lab/transaction-dashboard",
+      "title": "Transaction Dashboard"
+    },
+    {
+      "path": "/docs/tools/lab/transactions",
+      "title": "Transactions"
+    },
+    {
+      "path": "/docs/tools/lab/view-xdr",
+      "title": "View XDR"
+    },
+    {
+      "path": "/docs/tools/lab/view-xdr/diff-xdr",
+      "title": "Diff XDRs"
+    },
+    {
+      "path": "/docs/tools/lab/view-xdr/json-to-xdr",
+      "title": "JSON to XDR"
+    },
+    {
+      "path": "/docs/tools/lab/view-xdr/xdr-to-json",
+      "title": "XDR to JSON"
+    },
+    {
+      "path": "/docs/tools/openzeppelin-contracts",
+      "title": "OpenZeppelin Contracts and Toolings"
+    },
+    {
+      "path": "/docs/tools/openzeppelin-relayer",
+      "title": "OpenZeppelin Relayer"
+    },
+    {
+      "path": "/docs/tools/quickstart",
+      "title": "Quickstart"
+    },
+    {
+      "path": "/docs/tools/quickstart/advanced-usage",
+      "title": "Advanced Usage"
+    },
+    {
+      "path": "/docs/tools/quickstart/advanced-usage/container",
+      "title": "Container"
+    },
+    {
+      "path": "/docs/tools/quickstart/advanced-usage/operation-modes",
+      "title": "Operation Modes"
+    },
+    {
+      "path": "/docs/tools/quickstart/advanced-usage/ports",
+      "title": "Ports"
+    },
+    {
+      "path": "/docs/tools/quickstart/advanced-usage/run-command-examples",
+      "title": "Run Commands"
+    },
+    {
+      "path": "/docs/tools/quickstart/advanced-usage/service-options",
+      "title": "Service Options"
+    },
+    {
+      "path": "/docs/tools/quickstart/cloud",
+      "title": "Cloud Deployment"
+    },
+    {
+      "path": "/docs/tools/quickstart/cloud/digitalocean",
+      "title": "DigitalOcean"
+    },
+    {
+      "path": "/docs/tools/quickstart/cloud/fly.io",
+      "title": "Fly.io"
+    },
+    {
+      "path": "/docs/tools/quickstart/debugging",
+      "title": "Debugging"
+    },
+    {
+      "path": "/docs/tools/quickstart/debugging/diagnostic-events",
+      "title": "Diagnostic Events"
+    },
+    {
+      "path": "/docs/tools/quickstart/debugging/viewing-logs",
+      "title": "Viewing Logs"
+    },
+    {
+      "path": "/docs/tools/quickstart/explorer",
+      "title": "Explorer"
+    },
+    {
+      "path": "/docs/tools/quickstart/faucet",
+      "title": "Faucet"
+    },
+    {
+      "path": "/docs/tools/quickstart/getting-started",
+      "title": "Getting Started"
+    },
+    {
+      "path": "/docs/tools/quickstart/getting-started/connect-stellar-lab",
+      "title": "Connect Stellar Lab"
+    },
+    {
+      "path": "/docs/tools/quickstart/getting-started/deploy-smart-contract",
+      "title": "Deploy Smart Contract"
+    },
+    {
+      "path": "/docs/tools/quickstart/network-modes",
+      "title": "Network Modes"
+    },
+    {
+      "path": "/docs/tools/ramps",
+      "title": "Ramps"
+    },
+    {
+      "path": "/docs/tools/ramps/moneygram",
+      "title": "MoneyGram Ramps"
+    },
+    {
+      "path": "/docs/tools/scaffold-stellar",
+      "title": "Scaffold Stellar"
+    },
+    {
+      "path": "/docs/tools/sdks",
+      "title": "SDKs"
+    },
+    {
+      "path": "/docs/tools/sdks/build-your-own",
+      "title": "Build Your Own Contract SDK"
+    },
+    {
+      "path": "/docs/tools/sdks/client-sdks",
+      "title": "Client &amp; XDR SDKs"
+    },
+    {
+      "path": "/docs/tools/sdks/contract-sdks",
+      "title": "Contract SDKs"
+    },
+    {
+      "path": "/docs/validators",
+      "title": "Validators Introduction"
+    },
+    {
+      "path": "/docs/validators/admin-guide",
+      "title": "Admin Guide"
+    },
+    {
+      "path": "/docs/validators/admin-guide/advanced",
+      "title": "Advanced"
+    },
+    {
+      "path": "/docs/validators/admin-guide/commands",
+      "title": "Commands"
+    },
+    {
+      "path": "/docs/validators/admin-guide/configuring",
+      "title": "Configuring"
+    },
+    {
+      "path": "/docs/validators/admin-guide/environment-preparation",
+      "title": "Environment Preparation"
+    },
+    {
+      "path": "/docs/validators/admin-guide/installation",
+      "title": "Installing"
+    },
+    {
+      "path": "/docs/validators/admin-guide/logging",
+      "title": "Logging"
+    },
+    {
+      "path": "/docs/validators/admin-guide/maintenance",
+      "title": "Maintenance"
+    },
+    {
+      "path": "/docs/validators/admin-guide/monitoring",
+      "title": "Monitoring"
+    },
+    {
+      "path": "/docs/validators/admin-guide/network-upgrades",
+      "title": "Upgrading the Network"
+    },
+    {
+      "path": "/docs/validators/admin-guide/prerequisites",
+      "title": "Prerequisites"
+    },
+    {
+      "path": "/docs/validators/admin-guide/publishing-history-archives",
+      "title": "Publishing History Archives"
+    },
+    {
+      "path": "/docs/validators/admin-guide/running-node",
+      "title": "Running"
+    },
+    {
+      "path": "/docs/validators/admin-guide/soroban-settings",
+      "title": "Soroban Settings"
+    },
+    {
+      "path": "/docs/validators/tier-1-orgs",
+      "title": "Tier 1 Organizations"
+    },
+    {
+      "path": "/meetings/2024/01/18",
+      "title": "2024-01-18"
+    },
+    {
+      "path": "/meetings/2024/01/26",
+      "title": "2024-01-26"
+    },
+    {
+      "path": "/meetings/2024/02/01",
+      "title": "2024-02-01"
+    },
+    {
+      "path": "/meetings/2024/02/09",
+      "title": "2024-02-09"
+    },
+    {
+      "path": "/meetings/2024/02/15",
+      "title": "2024-02-15"
+    },
+    {
+      "path": "/meetings/2024/02/22",
+      "title": "2024-02-22"
+    },
+    {
+      "path": "/meetings/2024/02/29",
+      "title": "2024-02-29"
+    },
+    {
+      "path": "/meetings/2024/03/07",
+      "title": "2024-03-07"
+    },
+    {
+      "path": "/meetings/2024/03/14",
+      "title": "2024-03-14"
+    },
+    {
+      "path": "/meetings/2024/03/21",
+      "title": "2024-03-21"
+    },
+    {
+      "path": "/meetings/2024/03/28",
+      "title": "2024-03-28"
+    },
+    {
+      "path": "/meetings/2024/04/04",
+      "title": "2024-04-04"
+    },
+    {
+      "path": "/meetings/2024/04/11",
+      "title": "2024-04-11"
+    },
+    {
+      "path": "/meetings/2024/04/18",
+      "title": "2024-04-18"
+    },
+    {
+      "path": "/meetings/2024/04/25",
+      "title": "2024-04-25"
+    },
+    {
+      "path": "/meetings/2024/05/02",
+      "title": "2024-05-02"
+    },
+    {
+      "path": "/meetings/2024/05/09",
+      "title": "2024-05-09"
+    },
+    {
+      "path": "/meetings/2024/06/13",
+      "title": "2024-06-13"
+    },
+    {
+      "path": "/meetings/2024/06/20",
+      "title": "2024-06-20"
+    },
+    {
+      "path": "/meetings/2024/06/27",
+      "title": "2024-06-27"
+    },
+    {
+      "path": "/meetings/2024/07/11",
+      "title": "2024-07-11"
+    },
+    {
+      "path": "/meetings/2024/07/18",
+      "title": "2024-07-18"
+    },
+    {
+      "path": "/meetings/2024/07/25",
+      "title": "2024-07-25"
+    },
+    {
+      "path": "/meetings/2024/08/01",
+      "title": "2024-08-01"
+    },
+    {
+      "path": "/meetings/2024/08/08",
+      "title": "2024-08-12"
+    },
+    {
+      "path": "/meetings/2024/08/15",
+      "title": "2024-08-15"
+    },
+    {
+      "path": "/meetings/2024/08/22",
+      "title": "2024-08-23"
+    },
+    {
+      "path": "/meetings/2024/08/29",
+      "title": "2024-08-29"
+    },
+    {
+      "path": "/meetings/2024/09/05",
+      "title": "2024-09-05"
+    },
+    {
+      "path": "/meetings/2024/09/12",
+      "title": "2024-09-12"
+    },
+    {
+      "path": "/meetings/2024/09/19",
+      "title": "2024-09-19"
+    },
+    {
+      "path": "/meetings/2024/09/26",
+      "title": "2024-09-26"
+    },
+    {
+      "path": "/meetings/2024/10/24",
+      "title": "2024-10-24"
+    },
+    {
+      "path": "/meetings/2024/11/14",
+      "title": "2024-11-14"
+    },
+    {
+      "path": "/meetings/2024/12/05",
+      "title": "2024-12-05"
+    },
+    {
+      "path": "/meetings/2024/12/12",
+      "title": "2024-12-12"
+    },
+    {
+      "path": "/meetings/2024/12/19",
+      "title": "2024-12-19"
+    },
+    {
+      "path": "/meetings/2025/01/16",
+      "title": "2025-01-16"
+    },
+    {
+      "path": "/meetings/2025/01/23",
+      "title": "2025-01-23"
+    },
+    {
+      "path": "/meetings/2025/01/30",
+      "title": "2025-01-30"
+    },
+    {
+      "path": "/meetings/2025/02/06",
+      "title": "2025-02-06"
+    },
+    {
+      "path": "/meetings/2025/02/13",
+      "title": "2025-02-13"
+    },
+    {
+      "path": "/meetings/2025/02/20",
+      "title": "2025-02-20"
+    },
+    {
+      "path": "/meetings/2025/02/27",
+      "title": "2025-02-27"
+    },
+    {
+      "path": "/meetings/2025/03/06",
+      "title": "2025-03-06"
+    },
+    {
+      "path": "/meetings/2025/03/27",
+      "title": "2025-03-27"
+    },
+    {
+      "path": "/meetings/2025/04/03",
+      "title": "2025-04-03"
+    },
+    {
+      "path": "/meetings/2025/04/10",
+      "title": "2025-04-10"
+    },
+    {
+      "path": "/meetings/2025/04/17",
+      "title": "2025-04-17"
+    },
+    {
+      "path": "/meetings/2025/05/01",
+      "title": "2025-05-01"
+    },
+    {
+      "path": "/meetings/2025/05/22",
+      "title": "2025-05-22"
+    },
+    {
+      "path": "/meetings/2025/07/10",
+      "title": "2025-07-10"
+    },
+    {
+      "path": "/meetings/2025/07/17",
+      "title": "2025-07-17"
+    },
+    {
+      "path": "/meetings/2025/07/24",
+      "title": "2025-07-24"
+    },
+    {
+      "path": "/meetings/2025/08/07",
+      "title": "2025-08-07"
+    },
+    {
+      "path": "/meetings/2025/09/25",
+      "title": "2025-09-25"
+    },
+    {
+      "path": "/meetings/2025/10/02",
+      "title": "2025-10-02"
+    },
+    {
+      "path": "/meetings/2025/10/09",
+      "title": "2025-10-09"
+    },
+    {
+      "path": "/meetings/2025/10/16",
+      "title": "2025-10-16"
+    },
+    {
+      "path": "/meetings/2025/10/23",
+      "title": "2025-10-23"
+    },
+    {
+      "path": "/meetings/2025/10/30",
+      "title": "2025-10-30"
+    },
+    {
+      "path": "/meetings/2025/11/06",
+      "title": "2025-11-06"
+    },
+    {
+      "path": "/meetings/2026/01/22",
+      "title": "2026-01-22"
+    },
+    {
+      "path": "/meetings/2026/01/29",
+      "title": "2026-01-29"
+    },
+    {
+      "path": "/meetings/2026/02/26",
+      "title": "2026-02-26"
+    },
+    {
+      "path": "/meetings/2026/04/16",
+      "title": "2026-04-16"
+    },
+    {
+      "path": "/meetings/2026/04/23",
+      "title": "2026-04-23"
+    },
+    {
+      "path": "/meetings/2026/05/07",
+      "title": "2026-05-07"
+    },
+    {
+      "path": "/meetings/2026/05/14",
+      "title": "2026-05-14"
+    },
+    {
+      "path": "/meetings/2026/05/21",
+      "title": "2026-05-21"
+    },
+    {
+      "path": "/meetings/2026/06/11",
+      "title": "2026-06-11"
+    },
+    {
+      "path": "/meetings/2026/06/18",
+      "title": "2026-06-18"
+    },
+    {
+      "path": "/meetings/archive",
+      "title": "Archive"
+    },
+    {
+      "path": "/meetings/authors/carstenjacobsen",
+      "title": "Carsten Jacobsen"
+    },
+    {
+      "path": "/meetings/authors/carstenjacobsen/page/2",
+      "title": "Carsten Jacobsen"
+    },
+    {
+      "path": "/meetings/authors/carstenjacobsen/page/3",
+      "title": "Carsten Jacobsen"
+    },
+    {
+      "path": "/meetings/authors/elliotfriend",
+      "title": "Elliot Voris"
+    },
+    {
+      "path": "/meetings/authors/kalepail",
+      "title": "Tyler van der Hoeven"
+    },
+    {
+      "path": "/meetings/tags/developer",
+      "title": "61 posts tagged with \"developer\""
+    },
+    {
+      "path": "/meetings/tags/developer/page/2",
+      "title": "61 posts tagged with \"developer\""
+    },
+    {
+      "path": "/meetings/tags/developer/page/3",
+      "title": "61 posts tagged with \"developer\""
+    },
+    {
+      "path": "/meetings/tags/developer/page/4",
+      "title": "61 posts tagged with \"developer\""
+    },
+    {
+      "path": "/meetings/tags/developer/page/5",
+      "title": "61 posts tagged with \"developer\""
+    },
+    {
+      "path": "/meetings/tags/developer/page/6",
+      "title": "61 posts tagged with \"developer\""
+    },
+    {
+      "path": "/meetings/tags/protocol",
+      "title": "11 posts tagged with \"protocol\""
+    }
+  ],
+  "total": 631
+}

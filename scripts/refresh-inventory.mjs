@@ -299,7 +299,60 @@ async function refreshStellarDocs() {
     settings,
   });
 
-  return {};
+  // Page-title snapshot (todo 824 items 4/5): every type:lvl1 record is one
+  // docs page title — the specific concept vocabulary ("Muxed Accounts",
+  // "Sponsored Reserves") that neither the op descriptions nor the coarse
+  // taxonomy topic slugs carry. build-catalog.mjs scopes these per docs
+  // operation by URL prefix and distills them into the low-weight `keywords`
+  // field the scorer blends in.
+  const queryPath = `/1/indexes/${encodeURIComponent(STELLAR_DOCS_INDEX)}/query`;
+  const titlesRes = await fetchJson(`https://${appId}-dsn.algolia.net${queryPath}`, {
+    method: "POST",
+    headers: {
+      "X-Algolia-Application-Id": appId,
+      "X-Algolia-API-Key": apiKey,
+      "Content-Type": "application/json",
+    },
+    body: {
+      query: "",
+      filters: "type:lvl1",
+      hitsPerPage: 1000,
+      distinct: false,
+      attributesToRetrieve: ["hierarchy", "url_without_anchor"],
+      attributesToHighlight: [],
+      attributesToSnippet: [],
+    },
+    label: "algolia lvl1 page titles",
+  });
+  const seen = new Set();
+  const titles = [];
+  for (const hit of titlesRes.hits ?? []) {
+    const title = hit.hierarchy?.lvl1;
+    const url = hit.url_without_anchor ?? "";
+    const path = url.replace(/^https?:\/\/[^/]+/, "");
+    if (!title || !path) continue;
+    const key = `${path} ${title}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    titles.push({ path, title });
+  }
+  titles.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : a.title.localeCompare(b.title)));
+
+  writeInventory("stellar-docs-titles.json", {
+    service: "stellar-docs",
+    fetchedAt: new Date().toISOString(),
+    source: {
+      query: `https://{ALGOLIA_APPLICATION_ID}-dsn.algolia.net${queryPath}`,
+      authEnv: ["ALGOLIA_APPLICATION_ID", "ALGOLIA_API_KEY"],
+      method:
+        "empty-query POST filtered to type:lvl1 (one record per page title); title = hierarchy.lvl1, path = url_without_anchor without origin; deduped, sorted by path then title",
+    },
+    index: STELLAR_DOCS_INDEX,
+    total: titles.length,
+    titles,
+  });
+
+  return { pageTitleCount: titles.length };
 }
 
 // ---------------------------------------------------------------------------

@@ -20,12 +20,118 @@ import { fileURLToPath } from "node:url";
 // Loaded via native type stripping (Node >= 23.6) — the same way
 // eval/run-routing.mjs imports src/catalog/search.ts. Still zero deps.
 import { extractKeywords } from "../src/catalog/extract-keywords.ts";
+import { tokenize } from "../src/catalog/vendor/search-scoring.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_PATH = join(ROOT, "catalog", "manifest.json");
 
 const readJson = (p) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
 const readText = (p) => readFileSync(join(ROOT, p), "utf8");
+
+// ---------------------------------------------------------------------------
+// Operation keywords (todo 824 items 4+5, M3/M4): descriptions are prose, so
+// schema-level vocabulary — property names and enum values — plus the docs
+// page-title snapshot are lexically invisible to the search scorer. Distill
+// them into the same low-weight `keywords` field skill sections carry
+// (KEYWORD_BLEND damping, scoring.ts lever 4). Two noise controls, both
+// measured necessary (a naive schema-prose version regressed extended strict
+// top1 74→71 and skills top5 23→22 on 2026-07-03): only NAMES and ENUMS are
+// harvested (no schema description prose), and tokens shared across a large
+// fraction of the same service's operations (pagination/envelope
+// boilerplate: page, offset, total, …) are dropped by a document-frequency
+// filter — shared vocabulary distinguishes nothing and rescues wrong ops
+// into the gated tier.
+// ---------------------------------------------------------------------------
+
+/** Collect property names and enum values from a JSON schema subtree. */
+function schemaTextParts(schema, out = []) {
+  if (!schema || typeof schema !== "object") return out;
+  if (Array.isArray(schema)) {
+    for (const item of schema) schemaTextParts(item, out);
+    return out;
+  }
+  for (const [key, value] of Object.entries(schema)) {
+    if (key === "properties" && value && typeof value === "object" && !Array.isArray(value)) {
+      for (const [prop, sub] of Object.entries(value)) {
+        out.push(prop);
+        schemaTextParts(sub, out);
+      }
+    } else if (key === "enum" && Array.isArray(value)) {
+      for (const v of value) if (typeof v === "string") out.push(v);
+    } else if (value && typeof value === "object") {
+      schemaTextParts(value, out);
+    }
+  }
+  return out;
+}
+
+/**
+ * Fraction of a service's ops sharing a token before it is considered
+ * boilerplate. 0.3: an envelope field on every op is dropped; a field
+ * shared by 2–3 related ops (of 12+) survives.
+ */
+const OP_KEYWORD_MAX_DF = 0.3;
+
+/**
+ * Attach `keywords` to each operation entry of ONE service. Non-operation
+ * entries pass through untouched. `extraBodiesById` adds service-specific
+ * vocabulary sources (docs page titles), which join the schema tokens under
+ * the SAME document-frequency filter: a routing keyword is only useful when
+ * it distinguishes this op from its siblings ("muxed" appears on one docs
+ * op and survives; "contract" appears on most and is dropped).
+ */
+function attachOperationKeywords(entries, extraBodiesById = new Map(), { cap } = {}) {
+  const ops = entries.filter((e) => e.kind === "operation");
+  const tokenSetById = new Map(
+    ops.map((e) => [
+      e.id,
+      new Set(
+        tokenize(
+          [
+            ...schemaTextParts(e.inputSchema),
+            ...schemaTextParts(e.outputSchema),
+            ...(extraBodiesById.get(e.id) ?? [])
+          ].join("\n")
+        )
+      )
+    ])
+  );
+  const df = new Map();
+  for (const set of tokenSetById.values()) {
+    for (const t of set) df.set(t, (df.get(t) ?? 0) + 1);
+  }
+  const maxDf = Math.max(1, Math.floor(ops.length * OP_KEYWORD_MAX_DF));
+  return entries.map((entry) => {
+    const tokens = tokenSetById.get(entry.id);
+    if (!tokens) return entry;
+    const distinctive = [...tokens].filter((t) => (df.get(t) ?? 0) <= maxDf);
+    const keywords = extractKeywords(distinctive.join(" "), {
+      exclude: [entry.id, entry.service, entry.kind, entry.description],
+      ...(cap !== undefined ? { cap } : {})
+    });
+    return keywords.length > 0 ? { ...entry, keywords } : entry;
+  });
+}
+
+/**
+ * Per-op page-title bodies for stellarDocs (todo 824 item 5): titles from
+ * inventory/stellar-docs-titles.json scoped by each op's clientFilter URL
+ * prefixes. Whole-corpus ops (no prefix filter) get none — vocabulary shared
+ * by the whole surface distinguishes nothing.
+ */
+function stellarDocsTitleExtras(entries, titlesSnapshot) {
+  const out = new Map();
+  for (const entry of entries) {
+    const prefixes = entry.transport?.algolia?.clientFilter?.prefixesAnyOf;
+    if (!Array.isArray(prefixes) || prefixes.length === 0) continue;
+    const pathPrefixes = prefixes.map((p) => p.replace(/^https?:\/\/[^/]+/, ""));
+    const titles = titlesSnapshot.titles
+      .filter((t) => pathPrefixes.some((p) => t.path.startsWith(p)))
+      .map((t) => t.title);
+    if (titles.length > 0) out.set(entry.id, [titles.join("\n")]);
+  }
+  return out;
+}
 
 // ---------------------------------------------------------------------------
 // Policy: the deny-list is data (PLAN §4). Machine-checkable, lives here.
@@ -566,13 +672,22 @@ function main() {
   const lumenloop = readJson("inventory/lumenloop.json");
   const stellarLight = readJson("inventory/stellar-light.json");
   const stellarDocsSpec = readJson("specs/stellar-docs.json");
+  const stellarDocsTitles = readJson("inventory/stellar-docs-titles.json");
   const skillsManifest = readJson("ecosystem-skills/MANIFEST.json");
   assertRetirementNamesResolve(skillsManifest);
 
+  const stellarDocsEntries = buildStellarDocs(stellarDocsSpec);
   const entries = [
-    ...buildLumenloop(lumenloop),
-    ...buildScout(stellarLight),
-    ...buildStellarDocs(stellarDocsSpec),
+    ...attachOperationKeywords(buildLumenloop(lumenloop)),
+    ...attachOperationKeywords(buildScout(stellarLight)),
+    // Docs ops carry page-title vocabulary (hundreds of distinct frequency-1
+    // tokens post-DF) — the default 64 cap truncates the alphabetical tail,
+    // so they get a roomier cap. Still bounded: 12 ops × ≤256 short tokens.
+    ...attachOperationKeywords(
+      stellarDocsEntries,
+      stellarDocsTitleExtras(stellarDocsEntries, stellarDocsTitles),
+      { cap: 256 }
+    ),
     ...buildSkills(skillsManifest)
   ].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 

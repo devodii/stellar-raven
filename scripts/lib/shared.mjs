@@ -35,11 +35,16 @@ export function parseEnvFile(path) {
  * escalating backoff; 4xx fails immediately. Final errors carry the label and
  * any err.cause detail (undici wraps DNS/socket errors there).
  */
-export async function fetchJson(url, { headers = {}, label = url } = {}) {
+export async function fetchJson(url, { headers = {}, label = url, method = "GET", body } = {}) {
   const attempts = 3;
   for (let attempt = 1; ; attempt += 1) {
     try {
-      const res = await fetch(url, { headers, signal: AbortSignal.timeout(30_000) });
+      const res = await fetch(url, {
+        method,
+        headers,
+        ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+        signal: AbortSignal.timeout(30_000)
+      });
       if (res.status >= 500 && attempt < attempts) throw new Error(`HTTP ${res.status}`);
       if (!res.ok) throw Object.assign(new Error(`${label}: HTTP ${res.status}`), { final: true });
       return await res.json();
