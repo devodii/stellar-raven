@@ -2,7 +2,7 @@
   <img src="./public/Gemini_Generated_Image_v5uajdv5uajdv5ua.png" alt="stellar-raven — thermal neural interface" width="100%">
 </p>
 
-# stellar-raven
+# Stellar Raven
 
 Remote MCP server (Cloudflare Workers) exposing two tools — `search` and `execute` — over a
 unified catalog of Stellar services. `execute` runs LLM-authored JS in a Dynamic Worker isolate
