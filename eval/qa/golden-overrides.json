@@ -1,0 +1,57 @@
+{
+  "$comment": "Hand-authored golden corrections, applied by compile-qa.mjs AFTER case assembly. The vendored corpus (eval/corpus/raven-next) is a verbatim read-only snapshot (see eval/corpus/PROVENANCE.md), so eval-side golden fixes live here instead of editing the archive. Each entry: `why` + `evidence` (live-verification provenance), per-field replacement of the compiled case's `golden` subfields, and `graderNotesAppend` (appended, preserving the original review trail). This file is load-time and hand-authored — recompiles never touch it. Stale ids (not in kept cases) are warned at compile time.",
+  "overrides": {
+    "q-scf-regional-india": {
+      "why": "Under-enumeration + support-relative avoid clause caused a judge artifact (round 2026-07-03T16-06-45's only wrong verdict, overturned on live review — all 10 'fabricated' India events exist verbatim in the live corpus). Solo todos 826/827, scratchpad 521.",
+      "evidence": [
+        "eval/qa/results/2026-07-03T16-06-45-variantA.json (q-scf-regional-india wrong → overturned)",
+        "Live production execute 2026-07-03: ~14 corpus-supported India items — 4 Build Stations (Kolkata, Kozhikode, Pune, Delhi-NCR w/ luma URLs), Bhopal + Jabalpur workshops, Goa Builders Camp, Private Dinner, 5 Inner Circle city events 2026-04-25, Rise In '250+ new projects from India' (article 246)",
+        "Solo project 49: scratchpad 521 (per-case review — the wrong), todos 826 + 827"
+      ],
+      "golden": {
+        "answer": "- Answer from Stellar corpora (scout_research / scout_builders / scout_hackathons + the Ambassador Program), NOT general web — the regional-community question is in-corpus.\n- India is an active Stellar region: the Ambassador Program supports builders/educators forming regional chapters (events, meetups, docs). Source: https://stellar.gitbook.io/ambassador-program\n- Ground the activity in evidence — the corpus records a dense 2026 India footprint: Stellar Build Station 21-day builder sprints in Kolkata, Kozhikode (Kerala), Pune, and Delhi-NCR; builder workshops in Bhopal and Jabalpur; a Goa Builders Camp; Inner Circle community events across five Indian cities (April 2026); and ecosystem coverage reporting 250+ new projects from India. Source: Stellar Light research corpus (https://stellarlight.xyz)\n- Regional chapters can recommend Instawards (≤ $15K XLM) for local builders; they do not hand out the $150K Build grant. Source: https://stellar.gitbook.io/ambassador-program",
+        "keyFacts": [
+          "Confirms an active India-region Stellar community via the Ambassador Program / regional chapters.",
+          "Grounds the answer in concrete ecosystem evidence — e.g. Stellar Build Station sprints (Kolkata, Kozhikode, Pune, Delhi-NCR), Bhopal/Jabalpur workshops, Goa Builders Camp, or Inner Circle India city events — rather than assumption. Naming India events beyond this illustrative list is acceptable, not fabrication."
+        ],
+        "avoid": [
+          "Do NOT cite the DoraHacks 'Build On Stellar National Bounty (India)' event — the 2026-06-29 corpus review could not confirm it and removed it; it is not in the live catalog.",
+          "Do NOT claim regional chapters or ambassadors can award the $150K SCF Build grant (they can only recommend Instawards ≤ $15K XLM).",
+          "Do NOT route to general web (Parallel) when curated ecosystem corpora cover the regional program."
+        ]
+      },
+      "graderNotesAppend": "Reviewed 2026-07-03 (round 2026-07-03T16-06-45, Solo scratchpad 521, todos 826/827): the prior golden under-enumerated live India activity — ~14 corpus-supported items live-verified (4 Build Stations incl. Pune and Delhi-NCR with luma URLs, Bhopal and Jabalpur workshops, Goa Builders Camp, Private Dinner, 5 Inner Circle city events on 2026-04-25, Rise In '250+ new projects from India', article 246). Agent answers naming these are corpus-grounded, not fabrication. The support-relative honesty clause ('beyond what the corpora support') was rewritten into concrete traps: a corpus-blind judge can only read 'corpus support' as 'the golden's enumeration', which re-criminalized beyond-golden specifics (judge-artifact class, todo 826)."
+    },
+    "q-ti-rpc-gettransactions-pagination-xdr": {
+      "why": "Golden's trap premise was false: it treated the 200 limit as Horizon-only, but RPC getTransactions itself is capped at 200 (hardcoded, default 50) per the live method page. The golden's own notes conceded phase 3 never verified a getTransactions numeric limit. Solo todo 827, scratchpad 521.",
+      "evidence": [
+        "eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-rpc-gettransactions-pagination-xdr)",
+        "Live 2026-07-03: developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions — limit 'can range from 1 to 200 — an upper limit that is hardcoded in Stellar-RPC for performance reasons', default 50",
+        "Root cause both sides missed it: RPC method reference pages unindexed in Algolia — improvements/stellar-docs/sd-003"
+      ],
+      "golden": {
+        "answer": "For Stellar RPC methods that support pagination, the cursor is opaque. Persist the last fully processed cursor and ledger position, call the next page with that cursor, process idempotently, then commit the new cursor only after your downstream write succeeds. Do not invent meaning from the cursor string.\n\nThe question's 200-record premise is right for `getTransactions`: its `limit` can range from 1 to 200 — an upper limit hardcoded in Stellar-RPC for performance reasons — and defaults to 50. Horizon REST pagination is separately `limit=1..200`. `getEvents` differs: default 100, up to 10000. Limits are per-method — check the current RPC method docs and provider behavior rather than assuming one shared cap. If pages are consistently full, latest-ledger distance grows, or your requested start point falls outside RPC retention, treat that as falling behind and backfill from an indexer/data lake/Hubble rather than assuming the cursor can recover all history.\n\nTo extract operations, affected accounts, trustline changes, and events, decode `resultMetaXdr` with a current Stellar SDK/XDR library. The Horizon-to-RPC migration docs explicitly point to transaction meta XDR for event/effect-style data. After decoding, inspect transaction envelopes/operations plus ledger-entry changes for account/trustline deltas, and contract events for Soroban/SAC transfer flows.",
+        "keyFacts": [
+          "Explains RPC cursor pagination: pass the returned opaque cursor into the next request and persist the last processed cursor/ledger transactionally.",
+          "States method limits correctly: RPC `getTransactions` allows limit 1-200 (hardcoded in Stellar-RPC, default 50); RPC `getEvents` allows 1-10000 (default 100); Horizon REST separately uses 1-200. Limits are per-method — check the RPC method docs rather than assuming one shared cap.",
+          "Describes fall-behind detection by comparing latest ledger/retention window and by treating full pages/backlog growth as a signal to backfill from a data lake/indexer rather than assuming cursor continuity forever.",
+          "Explains that `resultMetaXdr` must be XDR-decoded to inspect transaction metadata for operations, ledger-entry changes, affected accounts, trustline changes, and contract events."
+        ],
+        "avoid": [
+          "Do NOT claim the 200 limit is Horizon-only or that Stellar RPC has no 200-record cap — RPC `getTransactions` itself is capped at 200 (default 50).",
+          "Do NOT hard-code Horizon's 200 limit as the RPC getEvents limit.",
+          "Do NOT claim Stellar RPC fully replaces every Horizon endpoint or swap their roles.",
+          "Do NOT parse XDR blobs with string matching instead of SDK/XDR decoders."
+        ],
+        "sources": [
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions",
+          "https://developers.stellar.org/docs/data/apis/rpc/api-reference/structure/pagination",
+          "https://developers.stellar.org/docs/data/apis/migrate-from-horizon-to-rpc#endpoint-mapping",
+          "https://developers.stellar.org/docs/build/guides/transactions/send-and-receive-payments#summary",
+          "https://developers.stellar.org/docs/data/apis/horizon/api-reference/structure/pagination/page-arguments"
+        ]
+      },
+      "graderNotesAppend": "Corrected 2026-07-03 (todo 827, scratchpad 521): the live getTransactions method page (developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions) states limit 'can range from 1 to 200 — an upper limit that is hardcoded in Stellar-RPC for performance reasons' with default 50. The prior golden's claim that the 200 limit is Horizon's, not RPC's, was false (its own notes conceded phase 3 never verified a getTransactions numeric limit). Root cause of the two-sided miss: RPC method reference pages are unindexed in Algolia — improvements/stellar-docs/sd-003."
+    }
+  }
+}

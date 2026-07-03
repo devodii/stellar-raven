@@ -10,6 +10,11 @@
  *   - <sourceFile> YAML frontmatter  → expected_service, query_type, should_fire,
  *                                      difficulty (labels the compiled file drops)
  *
+ * Then applies eval/qa/golden-overrides.json — hand-authored, live-verified golden
+ * corrections (the corpus snapshot is verbatim/read-only per eval/corpus/PROVENANCE.md,
+ * so eval-side fixes land as overrides, never as archive edits). Load-time supplement,
+ * committed, never touched by recompiles.
+ *
  * Selection (deterministic; every drop recorded in `skipped` with a reason):
  *   keep  expected_service ∈ {stellar_docs, stellar_light, lumenloop}  — answerable
  *         by our catalog (three services + skills)
@@ -161,6 +166,24 @@ function main() {
     });
   }
 
+  // ---- hand-authored golden overrides (eval-side corrections; archive stays verbatim)
+  const overridesPath = path.join(QA_DIR, "golden-overrides.json");
+  const overrides = JSON.parse(readFileSync(overridesPath, "utf8")).overrides ?? {};
+  const overridesApplied = [];
+  for (const c of cases) {
+    const o = overrides[c.id];
+    if (!o) continue;
+    for (const [k, v] of Object.entries(o.golden ?? {})) c.golden[k] = v;
+    if (o.graderNotesAppend) {
+      c.graderNotes = [c.graderNotes, o.graderNotesAppend.trim()].filter(Boolean).join("\n");
+    }
+    overridesApplied.push(c.id);
+  }
+  const staleOverrides = Object.keys(overrides).filter((id) => !overridesApplied.includes(id));
+  if (staleOverrides.length > 0) {
+    console.warn(`WARN: golden-overrides target ids not in kept cases: ${staleOverrides.join(", ")}`);
+  }
+
   // ---- counts ----------------------------------------------------------------
   const countBy = (arr, fn) => {
     const m = {};
@@ -187,6 +210,7 @@ function main() {
       "Golden Q→A answer-accuracy battery. Compiled from the raven-next golden corpus " +
       "(content only; our own format — see eval/qa/README.md). Regenerate: node eval/qa/compile-qa.mjs",
     corpus: path.relative(REPO_ROOT, goldenPath),
+    overrides: { source: "eval/qa/golden-overrides.json", applied: overridesApplied },
     mapping: SERVICE_MAP,
     counts,
     cases,

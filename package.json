@@ -21,6 +21,7 @@
     "eval:selftest": "node eval/self-test.mjs",
     "eval:qa:compile": "node eval/qa/compile-qa.mjs",
     "eval:qa:selftest": "node eval/qa/judge.mjs --self-test",
+    "eval:qa:lint": "node eval/qa/lint-goldens.mjs",
     "eval:qa": "node eval/qa/run-qa.mjs"
   },
   "dependencies": {

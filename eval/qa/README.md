@@ -84,6 +84,18 @@ Battery counts (from 538 corpus cases): **469 kept** — 277 stellarDocs / 119 s
 beyond the kept quota, 4 raven-agent-specific traps (its brand, its Airtable tool, its web-fetch
 SSRF case). Every drop is listed in `cases.json → skipped` with its reason.
 
+**Golden overrides (`golden-overrides.json`).** The vendored corpus is a verbatim read-only
+snapshot (`eval/corpus/PROVENANCE.md`), so live-verified golden corrections land in
+`eval/qa/golden-overrides.json` — a hand-authored, committed, load-time supplement (same
+pattern as the routing overlay). `compile-qa.mjs` applies each entry after case assembly:
+per-field replacement of `golden` subfields plus `graderNotesAppend` (preserving the original
+review trail); applied ids are recorded in `cases.json → overrides`, stale ids warn at compile
+time. Every entry carries `why` + `evidence` (live re-execution provenance, Solo refs). First
+entries (2026-07-03, todo 827): `q-scf-regional-india` (under-enumeration + support-relative
+avoid clause → concrete traps) and `q-ti-rpc-gettransactions-pagination-xdr` (false
+200-is-Horizon-only premise; live method page says RPC getTransactions is 1–200 hardcoded,
+default 50 — root cause `improvements/stellar-docs/sd-003`).
+
 ## How to run
 
 ```sh
@@ -91,7 +103,8 @@ SSRF case). Every drop is listed in `cases.json → skipped` with its reason.
 node eval/qa/compile-qa.mjs                # writes eval/qa/cases.json
 node eval/qa/compile-qa.mjs --sample 30    # also writes eval/qa/sample.json (stratified)
 
-# 2. judge sanity check (3 hand-written candidates vs 1 case; ~3 CLI calls)
+# 2. judge sanity check (4 hand-written candidates vs 1 case; ~4 CLI calls —
+#    incl. the rubric-v2.1 support-relative-avoid regression guard)
 node eval/qa/judge.mjs --self-test
 
 # 3. boot the server, then run the battery
@@ -189,6 +202,34 @@ be bypassed by **avoid-clause phrasing** — a golden must-avoid banning claims 
 support" makes a corpus-blind judge read beyond-golden specifics as avoid-matched, wrong again.
 Treat any wrong verdict whose rationale cites a support-relative avoid item as suspect-artifact
 until live-verified.
+
+**Rubric v2.1 (2026-07-03, todo 826) — avoid-clause scoping.** The fix for the class above,
+shipped in the judge prompt: must-avoid items bind only on what the judge can check from the
+candidate answer itself — **concrete wrong content** (named wrong entity, retired command, wrong
+number/date/version, specific false statement) or an **answer-visible sourcing condition**
+("without a dated source": the judge can see whether the candidate gave one). Avoid items
+conditioned on support the judge CANNOT see — corpus, reviewer verification, cited records
+("beyond corpus support", "not verified by the reviewer") — are advisory and never generate
+`wrongClaims` by themselves. Verdicts now carry a `rubric` field (`JUDGE_RUBRIC` exported from
+`judge.mjs`), and the self-test includes a regression candidate for exactly this artifact (a
+support-relative avoid item + a beyond-golden specific must still grade correct).
+**Comparability:** same rule as the v2 addendum — re-judge saved `rows[].answer` before any
+cross-rubric-version comparison. The calibrated v2 record above (the two `rejudge-rubric2`
+files, 19/8/3 and 17/11/2) remains the baseline of record until a v2.1 re-judge supersedes it;
+do not diff a v2.1 run against pre-v2.1 verdicts directly.
+**Golden hygiene:** `npm run eval:qa:lint` (`eval/qa/lint-goldens.mjs`, warn-only, never a gate)
+flags support-relative phrasing in avoid lists in two tiers mirroring the judge rule —
+`judge-blind` findings (the artifact class) should be rewritten to concrete traps;
+`sourcing-guard` findings (answer-checkable) are informational and allowed.
+
+**Verification re-judge (2026-07-03, todos 826+827 closure):** the two overridden cases'
+saved answers from `2026-07-03T16-06-45` re-judged under corrected goldens + rubric v2.1:
+`q-scf-regional-india` **wrong → correct** (zero wrongClaims; the judge explicitly applies the
+unverified-not-wrong rule to the beyond-golden India events — the artifact class is closed),
+and `q-ti-rpc-gettransactions-pagination-xdr` **partial → wrong** — correctly so: the agent
+genuinely denied the RPC-side 200 cap (the sd-003 indexing gap), a real failure the old golden
+masked by encoding the same false belief. The 16-06-45 headline stays as recorded (rubric v2 +
+pre-override goldens); this re-judge is closure evidence, not a re-headline.
 
 ## Known limitations
 

@@ -14,15 +14,26 @@
  * means the judge itself failed (CLI error / unparseable output), never a
  * grade of the candidate.
  *
- * Self-test (no server needed; 3 hand-written candidates against 1 case):
+ * Self-test (no server needed; 4 hand-written candidates against 1 case):
  *   node eval/qa/judge.mjs --self-test
- * exits non-zero unless right→correct, partial→partial, wrong→wrong.
+ * exits non-zero unless right→correct, partial→partial, wrong→wrong, and the
+ * rubric-v2.1 support-relative-avoid regression candidate→correct.
  */
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { extractJsonObject } from "./lib.mjs";
 
 export const JUDGE_MODEL = "claude-sonnet-5";
+
+/**
+ * Rubric version, stamped into every verdict. Bump whenever the judge prompt
+ * changes grading semantics; comparability rules in eval/qa/README.md
+ * ("Judging rubric") — re-judge saved answers before any cross-run comparison.
+ *   v2   — 2026-07-03 addendum: beyond-golden specifics are unverified, not wrong.
+ *   v2.1 — 2026-07-03 avoid-clause scoping (todo 826): avoid items bind on
+ *          concrete content only; support-relative avoid items are advisory.
+ */
+export const JUDGE_RUBRIC = "v2.1";
 
 function buildJudgePrompt({ question, golden, tags, graderNotes, candidateAnswer }) {
   const trapBlock = tags?.trap
@@ -53,6 +64,7 @@ Grading rules:
 - A key fact counts as present if it is expressed in substance, even in different words or structure.
 - Punish fabrications hard: any specific claim that contradicts the golden answer or a key fact, or hits a must-avoid item, goes in wrongClaims.
 - Specific claims BEYOND the golden's scope are "unverified", not wrong: you cannot see the candidate's tool transcripts, so entities/numbers/citations the golden never mentions may be grounded in sources invisible to you. Such a claim counts toward wrongClaims ONLY if it CONTRADICTS a golden fact or matches a must-avoid item — never merely because you cannot verify it. (Trap cases are unaffected: fabricating the trap's missing thing is still playing along.)
+- Must-avoid items bind only on what you can check from the candidate answer itself: CONCRETE WRONG CONTENT (a named wrong entity, a retired command, a wrong number/date/version, a specific false statement) or an ANSWER-VISIBLE sourcing condition (e.g. "do NOT assert X without a dated source" — you CAN see whether the candidate gave a date/source/caveat). An avoid item conditioned on support you CANNOT see — the corpus, the reviewer's verification, the candidate's tool transcripts ("beyond corpus support", "not verified by the reviewer", "not in the cited records") — is ADVISORY: you are corpus-blind, so such an item can NEVER by itself put a candidate claim in wrongClaims; the unverified-not-wrong rule above applies instead. (Trap cases are unaffected.)
 - An honest "not available in my sources" on a sub-point is a missing fact, not a wrong claim.
 - score = "correct": all (or all but a trivial one) key facts present AND no wrong claims.
 - score = "partial": the core answer is right but key facts are missing, or there are minor errors that don't invert the answer. Omissions alone — even several — cap at "partial" as long as everything the candidate DOES say is right.
@@ -80,7 +92,8 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
       score: "error",
       missingFacts: [],
       wrongClaims: [],
-      rationale: `judge CLI failed: ${res.error?.message ?? `exit ${res.status}`}: ${String(res.stderr).slice(0, 500)}`
+      rationale: `judge CLI failed: ${res.error?.message ?? `exit ${res.status}`}: ${String(res.stderr).slice(0, 500)}`,
+      rubric: JUDGE_RUBRIC
     };
   }
   let envelope;
@@ -96,7 +109,8 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
       score: "error",
       missingFacts: [],
       wrongClaims: [],
-      rationale: `judge returned unparseable verdict: ${String(resultText).slice(0, 500)}`
+      rationale: `judge returned unparseable verdict: ${String(resultText).slice(0, 500)}`,
+      rubric: JUDGE_RUBRIC
     };
   }
   return {
@@ -104,7 +118,8 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
     missingFacts: Array.isArray(verdict.missingFacts) ? verdict.missingFacts : [],
     wrongClaims: Array.isArray(verdict.wrongClaims) ? verdict.wrongClaims : [],
     rationale: typeof verdict.rationale === "string" ? verdict.rationale : "",
-    costUsd: envelope?.total_cost_usd
+    costUsd: envelope?.total_cost_usd,
+    rubric: JUDGE_RUBRIC
   };
 }
 
@@ -150,14 +165,31 @@ const SELF_TEST_CANDIDATES = [
     expect: "wrong",
     answer:
       "Write your contract in Solidity, then run `soroban contract deploy --network testnet` — the old soroban CLI is still the current tool. No build step is needed because the CLI compiles Solidity for you, and you don't need any keys on testnet."
+  },
+  {
+    // Rubric v2.1 regression guard (todo 826): a support-relative avoid item must
+    // not route a beyond-golden specific into wrongClaims.
+    label: "support-relative-avoid",
+    expect: "correct",
+    avoidExtra: [
+      "Do NOT include specific claims that go beyond corpus support / are not verified by the reviewer."
+    ],
+    answer:
+      "First compile your contract to a Wasm file: run `stellar contract build` in the project. Make sure you have an identity with testnet funds (`stellar keys generate alice --network testnet --fund`). Then run `stellar contract deploy --wasm target/wasm32v1-none/release/your_contract.wasm --source alice --network testnet`. The command prints the deployed contract ID (starts with C...), which you pass to `stellar contract invoke --id <CONTRACT_ID> ...` to call it. You can also pass `--alias my_contract` at deploy time to store a local name for the contract ID, and reuse that alias in later invoke commands."
   }
 ];
 
 async function selfTest() {
-  console.log(`judge self-test — model ${JUDGE_MODEL}, 3 candidates, 1 case\n`);
+  console.log(`judge self-test — model ${JUDGE_MODEL}, rubric ${JUDGE_RUBRIC}, ${SELF_TEST_CANDIDATES.length} candidates, 1 case\n`);
   let failures = 0;
   for (const cand of SELF_TEST_CANDIDATES) {
-    const verdict = await judgeCase({ ...SELF_TEST_CASE, candidateAnswer: cand.answer });
+    const kase = cand.avoidExtra
+      ? {
+          ...SELF_TEST_CASE,
+          golden: { ...SELF_TEST_CASE.golden, avoid: [...SELF_TEST_CASE.golden.avoid, ...cand.avoidExtra] }
+        }
+      : SELF_TEST_CASE;
+    const verdict = await judgeCase({ ...kase, candidateAnswer: cand.answer });
     const ok = verdict.score === cand.expect;
     if (!ok) failures++;
     console.log(

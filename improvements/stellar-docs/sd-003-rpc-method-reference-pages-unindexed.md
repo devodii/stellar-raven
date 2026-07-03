@@ -7,6 +7,7 @@ evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-rpc-gettransactions-pagination-xdr)
   - live soft-empty on get_doc_page_sections for the getTransactions method page + WebFetch of the live page (2026-07-03 evening)
   - Solo project 49, todo 807, scratchpad 521
+  - 2026-07-03 corrected-golden re-judge (todo 827): the saved agent answer flips partial → wrong under the fixed golden — the agent explicitly denied a getTransactions 200 cap ("did not find RPC-doc confirmation"), a real wrong answer this gap causes that the old golden masked by encoding the same false belief
 ---
 
 ## Finding
@@ -34,6 +35,13 @@ op description admits the exclusion); `search_docs` /
 `search_rpc_horizon_data_docs` for the limit facts → no relevant hits;
 WebFetch of the live method page → the 1–200/default-50 text quoted
 above. Round record: Solo scratchpad 521 (batch-3 review report).
+
+Impact quantified (2026-07-03 follow-up, todo 827): after correcting the
+golden to the live method-page numbers, re-judging the saved agent answer
+flips it partial → wrong — the agent's denial of an RPC-side 200 cap is a
+genuine consumer-facing wrong answer produced by this indexing gap, not a
+grading nuance. Both the QA agent and the original golden author
+independently derived the same false belief from the indexed pages.
 
 ## Recommendation
 
