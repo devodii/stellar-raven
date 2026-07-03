@@ -474,8 +474,8 @@ function brand(): string {
 export function landingPage(): string {
   return (
     head(
-      "Stellar Raven — one MCP endpoint over the whole Stellar catalog",
-      "A remote MCP server for AI agents. search discovers across Lumenloop, Stellar Light/Scout, the Stellar docs, and a curated skills library; execute runs model-written JavaScript in a no-network sandbox. Connect Claude, Cursor, Codex, or any MCP client with one OAuth sign-in.",
+      "Stellar Raven — all of Stellar, one MCP endpoint for your agent",
+      "Give your AI agent all of Stellar in one connection. search discovers across Lumenloop, Stellar Light/Scout, the docs, and a curated skills library; execute runs the code that composes them, sandboxed with no network. Point Claude, Cursor, Codex, or any MCP client at Raven — one OAuth sign-in, no keys.",
       BASE
     ) +
     `<div class="stage"><canvas id="gl"></canvas></div><div class="scrim"></div>` +
@@ -483,9 +483,9 @@ export function landingPage(): string {
     `<main class="wrap"><section class="hero" id="connect"><div class="hero-in">
   <p class="eyebrow">Remote MCP server <span class="live"><span class="dot"></span>live</span></p>
   <h1 class="title">Stellar <span class="r">Raven</span></h1>
-  <p class="lede">One endpoint, two tools. <code>search</code> ranks across Lumenloop, Stellar
-    Light/Scout, the Stellar docs, and a curated skills library — then <code>execute</code> runs the
-    <b>model-written JavaScript</b> that composes them, in a sandbox with <b>no network</b>.</p>
+  <p class="lede"><b>One endpoint, two tools — all of Stellar.</b> <code>search</code> discovers across
+    the whole ecosystem; <code>execute</code> runs the code that composes it. Point any MCP client at
+    Raven — no keys, no glue.</p>
 
   <div class="connect">
     <div class="connect-head">
@@ -494,11 +494,11 @@ export function landingPage(): string {
     </div>
     <div class="tabs">${tabButtons()}</div>
     ${panels()}
-    <div class="connect-foot">One browser <b>OAuth sign-in</b> on first connect — no API key to paste.</div>
+    <div class="connect-foot">One browser <b>OAuth sign-in</b> on first connect — then your agent's code runs in a <b>no-network</b> sandbox.</div>
   </div>
 </div></section></main>` +
     `<footer><div class="wrap foot">
-  <div class="l">${escapeHtml(HOST)} <b>·</b> one MCP endpoint over the Stellar catalog</div>
+  <div class="l">${escapeHtml(HOST)} <b>·</b> all of Stellar, one MCP endpoint</div>
   <div class="foot-links">
     <a href="https://github.com/kalepail/stellar-raven" target="_blank" rel="noopener">GitHub</a>
     <a href="https://stellar.org" target="_blank" rel="noopener">Stellar</a>
