@@ -92,7 +92,17 @@ const asArray = (v) => (Array.isArray(v) ? v : [v]);
  */
 export function matchPlanRule(row, rulesDoc) {
   const override = rulesDoc.overrides?.[row.id];
-  if (override) return { ruleId: `override:${row.id}`, plan: normalizePlan(override) };
+  if (override) {
+    // Overrides are stop-gaps wearing their provenance (same doctrine as
+    // eval/qa/golden-overrides.json): refuse entries that don't cite the
+    // coverage doc justifying why the category rule is wrong here.
+    if (typeof override.comment !== "string" || override.comment.trim().length < 20) {
+      throw new Error(
+        `coverage-rules.json override "${row.id}" is missing its comment (≥20 chars citing the coverage doc)`
+      );
+    }
+    return { ruleId: `override:${row.id}`, plan: normalizePlan(override) };
+  }
   for (const rule of rulesDoc.rules) {
     const m = rule.match ?? {};
     if (m.category !== undefined && !asArray(m.category).includes(row.tags?.category)) continue;

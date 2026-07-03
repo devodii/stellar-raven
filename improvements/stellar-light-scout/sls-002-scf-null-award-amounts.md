@@ -7,6 +7,7 @@ evidence:
   - eval/qa/results/2026-07-03T03-49-35-variantA.json
   - eval/qa/results/2026-07-03T04-13-42-variantA.json
   - Solo project 49, todo 822, comments 2204-2210
+  - recurred live 2026-07-03: production searchProjects again returned Liqvid.xyz scfAwarded true / amount null (Solo scratchpad 521 follow-up probe)
 ---
 
 ## Finding

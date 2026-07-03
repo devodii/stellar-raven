@@ -90,11 +90,26 @@ snapshot (`eval/corpus/PROVENANCE.md`), so live-verified golden corrections land
 pattern as the routing overlay). `compile-qa.mjs` applies each entry after case assembly:
 per-field replacement of `golden` subfields plus `graderNotesAppend` (preserving the original
 review trail); applied ids are recorded in `cases.json → overrides`, stale ids warn at compile
-time. Every entry carries `why` + `evidence` (live re-execution provenance, Solo refs). First
-entries (2026-07-03, todo 827): `q-scf-regional-india` (under-enumeration + support-relative
-avoid clause → concrete traps) and `q-ti-rpc-gettransactions-pagination-xdr` (false
-200-is-Horizon-only premise; live method page says RPC getTransactions is 1–200 hardcoded,
-default 50 — root cause `improvements/stellar-docs/sd-003`).
+time.
+
+**Overrides are stop-gaps, not fixes.** An override corrects the eval's *copy* of the truth;
+the defect that made it necessary lives somewhere else and must be captured where it can
+actually get fixed — an upstream service gap goes to `improvements/`, an eval-side
+authoring/rubric flaw goes to a Solo todo, plain freshness drift gets named as such. This is
+enforced structurally: every entry must carry `why` (what was wrong), `evidence` (live
+re-execution provenance — a judge's opinion alone never justifies an override), and
+`rootCause` (non-empty: `improvements/` paths, `solo://` refs, or an explicit eval-side
+rationale), and **the compile refuses entries missing any of the three**. The integrity risk
+this guards against is score laundering — "correcting" a golden until the agent's answer
+grades right; the live-evidence bar plus the root-cause pointer keep every override auditable
+back to a defect that exists independently of the eval score. Entries are re-checkable on
+later rounds: when facts drift or the root cause is fixed upstream, update the entry with
+fresh evidence rather than letting it rot. First entries (2026-07-03, todo 827):
+`q-scf-regional-india` (under-enumeration + support-relative avoid clause → concrete traps;
+root causes: todo 826 rubric artifact + freshness drift) and
+`q-ti-rpc-gettransactions-pagination-xdr` (false 200-is-Horizon-only premise; live method
+page says RPC getTransactions is 1–200 hardcoded, default 50 — root cause
+`improvements/stellar-docs/sd-003`).
 
 ## How to run
 

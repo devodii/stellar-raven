@@ -39,7 +39,7 @@ Decide what changed (or what question you're asking) — that picks the instrume
 | Executor / adapter / envelope changes | + QA live-data lane (`--cases eval/qa/live-cases.json`) |
 | Tool-description / agent-prompt-surface change (tool descriptions, MCP instructions, nudges) | QA sample + plan regrade — behavior shifts, routing math doesn't |
 | Any QA run already stored | + plan regrade (free, offline) |
-| Upstream drift refresh landed | routing `--gate`; refresh `improvements/` statuses (drift is the natural checkpoint for `fixed-upstream` re-checks) |
+| Upstream drift refresh landed | routing `--gate`; refresh `improvements/` statuses (drift is the natural checkpoint for `fixed-upstream` re-checks) and re-check `eval/qa/golden-overrides.json` entries — they cite live facts that rot; update with fresh evidence |
 
 Tracking (Solo MCP, project 49): create or claim a todo for the round; open a scratchpad as
 the round's working record (numbers, per-case notes, triage table, findings drafted). Repo
@@ -161,13 +161,22 @@ For each miss/wrong/partial (and each surprising pass), classify and route:
 | Judge artifact | live re-execution contradicts the verdict | round record; re-judge; rubric note if a new failure mode |
 | Agent failure | tool use / synthesis genuinely wrong in transcript | round record; only actionable if a pattern → Solo todo (prompt/tool-shape) |
 | Own-repo gap: scoring/catalog/executor/adapters/normalizers | search buried the right entry; envelope/normalizer misread a payload | **Solo project 49 todo** — never improvements/ |
-| Eval-side gap: stale golden, mislabeled case, missing lane coverage | golden disagrees with live truth from the service's own mouth | Solo todo (goldens live in this repo); freshness-drifting truth moves to the live-data lane as behavioral golden |
+| Eval-side gap: stale golden, mislabeled case, missing lane coverage | golden disagrees with live truth from the service's own mouth | Solo todo (goldens live in this repo); the fix lands as an `eval/qa/golden-overrides.json` entry (the corpus archive is verbatim/read-only); freshness-drifting truth moves to the live-data lane as behavioral golden |
 | **Upstream data/content gap**: missing fields, unordered arrays, empty lanes, extraction quality, stale skill content | correct agent + correct plumbing still can't answer from what the service returns | **`improvements/` finding** |
 | **Upstream semantics/spec gap**: response contracts, error shapes, vocabulary, index tokenization/ranking | the service works but its self-description or behavior misleads any consumer, not just us | **`improvements/` finding** |
 
 Anti-overfitting rules bind here: zero-hit routing cases stay failing until a *general*
 mechanism fixes them; no query→service maps, no per-question vocabulary. If the only fix
 you can imagine is case-specific, the case stays red and the note says why.
+
+**Override doctrine — overrides are stop-gaps wearing their provenance.** A
+`golden-overrides.json` entry corrects the eval's *copy* of the truth; the defect that made
+it necessary lives somewhere else and MUST be captured where it can actually get fixed:
+upstream service gap → `improvements/` finding, eval-side authoring/rubric flaw → Solo todo,
+plain freshness drift → named as such. An override without its root-cause capture is a patch
+hiding a defect. This is compile-enforced (every entry needs `why` + live `evidence` +
+`rootCause`; `compile-qa.mjs` refuses entries missing any) — but the enforcement only checks
+the fields exist; the reviewer checks they're true.
 
 ## Step 6 — file the findings (the round's primary artifact)
 
@@ -223,6 +232,8 @@ Close-out checklist:
 - [ ] New/updated `improvements/` findings committed — a round with zero findings needs an
       explicit "nothing new surfaced, here's what was re-checked" note to be credible
 - [ ] Own-repo fixes filed as Solo todos (not improvements/, not silently patched)
+- [ ] Any new/changed golden override carries live evidence + `rootCause` (compile enforces
+      the fields; the reviewer verifies the substance) and its root cause is actually filed
 - [ ] Solo round todo closed with a comment linking scratchpad + results stamps
 
 ## Hard rules (violating any of these invalidates the round)

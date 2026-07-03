@@ -167,8 +167,22 @@ function main() {
   }
 
   // ---- hand-authored golden overrides (eval-side corrections; archive stays verbatim)
+  // Overrides are stop-gaps wearing their provenance: an override without live evidence
+  // and a root-cause capture is a patch hiding a defect. Enforced structurally, not by
+  // convention — an entry missing any of the three fields fails the compile.
   const overridesPath = path.join(QA_DIR, "golden-overrides.json");
   const overrides = JSON.parse(readFileSync(overridesPath, "utf8")).overrides ?? {};
+  for (const [id, o] of Object.entries(overrides)) {
+    const missing = [];
+    if (typeof o.why !== "string" || o.why.trim().length < 20) missing.push("why (string, ≥20 chars)");
+    if (!Array.isArray(o.evidence) || o.evidence.length === 0) missing.push("evidence (non-empty array — live re-execution provenance)");
+    if (!Array.isArray(o.rootCause) || o.rootCause.length === 0) {
+      missing.push("rootCause (non-empty array — improvements/ finding path, solo:// ref, or explicit eval-side rationale)");
+    }
+    if (missing.length > 0) {
+      throw new Error(`golden-overrides.json entry "${id}" is missing ${missing.join("; ")}`);
+    }
+  }
   const overridesApplied = [];
   for (const c of cases) {
     const o = overrides[c.id];

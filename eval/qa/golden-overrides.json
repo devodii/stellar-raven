@@ -1,5 +1,5 @@
 {
-  "$comment": "Hand-authored golden corrections, applied by compile-qa.mjs AFTER case assembly. The vendored corpus (eval/corpus/raven-next) is a verbatim read-only snapshot (see eval/corpus/PROVENANCE.md), so eval-side golden fixes live here instead of editing the archive. Each entry: `why` + `evidence` (live-verification provenance), per-field replacement of the compiled case's `golden` subfields, and `graderNotesAppend` (appended, preserving the original review trail). This file is load-time and hand-authored — recompiles never touch it. Stale ids (not in kept cases) are warned at compile time.",
+  "$comment": "Hand-authored golden corrections, applied by compile-qa.mjs AFTER case assembly. The vendored corpus (eval/corpus/raven-next) is a verbatim read-only snapshot (see eval/corpus/PROVENANCE.md), so eval-side golden fixes live here instead of editing the archive. OVERRIDES ARE STOP-GAPS WEARING THEIR PROVENANCE: an override corrects the eval's copy of the truth, but the defect that made it necessary lives somewhere — an upstream service gap (file it in improvements/), an eval-side authoring/rubric flaw (file a Solo todo), or plain freshness drift (say so). Every entry MUST carry `why` (what was wrong), `evidence` (live re-execution provenance — a judge's opinion alone never justifies an override), and `rootCause` (non-empty array of improvements/ paths, solo:// refs, or an explicit eval-side rationale) — compile-qa.mjs REFUSES entries missing any of the three. Entries are re-checkable: a future round that finds an entry's facts drifted updates it with fresh evidence. Mechanics: per-field replacement of the compiled case's `golden` subfields plus `graderNotesAppend` (preserving the original review trail); load-time and hand-authored — recompiles never touch it; stale ids (not in kept cases) warn at compile time.",
   "overrides": {
     "q-scf-regional-india": {
       "why": "Under-enumeration + support-relative avoid clause caused a judge artifact (round 2026-07-03T16-06-45's only wrong verdict, overturned on live review — all 10 'fabricated' India events exist verbatim in the live corpus). Solo todos 826/827, scratchpad 521.",
@@ -7,6 +7,10 @@
         "eval/qa/results/2026-07-03T16-06-45-variantA.json (q-scf-regional-india wrong → overturned)",
         "Live production execute 2026-07-03: ~14 corpus-supported India items — 4 Build Stations (Kolkata, Kozhikode, Pune, Delhi-NCR w/ luma URLs), Bhopal + Jabalpur workshops, Goa Builders Camp, Private Dinner, 5 Inner Circle city events 2026-04-25, Rise In '250+ new projects from India' (article 246)",
         "Solo project 49: scratchpad 521 (per-case review — the wrong), todos 826 + 827"
+      ],
+      "rootCause": [
+        "solo://proj/49/todo/judge-rubric-corpus--826 — the avoid-clause judge-artifact class (FIXED: rubric v2.1 + eval:qa:lint, commit 18e234f)",
+        "eval-side freshness drift: the corpus snapshot (authored ~2026-06) predates most of the live India footprint; no upstream service defect — the services returned the data correctly"
       ],
       "golden": {
         "answer": "- Answer from Stellar corpora (scout_research / scout_builders / scout_hackathons + the Ambassador Program), NOT general web — the regional-community question is in-corpus.\n- India is an active Stellar region: the Ambassador Program supports builders/educators forming regional chapters (events, meetups, docs). Source: https://stellar.gitbook.io/ambassador-program\n- Ground the activity in evidence — the corpus records a dense 2026 India footprint: Stellar Build Station 21-day builder sprints in Kolkata, Kozhikode (Kerala), Pune, and Delhi-NCR; builder workshops in Bhopal and Jabalpur; a Goa Builders Camp; Inner Circle community events across five Indian cities (April 2026); and ecosystem coverage reporting 250+ new projects from India. Source: Stellar Light research corpus (https://stellarlight.xyz)\n- Regional chapters can recommend Instawards (≤ $15K XLM) for local builders; they do not hand out the $150K Build grant. Source: https://stellar.gitbook.io/ambassador-program",
@@ -28,6 +32,10 @@
         "eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-rpc-gettransactions-pagination-xdr)",
         "Live 2026-07-03: developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions — limit 'can range from 1 to 200 — an upper limit that is hardcoded in Stellar-RPC for performance reasons', default 50",
         "Root cause both sides missed it: RPC method reference pages unindexed in Algolia — improvements/stellar-docs/sd-003"
+      ],
+      "rootCause": [
+        "improvements/stellar-docs/sd-003 (verified, awaiting upstream) — RPC method reference pages unindexed in Algolia; the upstream fix that would have prevented both the agent's and the golden author's error. When sd-003 is fixed-upstream, this override's facts should be re-verified against the then-indexed page but the correction itself remains valid.",
+        "solo://proj/49/todo/golden-fixes-q-scf-r--827"
       ],
       "golden": {
         "answer": "For Stellar RPC methods that support pagination, the cursor is opaque. Persist the last fully processed cursor and ledger position, call the next page with that cursor, process idempotently, then commit the new cursor only after your downstream write succeeds. Do not invent meaning from the cursor string.\n\nThe question's 200-record premise is right for `getTransactions`: its `limit` can range from 1 to 200 — an upper limit hardcoded in Stellar-RPC for performance reasons — and defaults to 50. Horizon REST pagination is separately `limit=1..200`. `getEvents` differs: default 100, up to 10000. Limits are per-method — check the current RPC method docs and provider behavior rather than assuming one shared cap. If pages are consistently full, latest-ledger distance grows, or your requested start point falls outside RPC retention, treat that as falling behind and backfill from an indexer/data lake/Hubble rather than assuming the cursor can recover all history.\n\nTo extract operations, affected accounts, trustline changes, and events, decode `resultMetaXdr` with a current Stellar SDK/XDR library. The Horizon-to-RPC migration docs explicitly point to transaction meta XDR for event/effect-style data. After decoding, inspect transaction envelopes/operations plus ledger-entry changes for account/trustline deltas, and contract events for Soroban/SAC transfer flows.",
@@ -52,6 +60,90 @@
         ]
       },
       "graderNotesAppend": "Corrected 2026-07-03 (todo 827, scratchpad 521): the live getTransactions method page (developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions) states limit 'can range from 1 to 200 — an upper limit that is hardcoded in Stellar-RPC for performance reasons' with default 50. The prior golden's claim that the 200 limit is Horizon's, not RPC's, was false (its own notes conceded phase 3 never verified a getTransactions numeric limit). Root cause of the two-sided miss: RPC method reference pages are unindexed in Algolia — improvements/stellar-docs/sd-003."
+    },
+    "q-builder-by-region-latam": {
+      "why": "Judge-blind avoid item ('without directory evidence') re-armed as concrete trap + answer-visible guard (rubric v2.1 makes support-relative items advisory; lint judge-blind residual from todo 826).",
+      "evidence": [
+        "Live production execute 2026-07-03: scout builder directory total 112 profiles; Brazil 10 (incl. Cleverson Silva/Boleto Guardian payments infra, Matheus Brasil Aguiar/ChatPay Go Labs), Chile 5 (incl. Bruno Miranda/ArcusX payments), Costa Rica 2 (incl. Brandon Fernandez/Kindfi), Colombia 1 (Miguel Nieto); Argentina/Mexico/Peru/Venezuela 0",
+        "location='Latin America' returns 0 (free-text field, country-level terms required); zero-match responses carry the structured filter-miss advisory as graderNotes describe",
+        "Solo project 49: todo 826 comment 2224 (residual list), scratchpad 521 follow-up section"
+      ],
+      "rootCause": [
+        "solo://proj/49/todo/judge-rubric-corpus--826 — judge-blind avoid phrasing predates the rubric-v2.1 corpus-blind constraint (eval-side authoring)",
+        "improvements/stellar-light-scout/sls-010 — builder-directory filters are literal substring (no region-synonym expansion, no semantic q fallback) and four LatAm countries have zero coverage; the upstream fix that would make region queries first-class"
+      ],
+      "golden": {
+        "avoid": [
+          "Do NOT claim the builder directory has no Latin-America builders or that the region is unrepresented — it contains builder profiles located in Brazil, Chile, Colombia, and Costa Rica.",
+          "Do NOT present specific builder names without attributing them to the builder directory (Stellar builders directory / stellarlight.xyz).",
+          "Do NOT route to general web (Perplexity/Parallel) for a curated builder-directory query."
+        ]
+      },
+      "graderNotesAppend": "Avoid list re-armed 2026-07-03 (todo 826 residual, live-verified): the support-relative item split into a concrete trap (LatAm builders verifiably exist — Brazil 10, Chile 5, Costa Rica 2, Colombia 1 at probe time; country names chosen over volatile counts for drift resistance) and an answer-visible attribution guard. Note: the location field is free-text — region terms like 'Latin America' return 0; candidates must fan out by country."
+    },
+    "q-crp-anchors-by-corridor": {
+      "why": "Judge-blind avoid item ('without dated evidence from the anchor or ecosystem directory') re-armed: the corpus-side condition dropped for a purely answer-visible dated-citation guard, plus a live-verified concrete trap on the MoneyGram footprint conflation the corpus itself contains.",
+      "evidence": [
+        "Live production execute 2026-07-03: scout 19 Live Anchor-type projects with named coverage (Yellow Card 20 African countries, HoneyCoin 18+ markets, Coins.ph PHP, MYKOBO EURC, ClickPesa TZS, Trace Finance BRL, Bitso/Alfred Pay LATAM, Fonbnk); scout.matchPartners returns dated (generatedAt) per-partner freshness — dated corridor sources are reachable, so the guard is satisfiable",
+        "MoneyGram figures mutually inconsistent in-corpus: Scout '170+ cash-out countries' (Stellar off-ramp), Beans record '185+', LumenLoop moneygram record 'over 200 countries and territories' (corporate money-transfer footprint, undistinguished + undated); golden graderNotes verified 174 off-ramp countries 2026-06-29",
+        "Solo project 49: todo 826 comment 2224, scratchpad 521 follow-up section"
+      ],
+      "rootCause": [
+        "solo://proj/49/todo/judge-rubric-corpus--826 — judge-blind avoid phrasing (eval-side authoring)",
+        "improvements/stellar-light-scout/sls-012 — no structured corridor/coverage fields anywhere (free-text prose only); the upstream fix that would make corridor claims groundable with dated structured evidence",
+        "improvements/lumenloop/ll-008 — the moneygram record presents the corporate 200+-country footprint undistinguished from the Stellar off-ramp; the in-corpus source of the conflation this trap catches"
+      ],
+      "golden": {
+        "avoid": [
+          "Do NOT name a specific anchor-to-country/currency corridor pairing (e.g. 'anchor X currently serves country Y') as currently live without citing a dated source for that pairing.",
+          "Do NOT attribute MoneyGram's 200+-country corporate money-transfer footprint to its Stellar USDC off-ramp — the Stellar cash-out network covers roughly 170-174 countries (as of 2026-06), not 200+.",
+          "Do NOT confuse SEP-defined APIs with a guarantee of liquidity, licensing, or coverage.",
+          "Do NOT collapse this into a last-mile mobile-money payout how-to; this question owns corridor selection, cost structure, and build-vs-integrate."
+        ]
+      },
+      "graderNotesAppend": "Avoid list re-armed 2026-07-03 (todo 826 residual, live-verified): dated-citation guard is answer-visible (and satisfiable — matchPartners returns dated, freshness-stamped corridor matches); new concrete trap targets the corporate-footprint/off-ramp conflation the corpus itself carries (LumenLoop 200+ corporate vs Scout 170+ / verified 174 off-ramp). The conflation framing resists rot better than a bare number: the corporate footprint always exceeds off-ramp coverage."
+    },
+    "q-defi-lending-scf-flagships": {
+      "why": "Judge-blind avoid item ('not present in the cited records') re-armed as a live-verified concrete trap (Orbit Finance unfunded vs OrbitCDP SCF-funded — distinct coexisting records) plus an answer-visible dated-amount guard.",
+      "evidence": [
+        "Live production execute 2026-07-03 (scout.searchProjects ×6): Blend (Script3) Live scfAwarded $50,000; Slender (EQ Lab) Live scfAwarded $296,750; DeFindex (Paltalabs) Live scfAwarded $150,000; Orbit Finance scfAwarded FALSE amount null; OrbitCDP scfAwarded $280,000 — separate records, divergent funding",
+        "Also surfaced SCF-funded lending-adjacent: Microvault $80k, Hatom Protocol $135k, Liqvid.xyz (funded, amount null)",
+        "Solo project 49: todo 826 comment 2224, scratchpad 521 follow-up section"
+      ],
+      "rootCause": [
+        "solo://proj/49/todo/judge-rubric-corpus--826 — judge-blind avoid phrasing (eval-side authoring)",
+        "improvements/stellar-light-scout/sls-008 — Orbit Finance / OrbitCDP duplicate-ish lending records with no cross-link or dedupe signal; the upstream fix that would remove the naming trap this item guards",
+        "freshness: SCF amounts are point-in-time (probe 2026-07-03); the dated-amount guard, not pinned numbers, absorbs future drift"
+      ],
+      "golden": {
+        "avoid": [
+          "Do NOT claim lending is greenfield or that no one has built lending on Stellar.",
+          "Do NOT list only generic EVM protocols such as Aave/Compound instead of Stellar-native projects.",
+          "Do NOT present the project 'Orbit Finance' as SCF-funded; it is unfunded and is a distinct project from OrbitCDP (which IS SCF-funded).",
+          "Do NOT state a specific SCF dollar amount for any project without attaching an as-of date or an explicit source reference for that figure in the answer."
+        ]
+      },
+      "graderNotesAppend": "Avoid list re-armed 2026-07-03 (todo 826 residual, live-verified): Orbit Finance scfAwarded:false vs OrbitCDP scfAwarded:true/$280k confirmed live — the trap names both records so a correct answer citing OrbitCDP as funded is NOT penalized. SCF amounts at probe time: Blend $50k, Slender $296,750, DeFindex $150k (do not hard-gate these — the dated-amount guard covers drift). Note: Scout's Blend total ($50k) looks under-aggregated vs peers; treat amounts as source-reported."
+    },
+    "q-eco-lobstr-wallet": {
+      "why": "Judge-blind avoid item ('beyond what the source data states') re-armed as an answer-visible marketing-attribution guard; no concrete number trap is safe because the two live sources disagree on LOBSTR's SCF total.",
+      "evidence": [
+        "Live production execute 2026-07-03: scout lobstr record — Ultra Stellar, User-Facing App, Live, scfTotalAwardedUSD 232000; lumenloop get_project lobstr — parent Ultra Stellar, scf awarded rounds [2,17,22] total 267463; the sources DISAGREE on the SCF total, so no dollar figure can be a hard trap",
+        "Neither live record carries any user/transaction counts (the 1M+/10M+ figures are LOBSTR marketing, absent from both records) and neither mentions XRP Ledger support",
+        "Solo project 49: todo 826 comment 2224, scratchpad 521 follow-up section"
+      ],
+      "rootCause": [
+        "solo://proj/49/todo/judge-rubric-corpus--826 — judge-blind avoid phrasing (eval-side authoring)",
+        "improvements/stellar-light-scout/sls-011 — Scout and Lumenloop disagree on the same project's SCF total (232,000 vs 267,463) with no documented counting basis; the upstream fix that would let amount claims be hard-gated",
+        "improvements/lumenloop/ll-008 — lobstr operating_region ['Indonesia'] vs based_in Estonia (record data-quality)"
+      ],
+      "golden": {
+        "avoid": [
+          "Do NOT claim LOBSTR is built/operated by the Stellar Development Foundation.",
+          "Do NOT present specific user or transaction scale figures (e.g. '1M+ users', '10M+ monthly transactions') as verified or official metrics — if such figures appear, they must be explicitly attributed as LOBSTR's own marketing claims."
+        ]
+      },
+      "graderNotesAppend": "Avoid list re-armed 2026-07-03 (todo 826 residual, live-verified): the scale-figures item is now an answer-visible attribution guard (the 1M+/10M+ figures are marketing-only, absent from both live records — a judge can check attribution from the answer text alone). Grading cautions from the live probe: the two sources disagree on the SCF total (Scout $232,000 vs Lumenloop $267,463 across rounds 2/17/22) — do not penalize either figure; and neither live record still mentions XRP Ledger support, so the golden's XRPL claim is no longer corpus-answerable — treat it as nice-to-have, never require it and never punish its absence."
     }
   }
 }
