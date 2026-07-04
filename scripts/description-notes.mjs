@@ -22,9 +22,24 @@
 // entity_type "person" answers success:true + all-empty groups even for the
 // most heavily covered people (control: organization returns full groups) —
 // an envelope-ok empty that reads as evidence of absence but is lane behavior.
+// Lumenloop/scout boundary contrast (Solo todo 835, agentic-lane evidence
+// 2026-07-03): after the stellar-light description enrichment, agent callers
+// took "what is X / who builds X" project-lookup questions to
+// scout.searchProjects even when the asker wanted the narrative/editorial
+// answer lumenloop carries. The pair of notes below (here and on
+// scout.searchProjects) states the contrast each side is blind to: lumenloop
+// = editorial context + directory descriptions, scout = structured fields.
+// Wording is collision-checked against the routing corpus (2026-07-04):
+// every non-trivial token is either already present in the entry or has zero
+// cross-labeled query hits ("narrative", "editorial", "context", "lane");
+// "who builds X" is a deliberate claim — that phrasing appears only in
+// lumenloop-labeled questions. Avoided on this side: hackathon, partner,
+// funding, award, live, history (all appear in scout/mixed-labeled queries).
 export const LUMENLOOP_DESCRIPTION_NOTES = {
   find_content_by_entity:
-    'Catalog note: entity_type "person" yields all-empty groups on this lane even for heavily covered people (live-verified 2026-07-03) — an empty person result is lane behavior, NOT evidence of absence. Use entity types project, organization, or token; for a person, use search_content_semantic with the person name instead.'
+    'Catalog note: entity_type "person" yields all-empty groups on this lane even for heavily covered people (live-verified 2026-07-03) — an empty person result is lane behavior, NOT evidence of absence. Use entity types project, organization, or token; for a person, use search_content_semantic with the person name instead.',
+  search_directory:
+    "Catalog note: prefer this lane plus find_content_about_project when a what is X or who builds X question wants narrative editorial context about a named ecosystem project; the scout project search returns structured fields only."
 };
 
 // ---------------------------------------------------------------------------
@@ -144,6 +159,14 @@ export function rewriteScoutRefs(text, pairs) {
 }
 
 export const SCOUT_DESCRIPTION_NOTES = {
+  // Boundary twin of LUMENLOOP_DESCRIPTION_NOTES.search_directory (todo 835)
+  // — see the collision-check rationale there. Avoided on this side: news,
+  // talks, content, coverage, written, builds (all appear in
+  // lumenloop-labeled queries and would lexically pull them toward scout);
+  // "articles", "AV", "interviews", "summaries", "editorial", "pieces" have
+  // zero query hits in the routing corpus (2026-07-04).
+  searchProjects:
+    "Catalog note: results are structured directory facts, not editorial pieces — for articles, AV, interviews, or research summaries about a project, use the lumenloop semantic and directory ops.",
   getHackathon:
     "Catalog note: winner order is only meaningful when hackathonPlacement is ordinal (1st Place, 2nd Place, ...) and placementRank is a number; many events label every winner just Winners with placementRank null — there the winners array order is NOT a ranking, so never assert finishing order from list position (live-verified 2026-07-03).",
   listSkills:

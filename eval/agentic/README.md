@@ -19,6 +19,38 @@ right tool for a golden question.
 - Grades: **primary** = primary tool's service matches the label; **any** = primary or an
   alternate hits the labeled service.
 
+## Results — 2026-07-04 (post lumenloop/scout boundary notes, Solo todo 835; `results/agentic-2026-07-04.json`, git-ignored/local-only)
+
+Catalog change under test: the paired catalog notes in `scripts/description-notes.mjs` —
+`lumenloop.search_directory` claims "what is X / who builds X" narrative-editorial questions,
+`scout.searchProjects` declares itself structured-facts-only and points editorial asks at
+lumenloop. Twin-aware (rule v2) throughout; workflow run `wf_35311ccf-657`, same 30
+`sample.json` cases:
+
+| scope | low primary | low any | medium primary | medium any |
+|---|---|---|---|---|
+| stellarDocs (12) | **100%** | 100% | **100%** | 100% |
+| scout (10) | **50%** | 70% | **50%** | 80% |
+| lumenloop (8) | **37.5%** | 62.5% | **37.5%** | 87.5% |
+| **overall (30)** | **66.7%** | 80% | **66.7%** | 90% |
+
+Reading (per-row diff vs `agentic-2026-07-03.json`, primary picks): the flips **at the tuned
+boundary all moved the intended way** — `q-defi-soroswap-what-is:low` (the follow-up idea #4
+flagship case) went scout.searchProjects → lumenloop.search_directory, and
+`q-edge-fresh-latest-blend-tvl` (both efforts) went scout.searchProjects →
+lumenloop.get_project; no case flipped toward scout.searchProjects. The six primary
+regressions vs 2026-07-03 (`q-edge-deep-no-budget-limit` ×2, `q-scf-ambassador-program:medium`,
+`q-scf-liquidity-award-amount:low`, `q-asset-rwa-tokenized-freshness:medium`,
+`q-defi-comet-content:low`) are all between op-pairs the notes never touched
+(research pipeline vs getPartners, search_doc_titles vs searchResearch, contract docs vs
+find_av_passages) and none of their recorded reasoning mentions either tuned description —
+single-run agent variance, not attributable to the change. Residual lumenloop misses
+(e.g. `q-eco-lobstr-wallet` → scout.searchProjects on "who builds LOBSTR and what is its
+scale") ask for exactly the structured fields the scout note claims, i.e. the known label
+ambiguity of interpretation #3, not a routing failure. Lexical instrument for the same
+change: routing gate PASS with 0 per-case regressions / 3 improvements
+(`routing-2026-07-04T02-50-10-035Z`). Nothing tuned per-question, numbers as-is.
+
 ## Results — 2026-07-03 (post src-hardening 62fa42d + stellar-light description enrichment 18e7357; `results/agentic-2026-07-03.json`, git-ignored/local-only)
 
 Twin-aware (routing rule v2) numbers; original v1-graded values in parentheses where they
@@ -66,8 +98,9 @@ lifting lumenloop any-hit to 87.5%/75% and medium primary to 37.5%; the boundary
    the openzeppelin skills. The 83.3% any-hit rate at both efforts is the better signal of
    usable routing; the primary-hit gap between services reflects real corpus overlap that
    single-service labels can't express.
-4. Follow-up ideas (not yet acted on): multi-label grading for overlap questions; description
-   boundary-tuning between lumenloop content search and scout structured lookups.
+4. Follow-up ideas: multi-label grading for overlap questions (not yet acted on); description
+   boundary-tuning between lumenloop content search and scout structured lookups — **acted on
+   2026-07-04** (Solo todo 835, results section above).
 
 ## Re-run
 
