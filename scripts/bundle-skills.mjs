@@ -15,13 +15,20 @@
  * `transport.path` exactly — the skills store resolves an entry's transport
  * straight into this map with no path arithmetic.
  *
- * Deterministic: sorted keys, content byte-identical to the mirror; running
- * twice yields a zero diff. Run via `npm run skills:bundle` after any
- * ecosystem-skills refresh (catalog rebuild and bundle rebuild go together).
+ * Exposure filtering (ADR-0003, data in scripts/exposure.mjs): retired skills
+ * contribute zero bytes, and the exposed bodies are scrubbed of
+ * retired-skill cross-references — the bundle is the EXPOSED surface, not a
+ * byte-copy of the mirror.
+ *
+ * Deterministic: sorted keys, content a pure function of the mirror + the
+ * exposure data; running twice yields a zero diff. Run via
+ * `npm run skills:bundle` after any ecosystem-skills refresh (catalog rebuild
+ * and bundle rebuild go together).
  */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { RETIRED_ONBOARDING_SKILLS, scrubRetiredSkillRefs } from "./exposure.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(readFileSync(join(root, "ecosystem-skills/MANIFEST.json"), "utf8"));
@@ -29,10 +36,15 @@ const manifest = JSON.parse(readFileSync(join(root, "ecosystem-skills/MANIFEST.j
 const files = {};
 for (const source of manifest.sources) {
   for (const skill of source.skills) {
+    // Retired skills ship zero bytes into the Worker: they have no catalog
+    // entry so codemode.skill.read can never resolve them — bundling their
+    // bodies would be dead weight and a latent leak. Bodies stay in the
+    // mirror as harvest source only.
+    if (RETIRED_ONBOARDING_SKILLS.has(skill.name)) continue;
     for (const file of skill.files ?? []) {
       if (!file.path.endsWith(".md")) continue; // markdown only — that's the exposed surface
       const rel = `ecosystem-skills/skills/${source.id}/${skill.name}/${file.path}`;
-      files[rel] = readFileSync(join(root, rel), "utf8");
+      files[rel] = scrubRetiredSkillRefs(readFileSync(join(root, rel), "utf8"), rel);
     }
   }
 }

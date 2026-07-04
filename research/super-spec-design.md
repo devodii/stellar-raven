@@ -3,8 +3,11 @@
 > **Status:** design doc for the super spec. The code-shaped `search` tool it was written around
 > was **retired by ADR-0001** (`research/decisions/0001-search-tool-shape.md`, accepted
 > 2026-07-02); the spec now feeds `execute`'s `codemode.spec()`, not a top-level search sandbox.
-> Read the code-shaped-`search` references below as the historical context in which the spec was
-> designed — the artifact and its build/test contract are current.
+> The deny-list model it was designed under was **retired by ADR-0003**
+> (`research/decisions/0003-build-time-exposure-filtering.md`, 2026-07-04): exposure is filtered
+> at BUILD time, so the spec contains only callable operations — there are no `x-policy`/`x-cost`
+> fields and no denied paths. Sections below have been updated to the ADR-0003 reality; read the
+> code-shaped-`search` references as the historical context in which the spec was designed.
 
 One unified, OpenAPI-3.1-style document covering every operation this MCP server can execute
 across four services — **lumenloop**, **scout** (Stellar Light), **stellarDocs** (Algolia-backed
@@ -31,7 +34,7 @@ Built by `scripts/build-super-spec.mjs` (`npm run spec:build`); asserted by
   every operation (belt and braces; grouping code can use either).
 - **`operationId` is the exact catalog id** (`lumenloop.search_directory`), which is byte-for-byte
   the sandbox call in `execute` (`await lumenloop.search_directory(args)`). Search→execute needs
-  zero translation; the allowed ops additionally carry the literal call line as `x-execute`.
+  zero translation; every op additionally carries the literal call line as `x-execute`.
 - Known (accepted) deviations from strict OpenAPI validity, all in service of grep-ability:
   - scout path templates lose their `{slug}` segments when re-keyed to the callable name; the
     original `in: "path"` parameters are kept as-is and the real HTTP shape rides along in
@@ -45,10 +48,7 @@ Built by `scripts/build-super-spec.mjs` (`npm run spec:build`); asserted by
 | Extension | Content |
 |---|---|
 | `x-service` | `lumenloop \| scout \| stellarDocs \| skills` |
-| `x-policy` | `{ allow, denyReason }` — **copied from catalog/manifest.json, never re-derived** (single source of truth for the deny-list; asserted identical by test) |
-| `x-cost` | `free \| metered` (only `lumenloop.request_research` is metered) |
-| `x-auth` | `none \| partner-key \| algolia-key` — handled host-side, informational |
-| `x-execute` | exact sandbox call line; present **only** on allowed ops |
+| `x-execute` | exact sandbox call line; present on **every** path (everything emitted is callable — ADR-0003; the former `x-policy`/`x-cost` extensions died with the deny-list) |
 | `x-upstream` | real HTTP `{method, path}` behind the callable (lumenloop/scout) |
 | `x-algolia` | stellarDocs only: the exact Algolia query mapping the adapter applies |
 | `x-skill-index` | only on `GET /skills/list_skills`: the full skill index (see §3) |
@@ -59,16 +59,18 @@ stellarDocs `backend` block **and measured corpus taxonomy**, skills mirror prov
 
 ## 2. Per-service mapping
 
-- **lumenloop (36 ops: 20 allowed, 16 denied).** The 21 cataloged tools (18 free + 3 partner
-  research) come from the inventory *tools union* — NOT the embedded OpenAPI `/tools/*` paths —
-  because that union carries `when_to_use` / `returns`, which are appended to each description
-  exactly as the catalog builder does. `input_schema` → `requestBody`, `output_schema` →
-  `responses.200`. `request_research` stays denied+metered (from the manifest). The 15 non-tool
-  endpoints in Lumenloop's embedded OpenAPI (account/billing: `/me*`, `/billing/topup`; discovery:
-  `/changelog`, `/tools`, `/skills*`) are included for honesty but **always denied** — no sandbox
-  fn exists for them; their schemas are dropped (dead weight on uncallable ops) while summary +
-  description stay greppable.
-- **scout (24 ops: 21 allowed, 3 denied).** The embedded upstream OpenAPI carried near-verbatim:
+- **lumenloop (18 exposed ops).** The exposed subset of the 21 inventory tools (the paid
+  research lane — `request_research` trigger plus its `research_result`/`list_my_research` read
+  half — is excluded at build time and never emitted) comes from the inventory *tools union* —
+  NOT the embedded OpenAPI `/tools/*` paths — because that union carries `when_to_use` /
+  `returns`, which are appended to each description exactly as the catalog builder does.
+  `input_schema` → `requestBody`, `output_schema` → `responses.200`. The 15 non-tool endpoints in
+  Lumenloop's embedded OpenAPI (account/billing: `/me*`, `/billing/topup`; discovery:
+  `/changelog`, `/tools`, `/skills*`) are **not in the spec at all** (ADR-0003 dropped the
+  "included for honesty but always denied" model — the spec describes only what code can call).
+- **scout (20 exposed of 24 upstream ops** — the write/side-effecting endpoints and the
+  feedback-schema dead end are excluded at build time**).** The embedded upstream OpenAPI carried
+  near-verbatim:
   summary/description/tags/parameters/requestBody/responses unchanged, pathItem-level parameters
   merged into each op (they'd be orphaned by re-keying), components copied under namespaced names
   (`#/components/schemas/scout.Project`) with all `$ref`s rewritten accordingly — every `$ref`
@@ -85,7 +87,7 @@ stellarDocs `backend` block **and measured corpus taxonomy**, skills mirror prov
 
 The catalog has 25 mirrored skills (**18 exposed** after the 2026-07-03 retirement, ADR-0002) +
 203 skill-sections. Emitting a path per skill (or per section) would bloat `paths` with entries
-that are not operations (nothing is *called* per skill) and drown the 75 real operations in
+that are not operations (nothing is *called* per skill) and drown the 50 real operations in
 200+ pseudo-paths. Instead the skills service is **3 operations + an embedded index**, designed
 around "deliver skill context when and as relevant":
 
@@ -94,7 +96,7 @@ around "deliver skill context when and as relevant":
   description (its "when to use" text) and `sections` is the **heading list only** (every `##`
   heading of SKILL.md plus `file:<relpath>` keys for extra reference files; bodies are NOT in the
   spec). 203 section keys total — asserted 1:1 against the catalog's exposed skill-section ids
-  (the index is policy-filtered from the same manifest deny-list), so every listed section is
+  (the index is built from the same build-time-filtered manifest), so every listed section is
   guaranteed readable. Its `x-execute` shows the trick: the list is satisfied
   from the spec itself, `(await codemode.spec()).paths["/skills/list_skills"].get["x-skill-index"]`
   — works identically in the search sandbox and in execute.
@@ -106,26 +108,25 @@ around "deliver skill context when and as relevant":
 
 Honesty rule: skills ops never pretend to be `skills.*` sandbox globals (none exist); each op's
 `x-execute` names the actual `codemode.*` call. Lumenloop's 14 API-served skills stay out of this
-index (metadata-only upstream, and all 14 are now deny-listed by the twin de-dup, ADR-0002);
-their mirrored bodies live in the `skills.*` mirror via the exact-name alias in
-`src/skills/store.ts` — the 7 transport-agnostic playbooks among the 18 exposed, the 7
-API-onboarding skills retired.
+index (metadata-only upstream; since ADR-0003 they are simply never emitted — the
+`lumenloop.skill.*` twin namespace and the store read-alias are both gone); their mirrored bodies
+live under canonical `skills.*` ids — the 7 transport-agnostic playbooks among the 18 exposed,
+the 7 API-onboarding skills retired.
 
 ## 4. Size — measured, not guessed
 
-From `npm run spec:build` (current — 2026-07-03 inventory snapshots; sizes drift with each daily
-refresh, so treat exact bytes as as-of-2026-07-03, not invariants):
+From `npm run spec:build` (current — 2026-07-04, post-ADR-0003 exposure filtering; sizes drift
+with each daily refresh, so treat exact bytes as as-of-2026-07-04, not invariants):
 
 | Measure | Value |
 |---|---|
-| Paths / operations | 75 paths / 75 operations (36 lumenloop, 24 scout, 12 stellarDocs, 3 skills) |
-| Denied operations | 19 (16 lumenloop, 3 scout) |
-| Pretty (checked-in) | **273,899 bytes** |
-| Compact — the serialized in-sandbox form | **179,445 bytes ≈ 44,861 tokens** (4 chars/token, upstream's own heuristic) |
-| Largest single op | `skills.list_skills` (~20 KB — the embedded index), then `lumenloop.research_result` (~5.5 KB) |
+| Paths / operations | 53 paths / 53 operations, all callable (18 lumenloop, 20 scout, 12 stellarDocs, 3 skills) |
+| Pretty (checked-in) | **235,785 bytes** |
+| Compact — the serialized in-sandbox form | **152,948 bytes ≈ 38,237 tokens** (4 chars/token, upstream's own heuristic) |
+| Largest single op | `skills.list_skills` (~20 KB — the embedded index) |
 
 Decision: **the full spec ships — no trimmed search view.** The brief's threshold was ~300 KB;
-compact is 180 KB, well under. Note these tokens never enter the model's context: the spec is
+compact is ~150 KB, well under. Note these tokens never enter the model's context: the spec is
 injected into the *sandbox source* (one-shot isolate); the model sees only the ≤6k-token result.
 The per-call cost is isolate CPU/memory, and the serialized spec string is cached per isolate
 (`getSerializedSpec()` in src/executor/run.ts) so it is escaped/stringified once, not per call.
@@ -172,8 +173,10 @@ Deliberate deltas (each with rationale):
    into `execute`'s sandbox. Inside execute, `codemode.spec()`, `codemode.search`, and
    `codemode.catalog()` all remain (the catalog view and the spec answer different grains: flat
    scored entries vs full OpenAPI shapes).
-5. **Denied ops are visible in the spec** with `x-policy.allow=false` + reason (upstream has no
-   policy concept). See-but-not-call, consistent with `codemode.catalog()`.
+5. **~~Denied ops visible with `x-policy.allow=false`~~ — retired by ADR-0003.** The original
+   delta made denied ops see-but-not-call; build-time exposure filtering removed the policy
+   concept entirely, so this delta no longer exists (the spec now matches upstream in having no
+   policy fields — everything emitted is callable).
 6. **Skills as a first-class service** (§3) — no upstream analog.
 7. **Envelope guard prelude** (src/executor/providers.ts `envelopeGuardPrelude`; upstream returns
    dispatch results raw). Observed LLM failure mode in production (2026-07-02, Claude Desktop):
@@ -194,9 +197,10 @@ Deliberate deltas (each with rationale):
 ## 6. Test coverage
 
 - `test/super-spec.test.ts` — determinism (double build byte-identical + artifact freshness),
-  per-service counts, path/operationId invariants, x-execute presence rules, policy identity with
-  the catalog, skills index ↔ catalog section 1:1 (all 203 exposed), read_skill enum = 18
-  exposed ids, stellarDocs x-algolia, scout $ref resolvability, <300 KB compact budget.
+  per-service counts (exposed ops only, ADR-0003), path/operationId invariants, x-execute on
+  every op, spec = manifest consistency both directions, skills index ↔ catalog section 1:1
+  (all 203 exposed), read_skill enum = 18 exposed ids, stellarDocs x-algolia, scout $ref
+  resolvability, <300 KB compact budget.
 - `test/spec-sandbox.test.ts` — generated-source shape, `</` escaping, fence normalization, and
   the wrapper EVALUATED under Node: $ref inlining, `$circular`, external-ref pass-through, lazy
   spec caching, in-sandbox truncation format, host-side helpers, host/sandbox resolver parity,

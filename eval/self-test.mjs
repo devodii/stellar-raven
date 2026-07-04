@@ -18,7 +18,7 @@ const E = {
   llDirectory: { id: "lumenloop.search_directory", service: "lumenloop", kind: "operation", score: 0, description: "" },
   skillContracts: { id: "skills.stellar-dev.smart-contracts", service: "skills", kind: "skill", score: 0, description: "" },
   skillContractsSection: { id: "skills.stellar-dev.smart-contracts#storage", service: "skills", kind: "skill-section", score: 0, description: "" },
-  skillBilling: { id: "skills.lumenloop-api.lumenloop-api-billing", service: "skills", kind: "skill", score: 0, description: "" },
+  skillDossier: { id: "skills.lumenloop.stellar-project-dossier", service: "skills", kind: "skill", score: 0, description: "" },
 };
 const rank = (...entries) => entries.map((e, i) => ({ ...e, score: 1 - i * 0.1 }));
 
@@ -56,9 +56,9 @@ check("cardMatches: skills_ prefix maps to skills service; terminal name matches
   assert.equal(cardMatches("skills_smart_contracts", E.skillContracts), true);
   // a section of the right skill also counts (id carries a #fragment suffix)
   assert.equal(cardMatches("skills_smart_contracts", E.skillContractsSection), true);
-  assert.equal(cardMatches("skills_lumenloop_api_billing", E.skillBilling), true);
+  assert.equal(cardMatches("skills_stellar_project_dossier", E.skillDossier), true);
   // wrong skill under the same service must not match
-  assert.equal(cardMatches("skills_smart_contracts", E.skillBilling), false);
+  assert.equal(cardMatches("skills_smart_contracts", E.skillDossier), false);
   // wrong service must not match even with a similar op name
   assert.equal(cardMatches("skills_search_directory", E.llDirectory), false);
 });
@@ -129,7 +129,7 @@ check("no expected_any -> result shape unchanged (no any* fields), strict math i
   );
 });
 check("skills-lane case: strict grading with skills as expected_service + skills card@5", () => {
-  const g = gradeCase(rank(E.skillBilling, E.docsSearch), "skills", ["skills_lumenloop_api_billing"]);
+  const g = gradeCase(rank(E.skillDossier, E.docsSearch), "skills", ["skills_stellar_project_dossier"]);
   assert.deepEqual(g, { top1: true, top3: true, top5: true, cardHit5: true });
   // right service, wrong skill -> service metrics hit, card metric misses
   const g2 = gradeCase(rank(E.skillContracts), "skills", ["skills_lumenloop_api_billing"]);

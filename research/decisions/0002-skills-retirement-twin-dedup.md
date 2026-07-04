@@ -1,6 +1,9 @@
 # ADR-0002: Retire the Lumenloop API-onboarding skills and de-dup the `lumenloop.skill.*` metadata twins
 
-- Status: accepted (2026-07-03)
+- Status: accepted (2026-07-03); mechanism superseded by
+  [ADR-0003](./0003-build-time-exposure-filtering.md) (2026-07-04) — the retirements stand, but
+  the deny-list-as-manifest-data model described below was replaced by build-time exposure
+  filtering (excluded surfaces are never emitted; there is no `policy` field and no runtime deny)
 - Decision rule (user): the catalog exposes only surfaces that are correct *in this deployment* —
   a skill or entry that is redundant, unreadable, or actively misleading inside the sandbox is
   removed from exposure as **data in the manifest** (CLAUDE.md deny-list rule), never by prose or

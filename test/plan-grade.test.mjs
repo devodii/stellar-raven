@@ -236,8 +236,11 @@ describe("build-op-classes — generated classes stay in sync with the catalog",
     expect(classifyOp("stellarDocs.search_docs").cls).toBe("broad");
     expect(classifyOp("scout.getHackathons").cls).toBe("broad"); // plural override
     expect(classifyOp("scout.getHackathon").cls).toBe("detail");
-    expect(classifyOp("lumenloop.request_research").cls).toBe("meta"); // metered
+    expect(classifyOp("scout.getStatus").cls).toBe("meta"); // override
     expect(classifyOp("scout.someFutureThing").matched).toBe(false); // → warned
+    // Build-time-excluded ops (ADR-0003) carry no override — they classify
+    // like any other unknown name an LLM might hallucinate.
+    expect(classifyOp("lumenloop.request_research").matched).toBe(false);
   });
 
   it("committed op-classes.json matches a fresh build (no hand edits, no unmatched)", () => {

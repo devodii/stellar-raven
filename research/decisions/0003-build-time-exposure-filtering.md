@@ -91,8 +91,21 @@ in the model-facing world.
 | `codemode.catalog()` | all entries, policy visible | exposed entries only |
 | Runtime policy checks | deny + metered + args | **args only** |
 
+- **2026-07-04 follow-up (same mechanism, applied further; the table above is the decision-time
+  record):** the post-ship audit found dead-end read-halves and description leaks, all removed —
+  `scout.getFeedbackSchema` (schema feeder for the excluded feedback write),
+  `lumenloop.research_result` + `lumenloop.list_my_research` (read half of the non-exposed paid
+  research lane). Excluded-endpoint clauses are scrubbed from exposed scout descriptions
+  (`SCOUT_DESCRIPTION_SCRUBS`), retired-skill cross-references are scrubbed from emitted skill
+  text AND the Worker bundle (which no longer ships retired-skill bytes at all), the exclusion
+  data is consolidated in `scripts/exposure.mjs` shared by every emitter, and
+  `assertNoNonExposedRefs` fails the build on any emitted reference to a non-exposed surface.
+  Counts moved 274→**271** entries, 53→**50** service ops (lumenloop 18, scout 20,
+  stellarDocs 12), 56→**53** super-spec paths.
 - Enabling `lumenloop.request_research` later is a deliberate feature: remove the exclusion at
-  build time AND build the budget-gate + dedup runtime (PLAN §8) in the same change.
+  build time (all three research ops — the trigger and its read half `research_result` /
+  `list_my_research` — travel together) AND build the budget-gate + dedup runtime (PLAN §8) in
+  the same change.
 - ADR-0002's "Reads are unaffected" line was already stale before this change (reads were
   policy-gated in the shipped code); under ADR-0003 the question is moot — there is nothing
   denied to read.

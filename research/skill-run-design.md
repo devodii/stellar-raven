@@ -37,11 +37,12 @@ When a runnable candidate exists it enters the catalog as **data**, per CLAUDE.m
 ## Q3 — policy inheritance: automatic by construction
 
 The snippet executes against the same sandbox providers as the calling script, so
-every control is enforced at the same choke points it is today: denied ops stay denied
-(policy is per-op at dispatch, not per-entry-point), the paid Lumenloop research gate
-applies at the adapter, `globalOutbound: null` holds, and any embedded `skill.read`
-inherits the fail-closed section posture (62fa42d). No new enforcement surface is
-created — this is the main reason the contract above is cheap to hold in reserve.
+every control is enforced at the same choke points it is today: non-exposed ops simply
+do not exist as sandbox fns (exposure is filtered at build time per ADR-0003 — the paid
+research lane is never emitted, so there is no runtime gate to inherit),
+`globalOutbound: null` holds, and any embedded `skill.read` inherits the fail-closed
+section posture (62fa42d). No new enforcement surface is created — this is the main
+reason the contract above is cheap to hold in reserve.
 
 ## Why not build it speculatively
 

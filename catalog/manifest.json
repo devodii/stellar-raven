@@ -963,51 +963,6 @@
       }
     },
     {
-      "description": "List your account's past research reports, most recent first. Returns metadata plus a run_id you can pass to research_result for the full report.\n\nWhen to use: List YOUR account's commissioned reports (most recent first) — e.g. to avoid re-commissioning a question you already paid for. LumenLoop's public research is list_research.\n\nReturns: { results: [{ run_id, status ('completed'/'failed'/'running'), started_at, title, slug, format, summary, created_at }] } — legacy rows can carry nulls. Pass run_id to research_result for the report.",
-      "id": "lumenloop.list_my_research",
-      "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "additionalProperties": false,
-        "properties": {
-          "limit": {
-            "description": "Max rows (default 25).",
-            "maximum": 100,
-            "minimum": 1,
-            "type": "number"
-          }
-        },
-        "type": "object"
-      },
-      "kind": "operation",
-      "outputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "additionalProperties": false,
-        "properties": {
-          "results": {
-            "description": "Array of your commissioned reports: run_id, title, status, created_at.",
-            "items": {},
-            "type": "array"
-          },
-          "text": {
-            "description": "Present instead of the data fields when the tool reports a plain-text message."
-          }
-        },
-        "type": "object"
-      },
-      "provenance": {
-        "fetchedAt": "2026-07-02T13:59:07.782Z",
-        "source": "https://api.lumenloop.com/v1/tools",
-        "tier": "partner"
-      },
-      "service": "lumenloop",
-      "transport": {
-        "base": "https://api.lumenloop.com",
-        "method": "POST",
-        "path": "/v1/tools/list_my_research",
-        "type": "http"
-      }
-    },
-    {
       "description": "List research drafts with optional filters. Used by drafter agents for dedup (\"has anything similar been drafted lately?\") and by agents needing to reference prior work. Returns preview fields only — call get_document(collection=\"research\", id) for full body.\n\nWhen to use: Browse LumenLoop's own published research/editorial pieces (previews) — id, title, summary, links.\n\nReturns: Array of research previews: id, title, format, status, summary, created_at — not full bodies.",
       "id": "lumenloop.list_research",
       "inputSchema": {
@@ -1070,8 +1025,7 @@
         "ai",
         "ready",
         "processed",
-        "failed",
-        "count"
+        "failed"
       ],
       "kind": "operation",
       "outputSchema": {
@@ -1102,99 +1056,6 @@
         "base": "https://api.lumenloop.com",
         "method": "POST",
         "path": "/v1/tools/list_research",
-        "type": "http"
-      }
-    },
-    {
-      "description": "Fetch the result of a request_research run. While running, returns status + a partner-safe progress summary: phase, steps, searches_run, sources_read, elapsed_s, last_activity_s (heartbeat), stalled, eta_s + pct (estimates from historical run durations), poll_after_s (when to check back), and a ready-to-relay message — surface progress.message to your user verbatim. Pass wait_s (max 45) to long-poll: the call holds until the run finishes, the phase changes, or the window expires, then returns the current state. When complete: report runs return the report + sources + citations; source-pack runs (output_format='sources') return pack (title + overview) + sources; structured runs (output_format='structured') return data (conforming to your schema) + basis (per-field citations, reasoning, confidence) + sources; answer runs (output_format='answer') return answer + citations + confidence — these complete in seconds, so the first poll usually returns the completed result (wait_s works as-is). Each source carries title, url, author, date, tags, and Lumen Loop's AI summaries. You can only read research your own account triggered.\n\nWhen to use: Poll a request_research run by run_id (pass wait_s, max 45, to long-poll — returns early on completion or a phase change), and re-fetch past reports you own.\n\nReturns: While running: { status: 'running', progress } — progress carries phase, step counts (searches_run/sources_read), elapsed_s, a last_activity_s heartbeat + stalled flag, eta_s/pct estimates, poll_after_s (when to check back), and a relay-ready message. When done (status 'completed'): report runs return { status, output_format: 'report', report, sources, citations }; source-pack runs return { output_format: 'sources', pack: { title, overview }, sources, citations }; structured runs return { output_format: 'structured', data, schema, basis: [{field, citations, reasoning, confidence}], sources, citations }; answer runs return { output_format: 'answer', answer, citations, confidence } and complete in seconds — the first poll usually returns the completed result. Each source: type, id/slug, title, url, author, date, tags, summary, long_summary, and (packs) the curator's note. You can only read research your own account commissioned.",
-      "id": "lumenloop.research_result",
-      "inputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "additionalProperties": false,
-        "properties": {
-          "run_id": {
-            "description": "The run_id (a UUID) returned by request_research.",
-            "format": "uuid",
-            "type": "string"
-          },
-          "wait_s": {
-            "description": "Long-poll: hold the request up to this many seconds, returning early when the run completes or the phase changes. 0/omitted = answer immediately.",
-            "maximum": 45,
-            "minimum": 0,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "run_id"
-        ],
-        "type": "object"
-      },
-      "keywords": [
-        "reason"
-      ],
-      "kind": "operation",
-      "outputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "additionalProperties": false,
-        "properties": {
-          "answer": {
-            "description": "The cited answer text (answer runs, when complete)."
-          },
-          "basis": {
-            "description": "Per-field evidence: [{field, citations, reasoning, confidence}] (structured runs)."
-          },
-          "citations": {
-            "description": "Flat {title,url} citations (when complete)."
-          },
-          "confidence": {
-            "description": "'high' | 'low' (answer runs)."
-          },
-          "data": {
-            "description": "Object conforming to your output_schema (structured runs)."
-          },
-          "output_format": {
-            "description": "'report', 'sources', 'structured', or 'answer' (when complete)."
-          },
-          "pack": {
-            "description": "{ title, overview } (source-pack runs, when complete)."
-          },
-          "progress": {
-            "description": "Coarse progress while running (phase, steps, elapsed)."
-          },
-          "reason": {
-            "description": "Failure/skip reason, if any."
-          },
-          "report": {
-            "description": "The synthesized report (report runs, when complete)."
-          },
-          "schema": {
-            "description": "Echo of the output_schema the data conforms to (structured runs)."
-          },
-          "sources": {
-            "description": "Resolved sources: type, id/slug, title, url, author, date, tags, AI summaries, note."
-          },
-          "status": {
-            "description": "running | complete | failed."
-          },
-          "text": {
-            "description": "Present instead of the data fields when the tool reports a plain-text message."
-          },
-          "title": {
-            "description": "Dataset title (structured runs)."
-          }
-        },
-        "type": "object"
-      },
-      "provenance": {
-        "fetchedAt": "2026-07-02T13:59:07.782Z",
-        "source": "https://api.lumenloop.com/v1/tools",
-        "tier": "partner"
-      },
-      "service": "lumenloop",
-      "transport": {
-        "base": "https://api.lumenloop.com",
-        "method": "POST",
-        "path": "/v1/tools/research_result",
         "type": "http"
       }
     },
@@ -1880,30 +1741,6 @@
         "base": "https://stellarlight.xyz",
         "method": "GET",
         "path": "/api/clusters",
-        "type": "http"
-      }
-    },
-    {
-      "description": "Get the feedback request schema (discovery). Returns the expected POST body shape + valid kind values, so an agent can self-discover how to submit feedback without guessing. No side effects. Use when: you're about to POST feedback and want the schema first — kind enum, required fields, size limits. Not for: actually submitting feedback → scout.submitFeedback; browsing what's been reported → not exposed (curator queue is private).",
-      "id": "scout.getFeedbackSchema",
-      "inputSchema": {
-        "properties": {},
-        "type": "object"
-      },
-      "kind": "operation",
-      "outputSchema": {
-        "type": "object"
-      },
-      "provenance": {
-        "fetchedAt": "2026-07-04T16:09:14.327Z",
-        "openapiVersion": "1.4.4",
-        "source": "https://stellarlight.xyz/api/openapi.json"
-      },
-      "service": "scout",
-      "transport": {
-        "base": "https://stellarlight.xyz",
-        "method": "GET",
-        "path": "/api/feedback",
         "type": "http"
       }
     },
@@ -2665,7 +2502,7 @@
       }
     },
     {
-      "description": "AI-rank partners against a plain-language need. Describe a builder need in plain language (e.g. 'I need a USDC off-ramp in Mexico with SEP-24') and get the published partners RANKED by fit, each with a one-line reason. Grounded: only real published partners are ranked — nothing is invented. Requires the service to have AI configured; returns 503 unavailable:true otherwise (fall back to scout.getPartners filters). Use when: an agent needs a scored shortlist for a concrete integration need. Not for: browsing the full directory → scout.getPartners; interactive human chat → the /partners/chat page (backed by scout.partnerAssistant).",
+      "description": "AI-rank partners against a plain-language need. Describe a builder need in plain language (e.g. 'I need a USDC off-ramp in Mexico with SEP-24') and get the published partners RANKED by fit, each with a one-line reason. Grounded: only real published partners are ranked — nothing is invented. Requires the service to have AI configured; returns 503 unavailable:true otherwise (fall back to scout.getPartners filters). Use when: an agent needs a scored shortlist for a concrete integration need. Not for: browsing the full directory → scout.getPartners.",
       "id": "scout.matchPartners",
       "inputSchema": {
         "properties": {
@@ -2697,7 +2534,7 @@
       }
     },
     {
-      "description": "AI onboarding helpers: interview chat + profile extraction. Two modes for the get-listed flow. {mode:'chat', messages} → interview-style reply for a company describing itself. {mode:'extract', messages} → structures the transcript into partner-profile fields (tagline, services, sectors, regions, contact…; null where nothing was stated — nothing invented). 503 unavailable:true without AI configured. Use when: turning a get-listed conversation into structured profile fields (then submit via scout.submitPartnerListing). Not for: finding partners → scout.matchPartners or scout.partnerAssistant.",
+      "description": "AI onboarding helpers: interview chat + profile extraction. Two modes for the get-listed flow. {mode:'chat', messages} → interview-style reply for a company describing itself. {mode:'extract', messages} → structures the transcript into partner-profile fields (tagline, services, sectors, regions, contact…; null where nothing was stated — nothing invented). 503 unavailable:true without AI configured. Use when: turning a get-listed conversation into structured profile fields. Not for: finding partners → scout.matchPartners.",
       "id": "scout.partnerOnboard",
       "inputSchema": {
         "properties": {
@@ -2740,7 +2577,8 @@
       "keywords": [
         "content",
         "role",
-        "user"
+        "user",
+        "assistant"
       ],
       "kind": "operation",
       "outputSchema": {
@@ -4025,17 +3863,10 @@
       }
     },
     {
-      "description": "Related skills — - LumenLoop MCP setup and tool overview → ../lumenloop-mcp-connect/SKILL.md - Deep due-diligence on a single team behind a submission → ../stellar-project-dossier/SKILL.md - Map the…",
+      "description": "Related skills — - Deep due-diligence on a single team behind a submission → ../stellar-project-dossier/SKILL.md - Map the wider sector your idea sits in → ../stellar-ecosystem-scout/SKILL.md - Once…",
       "id": "skills.lumenloop.scf-submission-radar#related-skills",
       "inputSchema": null,
       "keywords": [
-        "wider",
-        "sector",
-        "idea",
-        "sits",
-        "ecosystem",
-        "scout",
-        "once",
         "positioning",
         "clear",
         "plan",
@@ -4397,19 +4228,7 @@
         "named",
         "https",
         "developers",
-        "org",
-        "tool",
-        "stops",
-        "appearing",
-        "after",
-        "server",
-        "update",
-        "reconnect",
-        "connector",
-        "see",
-        "mcp",
-        "connect",
-        "md"
+        "org"
       ],
       "kind": "skill-section",
       "outputSchema": null,
@@ -4444,12 +4263,10 @@
       }
     },
     {
-      "description": "Related skills — - Connect first → ../lumenloop-mcp-connect/SKILL.md — add the MCP server and sign in. - Map the sector before committing → ../stellar-ecosystem-scout/SKILL.md. - Pick a specific…",
+      "description": "Related skills — - Map the sector before committing → ../stellar-ecosystem-scout/SKILL.md. - Pick a specific dependency (wallet/oracle/anchor) → ../stellar-integration-finder/SKILL.md. - Deep-dive…",
       "id": "skills.lumenloop.stellar-builder-quickstart#related-skills",
       "inputSchema": null,
       "keywords": [
-        "oracle",
-        "deep",
         "project",
         "build",
         "soroban",
@@ -4458,12 +4275,6 @@
         "sep",
         "reflector",
         "feed",
-        "dependency",
-        "wallet",
-        "anchor",
-        "integration",
-        "finder",
-        "dive",
         "one",
         "prior",
         "art",
@@ -4511,7 +4322,15 @@
         "state",
         "indexing",
         "standards",
-        "cap"
+        "cap",
+        "applies",
+        "anchors",
+        "payments",
+        "kyc",
+        "links",
+        "price",
+        "pulse",
+        "free"
       ],
       "kind": "skill-section",
       "outputSchema": null,
@@ -4942,17 +4761,11 @@
       }
     },
     {
-      "description": "Related skills — - Connect the MCP + the tool map → ../lumenloop-mcp-connect/SKILL.md - Deep-dive one project you mention → ../stellar-project-dossier/SKILL.md - Find recent content on a topic to…",
+      "description": "Related skills — - Deep-dive one project you mention → ../stellar-project-dossier/SKILL.md - Find recent content on a topic to cite → ../stellar-ecosystem-digest/SKILL.md - Map the wider space around…",
       "id": "skills.lumenloop.stellar-content-auditor#related-skills",
       "inputSchema": null,
       "keywords": [
-        "ecosystem",
         "scf",
-        "cite",
-        "digest",
-        "wider",
-        "space",
-        "around",
         "draft",
         "scout",
         "verify",
@@ -5642,7 +5455,7 @@
       }
     },
     {
-      "description": "Pointers — - Build on what you find: https://developers.stellar.org - Connector & full tool catalog: ../lumenloop-mcp-connect/SKILL.md - Output template: reference/digest-template.md",
+      "description": "Pointers — - Build on what you find: https://developers.stellar.org - Output template: reference/digest-template.md",
       "id": "skills.lumenloop.stellar-ecosystem-digest#pointers",
       "inputSchema": null,
       "kind": "skill-section",
@@ -5690,23 +5503,7 @@
         "id",
         "keep",
         "one",
-        "entry",
-        "stay",
-        "current",
-        "tool",
-        "stops",
-        "appearing",
-        "after",
-        "server",
-        "update",
-        "reconnect",
-        "lumen",
-        "loop",
-        "connector",
-        "see",
-        "mcp",
-        "connect",
-        "md"
+        "entry"
       ],
       "kind": "skill-section",
       "outputSchema": null,
@@ -5723,15 +5520,10 @@
       }
     },
     {
-      "description": "Related skills — - LumenLoop MCP setup & the full tool catalog → ../lumenloop-mcp-connect/SKILL.md - Map a whole sector into a landscape (not just recent items) → ../stellar-ecosystem-scout/SKILL.md…",
+      "description": "Related skills — - Map a whole sector into a landscape (not just recent items) → ../stellar-ecosystem-scout/SKILL.md - Go deep on one project surfaced by the digest →…",
       "id": "skills.lumenloop.stellar-ecosystem-digest#related-skills",
       "inputSchema": null,
       "keywords": [
-        "project",
-        "go",
-        "deep",
-        "one",
-        "surfaced",
         "dossier",
         "building",
         "anything",
@@ -6125,7 +5917,7 @@
       }
     },
     {
-      "description": "Further reading — - LumenLoop MCP overview and full tool catalog → ../lumenloop-mcp-connect/SKILL.md. - Stellar developer docs (build references) → https://developers.stellar.org.",
+      "description": "Further reading — - Stellar developer docs (build references) → https://developers.stellar.org.",
       "id": "skills.lumenloop.stellar-ecosystem-scout#further-reading",
       "inputSchema": null,
       "kind": "skill-section",
@@ -6173,19 +5965,7 @@
         "compact",
         "true",
         "slim",
-        "shape",
-        "tool",
-        "stops",
-        "appearing",
-        "after",
-        "server",
-        "update",
-        "reconnect",
-        "connector",
-        "see",
-        "mcp",
-        "connect",
-        "md"
+        "shape"
       ],
       "kind": "skill-section",
       "outputSchema": null,
@@ -6272,16 +6052,11 @@
       }
     },
     {
-      "description": "Related skills — - Set up / troubleshoot the connector and see all 18 tools → ../lumenloop-mcp-connect/SKILL.md. - Deep-dive ONE project you surfaced here (funding, talks, comparables) →…",
+      "description": "Related skills — - Deep-dive ONE project you surfaced here (funding, talks, comparables) → ../stellar-project-dossier/SKILL.md. - Pick ONE dependency to integrate from a landscape…",
       "id": "skills.lumenloop.stellar-ecosystem-scout#related-skills",
       "inputSchema": null,
       "keywords": [
-        "landscape",
         "oracle",
-        "dossier",
-        "pick",
-        "dependency",
-        "integrate",
         "wallet",
         "anchor",
         "integration",
@@ -6315,6 +6090,7 @@
         "cap",
         "standards",
         "reflector",
+        "see",
         "developer",
         "docs",
         "https",
@@ -6614,18 +6390,7 @@
         "tags",
         "links",
         "comparison",
-        "table",
-        "tool",
-        "stops",
-        "appearing",
-        "after",
-        "server",
-        "update",
-        "reconnect",
-        "connector",
-        "mcp",
-        "connect",
-        "md"
+        "table"
       ],
       "kind": "skill-section",
       "outputSchema": null,
@@ -6726,16 +6491,11 @@
       }
     },
     {
-      "description": "Related skills — - New to the MCP? Connect first → ../lumenloop-mcp-connect/SKILL.md. - Need the whole landscape of a sector, not one pick → ../stellar-ecosystem-scout/SKILL.md. - Going deep on a…",
+      "description": "Related skills — - Need the whole landscape of a sector, not one pick → ../stellar-ecosystem-scout/SKILL.md. - Going deep on a single candidate (funding, comparables, what's said) →…",
       "id": "skills.lumenloop.stellar-integration-finder#related-skills",
       "inputSchema": null,
       "keywords": [
         "build",
-        "single",
-        "candidate",
-        "funding",
-        "comparables",
-        "said",
         "project",
         "dossier",
         "ready",
@@ -7020,14 +6780,9 @@
       }
     },
     {
-      "description": "Further reading — - LumenLoop MCP overview and full tool catalog → ../lumenloop-mcp-connect/SKILL.md - Building on Stellar (Soroban, stellar-sdk, assets, data, standards, Reflector) →…",
+      "description": "Further reading — - Building on Stellar (Soroban, stellar-sdk, assets, data, standards, Reflector) → https://developers.stellar.org",
       "id": "skills.lumenloop.stellar-project-dossier#further-reading",
       "inputSchema": null,
-      "keywords": [
-        "https",
-        "developers",
-        "org"
-      ],
       "kind": "skill-section",
       "outputSchema": null,
       "provenance": {
@@ -7080,19 +6835,7 @@
         "none",
         "record",
         "rather",
-        "dropping",
-        "tool",
-        "stops",
-        "appearing",
-        "after",
-        "server",
-        "update",
-        "reconnect",
-        "connector",
-        "see",
-        "mcp",
-        "connect",
-        "md"
+        "dropping"
       ],
       "kind": "skill-section",
       "outputSchema": null,
@@ -7187,19 +6930,11 @@
       }
     },
     {
-      "description": "Related skills — - New to the MCP? Connect and learn the toolset first → ../lumenloop-mcp-connect/SKILL.md - Mapping a whole sector instead of one project → ../stellar-ecosystem-scout/SKILL.md -…",
+      "description": "Related skills — - Mapping a whole sector instead of one project → ../stellar-ecosystem-scout/SKILL.md - Positioning an SCF idea against prior submissions → ../scf-submission-radar/SKILL.md -…",
       "id": "skills.lumenloop.stellar-project-dossier#related-skills",
       "inputSchema": null,
       "keywords": [
-        "scf",
         "oracle",
-        "positioning",
-        "idea",
-        "against",
-        "prior",
-        "submissions",
-        "submission",
-        "radar",
         "choosing",
         "depend",
         "wallet",

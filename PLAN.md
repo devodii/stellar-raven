@@ -117,14 +117,17 @@ callable surface — fields chosen for what search/execute actually consume, not
 ```
 
 Actual catalog (`catalog/manifest.json`; counts are authoritative in the manifest — the ADR
-below records the last structural change): **274 entries, all exposed** — 53 operations
-(lumenloop 20, scout 21, stellarDocs 12; the Docs MCP is fallback only) + 18 `skills.*` mirror
+below records the last structural change): **271 entries, all exposed** — 50 operations
+(lumenloop 18, scout 20, stellarDocs 12; the Docs MCP is fallback only) + 18 `skills.*` mirror
 skill entries + 203 skill `##`/file sections. **The manifest IS the exposed surface** — excluded
-surfaces (paid research, account mutations, scout writes, retired onboarding skills, the
-`lumenloop.skill.*` twin namespace) are filtered at build time and never emitted; there is no
-`policy`/`cost`/`auth` field and no runtime deny layer. See
+surfaces (the paid research lane incl. its read half, account mutations, scout writes and their
+schema/assistant feeders, retired onboarding skills, the `lumenloop.skill.*` twin namespace) are
+filtered at build time and never emitted; there is no `policy`/`cost`/`auth` field and no runtime
+deny layer, and a build guard rejects any emitted text that references a non-exposed surface. See
 [`research/decisions/0003-build-time-exposure-filtering.md`](./research/decisions/0003-build-time-exposure-filtering.md)
-(ADR-0003, 2026-07-04: 299→274 entries, 25→0 denied, superseding ADR-0002's deny-list model).
+(ADR-0003, 2026-07-04: 299→274 entries, 25→0 denied, superseding ADR-0002's deny-list model;
+2026-07-04 follow-up: 274→271, dead-end read-halves and description leaks removed, exclusion
+data consolidated in `scripts/exposure.mjs`).
 Entries additionally carry an `outputSchema` wherever the source declares one.
 
 Build pipeline: `scripts/build-catalog.mjs` reads the three service inventories + the skills

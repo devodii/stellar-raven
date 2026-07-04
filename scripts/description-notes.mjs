@@ -60,11 +60,18 @@ export const LUMENLOOP_DESCRIPTION_NOTES = {
 // build-super-spec.mjs (in-sandbox spec) so the two surfaces cannot drift.
 // ---------------------------------------------------------------------------
 
+import { EXCLUDED_SCOUT_OPS } from "./exposure.mjs";
+
 const SCOUT_HTTP_METHODS = ["get", "post", "put", "patch", "delete"];
 
 // Standalone shorthands the upstream prose uses that are not full spec paths
-// but still name a callable operation (e.g. partnerOnboard says "/assistant").
-const SCOUT_REF_ALIASES = [["/assistant", "scout.partnerAssistant"]];
+// but still name a callable operation. Every alias target must be an EXPOSED
+// op — an alias for an excluded op would mint a callable-looking name for an
+// operation that does not exist to consumers (the ADR-0003 leak that
+// scoutRefRewrites otherwise filters out). Currently empty: the one historical
+// alias ("/assistant" → scout.partnerAssistant) pointed at an excluded op and
+// its prose occurrences are scrubbed instead (SCOUT_DESCRIPTION_SCRUBS).
+const SCOUT_REF_ALIASES = [];
 
 /** snake_case form of a camelCase operationId (searchProjects -> search_projects). */
 function snakeCase(opId) {
@@ -106,6 +113,10 @@ export function scoutRefRewrites(openapi) {
     for (const method of SCOUT_HTTP_METHODS) {
       const op = item[method];
       if (!op?.operationId) continue;
+      // Never mint a callable name for an excluded op (ADR-0003: it does not
+      // exist to consumers). Prose that references an excluded endpoint is
+      // scrubbed by SCOUT_DESCRIPTION_SCRUBS, not rewritten.
+      if (EXCLUDED_SCOUT_OPS.has(`${method.toUpperCase()} ${path}`)) continue;
       const callable = `scout.${op.operationId}`;
       pairs.push([`${method.toUpperCase()} ${path}`, callable]);
       if (!bareByPath.has(path) || method === "get") bareByPath.set(path, callable);
@@ -156,6 +167,58 @@ export function rewriteScoutRefs(text, pairs) {
     }
   }
   return out.replace(/(^|[\s(/])\?([a-z])/g, "$1$2");
+}
+
+// ---------------------------------------------------------------------------
+// Excluded-endpoint clause scrubs (ADR-0003).
+//
+// Some upstream scout descriptions cross-reference endpoints that are in
+// EXCLUDED_SCOUT_OPS. Those clauses must be REMOVED, not rewritten: a rewrite
+// would mint a callable name for an op that does not exist to consumers, and
+// leaving the raw REST reference would still advertise a capability the
+// gateway does not expose. Exact-match data, applied to the RAW upstream text
+// BEFORE scoutRefRewrites — with a fail-loud guard: if upstream rephrases and
+// a needle stops matching, the build breaks so a human reconciles (a silently
+// stale scrub = the leak comes back).
+// ---------------------------------------------------------------------------
+export const SCOUT_DESCRIPTION_SCRUBS = {
+  matchPartners: [
+    // "Not for: ... → GET /api/partners; interactive human chat → the
+    // /partners/chat page (backed by /api/partners/assistant)." — the chat
+    // page is backed by the excluded assistant endpoint; the directory-browse
+    // alternative before the ";" stays.
+    "; interactive human chat → the /partners/chat page (backed by /api/partners/assistant)"
+  ],
+  partnerOnboard: [
+    // "Use when: ... structured profile fields (then submit via
+    // POST /api/partners/submit-listing)." — the submission step is excluded.
+    " (then submit via POST /api/partners/submit-listing)",
+    // "Not for: finding partners → /api/partners/match or /assistant." — the
+    // assistant is excluded; the match alternative stays.
+    " or /assistant"
+  ]
+};
+
+/**
+ * Remove the excluded-endpoint clauses from one op's raw upstream description.
+ * Throws when a listed needle is absent (upstream prose drifted — reconcile
+ * SCOUT_DESCRIPTION_SCRUBS) so a stale scrub can never silently re-leak.
+ */
+export function scrubScoutDescription(opId, text) {
+  const needles = SCOUT_DESCRIPTION_SCRUBS[opId];
+  if (!needles) return text;
+  let out = text;
+  for (const needle of needles) {
+    if (!out.includes(needle)) {
+      throw new Error(
+        `SCOUT_DESCRIPTION_SCRUBS["${opId}"] needle not found in the upstream description: ` +
+          `${JSON.stringify(needle)}. Upstream rephrased — reconcile the scrub in ` +
+          `scripts/description-notes.mjs so the excluded-endpoint reference cannot re-leak.`
+      );
+    }
+    out = out.split(needle).join("");
+  }
+  return out;
 }
 
 export const SCOUT_DESCRIPTION_NOTES = {

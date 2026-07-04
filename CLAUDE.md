@@ -47,13 +47,16 @@ coordinated via Solo MCP project 49 (todos + scratchpads; backlog items tracked 
   manifest.
 - **The manifest IS the exposed surface (ADR-0003,
   `research/decisions/0003-build-time-exposure-filtering.md`)** — exposure is filtered at
-  BUILD time; exclusions are exact-match data in `scripts/build-catalog.mjs` (with fail-loud
-  drift guards), never runtime policy, never prose. Consumers are never told what the gateway
-  cannot do.
+  BUILD time; exclusions are exact-match data in `scripts/exposure.mjs` (shared by every
+  emitter, with fail-loud drift guards in `scripts/build-catalog.mjs`), never runtime policy,
+  never prose. Consumers are never told what the gateway cannot do — emitted text must not
+  reference a non-exposed op or retired skill (`assertNoNonExposedRefs` breaks the build on it).
 - Exact-match guards on skill/tool id resolution; no fuzzy top-hit acceptance, no aliases.
 - Soft-empty ≠ error ≠ data — keep per-service normalizers.
-- Paid Lumenloop research (`request_research`) is not emitted at all; enabling it = remove the
-  build exclusion AND ship the budget gate + `list_my_research` dedup in the same change.
+- The paid Lumenloop research lane is not emitted at all — the `request_research` trigger AND
+  its read half (`research_result`, `list_my_research`; account-scoped dead ends without the
+  trigger). Enabling it = remove all three exclusions (`scripts/exposure.mjs`) AND ship the
+  budget gate + dedup in the same change. `list_research` (public editorial pieces) stays.
 - Secrets host-side only; sandbox keeps `globalOutbound: null`.
 - Generated artifacts (`catalog/manifest.json`, inventory JSONs) are rebuilt by `scripts/`,
   never hand-edited.

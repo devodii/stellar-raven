@@ -144,7 +144,7 @@ Per call (`src/executor/run.ts`):
 3. **Sandbox globals** (`src/executor/providers.ts`, `buildSandbox`): one namespace global
    per service with one async fn per cataloged operation, named by the id's terminal
    segment (`lumenloop.search_directory(args)`, `scout.getStatus()`,
-   `stellarDocs.search_docs(args)`) — currently 21 + 24 + 12 fns — plus the `codemode`
+   `stellarDocs.search_docs(args)`) — currently 18 + 20 + 12 fns — plus the `codemode`
    discovery global (§5). Wrong names fail loudly through codemode's per-namespace Proxy
    ("Tool not found"); there is no fuzzy resolution. Providers are rebuilt per run so the
    skill-read advice flag is run-scoped; the expensive derivations (catalog view, resolved
@@ -248,7 +248,9 @@ verifies integrity offline, `scripts/check-skills-drift.mjs` checks the pins aga
 upstream in the daily refresh (detection only — the mirror is never auto-synced).
 
 **The bundle.** Workers have no filesystem, so `scripts/bundle-skills.mjs` packs every
-`.md` file (markdown only — that's the exposed surface; 43 files) into
+exposed skill's `.md` files (markdown only — that's the exposed surface; 30 files — the
+7 retired skills contribute zero bytes, and retired-skill cross-references are scrubbed
+from the packed bodies via `scrubRetiredSkillRefs` in `scripts/exposure.mjs`) into
 `src/skills/bundle.json`, keyed by repo-root-relative path — chosen to equal catalog
 entries' `transport.path` exactly, so the store resolves transport → content with no path
 arithmetic. `generatedAt` comes from the mirror manifest's `synced_at`, never wall clock.
@@ -260,8 +262,9 @@ duplicate slugs deduped `-2`, `-3`…; description = heading + first paragraph, 
 200 chars; low-weight `keywords` extracted from the *section body* so mid-section content —
 error codes, flags, function names — is lexically searchable); and one section-kind entry
 per extra `.md` file (id `<skillId>#file:<relpath>`). The 7 retired Lumenloop
-API-onboarding skills are never emitted — no skill entry, no sections (ADR-0003; the
-retirement record is `RETIRED_ONBOARDING_SKILLS` in the builder plus the ADR). The
+API-onboarding skills are never emitted — no skill entry, no sections, no bundle bytes
+(ADR-0003; the retirement record is `RETIRED_ONBOARDING_SKILLS` in `scripts/exposure.mjs`
+plus the ADR). The
 Lumenloop-API-served skill metadata (14 skills as zips) is likewise never emitted: each
 duplicates a canonical `skills.*` mirror entry, and `assertLumenloopSkillsMirrored` breaks
 the build if an upstream-served skill ever lacks a mirror counterpart. Currently 18 exposed

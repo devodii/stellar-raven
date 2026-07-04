@@ -31,7 +31,6 @@
 import { z } from "zod";
 
 export const CATALOG_SERVICES = ["lumenloop", "scout", "stellarDocs", "skills"] as const;
-export type CatalogService = (typeof CATALOG_SERVICES)[number];
 
 export const CATALOG_KINDS = ["operation", "skill", "skill-section"] as const;
 export type CatalogKind = (typeof CATALOG_KINDS)[number];

@@ -137,48 +137,13 @@ function stellarDocsTitleExtras(entries, titlesSnapshot) {
 // Exposure filtering — build-time, data-driven (ADR-0003; supersedes the
 // runtime deny-list of ADR-0002). The manifest IS the exposed surface: an
 // entry is either emitted (callable/readable) or it does not exist to
-// consumers. Exclusion reasons live HERE and in ADRs — never in emitted
-// entries, never as runtime policy. Every exclusion list below is guarded by
-// a fail-loud drift check so an upstream rename/removal breaks the build
-// instead of silently changing the surface.
+// consumers. The exclusion DATA lives in scripts/exposure.mjs, shared by every
+// emitter (manifest, super-spec, description rewrites, skills bundle) so the
+// surfaces cannot drift; the fail-loud guards that pin that data to the live
+// inventories live here, where the inventory inputs are read. Exclusion
+// reasons live in exposure.mjs and the ADRs — never in emitted entries, never
+// as runtime policy.
 // ---------------------------------------------------------------------------
-
-/** Lumenloop account-mutation surfaces — excluded if they ever appear in inventory. */
-const LUMENLOOP_ACCOUNT_OP_RE = /(^|_)(key|keys|webhook|webhooks|topup|top_?up)(_|$)/;
-
-// request_research is the paid deep-research trigger — excluded until the
-// budget-gate + dedup feature is deliberately built (PLAN §8: off by default).
-// Named explicitly (not just via the metered flag) so an upstream re-pricing
-// cannot silently expose it.
-const EXCLUDED_LUMENLOOP_OPS = new Set(["request_research"]);
-
-/** True when a lumenloop tool must not be emitted: paid/metered, account
- *  mutation, or explicitly excluded by name. */
-function lumenloopOpExcluded(tool) {
-  return (
-    tool.metered === true ||
-    EXCLUDED_LUMENLOOP_OPS.has(tool.name) ||
-    LUMENLOOP_ACCOUNT_OP_RE.test(tool.name)
-  );
-}
-
-// Scout write/side-effecting endpoints — excluded (exact method+path):
-//  POST /api/feedback                 submits feedback upstream
-//  POST /api/partners/submit-listing  creates a DRAFT partner account / claim
-//                                     request reviewed by the Stellar Light team
-//  POST /api/partners/assistant       surfaced partners are logged as leads for
-//                                     the weekly partner digest (per upstream
-//                                     OpenAPI); scout.matchPartners is the
-//                                     side-effect-free ranking alternative
-// POST /api/partners/match and /api/partners/onboard stay exposed: their
-// OpenAPI descriptions declare pure AI ranking/extraction over published
-// partners ("nothing is invented", persistence happens only via the separate
-// submit-listing endpoint) — no write or logging is documented.
-const EXCLUDED_SCOUT_OPS = new Set([
-  "POST /api/feedback",
-  "POST /api/partners/submit-listing",
-  "POST /api/partners/assistant"
-]);
 
 // Drift guard: exclusions are exact-match data, so an upstream rename/removal
 // must break the build (stale exclusion = a write endpoint may have moved),
@@ -209,26 +174,6 @@ function assertLumenloopExclusionsResolve(inv) {
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// Retired skills — exclusion as DATA (ADR-0003; decision 2026-07-03).
-// The Lumenloop API-onboarding skills teach RAW HTTP/REST access (Bearer
-// llmcp_ auth, key minting, rate limits, the REST response envelope). They are
-// redundant AND misleading here: a model calling `execute` reaches Lumenloop
-// only through the wrapped `lumenloop.*` sandbox globals — no network, secrets
-// stay host-side, and the envelope is {ok,data}, not the REST shape these
-// skills describe. Bodies stay in the ecosystem-skills mirror as the harvest
-// source for operation-description enrichment (Solo todo 825); they are simply
-// never emitted — no skill entry, no sections.
-const RETIRED_ONBOARDING_SKILLS = new Set([
-  "lumenloop-api-billing",
-  "lumenloop-api-connect",
-  "lumenloop-api-integrate",
-  "lumenloop-api-keys",
-  "lumenloop-api-query",
-  "lumenloop-api-research",
-  "lumenloop-mcp-connect"
-]);
 
 // Refresh-safety guard: the retirement is pinned to upstream skill NAMES, so an
 // ecosystem-skills re-sync (update.sh) that RENAMES or REMOVES a retired skill
@@ -275,9 +220,18 @@ function assertLumenloopSkillsMirrored(inv, skillsManifest) {
 import {
   LUMENLOOP_DESCRIPTION_NOTES,
   SCOUT_DESCRIPTION_NOTES,
+  SCOUT_DESCRIPTION_SCRUBS,
   scoutRefRewrites,
-  rewriteScoutRefs
+  rewriteScoutRefs,
+  scrubScoutDescription
 } from "./description-notes.mjs";
+import {
+  EXCLUDED_LUMENLOOP_OPS,
+  EXCLUDED_SCOUT_OPS,
+  RETIRED_ONBOARDING_SKILLS,
+  lumenloopOpExcluded,
+  scrubRetiredSkillRefs
+} from "./exposure.mjs";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -488,7 +442,12 @@ function buildScout(inv) {
         .filter(Boolean)
         .join(". ")
         .replace(/\.\.\s/g, ". ");
-      const description = plainText(rewriteScoutRefs(rawDescription, refPairs));
+      // Scrub excluded-endpoint clauses BEFORE the rewrite (the rewrite never
+      // mints names for excluded ops, so an unscrubbed clause would keep its
+      // raw REST spelling — still a leak).
+      const description = plainText(
+        rewriteScoutRefs(scrubScoutDescription(opId, rawDescription), refPairs)
+      );
       const note = SCOUT_DESCRIPTION_NOTES[opId];
       if (note !== undefined) consumedNotes.add(opId);
       entries.push({
@@ -517,6 +476,18 @@ function buildScout(inv) {
       throw new Error(
         `SCOUT_DESCRIPTION_NOTES key "${key}" matched no scout operationId — orphaned note ` +
           `(upstream renamed/removed the operation?); update scripts/description-notes.mjs`
+      );
+    }
+  }
+  // Same orphan guard for the scrubs: a scrub keyed on a renamed/removed/
+  // excluded op would silently stop applying.
+  const emittedScoutOps = new Set(entries.map((e) => e.id.slice("scout.".length)));
+  for (const key of Object.keys(SCOUT_DESCRIPTION_SCRUBS)) {
+    if (!emittedScoutOps.has(key)) {
+      throw new Error(
+        `SCOUT_DESCRIPTION_SCRUBS key "${key}" matched no exposed scout operationId — orphaned ` +
+          `scrub (upstream renamed/removed the operation, or it is now excluded?); update ` +
+          `scripts/description-notes.mjs`
       );
     }
   }
@@ -585,14 +556,17 @@ function buildSkills(manifest) {
   for (const source of manifest.sources) {
     for (const skill of source.skills) {
       // Retired skills are not emitted at all — no skill entry, no sections
-      // (ADR-0003; the auditable record is RETIRED_ONBOARDING_SKILLS above +
-      // the ADR, not a manifest entry). Bodies stay in the mirror as the
-      // description-harvest source.
+      // (ADR-0003; the auditable record is RETIRED_ONBOARDING_SKILLS in
+      // scripts/exposure.mjs + the ADR, not a manifest entry). Bodies stay in
+      // the mirror as the description-harvest source.
       if (RETIRED_ONBOARDING_SKILLS.has(skill.name)) continue;
 
       const skillDir = `ecosystem-skills/skills/${source.id}/${skill.name}`;
       const skillId = `skills.${source.id}.${skill.name}`;
-      const raw = readText(`${skillDir}/SKILL.md`);
+      // Scrub retired-skill cross-references BEFORE deriving descriptions/
+      // keywords — the same scrub bundle-skills.mjs applies to the served
+      // bodies, so what search surfaces and what skill.read returns agree.
+      const raw = scrubRetiredSkillRefs(readText(`${skillDir}/SKILL.md`), `${skillDir}/SKILL.md`);
       const { attrs, body } = parseFrontmatter(raw);
       const bodyLines = body.split("\n");
 
@@ -640,7 +614,10 @@ function buildSkills(manifest) {
       // 3) each additional .md file treated like a section
       for (const file of skill.files ?? []) {
         if (file.path === "SKILL.md" || !file.path.endsWith(".md")) continue;
-        const fileRaw = readText(`${skillDir}/${file.path}`);
+        const fileRaw = scrubRetiredSkillRefs(
+          readText(`${skillDir}/${file.path}`),
+          `${skillDir}/${file.path}`
+        );
         const fileLines = parseFrontmatter(fileRaw).body.split("\n");
         const headingLine = fileLines.find((l) => /^#{1,2} /.test(l));
         const heading = headingLine ? plainText(headingLine.replace(/^#+ /, "")) : file.path;
@@ -669,6 +646,62 @@ function buildSkills(manifest) {
 // ---------------------------------------------------------------------------
 // Assemble
 // ---------------------------------------------------------------------------
+
+// The ADR-0003 leak guard, run over the fully assembled manifest: no emitted
+// text may name an operation that is not itself emitted, reference an
+// excluded scout endpoint by its raw REST spelling, or mention a retired
+// skill. This is the systemic backstop for the whole leak class — a scrub or
+// rewrite that goes stale fails the build here instead of shipping a pointer
+// to a capability consumers must never learn about.
+function assertNoNonExposedRefs(entries) {
+  const opIds = new Set(entries.filter((e) => e.kind === "operation").map((e) => e.id));
+  // Service-callable tokens ("scout.matchPartners"); the lookbehind skips
+  // dotted prefixes so skill ids like "skills.lumenloop.<name>" never match,
+  // and TLD-shaped tokens ("lumenloop.com" in prose URLs) are ignored.
+  const callableRe = /(?<![.\w])(?:lumenloop|scout|stellarDocs)\.[A-Za-z_]\w*/g;
+  const TLDS = new Set(["com", "org", "net", "io", "xyz", "dev", "app", "buzz"]);
+  const retiredRe = /lumenloop-api-[a-z]+|lumenloop-mcp-connect/;
+  const rawScoutPaths = [...EXCLUDED_SCOUT_OPS].map((k) => k.split(" ")[1]);
+  // Bare excluded lumenloop tool names ("request_research") are distinctive
+  // snake tokens — catch them even without the service prefix.
+  const excludedLumenloopRe = new RegExp(
+    `\\b(?:${[...EXCLUDED_LUMENLOOP_OPS].join("|")})\\b`
+  );
+  for (const entry of entries) {
+    const text = [entry.description ?? "", ...(entry.keywords ?? [])].join("\n");
+    for (const token of text.match(callableRe) ?? []) {
+      if (TLDS.has(token.split(".")[1])) continue;
+      if (!opIds.has(token)) {
+        throw new Error(
+          `ADR-0003 leak: entry "${entry.id}" emits a reference to non-exposed operation ` +
+            `"${token}" — scrub or rewrite the source text (scripts/description-notes.mjs / ` +
+            `scripts/exposure.mjs).`
+        );
+      }
+    }
+    for (const path of rawScoutPaths) {
+      if (text.includes(path)) {
+        throw new Error(
+          `ADR-0003 leak: entry "${entry.id}" emits excluded scout endpoint path "${path}" — ` +
+            `add the clause to SCOUT_DESCRIPTION_SCRUBS in scripts/description-notes.mjs.`
+        );
+      }
+    }
+    if (retiredRe.test(text)) {
+      throw new Error(
+        `ADR-0003 leak: entry "${entry.id}" emits a retired-skill reference — ` +
+          `scrubRetiredSkillRefs missed it; see scripts/exposure.mjs.`
+      );
+    }
+    if (excludedLumenloopRe.test(text)) {
+      throw new Error(
+        `ADR-0003 leak: entry "${entry.id}" emits an excluded lumenloop tool name ` +
+          `(${text.match(excludedLumenloopRe)[0]}) — the exclusion in scripts/exposure.mjs ` +
+          `must take its cross-references with it.`
+      );
+    }
+  }
+}
 
 function main() {
   const lumenloop = readJson("inventory/lumenloop.json");
@@ -701,6 +734,8 @@ function main() {
     if (ids.has(entry.id)) throw new Error(`duplicate catalog id: ${entry.id}`);
     ids.add(entry.id);
   }
+
+  assertNoNonExposedRefs(entries);
 
   // generatedAt = newest input snapshot (deterministic; never wall clock).
   // Includes stellar-docs-titles.json's fetchedAt: its page-title vocabulary

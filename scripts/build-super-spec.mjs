@@ -41,7 +41,8 @@ import {
   LUMENLOOP_DESCRIPTION_NOTES,
   SCOUT_DESCRIPTION_NOTES,
   scoutRefRewrites,
-  rewriteScoutRefs
+  rewriteScoutRefs,
+  scrubScoutDescription
 } from "./description-notes.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -237,8 +238,10 @@ function buildScout(inv, exposed) {
       const summary = upstream.summary
         ? plainText(rewriteScoutRefs(upstream.summary, refPairs))
         : undefined;
+      // Scrub excluded-endpoint clauses before the rewrite — MUST match
+      // build-catalog.mjs so both model-facing surfaces stay identical.
       const cleanDescription = upstream.description
-        ? plainText(rewriteScoutRefs(upstream.description, refPairs))
+        ? plainText(rewriteScoutRefs(scrubScoutDescription(opName, upstream.description), refPairs))
         : undefined;
       const description = [cleanDescription, note ? plainText(note) : undefined]
         .filter(Boolean)

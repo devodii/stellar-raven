@@ -1914,67 +1914,6 @@
         }
       }
     },
-    "/lumenloop/list_my_research": {
-      "post": {
-        "description": "List your account's past research reports, most recent first. Returns metadata plus a run_id you can pass to research_result for the full report.\n\nWhen to use: List YOUR account's commissioned reports (most recent first) — e.g. to avoid re-commissioning a question you already paid for. LumenLoop's public research is list_research.\n\nReturns: { results: [{ run_id, status ('completed'/'failed'/'running'), started_at, title, slug, format, summary, created_at }] } — legacy rows can carry nulls. Pass run_id to research_result for the report.",
-        "operationId": "lumenloop.list_my_research",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$schema": "http://json-schema.org/draft-07/schema#",
-                "additionalProperties": false,
-                "properties": {
-                  "limit": {
-                    "description": "Max rows (default 25).",
-                    "maximum": 100,
-                    "minimum": 1,
-                    "type": "number"
-                  }
-                },
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$schema": "http://json-schema.org/draft-07/schema#",
-                  "additionalProperties": false,
-                  "properties": {
-                    "results": {
-                      "description": "Array of your commissioned reports: run_id, title, status, created_at.",
-                      "items": {},
-                      "type": "array"
-                    },
-                    "text": {
-                      "description": "Present instead of the data fields when the tool reports a plain-text message."
-                    }
-                  },
-                  "type": "object"
-                }
-              }
-            },
-            "description": "{ results: [{ run_id, status ('completed'/'failed'/'running'), started_at, title, slug, format, summary, created_at }] } — legacy rows can carry nulls. Pass run_id to research_result for the report."
-          }
-        },
-        "summary": "List your account's past research reports, most recent first.",
-        "tags": [
-          "lumenloop",
-          "research"
-        ],
-        "x-execute": "await lumenloop.list_my_research(args)",
-        "x-service": "lumenloop",
-        "x-upstream": {
-          "method": "POST",
-          "path": "/v1/tools/list_my_research"
-        }
-      }
-    },
     "/lumenloop/list_research": {
       "post": {
         "description": "List research drafts with optional filters. Used by drafter agents for dedup (\"has anything similar been drafted lately?\") and by agents needing to reference prior work. Returns preview fields only — call get_document(collection=\"research\", id) for full body.\n\nWhen to use: Browse LumenLoop's own published research/editorial pieces (previews) — id, title, summary, links.\n\nReturns: Array of research previews: id, title, format, status, summary, created_at — not full bodies.",
@@ -2069,112 +2008,6 @@
         "x-upstream": {
           "method": "POST",
           "path": "/v1/tools/list_research"
-        }
-      }
-    },
-    "/lumenloop/research_result": {
-      "post": {
-        "description": "Fetch the result of a request_research run. While running, returns status + a partner-safe progress summary: phase, steps, searches_run, sources_read, elapsed_s, last_activity_s (heartbeat), stalled, eta_s + pct (estimates from historical run durations), poll_after_s (when to check back), and a ready-to-relay message — surface progress.message to your user verbatim. Pass wait_s (max 45) to long-poll: the call holds until the run finishes, the phase changes, or the window expires, then returns the current state. When complete: report runs return the report + sources + citations; source-pack runs (output_format='sources') return pack (title + overview) + sources; structured runs (output_format='structured') return data (conforming to your schema) + basis (per-field citations, reasoning, confidence) + sources; answer runs (output_format='answer') return answer + citations + confidence — these complete in seconds, so the first poll usually returns the completed result (wait_s works as-is). Each source carries title, url, author, date, tags, and Lumen Loop's AI summaries. You can only read research your own account triggered.\n\nWhen to use: Poll a request_research run by run_id (pass wait_s, max 45, to long-poll — returns early on completion or a phase change), and re-fetch past reports you own.\n\nReturns: While running: { status: 'running', progress } — progress carries phase, step counts (searches_run/sources_read), elapsed_s, a last_activity_s heartbeat + stalled flag, eta_s/pct estimates, poll_after_s (when to check back), and a relay-ready message. When done (status 'completed'): report runs return { status, output_format: 'report', report, sources, citations }; source-pack runs return { output_format: 'sources', pack: { title, overview }, sources, citations }; structured runs return { output_format: 'structured', data, schema, basis: [{field, citations, reasoning, confidence}], sources, citations }; answer runs return { output_format: 'answer', answer, citations, confidence } and complete in seconds — the first poll usually returns the completed result. Each source: type, id/slug, title, url, author, date, tags, summary, long_summary, and (packs) the curator's note. You can only read research your own account commissioned.",
-        "operationId": "lumenloop.research_result",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$schema": "http://json-schema.org/draft-07/schema#",
-                "additionalProperties": false,
-                "properties": {
-                  "run_id": {
-                    "description": "The run_id (a UUID) returned by request_research.",
-                    "format": "uuid",
-                    "type": "string"
-                  },
-                  "wait_s": {
-                    "description": "Long-poll: hold the request up to this many seconds, returning early when the run completes or the phase changes. 0/omitted = answer immediately.",
-                    "maximum": 45,
-                    "minimum": 0,
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "run_id"
-                ],
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$schema": "http://json-schema.org/draft-07/schema#",
-                  "additionalProperties": false,
-                  "properties": {
-                    "answer": {
-                      "description": "The cited answer text (answer runs, when complete)."
-                    },
-                    "basis": {
-                      "description": "Per-field evidence: [{field, citations, reasoning, confidence}] (structured runs)."
-                    },
-                    "citations": {
-                      "description": "Flat {title,url} citations (when complete)."
-                    },
-                    "confidence": {
-                      "description": "'high' | 'low' (answer runs)."
-                    },
-                    "data": {
-                      "description": "Object conforming to your output_schema (structured runs)."
-                    },
-                    "output_format": {
-                      "description": "'report', 'sources', 'structured', or 'answer' (when complete)."
-                    },
-                    "pack": {
-                      "description": "{ title, overview } (source-pack runs, when complete)."
-                    },
-                    "progress": {
-                      "description": "Coarse progress while running (phase, steps, elapsed)."
-                    },
-                    "reason": {
-                      "description": "Failure/skip reason, if any."
-                    },
-                    "report": {
-                      "description": "The synthesized report (report runs, when complete)."
-                    },
-                    "schema": {
-                      "description": "Echo of the output_schema the data conforms to (structured runs)."
-                    },
-                    "sources": {
-                      "description": "Resolved sources: type, id/slug, title, url, author, date, tags, AI summaries, note."
-                    },
-                    "status": {
-                      "description": "running | complete | failed."
-                    },
-                    "text": {
-                      "description": "Present instead of the data fields when the tool reports a plain-text message."
-                    },
-                    "title": {
-                      "description": "Dataset title (structured runs)."
-                    }
-                  },
-                  "type": "object"
-                }
-              }
-            },
-            "description": "While running: { status: 'running', progress } — progress carries phase, step counts (searches_run/sources_read), elapsed_s, a last_activity_s heartbeat + stalled flag, eta_s/pct estimates, poll_after_s (when to check back), and a relay-ready message. When done (status 'completed'): report runs return { status, output_format: 'report', report, sources, citations }; source-pack runs return { output_format: 'sources', pack: { title, overview }, sources, citations }; structured runs return { output_format: 'structured', data, schema, basis: [{field, citations, reasoning, confidence}], sources, citations }; answer runs return { output_format: 'answer', answer, citations, confidence } and complete in seconds — the first poll usually returns the completed result. Each source: type, id/slug, title, url, author, date, tags, summary, long_summary, and (packs) the curator's note. You can only read research your own account commissioned."
-          }
-        },
-        "summary": "Fetch the result of a request_research run.",
-        "tags": [
-          "lumenloop",
-          "research"
-        ],
-        "x-execute": "await lumenloop.research_result(args)",
-        "x-service": "lumenloop",
-        "x-upstream": {
-          "method": "POST",
-          "path": "/v1/tools/research_result"
         }
       }
     },
@@ -2940,35 +2773,6 @@
         }
       }
     },
-    "/scout/getFeedbackSchema": {
-      "get": {
-        "description": "Returns the expected POST body shape + valid kind values, so an agent can self-discover how to submit feedback without guessing. No side effects. Use when: you're about to POST feedback and want the schema first — kind enum, required fields, size limits. Not for: actually submitting feedback → scout.submitFeedback; browsing what's been reported → not exposed (curator queue is private).",
-        "operationId": "scout.getFeedbackSchema",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Feedback request schema"
-          }
-        },
-        "summary": "Get the feedback request schema (discovery)",
-        "tags": [
-          "scout",
-          "Feedback"
-        ],
-        "x-execute": "await scout.getFeedbackSchema(args)",
-        "x-service": "scout",
-        "x-upstream": {
-          "method": "GET",
-          "path": "/api/feedback"
-        }
-      }
-    },
     "/scout/getHackathon": {
       "get": {
         "description": "Full detail for ONE hackathon by slug — its metadata plus every submission with placement, prize amount, prize track, post-hack status (Built/In Progress/Abandoned), and scfAwarded flag; derives winners, per-tracks aggregates (prize $ + winner/submission counts), and a stats outcome funnel. Dual-shape: curated events return full DB detail; DoraHacks-only events read submissions/winners/tracks live from DoraHacks (degrading to a curated winner roster + meta.note when the live feed is unavailable). Use when: 'who won [event] / its soroban track', 'what projects were submitted to [event]', 'what tracks did [event] have and what did they pay', 'how many [event] submissions are still being built'. Needs an exact slug — get it from getHackathons first if unknown. Not for: listing/browsing many events → use getHackathons; comparing stats across 2+ events → use compareHackathons; ecosystem-wide aggregates → use analyzeEcosystem; a winning project's own repo/funding/status outside the hackathon context → use searchProjects / searchRepos.\n\nCatalog note: winner order is only meaningful when hackathonPlacement is ordinal (1st Place, 2nd Place, ...) and placementRank is a number; many events label every winner just Winners with placementRank null — there the winners array order is NOT a ranking, so never assert finishing order from list position (live-verified 2026-07-03).",
@@ -3574,7 +3378,7 @@
     },
     "/scout/matchPartners": {
       "post": {
-        "description": "Describe a builder need in plain language (e.g. 'I need a USDC off-ramp in Mexico with SEP-24') and get the published partners RANKED by fit, each with a one-line reason. Grounded: only real published partners are ranked — nothing is invented. Requires the service to have AI configured; returns 503 unavailable:true otherwise (fall back to scout.getPartners filters). Use when: an agent needs a scored shortlist for a concrete integration need. Not for: browsing the full directory → scout.getPartners; interactive human chat → the /partners/chat page (backed by scout.partnerAssistant).",
+        "description": "Describe a builder need in plain language (e.g. 'I need a USDC off-ramp in Mexico with SEP-24') and get the published partners RANKED by fit, each with a one-line reason. Grounded: only real published partners are ranked — nothing is invented. Requires the service to have AI configured; returns 503 unavailable:true otherwise (fall back to scout.getPartners filters). Use when: an agent needs a scored shortlist for a concrete integration need. Not for: browsing the full directory → scout.getPartners.",
         "operationId": "scout.matchPartners",
         "requestBody": {
           "content": {
@@ -3635,7 +3439,7 @@
     },
     "/scout/partnerOnboard": {
       "post": {
-        "description": "Two modes for the get-listed flow. {mode:'chat', messages} → interview-style reply for a company describing itself. {mode:'extract', messages} → structures the transcript into partner-profile fields (tagline, services, sectors, regions, contact…; null where nothing was stated — nothing invented). 503 unavailable:true without AI configured. Use when: turning a get-listed conversation into structured profile fields (then submit via scout.submitPartnerListing). Not for: finding partners → scout.matchPartners or scout.partnerAssistant.",
+        "description": "Two modes for the get-listed flow. {mode:'chat', messages} → interview-style reply for a company describing itself. {mode:'extract', messages} → structures the transcript into partner-profile fields (tagline, services, sectors, regions, contact…; null where nothing was stated — nothing invented). 503 unavailable:true without AI configured. Use when: turning a get-listed conversation into structured profile fields. Not for: finding partners → scout.matchPartners.",
         "operationId": "scout.partnerOnboard",
         "requestBody": {
           "content": {
@@ -5288,7 +5092,7 @@
   ],
   "x-generated": {
     "builder": "scripts/build-super-spec.mjs",
-    "catalogEntries": 274,
+    "catalogEntries": 271,
     "generatedAt": "2026-07-04T16:09:14.327Z"
   },
   "x-services": {

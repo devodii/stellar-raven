@@ -65,11 +65,16 @@ describe("build-catalog.mjs", () => {
     const count = (pred: (e: Catalog["entries"][number]) => boolean) =>
       catalog.entries.filter(pred).length;
 
-    // Lumenloop: 20 exposed operations — the 21st inventory tool
-    // (request_research, metered paid call) is excluded at build time and
-    // never emitted (ADR-0003; PLAN §8: off by default).
-    expect(count((e) => e.service === "lumenloop" && e.kind === "operation")).toBe(20);
+    // Lumenloop: 18 exposed operations of 21 inventory tools — request_research
+    // (metered paid trigger; PLAN §8: off by default) plus its read half
+    // research_result and list_my_research (account-scoped dead ends without
+    // the trigger) are excluded at build time and never emitted (ADR-0003).
+    // list_research stays: public editorial pieces, independent of the paid lane.
+    expect(count((e) => e.service === "lumenloop" && e.kind === "operation")).toBe(18);
     expect(count((e) => e.id === "lumenloop.request_research")).toBe(0);
+    expect(count((e) => e.id === "lumenloop.research_result")).toBe(0);
+    expect(count((e) => e.id === "lumenloop.list_my_research")).toBe(0);
+    expect(count((e) => e.id === "lumenloop.list_research")).toBe(1);
 
     // Lumenloop's 14 API-served skills are never emitted: each duplicates a
     // canonical skills.* mirror entry (the lumenloop.skill.* twin namespace is
@@ -80,13 +85,17 @@ describe("build-catalog.mjs", () => {
       catalog.entries.filter((e) => e.service === "lumenloop" && e.kind === "skill-section")
     ).toHaveLength(0);
 
-    // Scout: 21 exposed of 24 upstream OpenAPI operations — the 3 write/
+    // Scout: 20 exposed of 24 upstream OpenAPI operations — the 3 write/
     // side-effecting endpoints (submitFeedback, submitPartnerListing,
-    // partnerAssistant) are excluded at build time. matchPartners and
-    // partnerOnboard stay exposed — their OpenAPI descriptions document pure
-    // AI ranking/extraction with no persistence.
-    expect(count((e) => e.service === "scout" && e.kind === "operation")).toBe(21);
+    // partnerAssistant) are excluded at build time, plus getFeedbackSchema:
+    // read-only, but a dead end whose only purpose is to shape the excluded
+    // feedback submission (its upstream description names the non-exposed
+    // scout.submitFeedback). matchPartners and partnerOnboard stay exposed —
+    // their OpenAPI descriptions document pure AI ranking/extraction with no
+    // persistence.
+    expect(count((e) => e.service === "scout" && e.kind === "operation")).toBe(20);
     expect(count((e) => e.id === "scout.submitFeedback")).toBe(0);
+    expect(count((e) => e.id === "scout.getFeedbackSchema")).toBe(0);
     expect(count((e) => e.id === "scout.submitPartnerListing")).toBe(0);
     expect(count((e) => e.id === "scout.partnerAssistant")).toBe(0);
     expect(count((e) => e.id === "scout.matchPartners")).toBe(1);
@@ -115,7 +124,7 @@ describe("build-catalog.mjs", () => {
     expect(count((e) => e.id.includes("lumenloop-mcp-connect"))).toBe(0);
 
     // Grand total: everything in the manifest is exposed (ADR-0003).
-    expect(catalog.entries).toHaveLength(274);
+    expect(catalog.entries).toHaveLength(271);
   });
 
   it("carries exactly version/generatedAt/entries at the top level", () => {

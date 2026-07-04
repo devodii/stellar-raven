@@ -36,7 +36,6 @@ import { truncateForModel, truncateLogsForModel } from "../policy/truncate.ts";
 // Single source of truth: the search tool's `kind` enum IS the catalog's kind
 // set (F7 — no duplicated literal to drift from src/catalog/types.ts).
 export const SEARCH_KINDS = CATALOG_KINDS;
-export type SearchKind = (typeof SEARCH_KINDS)[number];
 
 export const SEARCH_TOOL_NAME = "search";
 export const EXECUTE_TOOL_NAME = "execute";

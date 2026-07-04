@@ -57,10 +57,11 @@ const PREFIX_CLASSES = {
  *   lumenloop get_related_projects returns a related-project collection)
  * - analytics rollups are ecosystem-wide entry points, i.e. broad
  * - vocab/enum/schema discovery and status/changelog are meta
- * - writes and metered compute (research/services/lumenloop.md: only
- *   request_research is metered; stellar-light.md: feedback + partner
- *   pipeline are writes/AI-compute) take no part in a read progression
- * - lumenloop.research_result fetches ONE research job by id → detail
+ * - AI compute that is not a read progression step (partnerOnboard) is meta
+ *
+ * Overrides are keyed on EXPOSED catalog ops only — classifyOp is only ever
+ * called for ops in the manifest, so keys for build-time-excluded ops
+ * (writes, the paid research lane, ADR-0003) would be dead data.
  */
 const OP_OVERRIDES = {
   // collections behind singular-looking prefixes → broad
@@ -75,19 +76,12 @@ const OP_OVERRIDES = {
   // vocab/enum/schema discovery → meta
   "scout.getStatus": "meta",
   "scout.getChangelog": "meta",
-  "scout.getFeedbackSchema": "meta",
   "lumenloop.get_categories": "meta",
   "lumenloop.get_regions": "meta",
   "lumenloop.get_tags_vocabulary": "meta",
   "lumenloop.get_project_tags_vocabulary": "meta",
-  // writes / metered or AI compute → meta (not a read progression step)
-  "scout.submitFeedback": "meta",
-  "scout.submitPartnerListing": "meta",
-  "scout.partnerAssistant": "meta",
-  "scout.partnerOnboard": "meta",
-  "lumenloop.request_research": "meta",
-  // one research job by id → detail
-  "lumenloop.research_result": "detail"
+  // AI compute, not a read progression step → meta
+  "scout.partnerOnboard": "meta"
 };
 
 /** camelCase → snake_case, then the first token: "searchProjects" → "search". */
