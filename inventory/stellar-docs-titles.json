@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-03T15:11:15.794Z",
+  "fetchedAt": "2026-07-04T16:09:14.219Z",
   "index": "crawler_Stellar Docs - Docusaurus",
   "service": "stellar-docs",
   "source": {
@@ -2484,6 +2484,14 @@
       "title": "2026-06-18"
     },
     {
+      "path": "/meetings/2026/06/25",
+      "title": "2026-06-25"
+    },
+    {
+      "path": "/meetings/2026/07/02",
+      "title": "2026-07-02"
+    },
+    {
       "path": "/meetings/archive",
       "title": "Archive"
     },
@@ -2509,32 +2517,32 @@
     },
     {
       "path": "/meetings/tags/developer",
-      "title": "61 posts tagged with \"developer\""
+      "title": "63 posts tagged with \"developer\""
     },
     {
       "path": "/meetings/tags/developer/page/2",
-      "title": "61 posts tagged with \"developer\""
+      "title": "63 posts tagged with \"developer\""
     },
     {
       "path": "/meetings/tags/developer/page/3",
-      "title": "61 posts tagged with \"developer\""
+      "title": "63 posts tagged with \"developer\""
     },
     {
       "path": "/meetings/tags/developer/page/4",
-      "title": "61 posts tagged with \"developer\""
+      "title": "63 posts tagged with \"developer\""
     },
     {
       "path": "/meetings/tags/developer/page/5",
-      "title": "61 posts tagged with \"developer\""
+      "title": "63 posts tagged with \"developer\""
     },
     {
       "path": "/meetings/tags/developer/page/6",
-      "title": "61 posts tagged with \"developer\""
+      "title": "63 posts tagged with \"developer\""
     },
     {
       "path": "/meetings/tags/protocol",
       "title": "11 posts tagged with \"protocol\""
     }
   ],
-  "total": 631
+  "total": 633
 }

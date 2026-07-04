@@ -95,6 +95,47 @@
           },
           "meta": {
             "$ref": "#/components/schemas/scout.Meta"
+          },
+          "submissions": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "tracks": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "winners": {
+            "description": "Winner entries. Ordering contract: placementRank is the ONLY per-entry ordering signal — never infer finishing order from array position; check winnersRanked first.",
+            "items": {
+              "properties": {
+                "hackathonPlacement": {
+                  "nullable": true,
+                  "type": "string"
+                },
+                "hackathonPrize": {
+                  "nullable": true,
+                  "type": "number"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "placementRank": {
+                  "nullable": true,
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "winnersRanked": {
+            "description": "Whether the winners array order is a ranking. true = ordinal placements (sorted by placementRank, winners[0] is 1st place); false = tier-labeled winners (all placementRank null — array order is meaningless, treat as an unordered set); null = no winners recorded.",
+            "nullable": true,
+            "type": "boolean"
           }
         },
         "type": "object"
@@ -184,6 +225,56 @@
       },
       "scout.Project": {
         "properties": {
+          "anchorProfile": {
+            "description": "Structured corridor/coverage data for Anchor-typed projects, joined from the partner directory's stellar.toml enrichment — answers 'which anchors serve corridor X→Y' with filterable, dated fields instead of prose. Null for non-anchor projects or when no partner record matches.",
+            "nullable": true,
+            "properties": {
+              "asOf": {
+                "description": "When the partner record was last updated — cite as the coverage as-of date.",
+                "format": "date-time",
+                "nullable": true,
+                "type": "string"
+              },
+              "assets": {
+                "description": "Asset codes the anchor issues/supports (from its stellar.toml CURRENCIES).",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "country": {
+                "nullable": true,
+                "type": "string"
+              },
+              "rampTypes": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "regions": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "seps": {
+                "description": "Supported SEPs (e.g. 6, 24, 31) — the on/off-ramp interop surface.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "url": {
+                "format": "uri",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
           "builtBy": {
             "description": "The organization/entity behind this project ('who built X') — e.g. LOBSTR → Ultra Stellar, Soroswap → Paltalabs. Null when no org is linked. Browse the org's portfolio at https://stellarlight.xyz/entities/{slug}.",
             "nullable": true,
@@ -304,8 +395,25 @@
             },
             "type": "array"
           },
+          "scfAmountStatus": {
+            "description": "Disambiguates a null award amount: 'undisclosed' = the SCF award is confirmed but no amount is published in the source data (NOT a data gap — do not guess); 'disclosed' = scfTotalAwardedUSD carries the number; null = not awarded.",
+            "enum": [
+              "disclosed",
+              "undisclosed",
+              null
+            ],
+            "nullable": true,
+            "type": "string"
+          },
           "scfAwarded": {
             "type": "boolean"
+          },
+          "scfAwardedRounds": {
+            "description": "SCF round numbers this project was awarded in (e.g. [2, 17, 22]), from official award pages. Rounds are authoritative; dollar TOTALS are in-house reconstructions (per-award amounts aren't published for all rounds) and can legitimately differ between aggregators — reconcile on rounds, not totals.",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
           },
           "scfTotalAwardedUSD": {
             "nullable": true,
@@ -662,7 +770,7 @@
     "description": "One spec covering every operation this MCP server can execute, across four services: lumenloop, scout (Stellar Light), stellarDocs (Algolia-backed docs search), and skills (bundled agent playbooks). Paths are keyed '/{service}/{operation}' and each operationId is the exact callable name: an operation with operationId 'lumenloop.search_directory' is invoked inside the execute tool's sandbox as `await lumenloop.search_directory(args)` — args is ONE object matching the operation's requestBody schema (POST ops) or its parameter names (GET ops). The exact call line is on each operation as x-execute. Every call resolves (never throws) to { ok: true, data } or { ok: false, error: { service, kind, message } }; the 200 response schema documents `data`. Every path in this spec is callable — exposure is filtered at build time, so nothing uncallable is described. Auth is handled host-side — code never sees keys.",
     "title": "stellar-raven-codemode — unified super spec",
     "version": "1.0.0",
-    "x-generatedAt": "2026-07-03T15:11:15.794Z"
+    "x-generatedAt": "2026-07-04T16:09:14.327Z"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -2363,7 +2471,7 @@
     },
     "/scout/analyzeEcosystem": {
       "get": {
-        "description": "Returns the cross-everything ecosystem rollup — the macro totals that single-event or single-cluster tools can't answer alone. dimension=all (default) or slice to hackathons (totalEvents, upcoming/active/completed counts, totalPrizePoolUSD, totalRegisteredHackers — live from DoraHacks), categories (project-count distribution + scfFunded + hackathon winners per category), or funding (scfAwardedProjects, scfTotalDistributedUSD, meanAwardUSD, per-round breakdown, and the post-hackathon Built/In-Progress/Abandoned status funnel). Use when: 'what's the overall state of Stellar hackathons/grants', 'total SCF funding distributed / mean award size', 'how much prize money across all hackathons', 'how many projects get built vs abandoned after hackathons'. Not for: crowdedness or whitespace per category → use getClusters; a ranked list of top/active projects → use getLeaderboard; one specific hackathon's details → use getHackathon; comparing two hackathons head-to-head → use compareHackathons. Use for ecosystem-wide totals and macro stats — project counts by category, total SCF funding, hackathon totals, and developer-activity aggregates across the whole ecosystem.",
+        "description": "Returns the cross-everything ecosystem rollup — the macro totals that single-event or single-cluster tools can't answer alone. dimension=all (default) or slice to hackathons (totalEvents, upcoming/active/completed counts, totalPrizePoolUSD, totalRegisteredHackers — live from DoraHacks), categories (project-count distribution + scfFunded + hackathon winners per category), or funding (scfAwardedProjects, scfTotalDistributedUSD, meanAwardUSD, per-round breakdown, and the post-hackathon Built/In-Progress/Abandoned status funnel). Use when: 'what's the overall state of Stellar hackathons/grants', 'total SCF funding distributed / mean award size', 'how much prize money across all hackathons', 'how many projects get built vs abandoned after hackathons'. Not for: crowdedness or whitespace per category → use getClusters; a ranked list of top/active projects → use getLeaderboard; one specific hackathon's details → use getHackathon; comparing two hackathons head-to-head → use compareHackathons. Use for ecosystem-wide totals and macro stats — project counts by category, total SCF funding, hackathon totals, and developer-activity aggregates across the whole ecosystem. Includes ecosystem-wide DeFi TVL rollups (as-of dated — never an exact to-the-dollar live figure) and totals across all events/categories.",
         "operationId": "scout.analyzeEcosystem",
         "parameters": [
           {
@@ -2608,7 +2716,7 @@
     },
     "/scout/getBuilders": {
       "get": {
-        "description": "The Stellar people directory — curated builder PROFILES (synced from Stellar Passport): displayName, githubUsername, bio, roleTitle, location, scfTier, and the projects[] each has shipped. Free-text q/skill searches across bio + role + project names/descriptions; location filters by place; featured builders sort first. Use when: 'find me a teammate/collaborator who has shipped X', 'Stellar devs in Lagos who've done Soroban', 'who can I hire for an anchor build' — i.e. you want a PERSON to contact. Not for: a funded project/product or 'who built X (the company)' → use searchProjects; the GitHub repo/code itself → use searchRepos; ecosystem-wide dev counts/activity stats → use getLeaderboard. Use for recruiting or hiring: find developers, engineers, contributors, or teammates to recruit or hire by skill, SCF tier, or track record of SCF awards.",
+        "description": "The Stellar people directory — curated builder PROFILES (synced from Stellar Passport): displayName, githubUsername, bio, roleTitle, location, scfTier, and the projects[] each has shipped. Free-text q/skill searches across bio + role + project names/descriptions; location filters by place; featured builders sort first. Use when: 'find me a teammate/collaborator who has shipped X', 'Stellar devs in Lagos who've done Soroban', 'who can I hire for an anchor build' — i.e. you want a PERSON to contact. Not for: a funded project/product or 'who built X (the company)' → use searchProjects; the GitHub repo/code itself → use searchRepos; ecosystem-wide dev counts/activity stats → use getLeaderboard. Use for recruiting or hiring: find developers, engineers, contributors, or teammates to recruit or hire by skill, SCF tier, or track record of SCF awards. Filter/find PEOPLE by region (Latin America, India, Africa, Asia, Europe) or by stack — e.g. 'experienced Soroban devs I could reach out to', 'Rust builders to hire', or 'builders in LatAm working on payments'.",
         "operationId": "scout.getBuilders",
         "parameters": [
           {
@@ -2781,7 +2889,7 @@
     },
     "/scout/getClusters": {
       "get": {
-        "description": "Groups the active Stellar project directory into topic clusters and scores each on crowdedness (1–10, log-scaled) so you can see saturated vs underbuilt lanes — i.e. where to build. Each cluster returns size, crowdedness, scfFundedCount, scfTotalUSD, hackathonWinnerCount, and up to 5 sample projects; cluster by dimension=category (coarse 7-cat) or dimension=types (finer: Wallet/DEX/Lending/RWA/Oracle…), or pass key/type to get one cluster. Use when: 'what's the most crowded category on Stellar', 'show me an underbuilt/whitespace area', 'how many projects/funded projects are in RWA vs wallets', 'where is the competition thin'. Not for: ranking the top projects/repos by stars or activity → use getLeaderboard; ecosystem-wide totals (events + funding + status funnel) → use analyzeEcosystem; finding/looking up an actual named project in a category → use searchProjects. Use for 'where should I build', 'what's underbuilt or saturated', 'which categories are crowded' opportunity-gap questions across the project directory.",
+        "description": "Groups the active Stellar project directory into topic clusters and scores each on crowdedness (1–10, log-scaled) so you can see saturated vs underbuilt lanes — i.e. where to build. Each cluster returns size, crowdedness, scfFundedCount, scfTotalUSD, hackathonWinnerCount, and up to 5 sample projects; cluster by dimension=category (coarse 7-cat) or dimension=types (finer: Wallet/DEX/Lending/RWA/Oracle…), or pass key/type to get one cluster. Use when: 'what's the most crowded category on Stellar', 'show me an underbuilt/whitespace area', 'how many projects/funded projects are in RWA vs wallets', 'where is the competition thin'. Not for: ranking the top projects/repos by stars or activity → use getLeaderboard; ecosystem-wide totals (events + funding + status funnel) → use analyzeEcosystem; finding/looking up an actual named project in a category → use searchProjects. Use for 'where should I build', 'what's underbuilt or saturated', 'which categories are crowded' opportunity-gap questions across the project directory. The market-map view: where the ecosystem is crowded versus whitespace, how many projects exist per category (wallets, DeFi, NFT, anchors), and where there is room to build.",
         "operationId": "scout.getClusters",
         "parameters": [
           {
@@ -3199,7 +3307,7 @@
     },
     "/scout/getRfps": {
       "get": {
-        "description": "The curated set of Stellar RFPs / sponsor briefs (mirrors the /ideas page) — open ones are eligible for SCF grant funding when winners are picked; closed ones are past rounds kept for context. Each brief has title, description, technicalRequirements, category, quarter, and a quarter-derived status (open|closed). Filter by q, category, quarter, or status; response carries open/closed counts + the activeQuarter. Use when: 'what RFPs/bounties match my idea', 'what's the SCF funding asking for this quarter', 'is there a sponsor brief for X I could get funded to build'. Not for: projects already BUILT/funded → use searchProjects; hackathons + their prizes → use getHackathons; how-to / SCF Handbook / standards knowledge → use searchResearch. Use for 'what grants or sponsor briefs or bounties are open', 'what does the ecosystem want built', 'where can I get an SCF grant' funding-opportunity questions.",
+        "description": "The curated set of Stellar RFPs / sponsor briefs (mirrors the /ideas page) — open ones are eligible for SCF grant funding when winners are picked; closed ones are past rounds kept for context. Each brief has title, description, technicalRequirements, category, quarter, and a quarter-derived status (open|closed). Filter by q, category, quarter, or status; response carries open/closed counts + the activeQuarter. Use when: 'what RFPs/bounties match my idea', 'what's the SCF funding asking for this quarter', 'is there a sponsor brief for X I could get funded to build'. Not for: projects already BUILT/funded → use searchProjects; hackathons + their prizes → use getHackathons; how-to / SCF Handbook / standards knowledge → use searchResearch. Use for 'what grants or sponsor briefs or bounties are open', 'what does the ecosystem want built', 'where can I get an SCF grant' funding-opportunity questions. Also the place to check which SCF round is currently open for submissions and its deadline, whether a past RFP (e.g. the Kelp / Hummingbot one) is closed or can still be applied to, and what the post-submission review lifecycle looks like.",
         "operationId": "scout.getRfps",
         "parameters": [
           {
@@ -3245,6 +3353,64 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "properties": {
+                    "meta": {
+                      "properties": {
+                        "activeQuarter": {
+                          "type": "string"
+                        },
+                        "scfRound": {
+                          "description": "SCF round identity + submission window (curated — SCF publishes no machine-readable round feed): fields are null when unconfirmed rather than guessed. Always cite asOf alongside answers built on this.",
+                          "properties": {
+                            "asOf": {
+                              "format": "date",
+                              "type": "string"
+                            },
+                            "currentRound": {
+                              "description": "Round currently open for submissions; null when no round is confirmed open as of asOf.",
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "lastConfirmedRound": {
+                              "nullable": true,
+                              "type": "integer"
+                            },
+                            "lastConfirmedRoundNote": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "submissionWindow": {
+                              "properties": {
+                                "closes": {
+                                  "format": "date",
+                                  "nullable": true,
+                                  "type": "string"
+                                },
+                                "opens": {
+                                  "format": "date",
+                                  "nullable": true,
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "verifyAt": {
+                              "format": "uri",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "rfps": {
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
                   "type": "object"
                 }
               }
@@ -3556,7 +3722,7 @@
     },
     "/scout/searchProjects": {
       "get": {
-        "description": "Search the curated Stellar project/product directory — what's been built, by whom, with SCF-funding and live/inactive status (wallets, DEXes, anchors, lending, oracles, RWAs, tooling). Keyword + synonym match (dex→amm/swap, rosca→susu/chama) ranked by curated prominence, SDF/community verification, SCF funding, and Live status; falls back to semantic vector search when keyword hits are thin. Each result carries status, scfAwarded/scfTotalAwardedUSD, builtBy (the org/entity behind it — 'who built X'), the project's own links, a confidence score, and its top indexed repos inline. Use when: 'who/what already exists for X', 'has anyone built X', 'is there a live/funded project for X', or you need a project's funding/status/competitors. Not for: raw GitHub source repos ranked by code quality → use searchRepos; docs, SEPs, audits, how-to/feasibility knowledge → use searchResearch; category counts or whitespace → use getClusters. Use for 'who has built / is there a / which projects / give me a directory of' questions about Stellar apps, products, protocols, dApps, teams, companies and startups by category — DeFi, lending, credit, yield, AMM, DEX, swap, NFT marketplace, wallets, anchors and on/off-ramps, RWA and real-world-asset tokenization, stablecoins, payments, oracles, identity, gaming, infrastructure, tooling. Also 'is there a mature X I could integrate', 'who is building Y', projects operating as anchors, and named products (Etherfuse Stablebonds, Soroswap).\n\nCatalog note: results are structured directory facts, not editorial pieces — for articles, AV, interviews, or research summaries about a project, use the lumenloop semantic and directory ops.",
+        "description": "Search the curated Stellar project/product directory — what's been built, by whom, with SCF-funding and live/inactive status (wallets, DEXes, anchors, lending, oracles, RWAs, tooling). Keyword + synonym match (dex→amm/swap, rosca→susu/chama) ranked by curated prominence, SDF/community verification, SCF funding, and Live status; falls back to semantic vector search when keyword hits are thin. Each result carries status, scfAwarded/scfTotalAwardedUSD, builtBy (the org/entity behind it — 'who built X'), the project's own links, a confidence score, and its top indexed repos inline. Use when: 'who/what already exists for X', 'has anyone built X', 'is there a live/funded project for X', or you need a project's funding/status/competitors. Not for: raw GitHub source repos ranked by code quality → use searchRepos; docs, SEPs, audits, how-to/feasibility knowledge → use searchResearch; category counts or whitespace → use getClusters. Use for 'who has built / is there a / which projects / give me a directory of' questions about Stellar apps, products, protocols, dApps, teams, companies and startups by category — DeFi, lending, credit, yield, AMM, DEX, swap, NFT marketplace, wallets, anchors and on/off-ramps, RWA and real-world-asset tokenization, stablecoins, payments, oracles, identity, gaming, infrastructure, tooling. Also 'is there a mature X I could integrate', 'who is building Y', projects operating as anchors, and named products (Etherfuse Stablebonds, Soroswap). Also answers list/enumerate/compare questions from the curated directory: which wallets exist and how they differ, anchors and anchor infrastructure, the main DeFi projects (directory / market map), NFT marketplaces, perpetuals/derivatives DEXes, block explorers (stellar.expert, StellarChain), AMM/liquidity protocols and their yields, and specific products like Etherfuse Stablebonds (USTRY/CETES).\n\nCatalog note: results are structured directory facts, not editorial pieces — for articles, AV, interviews, or research summaries about a project, use the lumenloop semantic and directory ops.",
         "operationId": "scout.searchProjects",
         "parameters": [
           {
@@ -3621,7 +3787,7 @@
     },
     "/scout/searchRepos": {
       "get": {
-        "description": "Search the indexed Stellar ecosystem GitHub code repos — the actual source, graded for quality. Indexes GitHub topics + description + language + README, expands tech synonyms (zk→zero-knowledge/snark, oracle→price-feed), and ranks by repoScore (0-100) = freshness + traction + hackathon/SCF/builder authority. Filterable by language and minScore. Use when: 'show me the code / repos for X', 'find a Rust/Soroban implementation of X', 'what GitHub repos exist for X', or you need prior-art source to read, fork, or cite. Not for: what products/companies exist or their funding/live status → use searchProjects; conceptual docs, SEPs, audits, or how-to/feasibility knowledge → use searchResearch; a known project's metadata (those repos already ride inline on searchProjects results). Use for finding CODE: libraries, SDKs, boilerplate, templates, starters, example and reference contracts (SEP-41 token, SEP reference impls), OpenZeppelin Soroban contracts, and testing tooling (fuzz, property-based, unit tests) for Soroban, Rust, and Stellar.",
+        "description": "Search the indexed Stellar ecosystem GitHub code repos — the actual source, graded for quality. Indexes GitHub topics + description + language + README, expands tech synonyms (zk→zero-knowledge/snark, oracle→price-feed), and ranks by repoScore (0-100) = freshness + traction + hackathon/SCF/builder authority. Filterable by language and minScore. Use when: 'show me the code / repos for X', 'find a Rust/Soroban implementation of X', 'what GitHub repos exist for X', or you need prior-art source to read, fork, or cite. Not for: what products/companies exist or their funding/live status → use searchProjects; conceptual docs, SEPs, audits, or how-to/feasibility knowledge → use searchResearch; a known project's metadata (those repos already ride inline on searchProjects results). Use for finding CODE: libraries, SDKs, boilerplate, templates, starters, example and reference contracts (SEP-41 token, SEP reference impls), OpenZeppelin Soroban contracts, and testing tooling (fuzz, property-based, unit tests) for Soroban, Rust, and Stellar. Also finds: streaming/recurring-payment contract examples, Groth16/ZK proof verifier contracts, passkey and smart-wallet implementations, top-rated SDK and client-library repos, current soroban-sdk / stellar-cli release versions and target protocol, OpenZeppelin Stellar RWA / regulated-token (ERC-3643 / T-REX style) contracts, and experimental AI-agent identity work.",
         "operationId": "scout.searchRepos",
         "parameters": [
           {
@@ -3680,7 +3846,7 @@
     },
     "/scout/searchResearch": {
       "get": {
-        "description": "Semantic ($vectorSearch over Voyage embeddings) search across the Stellar knowledge corpus — SDF blog, SCF Handbook, SEPs/standards, dev docs, papers, SCF proposals, security audits, incident reports, and Lumenloop/EC research. Returns the top matching text chunks with source attribution, section, URL, and a confidence score (relevance + freshness + authority); audit chunks add auditor/protocol/severity. Filterable by source; falls back to BM25-lite keyword search if vectors are unavailable. Use when: 'how does X work', 'is X possible / has X been discussed on Stellar', 'what does the SEP/spec/audit say about X', or you need primary-source citations for a thesis or design question. Not for: what products exist or their funding/status → use searchProjects; GitHub source code ranked by quality → use searchRepos. Use for ecosystem KNOWLEDGE & explainer questions — 'what is / how does / who / why / is it true that…'. Topics: security & risk (bug bounty, vulnerability disclosure, security audit, exploit, hack, incident, post-mortem, oracle manipulation, YieldBlox, Reflector); compliance & regulation (Travel Rule, FATF, KYC, AML, BSA, sanctions, humanitarian aid); funding & governance (SCF v7.0, award tiers, grant programs, Neural Quorum Governance, community voting, quorum); the Stellar Development Foundation (SDF) — mission, legal structure, org; protocol history (Stellar Consensus Protocol, SCP, whitepaper, authors); ecosystem programs (ambassador program, regional chapters, India, bootcamps); and fact-checking or verifying a claim about Stellar.",
+        "description": "Semantic ($vectorSearch over Voyage embeddings) search across the Stellar knowledge corpus — SDF blog, SCF Handbook, SEPs/standards, dev docs, papers, SCF proposals, security audits, incident reports, and Lumenloop/EC research. Returns the top matching text chunks with source attribution, section, URL, and a confidence score (relevance + freshness + authority); audit chunks add auditor/protocol/severity. Filterable by source; falls back to BM25-lite keyword search if vectors are unavailable. Use when: 'how does X work', 'is X possible / has X been discussed on Stellar', 'what does the SEP/spec/audit say about X', or you need primary-source citations for a thesis or design question. Not for: what products exist or their funding/status → use searchProjects; GitHub source code ranked by quality → use searchRepos. Use for ecosystem KNOWLEDGE & explainer questions — 'what is / how does / who / why / is it true that…'. Topics: security & risk (bug bounty, vulnerability disclosure, security audit, exploit, hack, incident, post-mortem, oracle manipulation, YieldBlox, Reflector); compliance & regulation (Travel Rule, FATF, KYC, AML, BSA, sanctions, humanitarian aid); funding & governance (SCF v7.0, award tiers, grant programs, Neural Quorum Governance, community voting, quorum); the Stellar Development Foundation (SDF) — mission, legal structure, org; protocol history (Stellar Consensus Protocol, SCP, whitepaper, authors); ecosystem programs (ambassador program, regional chapters, India, bootcamps); and fact-checking or verifying a claim about Stellar. More topics this corpus answers: SCF program mechanics — how to apply (step-by-step application process), Build Award, Instawards, Liquidity Award (amounts), Public Goods Award, eligibility, review timeline (prescreen, panel review, community vote, KYC), submission deadlines; Soroban security incidents — reentrancy, soroban-sdk security advisories/CVEs, denial-of-service (instance-storage growth, authorization recursion); ecosystem history — Soroban mainnet launch (Protocol 20), XLM initial supply creation and distribution, humanitarian aid disbursements (UNHCR Ukraine), SDF Enterprise Fund investments, SDF mandate/spending priorities; making an issued asset tradable/visible on exchanges, wallets, explorers, and aggregators; contract source verification (release.yml, Stellar Lab vs stellar.expert).",
         "operationId": "scout.searchResearch",
         "parameters": [
           {
@@ -5123,7 +5289,7 @@
   "x-generated": {
     "builder": "scripts/build-super-spec.mjs",
     "catalogEntries": 274,
-    "generatedAt": "2026-07-03T15:11:15.794Z"
+    "generatedAt": "2026-07-04T16:09:14.327Z"
   },
   "x-services": {
     "lumenloop": {
@@ -5135,7 +5301,7 @@
     },
     "scout": {
       "base": "https://stellarlight.xyz",
-      "fetchedAt": "2026-07-03T14:02:30.658Z",
+      "fetchedAt": "2026-07-04T16:09:14.327Z",
       "note": "Read-only keyless API, carried near-verbatim from the upstream OpenAPI (components namespaced 'scout.*').",
       "source": "https://stellarlight.xyz/api/openapi.json"
     },

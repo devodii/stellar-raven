@@ -19,6 +19,39 @@ right tool for a golden question.
 - Grades: **primary** = primary tool's service matches the label; **any** = primary or an
   alternate hits the labeled service.
 
+## Results — 2026-07-04 (upstream stellar-light OpenAPI 1.4.4 drift verification, GitHub issue #2; runs `wf_0d429a7c-285` baseline / `wf_7ed97384-f2a` drift, local-only)
+
+Change under test: the daily live-drift refresh brought stellar-light 1.3.2 → 1.4.4 — additive
+response-schema fields on existing scout ops (`repoMeta`, `lastActivityAt`, `lastCommitAt`, date
+formats) plus upstream description rewords (`searchResearch` trimmed to "security incidents —
+reentrancy, soroban-sdk advisories/CVEs, DoS"). No operation added/removed. Because the rewords
+feed the lexical scorer AND move the exact lumenloop/scout boundary the 835 round tuned, verified
+agentic-first before committing the drift + gate re-baseline. Same 30 `sample.json` cases,
+grading rule v3 (ADR-0003), Sonnet 5 low+medium. Baseline = committed post-836 catalog; drift =
+1.4.4 catalog served from the same `wrangler dev`.
+
+| scope | base low pri/any | drift low pri/any | base med pri/any | drift med pri/any |
+|---|---|---|---|---|
+| stellarDocs (12) | 100 / 100 | 100 / 100 | 100 / 100 | 100 / 100 |
+| scout (10) | 60 / 80 | **80 / 90** | 80 / 80 | **90 / 90** |
+| lumenloop (8) | 37.5 / 50 | 37.5 / 50 | 25 / 75 | **37.5** / 62.5 |
+| **overall (30)** | 70 / 80 | **76.7 / 83.3** | 73.3 / 86.7 | **80 / 86.7** |
+
+Reading (per-case, both runs' primary picks): **net +4 primary hits, no regression at medium
+effort.** Six primary GAINS — 3 lumenloop (`q-asset-rwa-tokenized-freshness:low`,
+`q-defi-aquarius-what-is:medium`, `q-defi-comet-content:low` all left docs/scout for lumenloop)
+and 3 scout (`q-hist-unhcr-stellar-aid-assist:low`, `q-scf-ambassador-program:low`,
+`q-scf-liquidity-award-amount:medium` left docs for scout). Two LOSSES, **both low-effort only**
+and both lumenloop→scout: `q-defi-rwa-overview:low` ("what RWA products are live") and
+`q-edge-fresh-latest-blend-tvl:low` ("Blend's TVL today") — the latter an 835 win that erodes at
+low but **holds lumenloop at medium**. Both are the directory/freshness label-ambiguity the
+2026-07-02 interpretation notes describe, now amplified by 1.4.4's freshness fields making scout a
+defensible structured answer; not a routing failure. lumenloop primary did not collapse (flat at
+low, +1 at medium); docs unchanged at 100%. Lexical instrument agrees: routing gate re-baselined
+203/265/303 → 213/267/303 (`routing-2026-07-04T15-58-31-434Z.json`), 14 improvements / 8 strict
+regressions (7 hold under accept-either). Nothing tuned per-question; the 2 low-effort flips are
+monitor-only (re-tuning would fight a legitimate upstream scout improvement).
+
 ## Results — 2026-07-04 (post lumenloop/scout boundary notes, Solo todo 835; `results/agentic-2026-07-04.json`, git-ignored/local-only)
 
 Catalog change under test: the paired catalog notes in `scripts/description-notes.mjs` —
