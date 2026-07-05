@@ -13,23 +13,25 @@ duplicate it — it points Codex at it and lists the shared skills. When guidanc
 
 ## Skills — shared, agent-agnostic runbooks
 
-The runbooks in `.claude/skills/<name>/SKILL.md` are plain markdown and **not Claude-specific** (a
-skill is just a `SKILL.md` plus optional bundled resources). Claude Code auto-discovers them as
-**project-scoped** skills from this repo's `.claude/skills/`. Codex has no repo-scoped skill
-discovery — its skills are global, auto-loaded from `$CODEX_HOME/skills` (`~/.codex/skills`) — so
-**this `AGENTS.md` is how Codex is pointed at these repo runbooks**: Codex auto-reads it from the
-repo root, sees the index below, and reads the referenced `SKILL.md` directly.
+The runbooks are plain markdown and **not Claude-specific** (a skill is just a `SKILL.md` plus
+optional bundled resources). They are **repo-scoped and first-class for both agents**, stored once
+and read by each tool from the location it scans:
 
-Two ways to expose a runbook to Codex, by scope:
+- **Canonical files live in `.agents/skills/<name>/SKILL.md`.** Codex discovers these natively — it
+  scans `.agents/skills` from the working directory up to the repo root (repo-scoped; no global
+  install, no `AGENTS.md` bridge needed).
+- **`.claude/skills` is a committed symlink → `../.agents/skills`.** Claude Code only scans
+  `.claude/skills/` for project skills, but it follows the symlink and loads the same runbooks. The
+  `.gitignore` negation (`!.claude/skills`, no trailing slash) is what keeps that symlink tracked
+  under the `.claude/*` deny rule.
 
-- **Repo-scoped (default, committed, portable):** add the `SKILL.md` under `.claude/skills/<name>/`
-  and list it in the index below. That is the whole job — no per-skill manifest, no sidecar.
-- **First-class global Codex skill (opt-in, machine-local):** symlink the skill dir into the
-  Codex farm, `ln -s "$PWD/.claude/skills/<name>" ~/.codex/skills/<name>` (mirror into
-  `~/.claude/skills/<name>` for user-level Claude too), then restart Codex. This matches the
-  user's shared-store pattern where `~/.codex/skills/*` and `~/.claude/skills/*` symlink into the
-  canonical `~/.agents/skills/` store — but it hoists a repo-specific runbook into every Codex
-  session everywhere, so only do it deliberately.
+This mirrors the machine-wide store (`~/.agents/skills` canonical ← `~/.claude`/`~/.codex` symlink
+farms) at repo scope, and matches the sibling repos. To add a runbook: create
+`.agents/skills/<name>/SKILL.md` and list it in the index below — that's the whole job. No
+per-skill manifest. `agents/openai.yaml` is an **optional** Codex-app UI/policy file (chip
+metadata, `allow_implicit_invocation`, tool deps); the house pattern omits it — add it only if you
+want to customize the Codex-app presentation, generated via the skill-creator's
+`generate_openai_yaml.py`, never hand-authored.
 
 Current skills:
 

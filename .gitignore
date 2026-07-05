@@ -15,9 +15,11 @@ dist/
 # generated types (npm run types)
 env.d.ts
 # local harness state (settings.local.json, worktrees) stays ignored;
-# committed project skills live in .claude/skills/
+# project skills are canonical in .agents/skills/ (read by Codex) and surfaced to
+# Claude Code via the committed .claude/skills symlink -> ../.agents/skills.
+# No trailing slash on the negation: it must re-include the symlink, not just a dir.
 .claude/*
-!.claude/skills/
+!.claude/skills
 
 # eval run outputs — local-only; summaries live in the eval READMEs
 eval/results/
