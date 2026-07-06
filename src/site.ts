@@ -11,9 +11,10 @@
  * inline WebGL2 so the page stays self-contained). The globe carries the retro /
  * digital signal; the type is the IBM Plex superfamily — Plex Serif (display),
  * Plex Sans (body), Plex Mono (utility), one shared skeleton — set on the right
- * so the copy never fights the animation. The product is one MCP endpoint with
- * two tools: `search` discovers across the Stellar catalog, `execute` runs
- * model-written JS in a no-network sandbox, so the CTA is per-client install.
+ * so the copy never fights the animation. The pitch is benefit-first ("all of
+ * Stellar, one connection"): hero + stat strip + four-pillar bento + one-vs-many
+ * contrast; the `search`/`execute` mechanics live in a mono footnote for the
+ * technical crowd. The CTA is per-client install (the connect panel).
  *
  * Fully self-contained + CSP-safe: fonts are embedded base64 (font-src data:),
  * the raven marks are inline SVG data URIs (img-src data:), all motion is the
@@ -175,13 +176,96 @@ pre.code .c{color:var(--ash);font-style:italic}
 pre.code .p{color:var(--fog)}
 pre.code .s{color:var(--orange-2)}
 pre.code .k{color:#93d6a6}
-.connect-foot{padding:2px 18px 16px;font-family:var(--sans);font-size:13px;color:var(--dim)}
+.connect-foot{display:flex;flex-wrap:wrap;gap:6px 18px;padding:4px 18px 12px;font-family:var(--sans);
+  font-size:12.5px;color:var(--dim)}
+.connect-foot .tk{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.connect-foot .tk::before{content:"✓";color:var(--orange);font-weight:600}
 .connect-foot b{color:var(--fog);font-weight:600}
+.connect-legal{padding:0 18px 16px;font-family:var(--sans);font-size:11.5px;color:var(--ash);line-height:1.55}
+.connect-legal a{color:var(--dim);text-decoration:underline;text-underline-offset:2px}
+.connect-legal a:hover{color:var(--orange)}
 .copied{color:var(--orange)!important;border-color:var(--orange)!important}
 
-/* ---- footer ---- */
-footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:20px;padding:24px 0 32px;
-  background:linear-gradient(0deg,rgba(14,21,13,.96),rgba(14,21,13,.66))}
+/* ---- below-the-fold sections: solid-ish field so copy never fights the globe ---- */
+/* long eased fade into the dark field — the stat strip sits where the ramp is
+   ~.9, so the dither melts into it instead of hitting a hard edge; no other
+   content before the field is fully dark */
+.below{position:relative;z-index:2;
+  background:linear-gradient(180deg,transparent,
+    rgba(14,21,13,.32) 90px,rgba(14,21,13,.6) 180px,rgba(14,21,13,.8) 270px,
+    rgba(14,21,13,.92) 360px,rgba(14,21,13,.96) 460px)}
+.sec{max-width:980px;margin:0 auto;padding:72px 32px 8px}
+.sec .eyebrow{margin-bottom:14px}
+.sec h2{font-family:var(--display);font-weight:700;font-size:clamp(30px,4vw,44px);line-height:1.08;
+  letter-spacing:-.02em;color:var(--fog);margin:0}
+.sec .sub{font-size:16px;color:var(--dim);max-width:62ch;margin:16px 0 0;line-height:1.65}
+.sec .sub b{color:var(--fog);font-weight:600}
+
+/* stat strip — the numbers ARE the social proof */
+.stats{display:flex;flex-wrap:wrap;gap:10px 0;justify-content:center;max-width:980px;margin:0 auto;
+  padding:360px 32px 0;font-family:var(--mono);font-size:13px;color:var(--dim)}
+.stats .st{display:flex;align-items:baseline;gap:8px;padding:0 22px;border-left:1px solid var(--line)}
+.stats .st:first-child{border-left:0}
+.stats b{color:var(--orange);font-weight:500;font-size:17px}
+
+/* bento of the four pillars */
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+.cell{border:1px solid var(--line);border-radius:16px;padding:22px 24px;
+  background:linear-gradient(180deg,rgba(24,38,23,.72),rgba(14,21,13,.6))}
+.cell .tag{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--orange)}
+.cell h3{font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:-.01em;
+  color:var(--fog);margin:10px 0 8px}
+.cell p{font-size:14px;color:var(--dim);margin:0 0 16px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--mono);font-size:11.5px;color:var(--dim);border:1px solid var(--line);
+  border-radius:999px;padding:4px 11px;white-space:nowrap}
+.chip.hot{color:var(--orange);border-color:rgba(255,85,0,.3);background:var(--orange-soft)}
+
+/* convergence strip — many sources, one wire, your agent */
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 14px;
+  margin:26px 0 0;font-family:var(--mono);font-size:12.5px;color:var(--ash)}
+.flow .fnode{border:1px solid var(--line);border-radius:8px;padding:6px 12px;color:var(--dim)}
+.flow .fnode.hub{color:var(--orange);border-color:rgba(255,85,0,.4);background:var(--orange-soft);
+  display:inline-flex;align-items:center;gap:7px}
+.flow .fnode.hub .rv{width:13px;height:13px;fill:var(--orange)}
+.flow .farrow{color:var(--orange);letter-spacing:-.06em}
+
+/* one vs many */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+.vs .col{border:1px solid var(--line);border-radius:16px;padding:22px 24px;
+  background:linear-gradient(180deg,rgba(24,38,23,.5),rgba(14,21,13,.45))}
+.vs .col.win{border-color:rgba(255,85,0,.36);
+  background:linear-gradient(180deg,rgba(24,38,23,.8),rgba(14,21,13,.7));
+  box-shadow:0 26px 60px -34px rgba(255,85,0,.35)}
+.vs h3{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ash);margin:0 0 14px}
+.vs .col.win h3{color:var(--orange)}
+.vs ul{list-style:none;margin:0;padding:0}
+.vs li{position:relative;padding:9px 0 9px 26px;font-size:14px;color:var(--dim);line-height:1.55;
+  border-top:1px solid var(--line)}
+.vs li:first-child{border-top:0}
+.vs li::before{content:"×";position:absolute;left:2px;top:8px;color:var(--ash);font-weight:600}
+.vs .col.win li{color:var(--fog)}
+.vs .col.win li::before{content:"✓";color:var(--orange)}
+.vs li b{color:var(--fog);font-weight:600}
+
+/* under-the-hood footnote for the technical crowd */
+.hood{margin:26px 0 0;font-family:var(--mono);font-size:12.5px;color:var(--ash);line-height:1.7;
+  max-width:74ch}
+.hood code{color:var(--orange);background:var(--orange-soft);border:1px solid rgba(255,85,0,.24);
+  padding:1px 6px;border-radius:6px;font-size:.95em}
+
+/* closing CTA */
+.cta-row{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;
+  max-width:980px;margin:0 auto;padding:58px 32px 74px;text-align:center}
+.cta-row .line{font-family:var(--display);font-weight:600;font-size:clamp(21px,2.6vw,27px);
+  letter-spacing:-.015em;color:var(--fog)}
+
+/* ---- footer: the last row of the same dark field .below establishes — flush
+   against it (no margin, solid fill) with only a hairline rule between ---- */
+footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:26px 0 34px;
+  background:rgba(14,21,13,.96)}
 .foot{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
 .foot .l{font-family:var(--mono);font-size:12px;color:var(--ash);text-shadow:0 1px 3px rgba(14,21,13,.9)}
 .foot .l b{color:var(--dim);font-weight:400}
@@ -200,6 +284,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   .scrim{background:
     linear-gradient(180deg,var(--bg) 4%,rgba(14,21,13,.9) 40%,rgba(14,21,13,.6) 58%,rgba(14,21,13,.3) 76%,rgba(14,21,13,.55))}
   .connect-head .end{display:none}
+  .sec{padding:52px 22px 6px}
+  .below{background:linear-gradient(180deg,transparent,
+    rgba(14,21,13,.4) 70px,rgba(14,21,13,.7) 140px,rgba(14,21,13,.9) 210px,rgba(14,21,13,.96) 280px)}
+  .stats{padding:220px 22px 0}
+  .stats .st{padding:0 14px}
+  .bento,.vs{grid-template-columns:1fr}
+  .cta-row{padding:44px 22px 58px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 `;
@@ -440,7 +531,7 @@ const CLIENTS: Array<{ id: string; name: string; term: string; code: string }> =
       `  <span class="k">"mcpServers"</span>: {\n` +
       `    <span class="k">"stellar-raven"</span>: {\n` +
       `      <span class="k">"command"</span>: <span class="s">"npx"</span>,\n` +
-      `      <span class="k">"args"</span>: [<span class="s">"mcp-remote"</span>, <span class="s">"${MCP_ENDPOINT}"</span>]\n` +
+      `      <span class="k">"args"</span>: [<span class="s">"-y"</span>, <span class="s">"mcp-remote@latest"</span>, <span class="s">"${MCP_ENDPOINT}"</span>, <span class="s">"--transport"</span>, <span class="s">"http-only"</span>]\n` +
       `    }\n` +
       `  }\n` +
       `}`
@@ -485,7 +576,8 @@ const JSONLD =
         "@id": `https://${HOST}/#website`,
         url: `https://${HOST}/`,
         name: "Stellar Raven",
-        description: "One MCP endpoint over the whole Stellar ecosystem, for AI agents."
+        description:
+          "All of Stellar — official docs, live ecosystem data, community intel, and proven playbooks — in one MCP connection for AI agents."
       },
       {
         "@type": "SoftwareApplication",
@@ -495,9 +587,10 @@ const JSONLD =
         applicationCategory: "DeveloperApplication",
         operatingSystem: "Any (remote MCP server)",
         description:
-          "A remote MCP server for AI agents: search discovers across the Stellar ecosystem " +
-          "(Lumenloop, Stellar Light/Scout, the docs, and a curated skills library) and execute " +
-          "runs the code that composes it, sandboxed with no network.",
+          "A remote MCP server that gives AI agents the whole Stellar ecosystem in one connection: " +
+          "official docs, live ecosystem data, community intel, and curated playbooks, unified in one " +
+          "catalog. Its search tool ranks every operation and skill; its execute tool runs agent-written " +
+          "JavaScript in a sandboxed, no-network runtime. One OAuth sign-in, no API keys.",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         author: { "@type": "Organization", name: "Stellar", url: "https://stellar.org" }
       }
@@ -511,8 +604,8 @@ const JSONLD =
 export function landingPage(): string {
   return (
     head(
-      "Stellar Raven — all of Stellar, one MCP endpoint for your agent",
-      "Give your AI agent all of Stellar in one connection. search discovers across Lumenloop, Stellar Light/Scout, the docs, and a curated skills library; execute runs the code that composes them, sandboxed with no network. Point Claude, Cursor, Codex, or any MCP client at Raven — one OAuth sign-in, no keys.",
+      "Stellar Raven — all of Stellar, one MCP connection for your agent",
+      "Give your AI agent the whole Stellar ecosystem in one connection: official docs, live ecosystem data, community intel, and proven playbooks — cross-referenced into real answers. Works with Claude, Cursor, Codex, and any MCP client. One sign-in, no API keys.",
       BASE,
       JSONLD
     ) +
@@ -521,9 +614,10 @@ export function landingPage(): string {
     `<main class="wrap"><section class="hero" id="connect"><div class="hero-in">
   <p class="eyebrow">Remote MCP server <span class="live"><span class="dot"></span>live</span></p>
   <h1 class="title">Stellar <span class="r">Raven</span></h1>
-  <p class="lede"><b>One endpoint, two tools — all of Stellar.</b> <code>search</code> discovers across
-    the whole ecosystem; <code>execute</code> runs the code that composes it. Point any MCP client at
-    Raven — no keys, no glue.</p>
+  <p class="lede"><b>The whole Stellar ecosystem, one connection.</b> Raven gives your AI agent the
+    official docs, live ecosystem data, community intel, and proven playbooks — and cross-references
+    them into answers no single source can give. No API keys. Nothing else to install. Paste, sign
+    in, ask.</p>
 
   <div class="connect">
     <div class="connect-head">
@@ -532,14 +626,108 @@ export function landingPage(): string {
     </div>
     <div class="tabs">${tabButtons()}</div>
     ${panels()}
-    <div class="connect-foot">One browser <b>OAuth sign-in</b> on first connect — then your agent's code runs in a <b>no-network</b> sandbox.</div>
+    <div class="connect-foot"><span class="tk"><b>No API keys</b> — one browser sign-in</span>
+      <span class="tk"><b>Sandboxed</b> — agent code runs with no network</span>
+      <span class="tk"><b>Zero upkeep</b> — tracks the live services daily</span></div>
+    <div class="connect-legal">By using Stellar Raven you acknowledge you have read and agreed to the
+      <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of
+      Service</a> and <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy
+      Policy</a>.</div>
   </div>
 </div></section></main>` +
+    `<div class="below">
+  <div class="stats" aria-label="What one connection covers">
+    <span class="st"><b>50</b> live operations</span>
+    <span class="st"><b>271</b> catalog entries</span>
+    <span class="st"><b>18</b> playbooks</span>
+    <span class="st"><b>1</b> sign-in</span>
+    <span class="st"><b>0</b> API keys</span>
+  </div>
+
+  <section class="sec" id="roof">
+    <p class="eyebrow">Under one roof</p>
+    <h2>Finally, all of Stellar in one place.</h2>
+    <p class="sub">Wired up separately, this is a stack of servers, API keys, and upkeep.
+      Raven bundles it behind one endpoint — and keeps it current so you never have to.</p>
+    <div class="bento">
+      <div class="cell">
+        <div class="tag">Official docs</div>
+        <h3>The source of truth, ranked for agents</h3>
+        <p>The complete Stellar developer docs, searched the way agents actually ask.</p>
+        <div class="chips"><span class="chip">smart contracts</span><span class="chip">SDKs</span><span class="chip">RPC &amp; Horizon</span><span class="chip">SEPs &amp; standards</span></div>
+      </div>
+      <div class="cell">
+        <div class="tag">Live ecosystem data</div>
+        <h3>Current and graded, not training-data stale</h3>
+        <p>Curated intelligence on who is building what across the network — refreshed from the live services.</p>
+        <div class="chips"><span class="chip">920+ projects</span><span class="chip">2,300+ graded repos</span><span class="chip">builders &amp; partners</span><span class="chip">research corpus</span></div>
+      </div>
+      <div class="cell">
+        <div class="tag">Community intel</div>
+        <h3>What the ecosystem is shipping and funding</h3>
+        <p>News, media, and money flows — the context your agent can't get from docs alone.</p>
+        <div class="chips"><span class="chip">news &amp; research</span><span class="chip">podcasts &amp; video</span><span class="chip">events &amp; jobs</span><span class="chip">governance &amp; SCF</span></div>
+      </div>
+      <div class="cell">
+        <div class="tag">Proven playbooks</div>
+        <h3>Tested procedures, read mid-task</h3>
+        <p>Eighteen step-by-step guides your agent pulls in section by section, exactly when it needs them.</p>
+        <div class="chips"><span class="chip">smart contracts</span><span class="chip">payments</span><span class="chip">dApps</span><span class="chip">data &amp; indexing</span></div>
+      </div>
+    </div>
+    <div class="flow" aria-hidden="true">
+      <span class="fnode">docs</span><span class="fnode">data</span><span class="fnode">intel</span><span class="fnode">playbooks</span>
+      <span class="farrow">──▶</span>
+      <span class="fnode hub">${ravenSvg("rv")}${escapeHtml(HOST)}/mcp</span>
+      <span class="farrow">──▶</span>
+      <span class="fnode">your agent</span>
+    </div>
+  </section>
+
+  <section class="sec" id="why">
+    <p class="eyebrow">Why a gateway</p>
+    <h2>One install replaces the pile.</h2>
+    <p class="sub">The point isn't fewer tabs — it's a <b>smarter agent</b>. When every source lives in
+      one catalog, Raven can answer the questions that fall between services.</p>
+    <div class="vs">
+      <div class="col">
+        <h3>Wiring it yourself</h3>
+        <ul>
+          <li>A separate MCP server for every service</li>
+          <li>API keys to obtain, store, and rotate</li>
+          <li>Dozens of tool schemas crowding the context window</li>
+          <li>One source per question — you do the cross-referencing</li>
+          <li>Breaks quietly whenever any service changes</li>
+        </ul>
+      </div>
+      <div class="col win">
+        <h3>Pointing at Raven</h3>
+        <ul>
+          <li><b>One endpoint,</b> one browser sign-in</li>
+          <li><b>No keys</b> — secrets stay server-side, out of your agent's reach</li>
+          <li><b>Two lean tools</b> that leave the context window to your work</li>
+          <li><b>One answer</b> composed from several sources at once</li>
+          <li><b>Checked daily</b> against the live services</li>
+        </ul>
+      </div>
+    </div>
+    <p class="hood">Under the hood: two MCP tools. <code>search</code> ranks 271 operations, docs, and
+      skill sections; <code>execute</code> runs your agent's JavaScript in a no-network sandbox where
+      every call is validated against the catalog.</p>
+  </section>
+
+  <div class="cta-row">
+    <span class="line">Two minutes from paste to expert.</span>
+    <a class="btn btn-primary" href="#connect">Connect your agent</a>
+  </div>
+</div>` +
     `<footer><div class="wrap foot">
-  <div class="l">${escapeHtml(HOST)} <b>·</b> all of Stellar, one MCP endpoint</div>
+  <div class="l">${escapeHtml(HOST)} <b>·</b> all of Stellar, one connection</div>
   <div class="foot-links">
     <a href="https://github.com/kalepail/stellar-raven" target="_blank" rel="noopener">GitHub</a>
     <a href="https://stellar.org" target="_blank" rel="noopener">Stellar</a>
+    <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms</a>
+    <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy</a>
   </div>
 </div></footer>` +
     `<script>${SCRIPT}</script></body></html>`
