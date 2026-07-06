@@ -7,6 +7,7 @@ evidence:
   - live probe 2026-07-03: find_av_passages returns only summary/long_summary (AI-generated) + start_offset — no transcript text field
   - lumenloop/lumenloop-skills @ d92c56b — stellar-project-dossier SKILL.md pipeline row 5 ("Direct quotes … transcript passages to quote"); stellar-ecosystem-digest Quality rules ("only find_av_passages gives verbatim passages")
   - Solo project 49, todo 825 (skills-harvest verification pass)
+  - live re-verified 2026-07-06 (eval round todo 846): find_av_passages still returns only AI-generated summary/long_summary + start_offset — no transcript/verbatim text field
 ---
 
 ## Finding

@@ -9,6 +9,7 @@ evidence:
   - caused 2 baseline QA verdicts in the 2026-07-03 round
   - Solo project 49, todo 822, comments 2204-2210
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-soroban-deploy-cli, partial) — recurred; live skill.read of build-deploy-invoke still serves wasm32-unknown-unknown while live docs say wasm32v1-none (Solo scratchpad 521)
+  - live re-verified 2026-07-06 (eval round todo 846): skill.read of build-deploy-invoke still serves wasm32-unknown-unknown twice (build comment + deploy --wasm path), zero occurrences of wasm32v1-none
 ---
 
 ## Finding

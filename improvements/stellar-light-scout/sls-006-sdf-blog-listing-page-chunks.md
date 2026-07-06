@@ -1,12 +1,13 @@
 ---
 id: sls-006
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-03
 evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-eco-stellar-rwa-stablecoin-volume)
   - live searchResearch probes source:sdf-blog + source:dev-docs (2026-07-03 evening, production)
   - Solo project 49, todo 807, scratchpad 521
+  - live re-check 2026-07-06 (eval round todo 846): FIXED — searchResearch source:sdf-blog now returns real article-body chunks (incl. the Q1 2026 report's "86% year-over-year growth in total developers, according to Electric Capital" and a closing-section chunk); all 10 hits substantive content from distinct SDF posts, no listing/tag-page chunks observed
 ---
 
 ## Finding
@@ -28,6 +29,10 @@ source:sdf-blog ×2 → index/tag pages only, no article-body chunk for the
 Q1 report; source:dev-docs → the Apr 23 2026 dev-meeting chunk (different
 figures) is the closest substantive hit; triplicate tag-page chunks
 observed. Round record: Solo scratchpad 521 (batch-1 review report).
+
+Fixed upstream: the 2026-07-06 live re-check found the Q1 2026 article body
+chunked and searchable with substantive content, and no listing/tag-page or
+duplicate tag chunks in the results.
 
 ## Recommendation
 

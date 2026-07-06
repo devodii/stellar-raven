@@ -9,6 +9,7 @@ evidence:
   - QA case q-protocol-24-whisk-incident (the round's one real QA failure)
   - live re-execution: correct content is hit #1 for the meetings-category query
   - Solo project 49, todo 822, comments 2204-2210
+  - live re-verified 2026-07-06 (eval round todo 846): bare "Protocol 24" still returns 8/8 SEP-24 anchor pages; the Whisk/state-archival meetings content only surfaces (as hit #1) on the detail-rich meetings-scoped query
 ---
 
 ## Finding

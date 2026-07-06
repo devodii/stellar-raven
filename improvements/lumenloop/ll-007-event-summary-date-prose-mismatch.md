@@ -7,6 +7,7 @@ evidence:
   - live search_content_semantic events probe (2026-07-03 evening, production)
   - 2 of ~14 India event rows affected (Bhopal + Jabalpur "Build On Stellar" workshops)
   - Solo project 49, todo 807, scratchpad 521
+  - live re-verified 2026-07-06 (eval round todo 846): Bhopal (id 1597) and Jabalpur (id 1598) rows still carry start_at 2026-06-27 with "July 27" in the summary prose
 ---
 
 ## Finding

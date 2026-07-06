@@ -6,6 +6,7 @@ discovered: 2026-07-03
 evidence:
   - ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md (mirror, verbatim of upstream lumenloop/lumenloop-skills)
   - audit sweep 2026-07-03 (documentation-consistency pass)
+  - live re-verified 2026-07-06 (eval round todo 846): worked example still hardcodes "Today is 2026-06-08" and date_end="2026-06-08" throughout, byte-identical to the quoted lines, no placeholder marker added
 ---
 
 ## Finding

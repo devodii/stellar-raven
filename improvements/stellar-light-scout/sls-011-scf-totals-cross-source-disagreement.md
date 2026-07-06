@@ -6,6 +6,7 @@ discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03 (scout.searchProjects + lumenloop.get_project on slug lobstr; Solo scratchpad 521 follow-up, todo 826 comment 2224)
   - consumer-side workaround shipped: eval/qa/golden-overrides.json q-eco-lobstr-wallet graderNotes instruct not penalizing either figure
+  - live re-verified 2026-07-06 (eval round todo 846): lobstr still Scout $232,000 (scfAmountStatus:"disclosed") vs Lumenloop $267,463 — same $35,463 gap, same rounds [2,17,22], still no basis note on either figure; partial improvement: Scout now exposes scfAwardedRounds:[2,17,22], but no per-round dollars
 ---
 
 ## Finding

@@ -7,6 +7,7 @@ evidence:
   - gateway retirement decision + verification, Solo project 49, todo 825 (2026-07-03)
   - scripts/build-catalog.mjs RETIRED_ONBOARDING_SKILLS (deny-list-as-data, this repo)
   - content survey: lumenloop-api family teaches Bearer llmcp_ auth, key minting, REST envelope; playbooks reference tools by bare name only (zero REST markers)
+  - live re-verified 2026-07-06 (eval round todo 846): stellar-project-dossier playbook still ships no frontmatter audience/transport marker; the retirement of the 7 onboarding skills is holding (playbook still bare-name tool refs, zero REST/auth markers)
 ---
 
 ## Finding

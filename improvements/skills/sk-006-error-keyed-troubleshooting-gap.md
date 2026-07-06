@@ -7,6 +7,7 @@ evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-cli-rust-windows-troubleshooting)
   - live zero-hit probes for exact error strings across search_docs + skill sections (2026-07-03 evening)
   - Solo project 49, todo 807, scratchpad 521
+  - live re-verified 2026-07-06 (eval round todo 846): search_sdk_cli_tools_docs on 'No such file or directory wasm' → 5 generic Lab/Quickstart/cookbook hits, still no error-keyed missing-wasm/wrong-path troubleshooting row
 ---
 
 ## Finding

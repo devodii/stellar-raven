@@ -8,6 +8,7 @@ evidence:
   - eval/qa/results/2026-07-03T04-13-42-variantA.json
   - live-lane case q-live-ll-regions-vocab (passes on behavior; drift recurring)
   - Solo project 49, todo 822, comments 2204-2210
+  - live re-verified 2026-07-06 (eval round todo 846): get_regions → 95 free-text values with duplicate casings/synonyms ('africa'/'Africa', 'mena'/'MENA', 'latam' vs 'Latin America & Caribbean') — still no canonical enum
 ---
 
 ## Finding

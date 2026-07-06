@@ -8,6 +8,7 @@ evidence:
   - eval/qa/results/2026-07-03T04-13-42-variantA.json
   - live re-execution resolved all five cited audit reports exactly
   - Solo project 49, todo 822, comments 2204-2210
+  - live re-verified 2026-07-06 (eval round todo 846): OtterSec/Axelar citation still resolves exactly (stellarsecurityportal.com/report/45, auditor OtterSec, protocol Axelar Network) — the trust anchor holds
 ---
 
 ## Finding

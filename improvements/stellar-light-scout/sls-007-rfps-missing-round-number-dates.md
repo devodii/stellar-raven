@@ -1,12 +1,13 @@
 ---
 id: sls-007
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-03
 evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-scf-current-round)
   - live getRfps re-execution (2026-07-03 evening, production)
   - Solo project 49, todo 807, scratchpad 521
+  - live re-check 2026-07-06 (eval round todo 846): FIXED — getRfps meta now ships a scfRound object {currentRound, lastConfirmedRound:43 + note ("SCF #43 concluded, next round not confirmed open"), submissionWindow:{opens,closes}, asOf:"2026-07-03", verifyAt:communityfund.stellar.org} — the recommended fields verbatim; values are null only because no next round is confirmed open, which the payload now states honestly
 ---
 
 ## Finding
@@ -33,6 +34,11 @@ quarter+status only. The QA agent's answer (graded partial) could only
 say "active SCF quarter of Q2 2026" with a freshness caveat — the
 rubric-correct ceiling given the payload. Round record: Solo scratchpad
 521 (batch-2 review report).
+
+Fixed upstream: the 2026-07-06 live re-check found the recommended
+round-identity fields shipped (`scfRound` with lastConfirmedRound, submissionWindow,
+asOf, and a verify link), converting the previously-unanswerable question into
+one answerable with an honest freshness caveat.
 
 ## Recommendation
 

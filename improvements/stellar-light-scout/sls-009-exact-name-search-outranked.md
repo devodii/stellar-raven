@@ -1,10 +1,11 @@
 ---
 id: sls-009
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03 (scout.searchProjects name probes; Solo scratchpad 521 follow-up, todo 826 comment 2224)
+  - live re-check 2026-07-06 (eval round todo 846): FIXED — q:"Slender" and q:"Blend" now rank the exact-name match #1 in both queries, with Reflector demoted to rank 2
 ---
 
 ## Finding
@@ -21,6 +22,10 @@ Live 2026-07-03, production `execute`: `scout.searchProjects({q:"Slender"})`
 and `scout.searchProjects({q:"Blend"})` each returned Reflector at rank 1 with
 the exact-name record below it. Both target records exist and are Live (Blend
 by Script3, Slender by EQ Lab), so this is pure ranking, not coverage.
+
+Fixed upstream: the 2026-07-06 live re-check found exact-name matches boosted
+to rank 1 for both probe queries, with the authority-heavy Reflector record
+demoted below them.
 
 ## Recommendation
 

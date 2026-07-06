@@ -8,6 +8,7 @@ evidence:
   - eval/qa/results/2026-07-03T04-13-42-variantA.json
   - live re-execution against local server confirmed slug/content mismatch
   - Solo project 49, todo 822, comments 2204-2210
+  - live re-verified 2026-07-06 (eval round todo 846): slug stellar-weekly-roundup-week-29-2026 still fronts "week of May 29, 2026" content (created 2026-06-05) — the week-number/date mismatch persists; side drift: search_documents now requires a collection arg
 ---
 
 ## Finding

@@ -6,6 +6,7 @@ discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03 (scout.searchProjects category Anchor, scout.matchPartners, lumenloop.search_directory/get_project; Solo scratchpad 521 follow-up, todo 826 comment 2224)
   - consumer-side workaround shipped: eval/qa/golden-overrides.json q-crp-anchors-by-corridor (dated-citation guard instead of structured grounding)
+  - live re-verified 2026-07-06 (eval round todo 846): 19 Anchor-category projects still carry coverage only in shortDescription prose — no countries[]/currencies[]/seps[] structured fields (and no regions field) on project rows
 ---
 
 ## Finding

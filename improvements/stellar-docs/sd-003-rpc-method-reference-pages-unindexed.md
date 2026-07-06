@@ -8,6 +8,7 @@ evidence:
   - live soft-empty on get_doc_page_sections for the getTransactions method page + WebFetch of the live page (2026-07-03 evening)
   - Solo project 49, todo 807, scratchpad 521
   - 2026-07-03 corrected-golden re-judge (todo 827): the saved agent answer flips partial → wrong under the fixed golden — the agent explicitly denied a getTransactions 200 cap ("did not find RPC-doc confirmation"), a real wrong answer this gap causes that the old golden masked by encoding the same false belief
+  - live re-verified 2026-07-06 (eval round todo 846): get_doc_page_sections on the getTransactions method page still returns the identical soft-empty ("auto-generated API-reference pages are not indexed")
 ---
 
 ## Finding

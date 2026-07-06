@@ -1,12 +1,13 @@
 ---
 id: sls-013
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03T18:34Z (scout.analyzeEcosystem dimension=funding; todo 829 skeptic sweep, Solo scratchpad 521)
   - prior live probes recorded in the golden corpus: 2026-06-22 and 2026-06-29 (graderNotes of q-scf-total-distributed)
   - communityfund.stellar.org fetched same day (homepage + awards page)
+  - live re-check 2026-07-06 (eval round todo 846): FIXED — analyzeEcosystem funding now ships computedAt + methodologyVersion:"funding-v2 (2026-07-05)" + a countBasis note, byRound populated with 41 real rounds, and the funnel carries an explicit scope string ("hackathon-linked projects only"); total $40,456,895.13 / 399 projects is ~0.7% off the 07-03 reading — normal re-indexing, not the prior unmarked swings
 ---
 
 ## Finding
@@ -38,6 +39,11 @@ the same day. Consumer impact is concrete: this repo's eval golden pinned
 the 06-29 snapshot as "the live snapshot" and was broken by the swing —
 goldens now refuse to pin the metric at all (eval/qa/golden-overrides.json
 q-scf-total-distributed).
+
+Fixed upstream: the 2026-07-06 live re-check found all three recommendations
+implemented (methodology/recomputation marker, populated byRound, documented
+count basis plus an explained funnel scope), with only ~0.7% residual drift in
+the headline total.
 
 ## Recommendation
 

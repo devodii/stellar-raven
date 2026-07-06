@@ -10,6 +10,7 @@ evidence:
   - live re-execution against local server confirmed no placement fields
   - Solo project 49, todo 822, comments 2204-2210
   - "2026-07-03 afternoon re-check: live probe of ALL 11 completed hackathons via production execute — winner entries now carry hackathonPlacement + placementRank (Solo todo 824, comment 2216)"
+  - live re-verified 2026-07-06 (eval round todo 846): no regression — stellar-agents-x402-stripe-mpp winners carry hackathonPlacement "1st Place".."5th Place" with placementRank 1..5
 ---
 
 ## Finding

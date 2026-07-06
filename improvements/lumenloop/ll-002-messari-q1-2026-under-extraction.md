@@ -8,6 +8,7 @@ evidence:
   - eval/qa/results/2026-07-03T04-13-42-variantA.json
   - live re-execution against local server confirmed ~702-char extraction
   - Solo project 49, todo 822, comments 2204-2210
+  - live re-verified 2026-07-06 (eval round todo 846): same thin extraction persists — long_summary 694 chars / summary 344 chars for the full Messari report; item's collection drifted research→av (get_document collection:'av', id:2207), so the original types:['research'] probe no longer surfaces it
 ---
 
 ## Finding

@@ -7,6 +7,7 @@ evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-eco-stellar-rwa-stablecoin-volume)
   - live replay of the agent's exact search_content_semantic query (2026-07-03 evening, production)
   - Solo project 49, todo 807, scratchpad 521
+  - live re-verified 2026-07-06 (eval round todo 846): exact query still surfaces Q2 2021 / Q4 2020 / Q2 2024 reviews at ranks 7/9/10 with article 5945 absent from the top 10, and the sim-order inversion (rank 6 sim 0.597 above ranks 1-5 at 0.544-0.531) still reproduces
 ---
 
 ## Finding

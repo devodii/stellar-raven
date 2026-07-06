@@ -1,13 +1,14 @@
 ---
 id: sls-005
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-03
 evidence:
   - live probe of all 11 completed hackathons via production execute (2026-07-03 afternoon)
   - buildonstellarchile — 14 winners, every hackathonPlacement "Winners", every placementRank null, awards heterogeneous ($50/$100 video-pitch prizes)
   - also tier-only: stellar-hacks-zk-gaming (5), ideaton2026 (6), ideatontelluscoop (3)
   - Solo project 49, todo 824, comment 2216
+  - live re-check 2026-07-06 (eval round todo 846): FIXED — buildonstellarchile still returns 14 tier-only winners ("Winners"/placementRank:null, the honestly-unranked data this finding described), but the payload now carries event-level winnersRanked:false (true on ordinal events like stellar-agents-x402-stripe-mpp) — the exact self-describing flag this finding recommended
 ---
 
 ## Finding
@@ -32,6 +33,11 @@ completed events, 6 return ordinal labels with numeric `placementRank`;
 `telluscoop-ideaton` has zero winners recorded. On `buildonstellarchile` the
 award strings show genuinely tiered, non-ordinal prizes (multiple equal $50/$100
 awards), confirming the nulls are honest — the data has no ranking to give.
+
+Fixed upstream: the 2026-07-06 live re-check found the recommended event-level
+flag shipped — `winnersRanked: false` on tier-only events, `true` on ordinal
+ones — making the unordered case self-describing; the null ranks themselves
+remain honest data, not a defect.
 
 ## Recommendation
 

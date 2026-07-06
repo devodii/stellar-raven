@@ -7,6 +7,7 @@ evidence:
   - lumenloop.com/research/stellar-weekly-roundup-week-29-2026 + lumenloop.com/media/state-stellar-q1-2026-beyond (fetched 2026-07-03)
   - messari.io/report/state-of-stellar-q1-2026 (the written report, pub 2026-04-29) + Messari interview youtube.com/watch?v=t0agtgLajhg (2026-06-04)
   - Solo project 49, todo 829 (consistency sweep + golden-truth resolution), scratchpad 521
+  - live re-verified 2026-07-06 (eval round todo 846): both divergent sources still live in the index — av 2207 (interview: $2.8B RWA, 1,700 devs) vs article 5945 (written report: $2B RWA, 4,400+ devs) — so the misattribution mechanism persists; the lumenloop.com editorial pages themselves were not re-fetched this round
 ---
 
 ## Finding
