@@ -27,3 +27,6 @@ eval/qa/results/
 eval/agentic/results/
 # run-routing's tsc-transpile fallback output (eval/run-routing.mjs)
 eval/.build/
+
+# local probe/measurement artifacts (round-5 adversarial probes etc.)
+/tmp/
