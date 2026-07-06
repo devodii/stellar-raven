@@ -457,24 +457,40 @@ const SCRIPT = `
 // Page shells
 // ---------------------------------------------------------------------------
 
-function head(title: string, description: string, css: string, headExtra: string = ""): string {
+const OG_ALT =
+  "Stellar Raven — all of Stellar, one connection. A Bayer-dithered orange globe " +
+  "beside the endpoint raven.stellar.buzz/mcp.";
+
+function head(
+  title: string,
+  description: string,
+  css: string,
+  headExtra: string = "",
+  noindex: boolean = false
+): string {
   return `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(description)}"/>
-<meta name="theme-color" content="#0e150d"/>
+${noindex ? `<meta name="robots" content="noindex"/>\n` : ""}<meta name="theme-color" content="#0e150d"/>
 <meta name="color-scheme" content="dark"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="${escapeHtml(title)}"/>
 <meta property="og:description" content="${escapeHtml(description)}"/>
 <meta property="og:image" content="${OG_IMAGE}"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:type" content="image/png"/>
+<meta property="og:image:alt" content="${escapeHtml(OG_ALT)}"/>
 <meta property="og:url" content="https://${HOST}/"/>
 <meta property="og:site_name" content="Stellar Raven"/>
+<meta property="og:locale" content="en_US"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="${escapeHtml(title)}"/>
 <meta name="twitter:description" content="${escapeHtml(description)}"/>
 <meta name="twitter:image" content="${OG_IMAGE}"/>
+<meta name="twitter:image:alt" content="${escapeHtml(OG_ALT)}"/>
 <link rel="icon" href="${FAVICON}"/>
 <link rel="apple-touch-icon" href="${FAVICON}"/>
 <link rel="canonical" href="https://${HOST}/"/>
@@ -600,8 +616,17 @@ const JSONLD =
         "@id": `https://${HOST}/#app`,
         name: "Stellar Raven",
         url: `https://${HOST}/`,
+        image: OG_IMAGE,
         applicationCategory: "DeveloperApplication",
         operatingSystem: "Any (remote MCP server)",
+        featureList: [
+          "Official Stellar developer docs search",
+          "Live Stellar ecosystem data (projects, graded repos, builders, partners)",
+          "Community intel (news, media, events, governance, SCF)",
+          "Curated skill playbooks read section by section",
+          "Sandboxed no-network code execution composing multiple sources",
+          "One OAuth sign-in, no API keys"
+        ],
         description:
           "A remote MCP server that gives AI agents the whole Stellar ecosystem in one connection: " +
           "official docs, live ecosystem data, community intel, and curated playbooks, unified in one " +
@@ -620,8 +645,8 @@ const JSONLD =
 export function landingPage(): string {
   return (
     head(
-      "Stellar Raven — all of Stellar, one MCP connection for your agent",
-      "Give your AI agent the whole Stellar ecosystem in one connection: official docs, live ecosystem data, community intel, and proven playbooks — cross-referenced into real answers. Works with Claude, Cursor, Codex, and any MCP client. One sign-in, no API keys.",
+      "Stellar Raven — the Stellar MCP server for AI agents",
+      "One connection gives your AI agent all of Stellar: official docs, live ecosystem data, community intel, and proven playbooks. One sign-in, no API keys.",
       BASE,
       JSONLD
     ) +
@@ -848,7 +873,7 @@ export function consentPage(args: {
     })
     .join("");
   return (
-    head("Authorize · Stellar Raven", "Authorize an MCP client to connect to Stellar Raven.", BASE + CONSENT_CSS) +
+    head("Authorize · Stellar Raven", "Authorize an MCP client to connect to Stellar Raven.", BASE + CONSENT_CSS, "", true) +
     `<div class="stage"></div><div class="scrim"></div>` +
     `<div class="auth-brand">${ravenSvg("rv")}<b>Stellar Raven</b><i>codemode</i></div>` +
     `<main class="auth"><div class="card">

@@ -52,17 +52,20 @@ magick([p("globe.png"),
   "(", "-size", "1200x150", "gradient:#0e150dCC-#0e150d00", ")", "-geometry", "+0+0", "-composite",
   p("og_base.png")]);
 // 5) type — right column (x≈600), editorial faces, title stacked on two lines
+// The brand appears once (the big title) — the top row is the raven mark plus
+// the category eyebrow, not a second wordmark. Tagline leads with the value
+// line in bright type, the pillar line beneath it in dim type, both sized to
+// stay inside the right column (x 600..1140).
 const RX = 600;
 magick([p("og_base.png"),
-  "-fill", "#ff5500", "-draw", `translate 600,42 scale 1.15,1.15 ${RAVEN}`,
-  "-font", SANS, "-weight", "600", "-pointsize", "22", "-fill", "#9aa890", "-annotate", `+${RX + 40}+60`, "STELLAR RAVEN",
-  "-font", MONO, "-pointsize", "19", "-fill", "#9aa890", "-annotate", `+${RX}+170`, "REMOTE MCP SERVER",
-  "-font", MONO, "-pointsize", "19", "-fill", "#ff5500", "-annotate", `+${RX + 240}+170`, "LIVE",
-  "-font", SERIF, "-weight", "700", "-pointsize", "96", "-fill", "#eef0e2", "-annotate", `+${RX}+270`, "Stellar",
-  "-font", SERIF, "-weight", "700", "-pointsize", "96", "-fill", "#ff5500", "-annotate", `+${RX}+370`, "Raven",
-  "-font", SANS, "-weight", "400", "-pointsize", "25", "-fill", "#eef0e2", "-annotate", `+${RX}+440`, "All of Stellar, one connection —",
-  "-font", SANS, "-weight", "400", "-pointsize", "25", "-fill", "#eef0e2", "-annotate", `+${RX}+476`, "docs, data, intel, playbooks. No keys.",
-  "-font", MONO, "-pointsize", "21", "-fill", "#ff5500", "-annotate", `+${RX}+552`, "raven.stellar.buzz/mcp",
+  "-fill", "#ff5500", "-draw", `translate ${RX},128 scale 1.3,1.3 ${RAVEN}`,
+  "-font", MONO, "-pointsize", "19", "-fill", "#9aa890", "-annotate", `+${RX + 48}+158`, "REMOTE MCP SERVER",
+  "-font", MONO, "-pointsize", "19", "-fill", "#ff5500", "-annotate", `+${RX + 296}+158`, "· LIVE",
+  "-font", SERIF, "-weight", "700", "-pointsize", "96", "-fill", "#eef0e2", "-annotate", `+${RX}+262`, "Stellar",
+  "-font", SERIF, "-weight", "700", "-pointsize", "96", "-fill", "#ff5500", "-annotate", `+${RX}+362`, "Raven",
+  "-font", SANS, "-weight", "600", "-pointsize", "29", "-fill", "#eef0e2", "-annotate", `+${RX}+442`, "All of Stellar, one connection.",
+  "-font", SANS, "-weight", "400", "-pointsize", "22", "-fill", "#9aa890", "-annotate", `+${RX}+484`, "Docs · data · intel · playbooks. No keys.",
+  "-font", MONO, "-pointsize", "21", "-fill", "#ff5500", "-annotate", `+${RX}+560`, "raven.stellar.buzz/mcp",
   "-resize", "1200x630!", "-strip", p("og_final.png")]);
 
 const b64 = readFileSync(p("og_final.png")).toString("base64");
