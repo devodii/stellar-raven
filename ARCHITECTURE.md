@@ -46,15 +46,25 @@ registration and all model-facing prose live in `src/mcp/tools.ts`; the initiali
 `SERVER_INSTRUCTIONS` (workflow + envelope contract) ride along because clients surface
 them in the system prompt, where they outlive per-tool descriptions.
 
-The `search` tool handler is a pure function call: `searchCatalog(getCatalog(), { query,
+The `search` tool handler is a pure function call: `searchCatalogPage(getCatalog(), { query,
 kind?, service?, limit? })`. `getCatalog()` (`src/catalog/load.ts`) imports the generated
 `catalog/manifest.json` as a bundled JSON module and validates it once per isolate via
 `loadManifest` — a malformed manifest throws loudly at first use, never softens. The
-response is `{ hits, nextSteps }` (as both `text` and `structuredContent`); `nextSteps` is
-a server-authored hint that restates the compose-in-one-script workflow and the envelope
-rule on every call. A `search` telemetry event (`src/observability.ts` → Workers Logs)
-records the query, hit count, top-3 ids, response size in chars (search has no output cap
-today — `responseChars` exists to set any future cap from data), and latency.
+response is `{ hits, total, truncated, nextSteps }` (as both `text` and
+`structuredContent`): `total` counts every distinct catalog entry the consulted scorer
+tiers matched (post-filter, pre-paging), `truncated` = `total > hits.length` (retry with a
+higher `limit` or a narrower query — mirrors upstream codemode's search shape), and
+`nextSteps` is a server-authored hint that restates the compose-in-one-script workflow and
+the envelope rule on every call. The handler also validates the `service` filter against
+the catalog's real service set (`catalogServices`): an unknown value ("stellardocs",
+"stellar-docs") returns zero hits with a `nextSteps` naming the bad value and the valid
+ones instead of a silently-empty page — the frozen `searchCatalog` contract keeps filters
+silent, so validation lives at the tool boundary (and, for `codemode.search`, at the
+sandbox boundary in `src/executor/providers.ts`, where an unknown `kind`/`service` is an
+error envelope listing the valid values). A `search` telemetry event
+(`src/observability.ts` → Workers Logs) records the query, hit/total/truncated counts,
+top-3 ids, response size in chars (search has no output cap today — `responseChars` exists
+to set any future cap from data), and latency.
 
 ## 2. The scoring pipeline
 
@@ -105,18 +115,26 @@ silently shadow one operation with another). `searchCatalog` needs no exposure f
 everything in the manifest is exposed by construction (ADR-0003,
 `research/decisions/0003-build-time-exposure-filtering.md`: exclusions, including the old
 `lumenloop.skill.*` twin namespace and the retired onboarding skills, are never emitted by
-`scripts/build-catalog.mjs`). It sorts score-desc then id-asc, and shapes the page in one way:
+`scripts/build-catalog.mjs`). The page-shaping pipeline lives in `searchCatalogPage`
+(returns `{ hits, total, truncated }`; `searchCatalog` is its thin `.hits` wrapper — the
+frozen eval/vitest contract). It sorts score-desc then id-asc, and shapes the page in one
+way:
 
 - *Tiered gate-rescue backfill* — tier 1 is the pipeline above (levers 1–4). Only when it leaves
   the page short (fewer than `limit` gate-passing candidates exist — measured on long
   extended-lane questions that gate to zero) does tier 2 re-run the same pipeline under the
   ungated scorer (lever 5) and append its novel hits **strictly below** every tier-1 hit. Tier-2
   hits never displace or outrank a tier-1 hit, so a full page is byte-identical to the
-  pre-tiering behavior; a page mixing tiers is score-sorted within each tier but not necessarily
-  across the seam. Behavior changes only for long multi-clause queries that previously returned
-  a short (or empty) page.
+  pre-tiering behavior; a page mixing tiers is score-sorted within each tier but **not across
+  the seam** — the two scorers use different math, so a tier-2 raw score can exceed the tier-1
+  scores ranked above it. Every hit therefore carries `tier: "gated" | "backfill"`, and `score`
+  is documented as comparable only among same-tier hits within one response. Behavior changes
+  only for long multi-clause queries that previously returned a short (or empty) page.
+- `total` counts the distinct candidates the consulted tiers accepted (post kind/service
+  filter, pre diversity/paging): tier-1 candidates alone when tier 1 filled the page, plus the
+  novel ungated candidates when the backfill ran; `truncated` = `total > hits.length`.
 
-**Hit anatomy**: `{ id, service, kind, score, description }`, plus a rendered **TypeScript
+**Hit anatomy**: `{ id, service, kind, score, tier, description }`, plus a rendered **TypeScript
 signature** for operations (`renderSignature` — input/output type declarations from the
 entry's JSON Schemas via the vendored type generator, and a callable line that spells out
 the *full result envelope union*, because a bare `Promise<Output>` teaches exactly the
@@ -232,7 +250,11 @@ The `codemode` provider (`buildCodemodeProvider`, `src/executor/providers.ts`) i
   context** unless a script deliberately returns slices of it. The unregistered
   `createSpecSearchRunner` (`src/executor/run.ts`) keeps the source-injection variant
   buildable for future A/Bs.
-- **`codemode.search(queryOrOpts)`** — the same host-side `searchCatalog`, mid-script.
+- **`codemode.search(queryOrOpts)`** — the same host-side `searchCatalogPage`, mid-script:
+  resolves to `{ ok: true, hits, total, truncated }` (tier-marked hits and pagination facts,
+  §1/§2), with the same kind/service filter validation at the sandbox boundary — an unknown
+  filter value returns `{ ok: false, error }` naming the valid ones (explicit `null` = no
+  filter, like `limit`).
 - **`codemode.catalog()`** — the full manifest as flat data for arbitrary code-grep, with
   host-only detail (transport, provenance) stripped. Everything in it is callable/readable —
   the manifest is pre-filtered at build time (ADR-0003), so there is no policy layer to show.

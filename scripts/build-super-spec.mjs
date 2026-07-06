@@ -455,7 +455,15 @@ function buildSkillsPaths(skillIndex) {
           }
         },
         responses: {
-          200: { description: "{ ok: true, hits: [{ id, service, kind, score, description }], total }" }
+          200: {
+            description:
+              "{ ok: true, hits: [{ id, service, kind, score, tier, description }], total, truncated } or " +
+              "{ ok: false, error } (an unknown kind/service filter value is rejected with the valid names — " +
+              "filters are exact-match). Each hit's tier is \"gated\" (strict primary scorer) or \"backfill\" " +
+              "(gate-relaxed page fill, always ranked below every gated hit); score compares ONLY among " +
+              "same-tier hits — a backfill score can be numerically larger than a gated one ranked above it. " +
+              "truncated: true means more entries matched (total) than returned — raise limit or narrow the query."
+          }
         },
         "x-service": "skills",
         "x-execute": `await codemode.search({ query, service: "skills" })`

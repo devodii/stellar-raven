@@ -59,8 +59,9 @@
  *     `scoreEntryWeightedUngated` is the same pipeline (keyword blend,
  *     stopword rescue, kind weight) over a gate-free replica of the vendor
  *     math, kept beside it the same way lever 4 double-scores rather than
- *     editing the vendor file. searchCatalog() uses it ONLY to backfill a
- *     result page the gated tier left short — gated hits always rank first,
+ *     editing the vendor file. searchCatalogPage() (searchCatalog's engine)
+ *     uses it ONLY to backfill a result page the gated tier left short —
+ *     gated hits always rank first (hits carry tier: "gated" | "backfill"),
  *     so every ranking that worked before is byte-identical (see search.ts).
  */
 import {

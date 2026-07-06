@@ -429,6 +429,69 @@ describe("codemode fns", () => {
     expect(r2.hits.some((h) => h.id === "scout.submitPartnerListing")).toBe(false);
   });
 
+  it("search returns honest total/truncated and tier-marked hits (todos 838/840)", async () => {
+    const r = (await codemode.search!({ query: "stellar soroban contract", limit: 5 })) as {
+      ok: boolean;
+      hits: { tier: string }[];
+      total: number;
+      truncated: boolean;
+    };
+    expect(r.ok).toBe(true);
+    expect(r.hits).toHaveLength(5);
+    expect(r.hits.every((h) => h.tier === "gated" || h.tier === "backfill")).toBe(true);
+    // total counts matching entries BEFORE paging — a broad 3-token query
+    // over the real manifest matches far more than one page.
+    expect(r.total).toBeGreaterThan(r.hits.length);
+    expect(r.truncated).toBe(true);
+  });
+
+  it("search honors a VALID kind filter — every hit carries it (todo 839)", async () => {
+    const r = (await codemode.search!({ query: "stellar project dossier", kind: "skill" })) as {
+      ok: boolean;
+      hits: { kind: string }[];
+    };
+    expect(r.ok).toBe(true);
+    expect(r.hits.length).toBeGreaterThan(0);
+    expect(r.hits.every((h) => h.kind === "skill")).toBe(true);
+  });
+
+  it("search treats explicit null kind/service as 'no filter', like limit (todo 839)", async () => {
+    const r = (await codemode.search!({ query: "docs search", kind: null, service: null, limit: null })) as {
+      ok: boolean;
+      hits: { id: string }[];
+    };
+    expect(r.ok).toBe(true);
+    expect(r.hits.length).toBeGreaterThan(0);
+  });
+
+  it("search rejects near-miss service filters with the valid set (todo 839)", async () => {
+    for (const service of ["stellardocs", "stellar-docs", "scoutt"]) {
+      const r = (await codemode.search!({ query: "docs search", service })) as {
+        ok: boolean;
+        error: { service: string; kind: string; message: string };
+      };
+      expect(r.ok, `service: ${service}`).toBe(false);
+      expect(r.error.service).toBe("codemode");
+      expect(r.error.kind).toBe("error");
+      expect(r.error.message).toContain(`"${service}"`);
+      // Lists the real, catalog-derived service names.
+      for (const valid of ["lumenloop", "scout", "stellarDocs", "skills"]) {
+        expect(r.error.message, `service: ${service}`).toContain(valid);
+      }
+    }
+  });
+
+  it("search rejects an unknown kind with the valid set (todo 839)", async () => {
+    const r = (await codemode.search!({ query: "docs search", kind: "operations" })) as {
+      ok: boolean;
+      error: { kind: string; message: string };
+    };
+    expect(r.ok).toBe(false);
+    expect(r.error.kind).toBe("error");
+    expect(r.error.message).toContain('"operations"');
+    expect(r.error.message).toContain("operation, skill, skill-section");
+  });
+
   it("catalog() returns the full manifest view — every entry callable, host detail stripped", async () => {
     const view = (await codemode.catalog!()) as {
       entries: { id: string; transport?: unknown }[];

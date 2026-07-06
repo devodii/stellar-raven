@@ -141,6 +141,67 @@ describe("search behavior (host-side ranked)", () => {
     // SDK surfaces input validation failures as isError results.
     expect(result.isError).toBe(true);
   });
+
+  it("carries tier on every hit plus total/truncated pagination facts (todos 838/840)", async () => {
+    const result = await client.callTool({
+      name: "search",
+      arguments: { query: "stellar soroban contract", limit: 5 }
+    });
+    expect(result.isError).toBeFalsy();
+    const structured = result.structuredContent as {
+      hits: Array<{ tier: string }>;
+      total: number;
+      truncated: boolean;
+      nextSteps: string;
+    };
+    expect(structured.hits).toHaveLength(5);
+    expect(structured.hits.every((h) => h.tier === "gated" || h.tier === "backfill")).toBe(true);
+    expect(structured.total).toBeGreaterThan(structured.hits.length);
+    expect(structured.truncated).toBe(true);
+    // The truncation-retry hint rides along on truncated pages.
+    expect(structured.nextSteps).toContain("More entries matched than shown");
+  });
+
+  it("a VALID service filter flows through validation to service-scoped hits (todo 839)", async () => {
+    const result = await client.callTool({
+      name: "search",
+      arguments: { query: "docs search", service: "stellarDocs", limit: 20 }
+    });
+    expect(result.isError).toBeFalsy();
+    const structured = result.structuredContent as {
+      hits: Array<{ service: string }>;
+      total: number;
+      truncated: boolean;
+      nextSteps: string;
+    };
+    expect(structured.hits.length).toBeGreaterThan(0);
+    expect(structured.hits.every((h) => h.service === "stellarDocs")).toBe(true);
+    // limit 20 covers every stellarDocs entry: an un-truncated page must NOT
+    // carry the truncation-retry hint.
+    expect(structured.truncated).toBe(false);
+    expect(structured.nextSteps).not.toContain("More entries matched than shown");
+  });
+
+  it("an unknown service filter returns zero hits with the valid names, not a silent empty page (todo 839)", async () => {
+    const result = await client.callTool({
+      name: "search",
+      arguments: { query: "docs search", service: "stellardocs" }
+    });
+    expect(result.isError).toBeFalsy();
+    const structured = result.structuredContent as {
+      hits: unknown[];
+      total: number;
+      truncated: boolean;
+      nextSteps: string;
+    };
+    expect(structured.hits).toEqual([]);
+    expect(structured.total).toBe(0);
+    expect(structured.truncated).toBe(false);
+    expect(structured.nextSteps).toContain('"stellardocs"');
+    expect(structured.nextSteps).toContain("stellarDocs");
+    expect(structured.nextSteps).toContain("lumenloop");
+    expect(structured.nextSteps).toContain("scout");
+  });
 });
 
 describe("execute behavior", () => {

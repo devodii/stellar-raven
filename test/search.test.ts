@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import {
   loadManifest,
   searchCatalog,
+  searchCatalogPage,
   DEFAULT_SEARCH_LIMIT,
   type Catalog,
   type SearchHit
@@ -215,6 +216,7 @@ describe("searchCatalog — tiered gate-rescue backfill (round 4, M1)", () => {
       expect(hits, `query: ${query}`).toHaveLength(5);
       for (const hit of hits) {
         expect(gatedScore(hit.id, query), `query: ${query}, hit: ${hit.id}`).toBe(hit.score);
+        expect(hit.tier, `query: ${query}, hit: ${hit.id}`).toBe("gated");
       }
       for (let i = 1; i < hits.length; i++) {
         expect(hits[i - 1]!.score >= hits[i]!.score).toBe(true);
@@ -233,7 +235,10 @@ describe("searchCatalog — tiered gate-rescue backfill (round 4, M1)", () => {
     expect(hits).toHaveLength(5);
     // Pure tier-2 page: nothing passes the gated scorer (this is exactly the
     // query shape that returned [] before the backfill existed).
-    for (const hit of hits) expect(gatedScore(hit.id, query)).toBeNull();
+    for (const hit of hits) {
+      expect(gatedScore(hit.id, query)).toBeNull();
+      expect(hit.tier).toBe("backfill");
+    }
     // Within the tier, ranking stays score desc.
     for (let i = 1; i < hits.length; i++) {
       expect(hits[i - 1]!.score >= hits[i]!.score).toBe(true);
@@ -252,12 +257,115 @@ describe("searchCatalog — tiered gate-rescue backfill (round 4, M1)", () => {
     const tiers = hits.map((h) => gatedScore(h.id, query) !== null);
     expect(tiers[0], "top hit must be tier-1").toBe(true);
     expect(tiers).toContain(false); // page actually mixes tiers
+    // The tier marker (todo 838) must agree with the recomputed ground truth.
+    for (let i = 0; i < hits.length; i++) {
+      expect(hits[i]!.tier).toBe(tiers[i] ? "gated" : "backfill");
+    }
     // Monotone partition: once a tier-2 hit appears, no tier-1 hit follows.
     const seam = tiers.indexOf(false);
     expect(tiers.slice(seam).every((t) => !t)).toBe(true);
     // Tier-1 prefix carries unchanged tier-1 scores.
     for (let i = 0; i < seam; i++) {
       expect(gatedScore(hits[i]!.id, query)).toBe(hits[i]!.score);
+    }
+  });
+});
+
+describe("searchCatalogPage — tier marker + total/truncated (todos 838/840)", () => {
+  /** Hand-built operation entry (passes loadManifest's structural invariants). */
+  function op(name: string, description: string) {
+    return {
+      id: `lumenloop.${name}`,
+      service: "lumenloop" as const,
+      kind: "operation" as const,
+      description,
+      inputSchema: null,
+      outputSchema: null,
+      transport: null,
+      provenance: { source: "test://hand-built", fetchedAt: "2026-01-01T00:00:00Z" }
+    };
+  }
+
+  /**
+   * A catalog engineered so a long query gates MOST entries out: on the
+   * 10-content-token query below only alpha_handler covers ≥60% of the
+   * vocabulary (7/10); every other entry matches 1–2 tokens, failing the
+   * vendor coverage gate but scoring non-null ungated. Exact candidate
+   * counts are therefore known, so total/truncated are checkable as math,
+   * not just invariants.
+   */
+  const tiny = loadManifest({
+    version: 1,
+    generatedAt: "2026-01-01T00:00:00Z",
+    entries: [
+      op("alpha_handler", "alpha beta gamma delta epsilon zeta omega handler"),
+      op("kappa_export", "kappa metrics exporter"),
+      op("iota_relay", "iota queue relay"),
+      op("theta_warm", "theta cache warmer"),
+      op("alpha_lookup", "alpha beta lookup"),
+      op("alpha_feed", "alpha beta history feed"),
+      op("alpha_store", "alpha beta config store")
+    ]
+  });
+  const LONG_QUERY = "alpha beta gamma delta epsilon zeta omega theta iota kappa";
+
+  it("marks tiers on a mixed page and counts gated + novel ungated candidates", () => {
+    const page = searchCatalogPage(tiny, { query: LONG_QUERY, limit: 5 });
+    expect(page.hits).toHaveLength(5);
+    // Exactly one entry passes the coverage gate; it leads the page.
+    expect(page.hits[0]!.id).toBe("lumenloop.alpha_handler");
+    expect(page.hits[0]!.tier).toBe("gated");
+    for (const hit of page.hits.slice(1)) expect(hit.tier).toBe("backfill");
+    // total = 1 gated + 6 novel ungated (every entry matches ≥1 token).
+    expect(page.total).toBe(7);
+    expect(page.truncated).toBe(true);
+  });
+
+  it("searchCatalog is the thin .hits wrapper — identical page", () => {
+    for (const [query, limit] of [
+      [LONG_QUERY, 5],
+      ["alpha beta", 2],
+      ["alpha beta", 10]
+    ] as const) {
+      expect(searchCatalog(tiny, { query, limit })).toEqual(
+        searchCatalogPage(tiny, { query, limit }).hits
+      );
+    }
+  });
+
+  it("tier-1-only full page: total counts gated candidates only, truncated flags the cut", () => {
+    // 2-token query, 100%-coverage gate: exactly the four alpha+beta entries
+    // pass. Page of 2 fills from tier 1 alone, so tier 2 is never consulted
+    // and total is the gated candidate count.
+    const page = searchCatalogPage(tiny, { query: "alpha beta", limit: 2 });
+    expect(page.hits).toHaveLength(2);
+    for (const hit of page.hits) expect(hit.tier).toBe("gated");
+    expect(page.total).toBe(4);
+    expect(page.truncated).toBe(true);
+  });
+
+  it("total <= limit: tier 2 consulted but novel-empty, truncated false", () => {
+    // Same four gated candidates, page of 10: tier 1 leaves the page short,
+    // tier 2 re-runs ungated — but every ungated candidate is already a
+    // gated one (no other entry matches any token), so total stays 4.
+    const page = searchCatalogPage(tiny, { query: "alpha beta", limit: 10 });
+    expect(page.hits).toHaveLength(4);
+    for (const hit of page.hits) expect(hit.tier).toBe("gated");
+    expect(page.total).toBe(4);
+    expect(page.truncated).toBe(false);
+  });
+
+  it("real-manifest invariants: wrapper equality and truncated ⇔ total > hits.length", () => {
+    for (const query of [
+      "stellar soroban contract",
+      "search directory",
+      "wallet balance lookup",
+      "zzzzqqqq zzqqzzqq"
+    ]) {
+      const page = searchCatalogPage(catalog, { query, limit: 5 });
+      expect(searchCatalog(catalog, { query, limit: 5 })).toEqual(page.hits);
+      expect(page.total).toBeGreaterThanOrEqual(page.hits.length);
+      expect(page.truncated).toBe(page.total > page.hits.length);
     }
   });
 });

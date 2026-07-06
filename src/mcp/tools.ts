@@ -26,7 +26,7 @@
  */
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { searchCatalog } from "../catalog/search.ts";
+import { searchCatalogPage, catalogServices } from "../catalog/search.ts";
 import { getCatalog } from "../catalog/load.ts";
 import { CATALOG_KINDS } from "../catalog/types.ts";
 import type { ExecuteRunner } from "../executor/run.ts";
@@ -72,7 +72,16 @@ export const searchHitSchema = z.object({
   id: z.string().describe("Exact catalog id — use it verbatim; never guess variants."),
   service: z.string(),
   kind: z.enum(SEARCH_KINDS),
-  score: z.number().describe("Relevance score (higher is better; only comparable within one search)."),
+  score: z
+    .number()
+    .describe(
+      "Relevance score — higher is better, but ONLY comparable among hits with the same `tier` in this response. Gated and backfill scores come from different scorers on different scales; a backfill score can be numerically larger than the gated hits ranked above it."
+    ),
+  tier: z
+    .enum(["gated", "backfill"])
+    .describe(
+      "Which scorer ranked this hit: \"gated\" = the strict coverage-gated scorer (primary tier); \"backfill\" = the gate-relaxed scorer used only to fill out a page the gated tier left short (long multi-clause queries). Gated hits always rank above backfill hits."
+    ),
   description: z.string(),
   signature: z
     .string()
@@ -91,6 +100,17 @@ export const rankedSearchOutputSchema = {
     .array(searchHitSchema)
     .describe(
       "Ranked catalog entries. Operation hits include a rendered TypeScript signature you can call from `execute`."
+    ),
+  total: z
+    .number()
+    .int()
+    .describe(
+      "Distinct catalog entries in the match pool this page was drawn from (post kind/service filter, pre paging). Counts only the scorer tiers consulted for THIS page, so it is a floor, not an exhaustive match count — searching again with a higher `limit` can consult the backfill tier and report a larger total. total > hits.length means more matches exist than shown."
+    ),
+  truncated: z
+    .boolean()
+    .describe(
+      "True when total > hits.length — more matching entries exist than returned. If none of these hits fit, retry with a higher `limit` or a narrower query/filter before concluding the capability is missing."
     ),
   nextSteps: z.string().describe("What to do with these results (server hint).")
 };
@@ -118,7 +138,9 @@ Returns ranked hits with rendered TypeScript signatures so you can call them fro
 
 - Never guess operation or skill names — always discover them here first (or with \`codemode.search\` mid-script).
 - Prefer specific queries ("account trustlines", "soroban storage patterns") over broad ones.
-- Use \`kind\` to narrow to operations vs skills vs skill sections, and \`service\` to narrow to one namespace.
+- Use \`kind\` to narrow to operations vs skills vs skill sections, and \`service\` to narrow to one namespace. Filter values are exact-match — an unknown \`service\` is rejected with the valid names, never silently empty.
+- Each hit's \`tier\` says which scorer ranked it: "gated" (strict, primary) or "backfill" (gate-relaxed page fill for long queries, always ranked below every gated hit). \`score\` is comparable only among same-tier hits within one response — a backfill score can be numerically larger than a gated one ranked above it.
+- \`truncated: true\` means more entries matched (\`total\`) than the page shows — if nothing here fits, search again with a higher \`limit\` or a narrower query before concluding the capability is missing.
 - Skill hits are operational playbooks and carry \`availableSections\` — read those sections via \`codemode.skill.read(id, { sections })\` inside \`execute\`.
 - Deeper or arbitrary discovery lives inside \`execute\`: \`codemode.search(...)\` (this same ranked search, mid-script), \`codemode.catalog()\` (the full catalog as plain data for code-shaped grepping), and \`codemode.spec()\` (the unified OpenAPI super spec) — use them for follow-ups without another tool round-trip.`;
 
@@ -149,7 +171,7 @@ Every service call resolves (never throws) to either { ok: true, data } or { ok:
 
 - The ONLY globals are \`lumenloop\`, \`scout\`, \`stellarDocs\`, \`codemode\`, and standard JavaScript. There is no \`host\`, \`fs\`, \`require\`, \`process\`, or Node.js API.
 - Never guess method names — call an operation as \`<service>.<name>(args)\` exactly as the spec's operationId / x-execute line (or a search hit's signature) shows. Unknown names fail; there is no fuzzy resolution.
-- Mid-script discovery, three affordances: \`codemode.spec()\` returns the unified OpenAPI-style super spec covering every service ($refs resolved inline — paths keyed "/{service}/{operation}", operationId = the exact callable, x-execute = the exact sandbox call line); \`codemode.search("intent phrase")\` (or \`{ query, kind?, service?, limit? }\`) for RANKED results; and \`codemode.catalog()\` for the full catalog as plain data (every entry: id, service, kind, description, inputSchema, outputSchema — everything listed is callable/readable). \`codemode.describe("<exact id>")\` returns one entry's docs + signature. Use these for follow-ups instead of ending the script early.
+- Mid-script discovery, three affordances: \`codemode.spec()\` returns the unified OpenAPI-style super spec covering every service ($refs resolved inline — paths keyed "/{service}/{operation}", operationId = the exact callable, x-execute = the exact sandbox call line); \`codemode.search("intent phrase")\` (or \`{ query, kind?, service?, limit? }\`) for RANKED results — resolves to { ok: true, hits, total, truncated }; truncated means more entries matched than returned (raise \`limit\` or narrow the query — \`total\` is a floor, not exhaustive: it counts only the scorer tiers consulted for this page and can grow at a higher \`limit\`), and an unknown \`kind\`/\`service\` filter value comes back as an error listing the valid ones; and \`codemode.catalog()\` for the full catalog as plain data (every entry: id, service, kind, description, inputSchema, outputSchema — everything listed is callable/readable). \`codemode.describe("<exact id>")\` returns one entry's docs + signature. Use these for follow-ups instead of ending the script early.
 - Skills are operational playbooks — tested build/integration/recovery procedures: \`codemode.skill.read("<exact skill id>", { sections: ["<section-slug>"] })\`; section keys come from search hits' \`availableSections\` or the spec's x-skill-index. \`{ sections }\` is the ONLY option (unknown option keys are rejected, not ignored). It resolves to { ok: true, id, content | sections, availableSections, notice? } — skill content sits at the TOP LEVEL of the result, not under \`.data\` (that envelope is for service calls); failures are { ok: false, error } as usual. Large reads come back whole for in-sandbox use (grep/aggregate freely) with an advisory \`notice\` — but RETURN sections or aggregates from the script, not whole bodies. For build/integrate questions pair skill sections with \`stellarDocs.search_*\` (current reference truth); purely factual questions: docs first.
 - Do NOT use \`fetch\` — the sandbox has no network access; it will throw. All I/O goes through the service globals.
 - Do NOT use TypeScript syntax — no type annotations, interfaces, or generics. Plain JavaScript only.
@@ -192,7 +214,53 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
     },
     async (args) => {
       const t0 = Date.now();
-      const hits = searchCatalog(getCatalog(), {
+      const catalog = getCatalog();
+
+      // Filter validation (todo 839): `kind` is already zod-enum-guarded at
+      // the tool boundary, but `service` is a free string — a near-miss like
+      // "stellardocs" or "stellar-docs" used to silently exact-match nothing
+      // and read as "the capability is missing". searchCatalog stays silent
+      // on filters by (frozen) contract, so the correction lives here: keep
+      // the zero-hit response SHAPE and put the diagnosis in nextSteps.
+      const services = catalogServices(catalog);
+      const respond = (structured: {
+        hits: unknown[];
+        total: number;
+        truncated: boolean;
+        nextSteps: string;
+      }) => {
+        const text = JSON.stringify(structured);
+        logEvent("search", {
+          source: "tool",
+          query: args.query,
+          kind: args.kind ?? null,
+          service: args.service ?? null,
+          hits: structured.hits.length,
+          total: structured.total,
+          truncated: structured.truncated,
+          top: (structured.hits as { id: string }[]).slice(0, 3).map((h) => h.id),
+          // Context-cost observability: search has NO output cap today (per-hit
+          // signatures vary widely); this measures real-world response sizes so
+          // any future cap is set from data, not guessed.
+          responseChars: text.length,
+          ms: Date.now() - t0
+        });
+        return {
+          content: [{ type: "text" as const, text }],
+          structuredContent: structured
+        };
+      };
+
+      if (args.service !== undefined && !services.includes(args.service)) {
+        return respond({
+          hits: [],
+          total: 0,
+          truncated: false,
+          nextSteps: `Unknown service "${args.service}" — service filter values are exact-match. Valid services: ${services.join(", ")}. Retry with one of those exact values, or drop the \`service\` filter.`
+        });
+      }
+
+      const { hits, total, truncated } = searchCatalogPage(catalog, {
         query: args.query,
         kind: args.kind,
         service: args.service,
@@ -200,27 +268,9 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
       });
       const nextSteps =
         hits.length > 0
-          ? "These hits are composable: write ONE `execute` script that calls the several relevant operations (Promise.all across services for independent calls), then follows up with deeper calls parameterized by their results — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })`. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`), and pair them with stellarDocs searches for current reference truth. Use `codemode.search(...)` mid-script for follow-up discovery; search again here with narrower terms or `kind`/`service` filters if none fit."
+          ? `These hits are composable: write ONE \`execute\` script that calls the several relevant operations (Promise.all across services for independent calls), then follows up with deeper calls parameterized by their results — e.g. \`await lumenloop.search_directory({ query: "..." })\` then \`lumenloop.get_project({ slug })\`. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under \`.data\` (\`r.data.projects\`, never \`r.projects\`); check \`r.ok\` first. Skill hits are operational playbooks — read the sections you need in-script via \`codemode.skill.read(id, { sections })\` (keys: the hit's \`availableSections\`), and pair them with stellarDocs searches for current reference truth. Scores compare only within the same \`tier\` (gated hits always rank above backfill hits). Use \`codemode.search(...)\` mid-script for follow-up discovery; search again here with narrower terms or \`kind\`/\`service\` filters if none fit.${truncated ? " More entries matched than shown (truncated) — raise `limit` or narrow the query if none of these fit." : ""}`
           : "No hits. Try fewer, more specific words (e.g. \"account trustlines\" not a full sentence), or drop the `kind`/`service` filters. Do not conclude the capability is missing from one empty result.";
-      const structured = { hits, nextSteps };
-      const text = JSON.stringify(structured);
-      logEvent("search", {
-        source: "tool",
-        query: args.query,
-        kind: args.kind ?? null,
-        service: args.service ?? null,
-        hits: hits.length,
-        top: hits.slice(0, 3).map((h) => h.id),
-        // Context-cost observability: search has NO output cap today (per-hit
-        // signatures vary widely); this measures real-world response sizes so
-        // any future cap is set from data, not guessed.
-        responseChars: text.length,
-        ms: Date.now() - t0
-      });
-      return {
-        content: [{ type: "text" as const, text }],
-        structuredContent: structured
-      };
+      return respond({ hits, total, truncated, nextSteps });
     }
   );
 

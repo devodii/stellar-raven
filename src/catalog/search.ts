@@ -3,11 +3,22 @@
  *
  *   loadManifest(json: unknown): Catalog
  *   searchCatalog(catalog, { query, kind?, service?, limit? }): SearchHit[]
- *   type SearchHit = { id, service, kind, score, description, signature? }
+ *   type SearchHit = { id, service, kind, score, tier, description, signature? }
+ *
+ * (`tier` — todo 838 — is an additive metadata field on the hit, not a
+ * contract change: ranking, membership, and every pre-existing field are
+ * byte-identical. `searchCatalogPage` — todo 840 — is a NEW export beside the
+ * frozen surface; `searchCatalog` is its thin `.hits` wrapper.)
  *
  * Pure functions, no I/O — importable from the Worker, vitest, and the eval
  * CLI alike. Everything in the manifest is exposed by construction (ADR-0003:
  * exclusions are filtered at build time). Default limit 10.
+ *
+ * Filters stay SILENT here by design: an unknown `kind`/`service` simply
+ * matches nothing (the eval runner scores raw routing behavior through this
+ * exact contract). Filter VALIDATION — "did you mean stellarDocs?" — is the
+ * callers' job (src/mcp/tools.ts, src/executor/providers.ts), fed by
+ * `catalogServices` below.
  *
  * Scoring is the vendored @cloudflare/codemode ranked-token scorer
  * (src/catalog/vendor/search-scoring.ts); signatures for operation hits are
@@ -38,6 +49,17 @@ export type SearchHit = {
   service: string;
   kind: string;
   score: number;
+  /**
+   * Which scorer produced this hit (todo 838): "gated" = tier 1, the vendor
+   * scorer with its coverage gate; "backfill" = tier 2, the gate-free replica
+   * used only to fill a page tier 1 left short. The two scorers use different
+   * math, so `score` is comparable ONLY among hits of the same tier within
+   * one response — a backfill hit can carry a numerically larger score than
+   * the gated hits ranked above it (measured page: 37, 28, 15, 8, then a
+   * backfill 111 ranked last). Without this marker that page reads as a
+   * broken sort under a "higher is better" schema.
+   */
+  tier: "gated" | "backfill";
   description: string;
   /** Rendered TypeScript signature — operation entries only. */
   signature?: string;
@@ -56,8 +78,45 @@ export type SearchOptions = {
   limit?: number;
 };
 
+/**
+ * One result page plus honest pagination facts (todo 840, mirroring upstream
+ * @cloudflare/codemode's { results, total, truncated } search shape):
+ *  - `total`     — distinct catalog entries scoring non-null under the scorer
+ *    tiers actually consulted (after kind/service filters, BEFORE paging and
+ *    diversity). Tier 1 only when it fills the page; gated candidates plus
+ *    novel ungated candidates when tier 2 ran.
+ *  - `truncated` — total > hits.length: more matching entries exist than the
+ *    page shows, so a caller that found nothing fitting should retry with a
+ *    higher limit or narrower query/filters rather than conclude absence.
+ */
+export type SearchPage = {
+  hits: SearchHit[];
+  total: number;
+  truncated: boolean;
+};
+
 export const DEFAULT_SEARCH_LIMIT = 10;
 export const MAX_SEARCH_LIMIT = 50;
+
+/**
+ * The valid `service` filter values, derived from the catalog itself (unique
+ * `entry.service` values, sorted) — the source of truth for the filter-
+ * validation layers in src/mcp/tools.ts and src/executor/providers.ts, so a
+ * near-miss like "stellardocs" can be rejected with the real names instead of
+ * silently matching nothing. Cached per catalog object (a module-singleton
+ * JSON import in the Worker); WeakMap so a reloaded manifest never pins the
+ * old array.
+ */
+const servicesCache = new WeakMap<Catalog, readonly string[]>();
+
+export function catalogServices(catalog: Catalog): readonly string[] {
+  let services = servicesCache.get(catalog);
+  if (!services) {
+    services = [...new Set(catalog.entries.map((e) => e.service))].sort();
+    servicesCache.set(catalog, services);
+  }
+  return services;
+}
 
 /**
  * Structural invariants over the whole entry set — enforced at load so a bad
@@ -176,16 +235,18 @@ function sectionKeysOf(catalog: Catalog, skillId: string): string[] {
 
 /**
  * One scoring pass over the catalog: filter (kind/service), score with
- * `scoreFn`, sort score desc then id asc, and pick a diversified page of
- * `pageLimit`. Shared by both tiers of searchCatalog() so tier 2 is the SAME
- * pipeline under a different scorer. The catalog needs no exposure filter:
+ * `scoreFn`, and sort score desc then id asc. Shared by both tiers of
+ * searchCatalogPage() so tier 2 is the SAME pipeline under a different
+ * scorer; the caller diversifies + pages the result (split out of the old
+ * selectPage so the pre-paging candidate COUNT is observable for `total`,
+ * todo 840 — diversifyByService(scoreCandidates(...), pageLimit) is the old
+ * selectPage, term for term). The catalog needs no exposure filter:
  * everything in the manifest is exposed by construction (ADR-0003).
  */
-function selectPage(
+function scoreCandidates(
   catalog: Catalog,
   opts: SearchOptions,
-  scoreFn: typeof scoreEntryWeighted,
-  pageLimit: number
+  scoreFn: typeof scoreEntryWeighted
 ): { entry: CatalogEntry; score: number }[] {
   const scored: { entry: CatalogEntry; score: number }[] = [];
   for (const entry of catalog.entries) {
@@ -208,12 +269,13 @@ function selectPage(
 
   scored.sort((a, b) => b.score - a.score || (a.entry.id < b.entry.id ? -1 : 1));
 
-  return diversifyByService(scored, pageLimit, (s) => s.entry.service);
+  return scored;
 }
 
 /**
- * Ranked search over the catalog. Pure; results sorted by score desc, then
- * id asc for determinism (within a tier — see below).
+ * Ranked search over the catalog, with pagination facts. Pure; results
+ * sorted by score desc, then id asc for determinism (within a tier — see
+ * below).
  *
  * Internal scoring (round 2, todo 793 — contract unchanged): the vendored
  * lexical score is wrapped by src/catalog/scoring.ts (query stopword
@@ -228,31 +290,46 @@ function selectPage(
  * the coverage gate bypassed (scoring.ts lever 5) and its novel hits
  * appended strictly BELOW every tier-1 hit. Tier-2 hits never outrank or
  * displace a tier-1 hit, so a page mixing tiers is score-sorted within each
- * tier but not necessarily across the seam. The tier-2 page is drawn at
+ * tier but not necessarily across the seam — every hit carries `tier` (todo
+ * 838) so the seam is data, not a guessing game. The tier-2 page is drawn at
  * `limit + 10` so diversity quotas are computed over a wider slate before
  * the tier-1 duplicates are removed.
+ *
+ * `total`/`truncated` (todo 840): total counts distinct candidates the
+ * consulted scorer tiers accepted (post-filter, pre-diversity/paging) —
+ * tier-1 candidates alone when tier 1 filled the page; plus the NOVEL tier-2
+ * candidates (ungated minus gated ids) when the backfill ran. Counting only
+ * consulted tiers keeps the number honest: it is exactly the pool this
+ * response's ranking drew from, not a hypothetical deeper search.
  */
-export function searchCatalog(catalog: Catalog, opts: SearchOptions): SearchHit[] {
+export function searchCatalogPage(catalog: Catalog, opts: SearchOptions): SearchPage {
   const limit = Math.max(1, Math.min(opts.limit ?? DEFAULT_SEARCH_LIMIT, MAX_SEARCH_LIMIT));
 
-  let selected = selectPage(catalog, opts, scoreEntryWeighted, limit);
+  const gated = scoreCandidates(catalog, opts, scoreEntryWeighted);
+  let selected = diversifyByService(gated, limit, (s) => s.entry.service);
+  let total = gated.length;
+  const gatedCount = selected.length; // page seam: hits below this index are tier 2
   if (selected.length < limit) {
     // Tier 2: every gate-passing candidate is already on the short page
-    // (selectPage only leaves slots empty when candidates ran out), so after
-    // dropping those ids the ungated re-run contributes gate-failed entries only.
+    // (diversifyByService only leaves slots empty when candidates ran out —
+    // so the page's ids ARE the full gated id set here), and after dropping
+    // those ids the ungated re-run contributes gate-failed entries only.
     const tier1Ids = new Set(selected.map((s) => s.entry.id));
-    const rescue = selectPage(catalog, opts, scoreEntryWeightedUngated, limit + 10).filter(
+    const ungated = scoreCandidates(catalog, opts, scoreEntryWeightedUngated);
+    total = gated.length + ungated.filter((s) => !tier1Ids.has(s.entry.id)).length;
+    const rescue = diversifyByService(ungated, limit + 10, (s) => s.entry.service).filter(
       (s) => !tier1Ids.has(s.entry.id)
     );
     selected = [...selected, ...rescue].slice(0, limit);
   }
 
-  return selected.map(({ entry, score }) => {
+  const hits = selected.map(({ entry, score }, index) => {
     const hit: SearchHit = {
       id: entry.id,
       service: entry.service,
       kind: entry.kind,
       score,
+      tier: index < gatedCount ? "gated" : "backfill",
       description: entry.description
     };
     const signature = renderSignature(entry);
@@ -263,4 +340,15 @@ export function searchCatalog(catalog: Catalog, opts: SearchOptions): SearchHit[
     }
     return hit;
   });
+
+  return { hits, total, truncated: total > hits.length };
+}
+
+/**
+ * The frozen-contract entry point (scratchpad 514; eval/run-routing.mjs and
+ * the vitest suites import this): the same page as searchCatalogPage, hits
+ * only. Thin wrapper by construction so the two can never disagree.
+ */
+export function searchCatalog(catalog: Catalog, opts: SearchOptions): SearchHit[] {
+  return searchCatalogPage(catalog, opts).hits;
 }

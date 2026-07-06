@@ -30,7 +30,12 @@
  *     injects the spec into the execute sandbox source; ours crosses the
  *     provider RPC instead (a source-injected `const codemode` would shadow
  *     this provider global) — same resolved document either way.
- *   codemode.search(queryOrOpts)      — host-side searchCatalog (ranked)
+ *   codemode.search(queryOrOpts)      — host-side searchCatalogPage (ranked;
+ *     { ok, hits, total, truncated } — truncated ⇒ retry with a higher limit
+ *     or narrower filters). Unknown kind/service filter values are rejected
+ *     as error envelopes naming the valid set (todo 839) — the frozen
+ *     searchCatalog contract keeps filters silent, so the validation lives
+ *     here at the sandbox boundary.
  *   codemode.catalog()                — the FULL catalog as plain data for
  *     arbitrary code-grep discovery (spec-as-data pattern; strict superset of
  *     the fixed scorer). Everything in it is callable/readable — exposure is
@@ -42,8 +47,8 @@
  * Proxy dispatch, so the prelude assigns `codemode.skill` wrapping the flat
  * `skill_read` dispatch fn — codemode's documented prelude mechanism.)
  */
-import type { Catalog, CatalogEntry } from "../catalog/types.ts";
-import { searchCatalog, renderSignature } from "../catalog/search.ts";
+import { CATALOG_KINDS, type Catalog, type CatalogEntry, type CatalogKind } from "../catalog/types.ts";
+import { searchCatalogPage, catalogServices, renderSignature } from "../catalog/search.ts";
 import { lastIdSegment, VALID_IDENT } from "../catalog/id.ts";
 import { callService } from "../adapters/index.ts";
 import type { AdapterEnv, FetchLike } from "../adapters/types.ts";
@@ -342,10 +347,41 @@ export function buildCodemodeProvider(
             }
           };
         }
-        const hits = searchCatalog(catalog, {
+        // Filter validation (todo 839): searchCatalog's filters are silent
+        // exact-matches by (frozen) contract, so a near-miss like service
+        // "stellardocs" or kind "operations" returns ZERO hits and reads as
+        // "the capability is missing". Reject unknown filter values as an
+        // error-envelope that names the bad value AND the real ones. The
+        // service set comes from the catalog itself (catalogServices), never
+        // a hand-maintained list. Explicit null means "no filter" (idiomatic
+        // LLM code passes `maybeService ?? null`), same as `limit: null`.
+        const kindFilter = opts.kind ?? undefined;
+        const serviceFilter = opts.service ?? undefined;
+        if (kindFilter !== undefined && !(CATALOG_KINDS as readonly unknown[]).includes(kindFilter)) {
+          return {
+            ok: false,
+            error: {
+              service: "codemode",
+              kind: "error",
+              message: `codemode.search: unknown kind ${JSON.stringify(kindFilter)} — valid kinds (exact-match): ${CATALOG_KINDS.join(", ")}`
+            }
+          };
+        }
+        const services = catalogServices(catalog);
+        if (serviceFilter !== undefined && !(services as readonly unknown[]).includes(serviceFilter)) {
+          return {
+            ok: false,
+            error: {
+              service: "codemode",
+              kind: "error",
+              message: `codemode.search: unknown service ${JSON.stringify(serviceFilter)} — valid services (exact-match): ${services.join(", ")}`
+            }
+          };
+        }
+        const { hits, total, truncated } = searchCatalogPage(catalog, {
           query: opts.query,
-          kind: opts.kind as never,
-          service: typeof opts.service === "string" ? opts.service : undefined,
+          kind: kindFilter as CatalogKind | undefined,
+          service: serviceFilter as string | undefined,
           limit: typeof opts.limit === "number" ? opts.limit : undefined
         });
         logEvent("search", {
@@ -354,11 +390,13 @@ export function buildCodemodeProvider(
           kind: typeof opts.kind === "string" ? opts.kind : null,
           service: typeof opts.service === "string" ? opts.service : null,
           hits: hits.length,
+          total,
+          truncated,
           top: hits.slice(0, 3).map((h) => h.id),
           responseChars: JSON.stringify(hits).length,
           ms: Date.now() - t0
         });
-        return { ok: true, hits, total: hits.length };
+        return { ok: true, hits, total, truncated };
       },
 
       describe: async (id?: unknown) => {
