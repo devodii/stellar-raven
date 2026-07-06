@@ -195,20 +195,30 @@ function assertRetirementNamesResolve(skillsManifest) {
 }
 
 // Lumenloop serves 14 skills of its own via /v1/skills (metadata only; bodies
-// are zips). They are NOT emitted: every one duplicates a canonical skills.*
-// mirror entry — one skill, one id (ADR-0003 kills the lumenloop.skill.* twin
-// namespace entirely). Guard the duplication assumption loudly: a NEW
-// upstream-served skill with no mirror counterpart must break the build (mirror
-// it via ecosystem-skills/update.sh, or exclude it here with a reason), not
-// vanish silently.
+// are zips). They are NOT emitted: every PUBLIC one duplicates a canonical
+// skills.* mirror entry — one skill, one id (ADR-0003 kills the
+// lumenloop.skill.* twin namespace entirely). Guard the duplication assumption
+// loudly: a NEW upstream-served public skill with no mirror counterpart must
+// break the build (mirror it via ecosystem-skills/update.sh, or exclude it
+// here with a reason), not vanish silently.
+//
+// Partner-set skills are exempt BY POLICY: they are deliberately not mirrored
+// (partner-tier content must not live in this public repo — mirror source
+// removed 2026-07-06) and never emitted. The inventory keeps them as
+// name-only stubs (`set: "partner"`, no description/files) purely so the
+// /v1/skills union stays observable and drift in the partner set still
+// surfaces in inventory diffs.
 function assertLumenloopSkillsMirrored(inv, skillsManifest) {
   const mirrorNames = new Set(
     skillsManifest.sources.flatMap((s) => s.skills.map((sk) => sk.name))
   );
-  const unmirrored = inv.skills.map((s) => s.name).filter((n) => !mirrorNames.has(n));
+  const unmirrored = inv.skills
+    .filter((s) => s.set !== "partner")
+    .map((s) => s.name)
+    .filter((n) => !mirrorNames.has(n));
   if (unmirrored.length > 0) {
     throw new Error(
-      `Lumenloop /v1/skills serves skills with no ecosystem-skills mirror counterpart: ` +
+      `Lumenloop /v1/skills serves public skills with no ecosystem-skills mirror counterpart: ` +
         `${unmirrored.join(", ")}. Mirror them (ecosystem-skills/update.sh) or exclude them ` +
         `here with a reason — API-served skills are never emitted directly (ADR-0003).`
     );
@@ -338,6 +348,19 @@ function buildLumenloop(inv) {
   const consumedNotes = new Set();
 
   for (const tool of inv.tools) {
+    // Partner-lane tools exist in the inventory only as name stubs (no
+    // description/schemas — partner-tier detail is not persisted in this
+    // public repo). A stub that is not excluded is unemittable AND a policy
+    // breach: fail loudly so exposing a partner tool is always a deliberate
+    // change (extend the exclusions, or restore detail persistence together
+    // with the budget gate — see CLAUDE.md's research-lane rule).
+    if (tool.partner_stub && !lumenloopOpExcluded(tool)) {
+      throw new Error(
+        `lumenloop tool "${tool.name}" is a partner name-only stub but is not excluded — ` +
+          `it cannot be emitted. Add it to EXCLUDED_LUMENLOOP_OPS (scripts/exposure.mjs), or ` +
+          `deliberately restore partner detail persistence in scripts/refresh-inventory.mjs.`
+      );
+    }
     if (lumenloopOpExcluded(tool)) continue;
     const descriptionParts = [tool.description];
     if (tool.when_to_use) descriptionParts.push(`When to use: ${tool.when_to_use}`);
@@ -769,7 +792,9 @@ function main() {
     `  excluded at build: lumenloop ops [${excludedLumenloop.join(", ")}], ` +
       `scout ops [${[...EXCLUDED_SCOUT_OPS].join(", ")}], ` +
       `retired skills [${[...RETIRED_ONBOARDING_SKILLS].join(", ")}], ` +
-      `lumenloop-served skill metadata (${lumenloop.skills.length}, all mirrored)`
+      `lumenloop-served skill metadata (${lumenloop.skills.length}: ` +
+      `${lumenloop.skills.filter((s) => s.set !== "partner").length} public/mirrored, ` +
+      `${lumenloop.skills.filter((s) => s.set === "partner").length} partner name-only stubs)`
   );
 }
 
