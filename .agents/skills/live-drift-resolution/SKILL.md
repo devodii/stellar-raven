@@ -108,8 +108,8 @@ npm run eval:compile && npm run eval:routing
 - The gate prints `GATE PASS — legacy <N> within band and skills lane at/above floor (baseline …)`
   or fails with the deltas. The baseline it compares against lives in `eval/gates.json`.
 - **Re-baseline ONLY when a routing-relevant text change is the cause and the movement is an
-  intended improvement** — the way a prior bump was handled when it reworded an operation
-  description. Re-baselining is asserting "the new numbers are the new correct floor."
+  intended improvement** — e.g. a bump that genuinely reworded an operation `summary`/`description`.
+  Re-baselining is asserting "the new numbers are the new correct floor."
 - **Never re-baseline to make a red gate green for a pure-provenance/data bump.** If descriptions
   are byte-identical (Step 2 diff empty) the gate must pass against the *existing* baseline with
   no change — that is the proof the bump is routing-neutral. A gate that moves when descriptions
@@ -170,9 +170,9 @@ version until a manual deploy. Closing the drift loop requires shipping:
   (the public landing/`/mcp` endpoints return 200) confirms the roll-out. Note the Version ID in
   the close-out record.
 
-A drift bump that is committed but never deployed is a *silent* stale prod — the catalog says 1.4.5
-while the gateway still answers as 1.4.4. Treat deploy as part of resolving the issue, not a
-separate optional chore.
+A drift bump that is committed but never deployed is a *silent* stale prod — the catalog carries
+the new upstream version while the gateway still answers as the old one. Treat deploy as part of
+resolving the issue, not a separate optional chore.
 
 ## Hard rules
 

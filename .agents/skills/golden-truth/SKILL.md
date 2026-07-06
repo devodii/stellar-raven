@@ -49,12 +49,11 @@ Most questions mix domains — classify per CLAIM, not per case.
   and off — that rule is unchanged.)
 - **E. Docs search index** — `mcp__stellar-docs__algolia_*`: checks BOTH the fact and its
   discoverability; an authoritative page missing from the index is an `improvements/`
-  finding (the sd-003 pattern).
+  finding.
 - **F. Empirical execution** — for executable claims (CLI commands, address derivation,
   XDR decoding, API parameters), RUN the thing on testnet/live free ops rather than
   reading about it. The strongest evidence class for how-to facts — "the command is real,
-  not a doc guess" (prior-art lesson: raven-next's phase-3 pipeline verified commands by
-  executing them; docs can describe behavior that shipped differently).
+  not a doc guess": docs can describe behavior that shipped differently, so run it.
 
 Two perplexity hits are ONE class. Corroboration = agreement across classes.
 
@@ -88,9 +87,9 @@ authored by the agent proposing the change — a matrix review can rubber-stamp 
 spots. For overrides touching disputed facts, negative claims, or high-weight/volatile
 truth, add a second agent that re-derives the fact from live sources WITHOUT reading the
 proposer's evidence notes ("do not rely on the prior verification — query the sources
-yourself, list every URL you hit"). Prior-art lesson: raven's RECONCILE lane, run exactly
-this way, caught a wrong incident month and a false "SEP-43 doesn't exist" claim that had
-survived authoring review. Reviewer ≠ author is the invariant.
+yourself, list every URL you hit"). Reviewer ≠ author is the invariant — an independent
+re-derivation catches errors (wrong dates, false "X doesn't exist" claims) that a matrix
+review of the author's own notes rubber-stamps.
 
 ## Step 5 — encode by verdict
 
@@ -105,8 +104,7 @@ survived authoring review. Reviewer ≠ author is the invariant.
 genuinely disagree or a number is contested, never gate the golden on the brittle value —
 gate the durable formulation: the protocol version, the CAP/SEP id, "cite a dated primary
 source", the behavior of flagging staleness. Record the disagreement in graderNotes and
-lower the claim's standing. "Honesty > false precision" (prior-art rule that survived two
-generations of the corpus for good reason).
+lower the claim's standing. Honesty > false precision.
 
 **Sibling-consistency sweep (required on every change).** The dominant drift mechanism
 observed in the ancestor corpora was a correction pass fixing one file while its topical

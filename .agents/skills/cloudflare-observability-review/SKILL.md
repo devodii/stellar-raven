@@ -13,12 +13,11 @@ events, and OTel spans.
 
 Prefer Cloudflare-native request identity over app-issued task IDs.
 
-This service no longer needs a model-facing `correlationId` contract for normal
-observability. In practice, same-user concurrent MCP tasks are rare, and for
-debugging/evals we can join requests by Ray ID, time window, user-agent/client
-marker, host/path/method/status, and auth mode. If a future investigation needs
-stronger cross-request grouping, add privacy-safe auth subject/client fields to
-app logs rather than asking models to forward ids.
+Observability works without a model-facing `correlationId` contract. Same-user
+concurrent MCP tasks are rare, and for debugging/evals we join requests by Ray ID,
+time window, user-agent/client marker, host/path/method/status, and auth mode. If an
+investigation needs stronger cross-request grouping, add privacy-safe auth
+subject/client fields to app logs rather than asking models to forward ids.
 
 ## Safety Rules
 
