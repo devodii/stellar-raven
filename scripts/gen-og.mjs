@@ -60,8 +60,8 @@ magick([p("og_base.png"),
   "-font", MONO, "-pointsize", "19", "-fill", "#ff5500", "-annotate", `+${RX + 240}+170`, "LIVE",
   "-font", SERIF, "-weight", "700", "-pointsize", "96", "-fill", "#eef0e2", "-annotate", `+${RX}+270`, "Stellar",
   "-font", SERIF, "-weight", "700", "-pointsize", "96", "-fill", "#ff5500", "-annotate", `+${RX}+370`, "Raven",
-  "-font", SANS, "-weight", "400", "-pointsize", "25", "-fill", "#eef0e2", "-annotate", `+${RX}+440`, "One endpoint, two tools —",
-  "-font", SANS, "-weight", "400", "-pointsize", "25", "-fill", "#eef0e2", "-annotate", `+${RX}+476`, "all of Stellar. No keys, no glue.",
+  "-font", SANS, "-weight", "400", "-pointsize", "25", "-fill", "#eef0e2", "-annotate", `+${RX}+440`, "All of Stellar, one connection —",
+  "-font", SANS, "-weight", "400", "-pointsize", "25", "-fill", "#eef0e2", "-annotate", `+${RX}+476`, "docs, data, intel, playbooks. No keys.",
   "-font", MONO, "-pointsize", "21", "-fill", "#ff5500", "-annotate", `+${RX}+552`, "raven.stellar.buzz/mcp",
   "-resize", "1200x630!", "-strip", p("og_final.png")]);
 
