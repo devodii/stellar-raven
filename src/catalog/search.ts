@@ -61,7 +61,12 @@ export type SearchHit = {
    */
   tier: "gated" | "backfill";
   description: string;
-  /** Rendered TypeScript signature — operation entries only. */
+  /**
+   * Rendered TypeScript signature — operation entries only. Input type and
+   * callable envelope line are always full; an output type block over
+   * COMPACT_OUTPUT_THRESHOLD chars is stubbed down to its top-level field
+   * names (todo 841) — the full shape is `codemode.describe(id)`'s job.
+   */
   signature?: string;
   /**
    * Skill hits only: section keys readable via `codemode.skill.read(id,
@@ -189,23 +194,91 @@ function entryName(entry: CatalogEntry): string {
 }
 
 /**
- * Render a compact TypeScript signature for an operation entry:
- * input/output type declarations plus the callable line the model can use
- * inside `execute` (e.g. `lumenloop.search_directory(input): Promise<...>`).
+ * SEARCH-HIT output-type compaction threshold (todo 841): in a search hit, an
+ * operation whose rendered OUTPUT type block exceeds this many chars is
+ * replaced by a stub declaration (see renderSignature). Why 2000: measured
+ * over the whole manifest (2026-07-06), every operation's output block is
+ * ≤1,350 chars except three Scout monsters — scout.searchProjects (12,681),
+ * scout.searchRepos (4,122), scout.explainRepo (2,099) — so 2000 sits in the
+ * dead zone between the ordinary population and the outliers: it trims ONLY
+ * the monsters (a limit-10 page carrying searchProjects was ~26KB, ~6.5k
+ * tokens, with the bloat usually attached to an OFF-TARGET hit, making the
+ * wrong call the easiest one to copy) while leaving every other operation's
+ * search signature byte-identical. Applies to output blocks only — the input
+ * type and the callable envelope line are what the model needs to MAKE the
+ * call and are never compacted anywhere; the full output type stays one
+ * `codemode.describe(id)` away inside `execute`.
+ */
+export const COMPACT_OUTPUT_THRESHOLD = 2000;
+
+/**
+ * Stub declaration standing in for an oversized output type block in a
+ * search hit. Keeps (a) the type NAME the callable line references, so the
+ * signature still reads as one coherent declaration set, and (b) the output
+ * schema's TOP-LEVEL property names — field names teach the model payload
+ * shape (`r.data.projects[].slug` starts from knowing `projects` exists), so
+ * field selection stays possible without a describe round-trip. Non-object
+ * output schemas (no top-level properties to list) degrade to a bare
+ * `unknown` stub with the same describe pointer. The interpolated text
+ * (property names, entry id) rides inside a block comment, so a literal
+ * comment-terminator sequence in it would end the comment early and corrupt
+ * the stub — a
+ * build-generated schema shouldn't contain one, but the stub must not be
+ * corruptible by upstream data, hence the escape.
+ */
+function inBlockComment(text: string): string {
+  return text.replace(/\*\//g, "*\\/");
+}
+
+function compactOutputStub(entry: CatalogEntry, typeName: string): string {
+  const schema = entry.outputSchema as JsonSchema;
+  const pointer = `full shape via codemode.describe(${JSON.stringify(entry.id)})`;
+  const props =
+    typeof schema === "object" && schema !== null && schema.properties
+      ? Object.keys(schema.properties)
+      : [];
+  if (props.length === 0) {
+    return `type ${typeName} = unknown /* ${inBlockComment(`output type elided in search hits — ${pointer}`)} */`;
+  }
+  return `type ${typeName} = { /* ${inBlockComment(`${props.length} top-level field${props.length === 1 ? "" : "s"}: ${props.join(", ")} — ${pointer}`)} */ }`;
+}
+
+/**
+ * Render a TypeScript signature for an operation entry: input/output type
+ * declarations plus the callable line the model can use inside `execute`
+ * (e.g. `lumenloop.search_directory(input): Promise<...>`).
  *
  * The callable line spells out the full result envelope (adapters/types.ts)
  * rather than a bare Promise<Output>: the signature is what LLM code copies
  * from, and a bare Promise<Output> reads as "payload fields at the top
  * level" — exactly the wrong access (`r.projects` instead of
  * `r.data.projects`) the envelope exists to prevent.
+ *
+ * `compactOversizedOutput` (todo 841) is the SEARCH-HIT rendering mode: the
+ * input type block and the callable line are always full (they are what the
+ * model needs to make the call), but an output type block over
+ * COMPACT_OUTPUT_THRESHOLD chars is replaced by a stub that keeps the type
+ * name and the top-level field names (compactOutputStub above). Compaction
+ * wraps AROUND the vendored renderer — src/catalog/vendor/json-schema-types.ts
+ * stays byte-untouched. `codemode.describe` always renders full (default
+ * mode): describe is the canonical detail-on-demand step, so it must carry
+ * exactly what the search hit elided.
  */
-export function renderSignature(entry: CatalogEntry): string | undefined {
+export function renderSignature(
+  entry: CatalogEntry,
+  opts?: { compactOversizedOutput?: boolean }
+): string | undefined {
   if (entry.kind !== "operation" || !entry.inputSchema) return undefined;
   const typeBase = toPascalCase(sanitizeToolName(entryName(entry)));
   const parts: string[] = [];
   parts.push(jsonSchemaToType(entry.inputSchema as JsonSchema, `${typeBase}Input`));
   if (entry.outputSchema) {
-    parts.push(jsonSchemaToType(entry.outputSchema as JsonSchema, `${typeBase}Output`));
+    const outputBlock = jsonSchemaToType(entry.outputSchema as JsonSchema, `${typeBase}Output`);
+    parts.push(
+      opts?.compactOversizedOutput && outputBlock.length > COMPACT_OUTPUT_THRESHOLD
+        ? compactOutputStub(entry, `${typeBase}Output`)
+        : outputBlock
+    );
   }
   const outputType = entry.outputSchema ? `${typeBase}Output` : "unknown";
   // Callable line as the model uses it inside `execute` (namespaced global).
@@ -220,8 +293,10 @@ export function renderSignature(entry: CatalogEntry): string | undefined {
  * (`skillId#<key>`): the same key set src/skills/store.ts advertises as
  * `availableSections` (`##` slugs, then `file:<relpath>` keys — catalog
  * entries are id-sorted, store.ts is document-ordered, so ORDER may differ).
+ * Exported (todo 841) so `codemode.describe` (src/executor/providers.ts)
+ * advertises the SAME key set search hits carry — one derivation, no drift.
  */
-function sectionKeysOf(catalog: Catalog, skillId: string): string[] {
+export function sectionKeysOf(catalog: Catalog, skillId: string): string[] {
   const prefix = `${skillId}#`;
   const slugs: string[] = [];
   const fileKeys: string[] = [];
@@ -332,7 +407,9 @@ export function searchCatalogPage(catalog: Catalog, opts: SearchOptions): Search
       tier: index < gatedCount ? "gated" : "backfill",
       description: entry.description
     };
-    const signature = renderSignature(entry);
+    // Search-hit rendering mode: oversized output type blocks become stubs
+    // (COMPACT_OUTPUT_THRESHOLD above) — the full signature is describe's job.
+    const signature = renderSignature(entry, { compactOversizedOutput: true });
     if (signature) hit.signature = signature;
     if (entry.kind === "skill") {
       const sections = sectionKeysOf(catalog, entry.id);

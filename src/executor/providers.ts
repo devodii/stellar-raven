@@ -41,14 +41,23 @@
  *     the fixed scorer). Everything in it is callable/readable — exposure is
  *     filtered at build time (ADR-0003). Host-only transport/provenance
  *     detail is stripped.
- *   codemode.describe(id)             — one entry's docs + signature, exact id
+ *   codemode.describe(id)             — canonical detail-on-demand step
+ *     (exact id): operations get the FULL rendered signature (search hits
+ *     stub oversized output types) + inputSchema/outputSchema as data;
+ *     skills get availableSections; skill sections get parent id + key —
+ *     every kind carries a `usage` line naming the exact next call.
  *   codemode.skill.read(name, {sections?}) — bundled skill content
  * (`skill.read` needs a sandbox-side prelude: nested objects can't cross the
  * Proxy dispatch, so the prelude assigns `codemode.skill` wrapping the flat
  * `skill_read` dispatch fn — codemode's documented prelude mechanism.)
  */
 import { CATALOG_KINDS, type Catalog, type CatalogEntry, type CatalogKind } from "../catalog/types.ts";
-import { searchCatalogPage, catalogServices, renderSignature } from "../catalog/search.ts";
+import {
+  searchCatalogPage,
+  catalogServices,
+  renderSignature,
+  sectionKeysOf
+} from "../catalog/search.ts";
 import { lastIdSegment, VALID_IDENT } from "../catalog/id.ts";
 import { callService } from "../adapters/index.ts";
 import type { AdapterEnv, FetchLike } from "../adapters/types.ts";
@@ -399,6 +408,16 @@ export function buildCodemodeProvider(
         return { ok: true, hits, total, truncated };
       },
 
+      // The canonical detail-on-demand step (todo 841, mirroring upstream
+      // codemode's search → describe → call): a describe result carries
+      // everything DETAIL-shaped a search hit has and more — search hits
+      // stub oversized output types (COMPACT_OUTPUT_THRESHOLD,
+      // src/catalog/search.ts) and point here for the full shape, so this is
+      // the one place the FULL signature is always rendered. (Ranking facts
+      // — score, tier — stay on hits: they describe a hit's place in one
+      // response, not the entry.) Every kind also carries a `usage` line:
+      // the exact next call, so the model never has to reverse-engineer the
+      // read/call pattern from prose.
       describe: async (id?: unknown) => {
         if (typeof id !== "string" || id.length === 0) {
           return {
@@ -417,14 +436,54 @@ export function buildCodemodeProvider(
             }
           };
         }
-        const signature = renderSignature(entry);
-        return {
-          ok: true,
+        const base = {
+          ok: true as const,
           id: entry.id,
           service: entry.service,
           kind: entry.kind,
-          description: entry.description,
-          ...(signature ? { signature } : {})
+          description: entry.description
+        };
+        if (entry.kind === "skill") {
+          // Same section-key derivation as search hits (sectionKeysOf) —
+          // omitted when the skill has no readable sections, like the hit.
+          // A sectionless skill (anticipated by the SearchHit doc; none in
+          // the current manifest) gets the whole-body read form instead: a
+          // `{ sections: [...] }` usage line there would invite invented
+          // section keys against a skill that has none.
+          const availableSections = sectionKeysOf(catalog, entry.id);
+          return {
+            ...base,
+            ...(availableSections.length > 0 ? { availableSections } : {}),
+            usage:
+              availableSections.length > 0
+                ? `read sections via codemode.skill.read(${JSON.stringify(entry.id)}, { sections: [...] }) — section keys in availableSections`
+                : `read the whole skill via codemode.skill.read(${JSON.stringify(entry.id)})`
+          };
+        }
+        if (entry.kind === "skill-section") {
+          // Section ids are `<skillId>#<key>` by build construction
+          // (scripts/build-catalog.mjs); the read call targets the PARENT
+          // skill with the key as a section selector.
+          const hash = entry.id.indexOf("#");
+          const skillId = hash === -1 ? entry.id : entry.id.slice(0, hash);
+          const section = hash === -1 ? entry.id : entry.id.slice(hash + 1);
+          return {
+            ...base,
+            skillId,
+            section,
+            usage: `read this section via codemode.skill.read(${JSON.stringify(skillId)}, { sections: [${JSON.stringify(section)}] })`
+          };
+        }
+        // Operation: ALWAYS the full signature — never the search-hit
+        // compaction — plus the raw schemas as plain data (the same
+        // projection codemode.catalog() serves, catalogEntryView above).
+        const signature = renderSignature(entry);
+        return {
+          ...base,
+          ...(signature ? { signature } : {}),
+          inputSchema: entry.inputSchema,
+          outputSchema: entry.outputSchema,
+          usage: "call it exactly as the signature's callable line shows — the payload arrives under r.data ({ ok: true, data } | { ok: false, error }), never at the top level"
         };
       },
 

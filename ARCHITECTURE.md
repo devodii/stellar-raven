@@ -63,8 +63,8 @@ silent, so validation lives at the tool boundary (and, for `codemode.search`, at
 sandbox boundary in `src/executor/providers.ts`, where an unknown `kind`/`service` is an
 error envelope listing the valid values). A `search` telemetry event
 (`src/observability.ts` → Workers Logs) records the query, hit/total/truncated counts,
-top-3 ids, response size in chars (search has no output cap today — `responseChars` exists
-to set any future cap from data), and latency.
+top-3 ids, response size in chars (`responseChars` — the measurement that set
+`COMPACT_OUTPUT_THRESHOLD`, §2; it stays on to verify the compaction holds), and latency.
 
 ## 2. The scoring pipeline
 
@@ -139,7 +139,16 @@ signature** for operations (`renderSignature` — input/output type declarations
 entry's JSON Schemas via the vendored type generator, and a callable line that spells out
 the *full result envelope union*, because a bare `Promise<Output>` teaches exactly the
 wrong-level access the envelope exists to prevent), plus **`availableSections`** for skill
-hits (`sectionKeysOf` — the same key set `readSkill` advertises).
+hits (`sectionKeysOf` — the same key set `readSkill` advertises). Search hits render
+signatures in **compact mode**: the input type and callable line are always full, but an
+output type block over `COMPACT_OUTPUT_THRESHOLD` (2,000 chars — measured to trim only the
+three Scout monsters, `searchProjects`/`searchRepos`/`explainRepo`, whose output types ran
+to ~12.7KB and made a limit-10 page ~26KB with the bloat usually attached to an off-target
+hit) is replaced by a stub declaration keeping the type name and the output schema's
+top-level field names (so payload field selection like `r.data.projects` still works from
+the hit alone), pointing at `codemode.describe(id)` for the full shape. The compaction
+wraps *around* the vendored renderer — the vendor file is untouched — and applies to
+search hits only; `codemode.describe` always renders the full signature (§5).
 
 ## 3. An `execute` call, end to end
 
@@ -258,7 +267,16 @@ The `codemode` provider (`buildCodemodeProvider`, `src/executor/providers.ts`) i
 - **`codemode.catalog()`** — the full manifest as flat data for arbitrary code-grep, with
   host-only detail (transport, provenance) stripped. Everything in it is callable/readable —
   the manifest is pre-filtered at build time (ADR-0003), so there is no policy layer to show.
-- **`codemode.describe(id)`** — one entry's docs + signature, exact-match id only.
+- **`codemode.describe(id)`** — the canonical detail-on-demand step (exact-match id only;
+  mirrors upstream codemode's search → describe → call). A describe result carries all the
+  DETAIL a search hit has and more (ranking facts — `score`, `tier` — stay on hits, since
+  they describe a hit's place in one response, not the entry): operations carry the **full** rendered signature
+  (complete output type, even where the search hit stubbed it — §2) plus the raw
+  `inputSchema`/`outputSchema` as plain data (the same projection `codemode.catalog()`
+  serves); skills carry `availableSections` (same `sectionKeysOf` derivation as search
+  hits); skill sections carry the parent `skillId` and `section` key. Every kind includes
+  a `usage` line naming the exact next call (the callable-line/envelope reminder for
+  operations, the precise `codemode.skill.read(...)` invocation for skills and sections).
 - **`codemode.skill.read(name, { sections? })`** — §6. Wired via a one-line prelude
   (`SKILL_PRELUDE`) because nested objects can't cross codemode's flat Proxy dispatch.
 

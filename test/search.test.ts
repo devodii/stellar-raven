@@ -11,10 +11,19 @@ import {
   loadManifest,
   searchCatalog,
   searchCatalogPage,
+  renderSignature,
+  COMPACT_OUTPUT_THRESHOLD,
   DEFAULT_SEARCH_LIMIT,
   type Catalog,
+  type CatalogEntry,
   type SearchHit
 } from "../src/catalog/search.ts";
+import {
+  jsonSchemaToType,
+  toPascalCase,
+  sanitizeToolName,
+  type JsonSchema
+} from "../src/catalog/vendor/json-schema-types.ts";
 import { readSkill, type SkillBundle } from "../src/skills/store.ts";
 import { scoreEntryWeighted } from "../src/catalog/scoring.ts";
 import { lastIdSegment } from "../src/catalog/id.ts";
@@ -459,5 +468,116 @@ describe("searchCatalog — signatures", () => {
     const hit = hits.find((h) => h.id === "scout.searchProjects");
     expect(hit?.signature).toContain("type SearchProjectsInput");
     expect(hit?.signature).toMatch(/q\?: string/);
+  });
+});
+
+describe("search-hit signature compaction (todo 841)", () => {
+  /** Full-render output type block length for one operation entry. */
+  function outputBlockLength(entry: CatalogEntry): number {
+    if (!entry.outputSchema) return 0;
+    const typeBase = toPascalCase(sanitizeToolName(lastIdSegment(entry.id)));
+    return jsonSchemaToType(entry.outputSchema as JsonSchema, `${typeBase}Output`).length;
+  }
+
+  it("stubs scout.searchProjects' oversized output type in search hits — top-level names kept, full type gone", () => {
+    const hit = searchCatalog(catalog, { query: "scout.searchProjects" }).find(
+      (h) => h.id === "scout.searchProjects"
+    ) as SearchHit;
+    // The input type and callable envelope line are ALWAYS full — they are
+    // what the model needs to make the call.
+    expect(hit.signature).toContain("type SearchProjectsInput");
+    expect(hit.signature).toContain(
+      "scout.searchProjects(input: SearchProjectsInput): Promise<{ ok: true, data: SearchProjectsOutput }"
+    );
+    // The output type is the stub declaration: top-level field names stay
+    // visible (payload field selection without a describe round-trip)…
+    // (Asserting the load-bearing parts, not the prose — the stub's wording
+    // may be tuned without breaking CI; the type name, field names, and the
+    // exact describe pointer may not.)
+    expect(hit.signature).toContain("type SearchProjectsOutput");
+    expect(hit.signature).toContain("codeReferences, meta, projects");
+    expect(hit.signature).toContain('codemode.describe("scout.searchProjects")');
+    // …and the ~12.7KB rendered property tree is gone.
+    expect(hit.signature).not.toContain("codeReferences?:");
+    expect(hit.signature!.length).toBeLessThan(2000);
+  });
+
+  it("only output blocks over the threshold are compacted; every other op's search signature is byte-identical", () => {
+    const ops = catalog.entries.filter((e) => e.kind === "operation" && e.inputSchema);
+    let compacted = 0;
+    for (const entry of ops) {
+      const full = renderSignature(entry)!;
+      const compact = renderSignature(entry, { compactOversizedOutput: true })!;
+      if (outputBlockLength(entry) > COMPACT_OUTPUT_THRESHOLD) {
+        compacted += 1;
+        expect(compact, entry.id).not.toBe(full);
+        // The describe pointer is the branch-independent stub invariant
+        // (object schemas list field names; non-object ones degrade to an
+        // `unknown` stub — both carry the pointer).
+        expect(compact, entry.id).toContain(`codemode.describe(${JSON.stringify(entry.id)})`);
+      } else {
+        expect(compact, entry.id).toBe(full); // byte-identical below the line
+      }
+    }
+    // The threshold trims ONLY the measured monsters (rationale on the
+    // constant): a manifest refresh growing this set should be a conscious
+    // re-measurement, not silent drift.
+    expect(compacted).toBeGreaterThan(0);
+    expect(compacted).toBeLessThanOrEqual(5);
+  });
+
+  it("search hits (both surfaces share searchCatalogPage) carry the compact rendering", () => {
+    const { hits } = searchCatalogPage(catalog, { query: "scout.searchRepos" });
+    const hit = hits.find((h) => h.id === "scout.searchRepos")!;
+    expect(hit.signature).toContain("top-level field");
+    const small = hits.find((h) => {
+      if (h.kind !== "operation") return false;
+      const entry = catalog.entries.find((e) => e.id === h.id)!;
+      return outputBlockLength(entry) <= COMPACT_OUTPUT_THRESHOLD;
+    });
+    expect(small).toBeDefined(); // the page isn't all monsters
+    const entry = catalog.entries.find((e) => e.id === small!.id)!;
+    expect(small!.signature).toBe(renderSignature(entry)); // full === compact below threshold
+  });
+
+  it("exercises COMPACT_OUTPUT_THRESHOLD exactly at its boundary (hand-built schema)", () => {
+    // One string property whose description pads the rendered JSDoc line —
+    // the rendered block length is linear in the pad, so the entry can be
+    // calibrated to land EXACTLY on the threshold.
+    const makeEntry = (pad: string): CatalogEntry => ({
+      id: "scout.boundaryProbe",
+      service: "scout",
+      kind: "operation",
+      description: "hand-built boundary probe",
+      inputSchema: { type: "object", properties: { q: { type: "string" } } },
+      outputSchema: {
+        type: "object",
+        properties: {
+          alpha: { type: "string", description: pad },
+          beta: { type: "number" }
+        }
+      },
+      transport: null,
+      provenance: { source: "test://boundary", fetchedAt: "2026-07-06T00:00:00Z" }
+    });
+    const baseLen = outputBlockLength(makeEntry("x"));
+    expect(baseLen).toBeLessThan(COMPACT_OUTPUT_THRESHOLD); // calibration sanity
+    const atThreshold = makeEntry("x".repeat(COMPACT_OUTPUT_THRESHOLD - baseLen + 1));
+    expect(outputBlockLength(atThreshold)).toBe(COMPACT_OUTPUT_THRESHOLD);
+    const overThreshold = makeEntry("x".repeat(COMPACT_OUTPUT_THRESHOLD - baseLen + 2));
+    expect(outputBlockLength(overThreshold)).toBe(COMPACT_OUTPUT_THRESHOLD + 1);
+
+    // AT the threshold: not compacted (strictly-greater comparison).
+    expect(renderSignature(atThreshold, { compactOversizedOutput: true })).toBe(
+      renderSignature(atThreshold)
+    );
+    // ONE char over: compacted to the stub with both top-level names.
+    const compacted = renderSignature(overThreshold, { compactOversizedOutput: true })!;
+    expect(compacted).toContain("type BoundaryProbeOutput");
+    expect(compacted).toContain("alpha, beta");
+    expect(compacted).toContain('codemode.describe("scout.boundaryProbe")');
+    expect(compacted).not.toContain("xxxx");
+    // Full mode never compacts, no matter the size (describe's rendering).
+    expect(renderSignature(overThreshold)).toContain("alpha?: string");
   });
 });

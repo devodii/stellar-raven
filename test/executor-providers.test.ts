@@ -519,6 +519,85 @@ describe("codemode fns", () => {
     expect(miss.error.message).toContain("exact-match");
   });
 
+  it("describe on an operation: FULL signature + raw schemas + usage (todo 841)", async () => {
+    // scout.searchProjects is the motivating monster: its search hit stubs
+    // the ~12.7KB output type; describe must carry the whole thing.
+    const entry = catalog.entries.find((e) => e.id === "scout.searchProjects")!;
+    const r = (await codemode.describe!("scout.searchProjects")) as {
+      ok: boolean;
+      signature: string;
+      inputSchema: unknown;
+      outputSchema: unknown;
+      usage: string;
+    };
+    expect(r.ok).toBe(true);
+    // Full output type: real property declarations, no compaction stub.
+    expect(r.signature).toContain("type SearchProjectsOutput = {");
+    expect(r.signature).toContain("codeReferences?:");
+    expect(r.signature).not.toContain("top-level field");
+    expect(r.signature.length).toBeGreaterThan(10000);
+    // Callable envelope line rides along, as in every rendered signature.
+    expect(r.signature).toContain(
+      "scout.searchProjects(input: SearchProjectsInput): Promise<{ ok: true, data: SearchProjectsOutput }"
+    );
+    // Raw schemas as plain data — the same projection codemode.catalog() uses.
+    expect(r.inputSchema).toEqual(entry.inputSchema);
+    expect(r.outputSchema).toEqual(entry.outputSchema);
+    // One-line envelope reminder.
+    expect(r.usage).toContain("callable line");
+    expect(r.usage).toContain("r.data");
+  });
+
+  it("describe is a strict superset of the search hit: the hit stubs, describe carries the full type (todo 841)", async () => {
+    const s = (await codemode.search!({ query: "scout.searchProjects" })) as {
+      hits: { id: string; signature?: string }[];
+    };
+    const hit = s.hits.find((h) => h.id === "scout.searchProjects")!;
+    expect(hit.signature).toContain("top-level fields: codeReferences, meta, projects");
+    expect(hit.signature).toContain('codemode.describe("scout.searchProjects")');
+    expect(hit.signature).not.toContain("codeReferences?:");
+    const d = (await codemode.describe!("scout.searchProjects")) as { signature: string };
+    expect(d.signature).toContain("codeReferences?:");
+  });
+
+  it("describe on a skill: availableSections (same derivation as search hits) + skill.read usage (todo 841)", async () => {
+    const skillId = "skills.lumenloop.stellar-project-dossier";
+    const r = (await codemode.describe!(skillId)) as {
+      ok: boolean;
+      kind: string;
+      availableSections: string[];
+      usage: string;
+    };
+    expect(r.ok).toBe(true);
+    expect(r.kind).toBe("skill");
+    // Exactly the skill's cataloged section keys — the set search hits carry.
+    const sectionIds = catalog.entries
+      .filter((e) => e.kind === "skill-section" && e.id.startsWith(`${skillId}#`))
+      .map((e) => e.id.slice(skillId.length + 1));
+    expect(r.availableSections.length).toBe(sectionIds.length);
+    expect([...r.availableSections].sort()).toEqual([...sectionIds].sort());
+    expect(r.usage).toContain(`codemode.skill.read("${skillId}", { sections: [...] })`);
+  });
+
+  it("describe on a skill section: parent skill id + section key + exact skill.read call (todo 841)", async () => {
+    const section = catalog.entries.find((e) => e.kind === "skill-section")!;
+    const hash = section.id.indexOf("#");
+    const parentId = section.id.slice(0, hash);
+    const key = section.id.slice(hash + 1);
+    const r = (await codemode.describe!(section.id)) as {
+      ok: boolean;
+      kind: string;
+      skillId: string;
+      section: string;
+      usage: string;
+    };
+    expect(r.ok).toBe(true);
+    expect(r.kind).toBe("skill-section");
+    expect(r.skillId).toBe(parentId);
+    expect(r.section).toBe(key);
+    expect(r.usage).toContain(`codemode.skill.read("${parentId}", { sections: ["${key}"] })`);
+  });
+
   it("spec() returns the super spec with $refs resolved inline (upstream REQUEST_TYPES mirror)", async () => {
     const superSpec = {
       openapi: "3.1.0",
