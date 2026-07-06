@@ -186,14 +186,27 @@ pre.code .k{color:#93d6a6}
 .connect-legal a:hover{color:var(--orange)}
 .copied{color:var(--orange)!important;border-color:var(--orange)!important}
 
-/* ---- below-the-fold sections: solid-ish field so copy never fights the globe ---- */
-/* long eased fade into the dark field — the stat strip sits where the ramp is
-   ~.9, so the dither melts into it instead of hitting a hard edge; no other
-   content before the field is fully dark */
+/* ---- below-the-fold sections: frosted-glass field over the globe ---- */
+/* Two layers ramping in together over ~460px: a light dark wash (never fully
+   opaque, so the dither keeps glowing through) and a masked backdrop blur that
+   melts the dots into soft fog before any content appears. */
 .below{position:relative;z-index:2;
   background:linear-gradient(180deg,transparent,
+    rgba(14,21,13,.2) 90px,rgba(14,21,13,.42) 180px,rgba(14,21,13,.58) 270px,
+    rgba(14,21,13,.68) 360px,rgba(14,21,13,.72) 460px)}
+.below::before{content:"";position:absolute;inset:0;pointer-events:none;
+  backdrop-filter:blur(10px) saturate(.9);-webkit-backdrop-filter:blur(10px) saturate(.9);
+  mask-image:linear-gradient(180deg,transparent,#000 440px);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 440px)}
+.below>*{position:relative;z-index:1}
+/* no backdrop-filter support -> the sharp dither would sit right behind copy;
+   fall back to the near-opaque field */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .below{background:linear-gradient(180deg,transparent,
     rgba(14,21,13,.32) 90px,rgba(14,21,13,.6) 180px,rgba(14,21,13,.8) 270px,
     rgba(14,21,13,.92) 360px,rgba(14,21,13,.96) 460px)}
+  footer{background:rgba(14,21,13,.96)}
+}
 .sec{max-width:980px;margin:0 auto;padding:72px 32px 8px}
 .sec .eyebrow{margin-bottom:14px}
 .sec h2{font-family:var(--display);font-weight:700;font-size:clamp(30px,4vw,44px);line-height:1.08;
@@ -262,10 +275,11 @@ pre.code .k{color:#93d6a6}
 .cta-row .line{font-family:var(--display);font-weight:600;font-size:clamp(21px,2.6vw,27px);
   letter-spacing:-.015em;color:var(--fog)}
 
-/* ---- footer: the last row of the same dark field .below establishes — flush
-   against it (no margin, solid fill) with only a hairline rule between ---- */
+/* ---- footer: the last row of the same frosted field — flush against .below
+   (no margin) with only a hairline rule between ---- */
 footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:26px 0 34px;
-  background:rgba(14,21,13,.96)}
+  background:rgba(14,21,13,.72);
+  backdrop-filter:blur(10px) saturate(.9);-webkit-backdrop-filter:blur(10px) saturate(.9)}
 .foot{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
 .foot .l{font-family:var(--mono);font-size:12px;color:var(--ash);text-shadow:0 1px 3px rgba(14,21,13,.9)}
 .foot .l b{color:var(--dim);font-weight:400}
@@ -286,7 +300,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:26px
   .connect-head .end{display:none}
   .sec{padding:52px 22px 6px}
   .below{background:linear-gradient(180deg,transparent,
-    rgba(14,21,13,.4) 70px,rgba(14,21,13,.7) 140px,rgba(14,21,13,.9) 210px,rgba(14,21,13,.96) 280px)}
+    rgba(14,21,13,.26) 70px,rgba(14,21,13,.48) 140px,rgba(14,21,13,.64) 210px,rgba(14,21,13,.72) 280px)}
+  .below::before{mask-image:linear-gradient(180deg,transparent,#000 260px);
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 260px)}
   .stats{padding:220px 22px 0}
   .stats .st{padding:0 14px}
   .bento,.vs{grid-template-columns:1fr}
