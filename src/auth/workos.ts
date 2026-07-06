@@ -82,7 +82,11 @@ export const WorkOSAuthHandler = {
       return new Response(landingPage(), { headers: LANDING_HEADERS });
     }
 
-    if (request.method === "GET" && url.pathname === "/og.png") {
+    // GET + HEAD: a public web resource, so HEAD is required of a
+    // general-purpose server (RFC 9110 §9.3.2). Return the identical response —
+    // workerd drops the body for HEAD and keeps an accurate Content-Length
+    // (manually setting Content-Length is ignored by the runtime, so don't).
+    if ((request.method === "GET" || request.method === "HEAD") && url.pathname === "/og.png") {
       return ogImageResponse();
     }
 
