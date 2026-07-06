@@ -1,16 +1,16 @@
 {
-  "changelogEntryCount": 28,
+  "changelogEntryCount": 29,
   "changelogLatest": {
-    "date": "2026-07-05",
-    "detail": "sls-005: placementRank now parses Spanish ordinals + emoji medals and reads the award title, so LatAm/emoji hackathons rank correctly and genuine flat-pool events honestly report winnersRanked=false (was wrong in both directions). sls-009: only an EXACT name/slug match dominates authority now — prefix/whole-word matches drop to a late tiebreaker, so a generic query like 'swap' no longer ranks a 0-prominence 'SwapX' above flagship Soroswap. sls-006: SDF-blog nav/footer boilerplate is stripped at ingest and metadata/related-post stubs are dropped, so retrieval returns article prose not chrome (re-crawl pending). sls-013: countBasis now states byRound[].count is per-round membership (non-additive). sls-011: /api/projects/search meta carries scfCountBasis where the SCF numbers appear. sls-004: /api/skills/{slug} is force-dynamic (GET still CDN-cached via headers) so non-GET returns JSON 405, not a plaintext Vercel error. Schema-only/additive + behavior fixes — no operation-description changes (routing-neutral).",
-    "summary": "Data-quality fixes from an adversarial recheck of the sls-* feedback items: hackathon winner ranking (i18n placement parsing), name-search over-fire, blog chunk hygiene, funding count basis, and JSON errors on the skill-detail route.",
+    "date": "2026-07-06",
+    "detail": "search_repos results and explain_repo now carry a codeVerified object: stellarProof (how we know it's Stellar — cargo-sdk/contract-macros/lang-sdk/js-sdk/stellar-toml), codeDepth (0-1 substance of the contract logic, not stars), isDeployableContract (Cargo cdylib), sorobanSdkVersion + versionStatus (current/supported/deprecated/unknown vs the latest protocol). Derived by scanning the repo's Cargo.toml + source through a shared, tested pipeline; codeDepth also feeds repoScore so code-verified deep contracts outrank starred-but-shallow ones. null until a repo is code-scanned (honest — we never claim verification we haven't done). ADDITIVE + routing-neutral: new response fields only, no operation added/removed, no operation-description changes.",
+    "summary": "codeVerified block on repos — code-truth from analyzing each repo's ACTUAL source (stellarProof, codeDepth, deployable-contract, soroban-sdk version status). The discriminator between a popular repo and real, current, deep Soroban code.",
     "surfaces": [
       "api"
     ],
-    "type": "fixed",
-    "version": "openapi 1.4.5"
+    "type": "added",
+    "version": "openapi 1.5.0"
   },
-  "fetchedAt": "2026-07-05T23:11:30.647Z",
+  "fetchedAt": "2026-07-06T15:29:47.428Z",
   "openapi": {
     "components": {
       "parameters": {
@@ -541,6 +541,55 @@
               "description": "True when surfaced as a curated canonical SDF answer for an infra/protocol query (e.g. error codes → stellar-core/Horizon/SDKs; Horizon → stellar/go). Floated to the top; meta.canonical lists them.",
               "type": "boolean"
             },
+            "codeVerified": {
+              "description": "Code-verified truth from analyzing the repo's ACTUAL source (not stars/topics) — the discriminator between 'popular' and 'real, current, deep Soroban code'. Null until the repo has been code-scanned. Use to qualify an answer: prefer a deployable contract on a supported soroban-sdk over tooling that merely uses Stellar.",
+              "nullable": true,
+              "properties": {
+                "codeDepth": {
+                  "description": "0-1 substance of the actual contract code (auth/storage/arith/branch, not mere presence). ~0.6+ = a real, non-trivial contract; low = scaffold/template. Null for non-Rust proofs.",
+                  "nullable": true,
+                  "type": "number"
+                },
+                "isDeployableContract": {
+                  "description": "Cargo cdylib — a real deployable Soroban contract (vs a CLI/indexer/frontend that only uses Stellar).",
+                  "type": "boolean"
+                },
+                "scannedAt": {
+                  "description": "When the code was last scanned.",
+                  "format": "date-time",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "sorobanSdkVersion": {
+                  "description": "Raw soroban-sdk version requirement (a sourced fact — never a bare protocol integer).",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "stellarProof": {
+                  "description": "How we verified it's Stellar, strongest→weakest: cargo-sdk (soroban-sdk dep) / contract-macros (#[contract] usage) / lang-sdk (Swift/Kotlin/Go/Python Stellar SDK) / js-sdk / stellar-toml.",
+                  "enum": [
+                    "cargo-sdk",
+                    "contract-macros",
+                    "lang-sdk",
+                    "js-sdk",
+                    "stellar-toml"
+                  ],
+                  "type": "string"
+                },
+                "versionStatus": {
+                  "description": "soroban-sdk status vs the latest protocol at scan time. 'unknown' (rc/git/unpinned) never implies staleness.",
+                  "enum": [
+                    "current",
+                    "supported",
+                    "deprecated",
+                    "unknown"
+                  ],
+                  "nullable": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
             "deepWikiUrl": {
               "description": "DeepWiki AI-generated wiki of this repo's internals (deepwiki.com/{owner}/{name}). Hand off here for deep 'where/how' code questions — e.g. where error codes / consensus / XDR are defined — beyond which-repo discovery.",
               "type": "string"
@@ -792,7 +841,7 @@
       },
       "summary": "Agent-native data layer for the Stellar ecosystem — projects, builders, hackathons, SCF, audits, research.",
       "title": "Stellar Scout API",
-      "version": "1.4.5"
+      "version": "1.5.0"
     },
     "openapi": "3.1.0",
     "paths": {
@@ -1847,6 +1896,36 @@
                         "description": "Always present, including when routedVia is null (then false).",
                         "type": "boolean"
                       },
+                      "codeVerified": {
+                        "description": "Code-verified truth from analyzing the routed repo's ACTUAL source — qualify the answer with it: a deployable contract on a supported soroban-sdk is authoritative; tooling that merely uses Stellar is not. Null until code-scanned.",
+                        "nullable": true,
+                        "properties": {
+                          "codeDepth": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "isDeployableContract": {
+                            "type": "boolean"
+                          },
+                          "scannedAt": {
+                            "format": "date-time",
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "sorobanSdkVersion": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "stellarProof": {
+                            "type": "string"
+                          },
+                          "versionStatus": {
+                            "nullable": true,
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
                       "meta": {
                         "description": "Provenance: routing/grounding source + generation time.",
                         "properties": {
@@ -2361,7 +2440,7 @@
       }
     ]
   },
-  "openapiVersion": "1.4.5",
+  "openapiVersion": "1.5.0",
   "operationCount": 24,
   "service": "stellar-light",
   "source": {
@@ -2373,7 +2452,7 @@
     "status": "https://stellarlight.xyz/api/status"
   },
   "status": {
-    "apiVersion": "1.4.5",
+    "apiVersion": "1.5.0",
     "docs": "https://stellarlight.xyz/scout",
     "endpoints": [
       "/api/status",
@@ -2417,13 +2496,13 @@
       },
       {
         "count": 113,
-        "lastUpdatedAt": "2026-07-05T06:00:44.141Z",
+        "lastUpdatedAt": "2026-07-06T06:01:12.913Z",
         "name": "builders",
         "notes": "Synced from Stellar Passport — small and growing dataset"
       },
       {
         "count": 2423,
-        "lastUpdatedAt": "2026-07-05T23:00:55.632Z",
+        "lastUpdatedAt": "2026-07-06T15:17:37.996Z",
         "name": "repos",
         "notes": "Indexed-and-scored Stellar GitHub repos (powers /api/repos/search)"
       },
