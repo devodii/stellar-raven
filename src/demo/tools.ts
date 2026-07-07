@@ -11,10 +11,10 @@
  * (design Decision 5, all in-request enforced here because stepCountIs alone
  * does not cap tool calls within one model step):
  *  - search `limit` clamped to DEMO_CAPS.maxSearchLimit,
- *  - ≤ DEMO_CAPS.maxSearchCallsPerTurn catalog searches per buildDemoTools()
- *    call (structured refusal as data, never a throw),
- *  - ≤ DEMO_CAPS.maxExecuteCallsPerTurn sandbox runs per buildDemoTools()
- *    call (structured refusal as data, never a throw),
+ *  - ≤ DEMO_CAPS.maxSearchCallsPerTurn catalog searches per shared turn
+ *    budget (structured refusal as data, never a throw),
+ *  - ≤ DEMO_CAPS.maxExecuteCallsPerTurn sandbox runs per shared turn
+ *    budget (structured refusal as data, never a throw),
  *  - execute code length capped at DEMO_CAPS.maxExecuteCodeChars.
  * Every call emits tool-start/tool-result trace frames via opts.emit.
  *
@@ -34,7 +34,7 @@ import {
 import { createExecuteRunner, type ExecuteRunner } from "../executor/run.ts";
 import { logEvent, preview, CODE_LOG_MAX } from "../observability.ts";
 import { truncateForModel, truncateLogsForModel } from "../policy/truncate.ts";
-import { DEMO_CAPS } from "./budget.ts";
+import { DEMO_CAPS, createDemoToolBudget, type DemoToolBudget } from "./budget.ts";
 import type { DemoFrame } from "./frames.ts";
 
 // One sandbox executor per isolate, exactly like src/server.ts — the runner
@@ -75,17 +75,15 @@ function compactHitForDemo(hit: SearchHit): SearchHit {
   };
 }
 
-export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void }): {
+export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; budget?: DemoToolBudget }): {
   tools: Record<string, unknown>;
-  countersReport: () => { executeCalls: number; searchCalls: number };
+  budgetReport: () => DemoToolBudget;
 } {
   const { env, emit } = opts;
-  // Per-turn closure counters — THE enforceable budget (design Decision 5).
-  // executeCalls counts sandbox runs (each is a Worker Loader isolate
-  // spin-up); refused calls don't increment, so the refusal is permanent for
-  // the rest of the turn once the cap is hit.
-  let executeCalls = 0;
-  let searchCalls = 0;
+  // This object is created once by chat.ts and shared across fallback model
+  // attempts. If callers omit it, a standalone turn budget is created for
+  // direct smoke tests.
+  const budget = opts.budget ?? createDemoToolBudget();
 
   const search = tool({
     description: SEARCH_DESCRIPTION,
@@ -116,16 +114,8 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
         return structured;
       };
 
-      if (args.service !== undefined && !services.includes(args.service)) {
-        return respond({
-          hits: [],
-          total: 0,
-          truncated: false,
-          nextSteps: `Unknown service "${args.service}" — service filter values are exact-match. Valid services: ${services.join(", ")}. Retry with one of those exact values, or drop the \`service\` filter.`
-        });
-      }
-
-      if (searchCalls >= DEMO_CAPS.maxSearchCallsPerTurn) {
+      if (budget.searchCalls >= DEMO_CAPS.maxSearchCallsPerTurn) {
+        budget.searchRefusals += 1;
         const refusal = {
           hits: [],
           total: 0,
@@ -135,12 +125,23 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
         logEvent("demo-search-refused", {
           reason: "call-limit",
           query: args.query,
-          searchCalls
+          searchCalls: budget.searchCalls,
+          searchRefusals: budget.searchRefusals
         });
         emit({ type: "tool-result", id, tool: "search", ok: false, output: refusal });
         return refusal;
       }
-      searchCalls += 1;
+      budget.searchCalls += 1;
+
+      if (args.service !== undefined && !services.includes(args.service)) {
+        budget.unknownServiceSearches += 1;
+        return respond({
+          hits: [],
+          total: 0,
+          truncated: false,
+          nextSteps: `Unknown service "${args.service}" — service filter values are exact-match. Valid services: ${services.join(", ")}. Retry with one of those exact values, or drop the \`service\` filter.`
+        });
+      }
 
       const page = searchCatalogPage(catalog, {
         query: args.query,
@@ -169,15 +170,17 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
 
       const refuse = (reason: string, error: string) => {
         const refusal = { ok: false as const, error };
+        budget.executeRefusals += 1;
         logEvent("demo-execute-refused", {
           reason,
           codeChars: args.code.length,
-          executeCalls
+          executeCalls: budget.executeCalls,
+          executeRefusals: budget.executeRefusals
         });
         emit({ type: "tool-result", id, tool: "execute", ok: false, output: refusal });
         return refusal;
       };
-      if (executeCalls >= DEMO_CAPS.maxExecuteCallsPerTurn) {
+      if (budget.executeCalls >= DEMO_CAPS.maxExecuteCallsPerTurn) {
         return refuse("call-limit", "execute call limit reached for this turn");
       }
       if (args.code.length > DEMO_CAPS.maxExecuteCodeChars) {
@@ -186,7 +189,7 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
           `execute code too long for the demo: ${args.code.length} chars (max ${DEMO_CAPS.maxExecuteCodeChars}). Write a shorter script — select fields and aggregate in-sandbox instead of inlining data.`
         );
       }
-      executeCalls += 1;
+      budget.executeCalls += 1;
 
       const t0 = Date.now();
       let outcome;
@@ -200,6 +203,8 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
           logs: []
         };
       }
+      if (!outcome.ok) budget.executeFailures += 1;
+      if (outcome.ok && outcome.truncated) budget.executeResultTruncated += 1;
       // Same model-boundary budgets as the MCP handler: logs and error text
       // are model-authored channels and get the result's ~6k-token cap each
       // (rationale in src/policy/truncate.ts and src/mcp/tools.ts).
@@ -231,9 +236,13 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
         outcome.logs.length > 0
           ? `\n\n--- console (${outcome.logs.length} lines) ---\n${shapedLogs.text}`
           : "";
+      const truncationAdvisory =
+        outcome.ok && outcome.truncated
+          ? "\n\n--- demo advisory ---\nThis execute result was truncated before the final-answer step. Answer only from the visible returned fields, say the result was truncated if that affects completeness, and suggest a narrower follow-up for full detail."
+          : "";
 
       const text = outcome.ok
-        ? `${outcome.result}${logsBlock}`
+        ? `${outcome.result}${truncationAdvisory}${logsBlock}`
         : `Execution failed: ${shapedError ? shapedError.text : outcome.error}${logsBlock}`;
       emit({ type: "tool-result", id, tool: "execute", ok: outcome.ok, output: text });
       return text;
@@ -242,6 +251,6 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
 
   return {
     tools: { search, execute },
-    countersReport: () => ({ executeCalls, searchCalls })
+    budgetReport: () => ({ ...budget })
   };
 }

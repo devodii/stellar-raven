@@ -5,7 +5,7 @@
  * hard guarantee.
  */
 import { describe, expect, it } from "vitest";
-import { DEMO_CAPS, clampHistory, demoThrottle } from "../src/demo/budget";
+import { DEMO_CAPS, clampHistory, createDemoToolBudget, demoThrottle } from "../src/demo/budget";
 
 // ---------------------------------------------------------------------------
 // Stub (same shape as test/auth.test.ts's memoryKv)
@@ -49,6 +49,20 @@ describe("DEMO_CAPS", () => {
       maxExecuteCodeChars: 8000,
       maxUserMessageChars: 4000,
       chatsPerHour: 30
+    });
+  });
+});
+
+describe("createDemoToolBudget", () => {
+  it("initializes every per-turn aggregate counter to zero", () => {
+    expect(createDemoToolBudget()).toEqual({
+      searchCalls: 0,
+      executeCalls: 0,
+      searchRefusals: 0,
+      executeRefusals: 0,
+      unknownServiceSearches: 0,
+      executeFailures: 0,
+      executeResultTruncated: 0
     });
   });
 });

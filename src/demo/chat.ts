@@ -27,7 +27,7 @@ import { createWorkersAI } from "workers-ai-provider";
 import { allowDevUnauthenticated } from "../auth/gate.ts";
 import { logEvent } from "../observability.ts";
 import { verifyDemoCookie } from "./auth.ts";
-import { DEMO_CAPS, clampHistory, demoThrottle } from "./budget.ts";
+import { DEMO_CAPS, clampHistory, createDemoToolBudget, demoThrottle } from "./budget.ts";
 import { encodeFrame, type DemoFrame } from "./frames.ts";
 import {
   DEMO_GATEWAY_ID_FALLBACK,
@@ -36,6 +36,12 @@ import {
   DEMO_TEMPERATURE,
   demoSessionAffinity
 } from "./model-config.ts";
+import {
+  demoFinalTextTelemetry,
+  isMeaningfulDemoOutput,
+  sumDemoUsage,
+  type DemoUsage
+} from "./output.ts";
 import { DEMO_SYSTEM_PROMPT } from "./prompt.ts";
 import { buildDemoTools } from "./tools.ts";
 
@@ -62,6 +68,8 @@ declare global {
 // A live demo needs reliable tool turns more than the absolute cheapest model.
 /** Throttle-bucket subject for loopback dev requests (no cookie, no WorkOS). */
 const DEV_SUBJECT = "dev-loopback";
+const TOOL_BUDGET_MESSAGE =
+  "The demo hit its tool/step budget before the model produced a final answer. The trace above shows the completed tool work, but the answer may be incomplete; ask a narrower follow-up.";
 /**
  * Whole-turn ceiling (design Decision 5: "abort/timeout on the whole turn").
  * Worst legitimate turn: 3 model steps + 1 sandbox execute; generous so it
@@ -187,21 +195,13 @@ async function runTurn(
   abortSignal: AbortSignal
 ): Promise<void> {
   const t0 = Date.now();
-  const { tools, countersReport } = buildDemoTools({ env, emit });
+  const toolBudget = createDemoToolBudget();
+  const usageReports: DemoUsage[] = [];
+  let finalText = "";
   let steps = 0;
   let finishReason = "none";
   let selectedModel = DEMO_MODELS[0]?.model ?? "unknown";
   const attemptedModels: string[] = [];
-  let usage:
-    | {
-        inputTokens: number | undefined;
-        cacheReadTokens: number | undefined;
-        cacheWriteTokens: number | undefined;
-        outputTokens: number | undefined;
-        reasoningTokens: number | undefined;
-        totalTokens: number | undefined;
-      }
-    | undefined;
   try {
     const workersai = createWorkersAI({
       binding: env.AI,
@@ -216,7 +216,26 @@ async function runTurn(
       if (!config) continue;
       selectedModel = config.model;
       attemptedModels.push(config.model);
-      let emittedModelOutput = false;
+      let emittedUsefulOutput = false;
+      let fallbackLogged = false;
+      const attemptEmit = (frame: DemoFrame): void => {
+        if (isMeaningfulDemoOutput(frame)) emittedUsefulOutput = true;
+        emit(frame);
+      };
+      // Fallback model attempts share the same demo tool budget. Tool trace
+      // frames intentionally count as useful output, so a model that reached
+      // tool activity does not unlock another search/execute allowance.
+      const { tools } = buildDemoTools({ env, emit: attemptEmit, budget: toolBudget });
+      const fallbackToNextModel = (reason: string): void => {
+        if (fallbackLogged) return;
+        fallbackLogged = true;
+        finishReason = "empty-fallback";
+        logEvent("demo-model-fallback", {
+          fromModel: config.model,
+          toModel: DEMO_MODELS[index + 1]?.model,
+          reason
+        });
+      };
       try {
         const result = streamText({
           model: workersai(config.model, {
@@ -237,28 +256,25 @@ async function runTurn(
         for await (const part of result.fullStream) {
           switch (part.type) {
             case "text-delta":
-              emittedModelOutput = true;
-              emit({ type: "token", text: part.text });
+              finalText += part.text;
+              attemptEmit({ type: "token", text: part.text });
               break;
             case "reasoning-delta":
-              emittedModelOutput = true;
               // Reasoning models can sit silent before answering; stream the
               // reasoning tail so the wait is visibly alive (client shows a
               // rolling tail, not a transcript).
-              emit({ type: "thinking", text: part.text });
+              attemptEmit({ type: "thinking", text: part.text });
               break;
             case "start-step":
-              emittedModelOutput = true;
               steps += 1;
-              emit({ type: "step", index: steps });
+              attemptEmit({ type: "step", index: steps });
               break;
             case "tool-error":
-              emittedModelOutput = true;
               // A call that never reached our execute (e.g. invalid input) —
               // the tools' own emit didn't fire, so trace it here.
               if (part.toolName === "search" || part.toolName === "execute") {
-                emit({ type: "tool-start", id: part.toolCallId, tool: part.toolName, input: part.input });
-                emit({
+                attemptEmit({ type: "tool-start", id: part.toolCallId, tool: part.toolName, input: part.input });
+                attemptEmit({
                   type: "tool-result",
                   id: part.toolCallId,
                   tool: part.toolName,
@@ -269,45 +285,46 @@ async function runTurn(
               break;
             case "abort":
               finishReason = "abort";
-              if (!emittedModelOutput && index < DEMO_MODELS.length - 1) throw new Error("model aborted before output");
-              emittedModelOutput = true;
-              emit({ type: "error", message: "The turn was aborted before finishing." });
+              if (abortSignal.aborted && !emittedUsefulOutput) throw new Error("turn aborted before useful output");
+              if (!emittedUsefulOutput && index < DEMO_MODELS.length - 1) throw new Error("model aborted before useful output");
+              attemptEmit({ type: "error", message: "The turn was aborted before finishing." });
               break;
             case "error":
               finishReason = "error";
-              if (!emittedModelOutput && index < DEMO_MODELS.length - 1) throw new Error(errorText(part.error));
-              emittedModelOutput = true;
-              emit({ type: "error", message: errorText(part.error) });
+              if (!emittedUsefulOutput && index < DEMO_MODELS.length - 1) throw new Error(errorText(part.error));
+              attemptEmit({ type: "error", message: errorText(part.error) });
               break;
             case "finish":
               finishReason = part.finishReason;
-              usage = {
+              usageReports.push({
                 inputTokens: part.totalUsage.inputTokens,
                 cacheReadTokens: part.totalUsage.inputTokenDetails.cacheReadTokens,
                 cacheWriteTokens: part.totalUsage.inputTokenDetails.cacheWriteTokens,
                 outputTokens: part.totalUsage.outputTokens,
                 reasoningTokens: part.totalUsage.outputTokenDetails.reasoningTokens,
                 totalTokens: part.totalUsage.totalTokens
-              };
-              if (!emittedModelOutput && index < DEMO_MODELS.length - 1) {
-                finishReason = "empty-fallback";
+              });
+              if (!emittedUsefulOutput && index < DEMO_MODELS.length - 1) {
+                fallbackToNextModel(`model finished (${part.finishReason}) before useful output`);
                 break;
               }
-              emit({ type: "done", reason: part.finishReason });
+              if (part.finishReason === "tool-calls") {
+                attemptEmit({ type: "error", message: TOOL_BUDGET_MESSAGE });
+                return;
+              }
+              attemptEmit({ type: "done", reason: part.finishReason });
               return;
             default:
               break; // source/raw/tool-call etc. — no frame mapping
           }
         }
-        if (emittedModelOutput || index === DEMO_MODELS.length - 1) return;
+        if (emittedUsefulOutput || index === DEMO_MODELS.length - 1) return;
+        fallbackToNextModel("model stream ended before useful output");
       } catch (error) {
         finishReason = "exception";
-        if (emittedModelOutput || index === DEMO_MODELS.length - 1) throw error;
-        logEvent("demo-model-fallback", {
-          fromModel: config.model,
-          toModel: DEMO_MODELS[index + 1]?.model,
-          reason: errorText(error)
-        });
+        if (abortSignal.aborted && !emittedUsefulOutput) throw error;
+        if (emittedUsefulOutput || index === DEMO_MODELS.length - 1) throw error;
+        fallbackToNextModel(errorText(error));
       }
     }
   } catch (e) {
@@ -315,7 +332,8 @@ async function runTurn(
     finishReason = "exception";
     emit({ type: "error", message: errorText(e) });
   } finally {
-    const counters = countersReport();
+    const usage = sumDemoUsage(usageReports);
+    const finalTelemetry = demoFinalTextTelemetry(finalText, finishReason);
     logEvent("demo-chat", {
       auth: subject === DEV_SUBJECT ? "dev-bypass" : "cookie",
       model: selectedModel,
@@ -332,8 +350,16 @@ async function runTurn(
       messages: messages.length,
       steps,
       finishReason,
-      searchCalls: counters.searchCalls,
-      executeCalls: counters.executeCalls,
+      ...finalTelemetry,
+      searchCalls: toolBudget.searchCalls,
+      executeCalls: toolBudget.executeCalls,
+      searchRefusals: toolBudget.searchRefusals,
+      executeRefusals: toolBudget.executeRefusals,
+      unknownServiceSearches: toolBudget.unknownServiceSearches,
+      executeFailures: toolBudget.executeFailures,
+      executeResultTruncated: toolBudget.executeResultTruncated,
+      toolCounterScope: "turn",
+      usageScope: "sum-per-model-attempt",
       ms: Date.now() - t0
     });
   }

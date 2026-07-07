@@ -46,6 +46,28 @@ export const DEMO_CAPS = {
   chatsPerHour: 30
 } as const;
 
+export type DemoToolBudget = {
+  searchCalls: number;
+  executeCalls: number;
+  searchRefusals: number;
+  executeRefusals: number;
+  unknownServiceSearches: number;
+  executeFailures: number;
+  executeResultTruncated: number;
+};
+
+export function createDemoToolBudget(): DemoToolBudget {
+  return {
+    searchCalls: 0,
+    executeCalls: 0,
+    searchRefusals: 0,
+    executeRefusals: 0,
+    unknownServiceSearches: 0,
+    executeFailures: 0,
+    executeResultTruncated: 0
+  };
+}
+
 const THROTTLE_TTL_SECONDS = 2 * 60 * 60;
 const HOUR_MS = 60 * 60 * 1000;
 

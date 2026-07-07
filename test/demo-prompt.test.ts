@@ -22,6 +22,11 @@ describe("demo system prompt", () => {
     expect(DEMO_PREAMBLE).toContain("do not call `codemode.search` inside `execute`");
     expect(DEMO_PREAMBLE).toContain("Do not infer per-item detail functions");
     expect(DEMO_PREAMBLE).toContain("named result objects");
+    expect(DEMO_PREAMBLE).toContain("Return compact selected fields only from `execute`");
+    expect(DEMO_PREAMBLE).toContain("broad directory, regional, or aggregate questions");
+    expect(DEMO_PREAMBLE).toContain("targeted per-country/per-entity fanout");
+    expect(DEMO_PREAMBLE).toContain("counts, top 5-8 named rows, and source/provenance fields");
+    expect(DEMO_PREAMBLE).toContain("Aggregate, slice arrays, and project columns inside the sandbox");
   });
 
   it("references no non-exposed operations or retired skills (ADR-0003)", () => {
