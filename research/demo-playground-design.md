@@ -161,7 +161,8 @@ mints MCP OAuth tokens. So:
   a **same-origin interstitial page** (meta-refresh to `/demo`) rather than a
   302 — a Strict cookie is not sent on the cross-site redirect chain arriving
   from WorkOS, so the interstitial starts a fresh same-origin navigation.
-  Needs a real-browser check on first deploy.
+  Verified working in a real browser against production on 2026-07-07
+  (first deploy, version 087049b7).
 - `POST /demo/chat` requires that cookie **plus explicit CSRF/origin defense**
   (review finding: a cookie alone is insufficient across two same-site custom
   domains): require the `Origin` header to equal the request origin, reject
