@@ -12,7 +12,7 @@ export const DEMO_MODELS: readonly DemoModelConfig[] = [
 export const DEMO_MODEL = DEMO_GROK_MODEL;
 export const DEMO_REASONING_EFFORT = "medium" as const;
 export const DEMO_TEMPERATURE = 0.1;
-export const DEMO_GATEWAY_ID_FALLBACK = "default";
+export const DEMO_GATEWAY_ID_FALLBACK = "stellar-raven-demo";
 
 export async function demoSessionAffinity(subject: string): Promise<string> {
   const bytes = new TextEncoder().encode(`demo:${subject}`);

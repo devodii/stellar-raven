@@ -3,6 +3,7 @@ import { createWorkersAI } from "workers-ai-provider";
 import { describe, expect, it } from "vitest";
 import {
   DEMO_GROK_MODEL,
+  DEMO_GATEWAY_ID_FALLBACK,
   DEMO_KIMI_MODEL,
   DEMO_MODEL,
   DEMO_MODELS,
@@ -22,6 +23,7 @@ describe("demo model config", () => {
     ]);
     expect(DEMO_TEMPERATURE).toBe(0.1);
     expect(DEMO_REASONING_EFFORT).toBe("medium");
+    expect(DEMO_GATEWAY_ID_FALLBACK).toBe("stellar-raven-demo");
   });
 
   it("derives stable non-raw session affinity keys", async () => {

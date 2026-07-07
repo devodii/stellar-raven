@@ -197,20 +197,14 @@ emitted in a single model step):
 - AI Gateway spend-limit rule is a **mandatory backstop**, not optional; every
   execute is also a Worker Loader isolate spin-up (open beta, Workers Paid) —
   the per-turn execute counter bounds it.
-  **⚠ UNMET AS OF 2026-07-06** (accepted as a merge non-blocker; tracked as
-  Solo todo 848 — required before public traffic): the demo now routes
-  through the account's
-  `default` gateway, which has NO rate limit and NO spend rule configured
-  (live-verified: `rate_limiting_limit: 0`), and the model change to kimi
-  raised worst-case turn cost to ~3¢ (~10× the original glm sizing). The API
-  token has AI Gateway read but not write, so this is dashboard work: add a
-  spend-limit rule (and ideally a rate limit) on `default` — or create a
-  dedicated demo gateway — **before /demo ships to the public hostname**.
-  Related, decided-and-accepted for a WorkOS-gated demo: `default` has
-  `collect_logs: true`, so demo prompts/responses persist in the AI Gateway
-  log viewer (bounded by the plan's log cap) even though the app itself never
-  logs full trace payloads; `zdr` is off, which is moot for `@cf/*` models.
-  Revisit both if the gate ever loosens.
+  Updated 2026-07-07: the demo routes through the dedicated
+  `stellar-raven-demo` gateway (`DEMO_AI_GATEWAY_ID` in `wrangler.jsonc`, with
+  the same fallback in code) so rate-limit / spend-limit posture can live on a
+  demo-specific control plane. The API token has AI Gateway read but not write,
+  so changing those rules remains dashboard work. Gateway logging persists
+  prompts/responses in the AI Gateway log viewer (bounded by the plan's log
+  cap) even though the app itself never logs full trace payloads; revisit log
+  retention if the gate ever loosens.
 - If a hard cross-request cap ever becomes a requirement, that is an explicit
   new design (atomic limiter: DO or Cloudflare rate-limiting product) — not a
   KV patch.
