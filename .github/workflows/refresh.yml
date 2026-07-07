@@ -94,11 +94,7 @@ jobs:
                 echo
                 echo '#### Inventory drift'
                 echo
-                echo '```'
-                git diff --stat -- inventory catalog specs
-                echo '```'
-                echo
-                echo 'Regenerate locally (`node scripts/refresh-inventory.mjs && node scripts/build-catalog.mjs && npm run spec:build && node eval/plan/build-op-classes.mjs`), review the diff — especially new/removed operations, which may need policy (deny/metered) decisions — and commit.'
+                node scripts/summarize-live-drift.mjs
               fi
               if [ "$skills_drift" = "true" ]; then
                 echo

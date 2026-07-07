@@ -1,0 +1,325 @@
+#!/usr/bin/env node
+/**
+ * summarize-live-drift.mjs - Markdown evidence for the auto-filed drift issue.
+ *
+ * This is intentionally advisory. The live-drift-resolution skill remains the
+ * source of truth: agents must regenerate locally and classify from the actual
+ * diff before committing. This script makes the issue richer by surfacing the
+ * first-pass facts CI can derive from the checked-out old snapshot vs the
+ * refreshed working tree.
+ */
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { RUNNERS } from "../src/skills/runners/index.ts";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const HTTP_METHODS = ["get", "post", "put", "patch", "delete", "head", "options"];
+const MAX_ITEMS = 20;
+
+function git(args, options = {}) {
+  return execFileSync("git", args, {
+    cwd: ROOT,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", options.ignoreError ? "ignore" : "pipe"]
+  });
+}
+
+function readJson(path) {
+  return JSON.parse(readFileSync(join(ROOT, path), "utf8"));
+}
+
+function readHeadJson(path) {
+  try {
+    return JSON.parse(git(["show", `HEAD:${path}`], { ignoreError: true }));
+  } catch {
+    return null;
+  }
+}
+
+function changedFiles(paths) {
+  return git(["diff", "--name-only", "--", ...paths])
+    .split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function diffStat(paths) {
+  return git(["diff", "--stat", "--", ...paths]).trim();
+}
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = stable(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function sameJson(a, b) {
+  return JSON.stringify(stable(a)) === JSON.stringify(stable(b));
+}
+
+function bulletList(items, empty = "none") {
+  if (items.length === 0) return `  - ${empty}`;
+  const shown = items.slice(0, MAX_ITEMS);
+  const lines = shown.map((item) => `  - ${item}`);
+  if (items.length > shown.length) lines.push(`  - ... ${items.length - shown.length} more`);
+  return lines.join("\n");
+}
+
+function opRecords(openapi, service) {
+  const records = new Map();
+  for (const [path, pathItem] of Object.entries(openapi?.paths ?? {})) {
+    for (const method of HTTP_METHODS) {
+      const op = pathItem?.[method];
+      if (!op) continue;
+      const httpMethod = method.toUpperCase();
+      const opId = op.operationId ?? `${method}_${path.replace(/[^A-Za-z0-9]+/g, "_")}`;
+      records.set(`${httpMethod} ${path}`, {
+        key: `${httpMethod} ${path}`,
+        catalogId: `${service}.${opId}`,
+        opId,
+        summary: op.summary ?? "",
+        description: op.description ?? "",
+        op
+      });
+    }
+  }
+  return records;
+}
+
+function summarizeOpenapiInventory(path, service) {
+  if (!existsSync(join(ROOT, path))) return { touchedCatalogIds: new Set(), lines: [] };
+  const oldInv = readHeadJson(path);
+  const nextInv = readJson(path);
+  if (!oldInv) {
+    return {
+      touchedCatalogIds: new Set(),
+      lines: [`- ${path}: new inventory file; classify manually.`]
+    };
+  }
+  if (sameJson({ ...oldInv, fetchedAt: nextInv.fetchedAt }, nextInv)) {
+    return { touchedCatalogIds: new Set(), lines: [`- ${path}: unchanged ignoring fetchedAt.`] };
+  }
+
+  const oldOps = opRecords(oldInv.openapi, service);
+  const nextOps = opRecords(nextInv.openapi, service);
+  const added = [];
+  const removed = [];
+  const renamed = [];
+  const textChanged = [];
+  const schemaChanged = [];
+  const touchedCatalogIds = new Set();
+
+  for (const [key, next] of nextOps) {
+    const old = oldOps.get(key);
+    if (!old) {
+      added.push(`${next.catalogId} (${key})`);
+      touchedCatalogIds.add(next.catalogId);
+      continue;
+    }
+    if (old.opId !== next.opId) {
+      renamed.push(`${key}: ${old.catalogId} -> ${next.catalogId}`);
+      touchedCatalogIds.add(old.catalogId);
+      touchedCatalogIds.add(next.catalogId);
+    }
+    if (old.summary !== next.summary || old.description !== next.description) {
+      textChanged.push(`${next.catalogId} (${key})`);
+      touchedCatalogIds.add(next.catalogId);
+    } else if (!sameJson(old.op, next.op)) {
+      schemaChanged.push(`${next.catalogId} (${key})`);
+      touchedCatalogIds.add(next.catalogId);
+    }
+  }
+  for (const [key, old] of oldOps) {
+    if (!nextOps.has(key)) {
+      removed.push(`${old.catalogId} (${key})`);
+      touchedCatalogIds.add(old.catalogId);
+    }
+  }
+
+  const lines = [
+    `- ${path}:`,
+    `  - operation surface added: ${added.length}`,
+    bulletList(added),
+    `  - operation surface removed: ${removed.length}`,
+    bulletList(removed),
+    `  - operationId changes on existing path/method: ${renamed.length}`,
+    bulletList(renamed),
+    `  - routing text changes (operationId/summary/description): ${textChanged.length}`,
+    bulletList(textChanged),
+    `  - schema/response-only operation changes: ${schemaChanged.length}`,
+    bulletList(schemaChanged)
+  ];
+  return { touchedCatalogIds, lines };
+}
+
+function summarizeLumenloop(path) {
+  if (!existsSync(join(ROOT, path))) return { touchedCatalogIds: new Set(), lines: [] };
+  const oldInv = readHeadJson(path);
+  const nextInv = readJson(path);
+  if (!oldInv) {
+    return {
+      touchedCatalogIds: new Set(),
+      lines: [`- ${path}: new inventory file; classify manually.`]
+    };
+  }
+  if (sameJson({ ...oldInv, fetchedAt: nextInv.fetchedAt }, nextInv)) {
+    return { touchedCatalogIds: new Set(), lines: [`- ${path}: unchanged ignoring fetchedAt.`] };
+  }
+
+  const oldTools = new Map((oldInv.tools ?? []).map((tool) => [tool.name, tool]));
+  const nextTools = new Map((nextInv.tools ?? []).map((tool) => [tool.name, tool]));
+  const added = [];
+  const removed = [];
+  const textChanged = [];
+  const schemaChanged = [];
+  const metadataChanged = [];
+  const touchedCatalogIds = new Set();
+
+  for (const [name, next] of nextTools) {
+    const catalogId = `lumenloop.${name}`;
+    const old = oldTools.get(name);
+    if (!old) {
+      added.push(catalogId);
+      touchedCatalogIds.add(catalogId);
+      continue;
+    }
+    const oldText = {
+      description: old.description ?? "",
+      when_to_use: old.when_to_use ?? "",
+      returns: old.returns ?? ""
+    };
+    const nextText = {
+      description: next.description ?? "",
+      when_to_use: next.when_to_use ?? "",
+      returns: next.returns ?? ""
+    };
+    const oldSchemas = { input_schema: old.input_schema, output_schema: old.output_schema };
+    const nextSchemas = { input_schema: next.input_schema, output_schema: next.output_schema };
+    if (!sameJson(oldText, nextText)) {
+      textChanged.push(catalogId);
+      touchedCatalogIds.add(catalogId);
+    } else if (!sameJson(oldSchemas, nextSchemas)) {
+      schemaChanged.push(catalogId);
+      touchedCatalogIds.add(catalogId);
+    } else if (!sameJson(old, next)) {
+      metadataChanged.push(catalogId);
+    }
+  }
+  for (const [name] of oldTools) {
+    if (!nextTools.has(name)) {
+      const catalogId = `lumenloop.${name}`;
+      removed.push(catalogId);
+      touchedCatalogIds.add(catalogId);
+    }
+  }
+
+  const lines = [
+    `- ${path}:`,
+    `  - tool surface added: ${added.length}`,
+    bulletList(added),
+    `  - tool surface removed: ${removed.length}`,
+    bulletList(removed),
+    `  - routing text changes (description/when_to_use/returns): ${textChanged.length}`,
+    bulletList(textChanged),
+    `  - schema changes: ${schemaChanged.length}`,
+    bulletList(schemaChanged),
+    `  - other tool metadata changes: ${metadataChanged.length}`,
+    bulletList(metadataChanged)
+  ];
+  return { touchedCatalogIds, lines };
+}
+
+function summarizeDocsInventory(path) {
+  if (!changedFiles([path]).includes(path)) return [];
+  if (path.endsWith("stellar-docs-titles.json")) {
+    const oldInv = readHeadJson(path);
+    const nextInv = readJson(path);
+    const oldTotal = oldInv?.total ?? oldInv?.titles?.length ?? "unknown";
+    const nextTotal = nextInv.total ?? nextInv.titles?.length ?? "unknown";
+    return [
+      `- ${path}: docs page-title vocabulary changed (${oldTotal} -> ${nextTotal}).`,
+      "  - This feeds catalog keywords; treat as routing-relevant until the routing gate proves it safe."
+    ];
+  }
+  return [
+    `- ${path}: Algolia index settings changed.`,
+    "  - Review facets/ranking/distinct/searchable attributes; this can affect search behavior even without operation surface drift."
+  ];
+}
+
+function runnerIntersections(touchedCatalogIds) {
+  const lines = [];
+  for (const [runnerId, runner] of Object.entries(RUNNERS)) {
+    const hits = (runner.ops ?? []).filter((op) => touchedCatalogIds.has(op));
+    if (hits.length > 0) lines.push(`- ${runnerId}: ${hits.join(", ")}`);
+  }
+  return lines;
+}
+
+function main() {
+  const generatedChanged = changedFiles(["inventory", "catalog", "specs"]);
+  const stat = diffStat(["inventory", "catalog", "specs"]);
+  const touchedCatalogIds = new Set();
+  const classificationLines = [];
+
+  const lumenloop = summarizeLumenloop("inventory/lumenloop.json");
+  for (const id of lumenloop.touchedCatalogIds) touchedCatalogIds.add(id);
+  classificationLines.push(...lumenloop.lines);
+
+  const scout = summarizeOpenapiInventory("inventory/stellar-light.json", "scout");
+  for (const id of scout.touchedCatalogIds) touchedCatalogIds.add(id);
+  classificationLines.push(...scout.lines);
+
+  classificationLines.push(...summarizeDocsInventory("inventory/stellar-docs.json"));
+  classificationLines.push(...summarizeDocsInventory("inventory/stellar-docs-titles.json"));
+
+  const runnerHits = runnerIntersections(touchedCatalogIds);
+
+  console.log("#### Resolution runbook");
+  console.log();
+  console.log(
+    "Use `.agents/skills/live-drift-resolution/SKILL.md` to resolve this. The summary below is CI-derived evidence, not a verdict. Regenerate locally and classify from the actual diff before committing."
+  );
+  console.log();
+  console.log("Minimum checks before close: drift class, ADR-0003 exposure decision if needed, routing gate when routing text/keywords changed, runner live smoke if runner ops intersect, `npm run secrets:scan -- --tree`, independent review, and production deploy when approved.");
+  console.log();
+  console.log("#### Generated files changed");
+  console.log();
+  if (stat) {
+    console.log("```");
+    console.log(stat);
+    console.log("```");
+  } else {
+    console.log("_No generated file diff at the time of summary generation._");
+  }
+  console.log();
+  if (generatedChanged.length > 0) {
+    console.log(generatedChanged.map((file) => `- \`${file}\``).join("\n"));
+  }
+  console.log();
+  console.log("#### Classification hints");
+  console.log();
+  if (classificationLines.length > 0) {
+    console.log(classificationLines.join("\n"));
+  } else {
+    console.log("- No inventory files changed; inspect catalog/spec diffs and the run logs.");
+  }
+  console.log();
+  console.log("#### Runner-affecting hints");
+  console.log();
+  if (runnerHits.length > 0) {
+    console.log(runnerHits.join("\n"));
+    console.log();
+    console.log("Re-run the affected runnable skills live and verify projections before closing.");
+  } else {
+    console.log("- No current runner declared ops intersect the CI-detected operation/tool changes.");
+  }
+}
+
+main();

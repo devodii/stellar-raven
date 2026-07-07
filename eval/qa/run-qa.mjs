@@ -58,6 +58,7 @@ const MAX_TURNS = 24;
 const AGENT_TIMEOUT_MS = 10 * 60_000;
 
 function agentPrompt(question, searchTool) {
+  const promptAppend = process.env.QA_AGENT_PROMPT_APPEND?.trim();
   return `You answer questions about the Stellar ecosystem using ONLY this session's MCP tools:
 
 - mcp__raven__${searchTool} — discover what the catalog can do (service operations, skills)
@@ -70,6 +71,7 @@ Rules:
 - If the tools cannot support an answer — the question is out of scope, the thing does not exist, or the request itself is something you should not do — say that plainly and briefly instead of guessing or playing along.
 - Do not use any tool other than the two named above.
 - Your FINAL message must be the answer itself: concise, fact-dense, with source URLs from tool results where available. No preamble, no meta-commentary about tools.
+${promptAppend ? `\nAdditional run instructions:\n${promptAppend}\n` : ""}
 
 QUESTION:
 ${question}`;
@@ -248,7 +250,7 @@ async function main() {
       let verdict = null;
       if (!noJudge) {
         verdict = run.answer
-          ? await judgeCase({ ...c, candidateAnswer: run.answer }, { model: judgeModel })
+          ? await judgeCase({ ...c, candidateAnswer: run.answer, transcript: run.transcript }, { model: judgeModel })
           : { score: "error", missingFacts: [], wrongClaims: [], rationale: run.error ?? "empty answer" };
       }
       const durationMs = Date.now() - t0;

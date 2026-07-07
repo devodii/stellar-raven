@@ -23,7 +23,10 @@
  * cloudflare:workers). Route coverage lives in test/smoke/server.test.ts.
  */
 import { stepCountIs, streamText, type ToolSet } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createWorkersAI } from "workers-ai-provider";
+import { google } from "workers-ai-provider/google";
+import { openai } from "workers-ai-provider/openai";
 import { allowDevUnauthenticated } from "../auth/gate.ts";
 import { logEvent } from "../observability.ts";
 import { verifyDemoCookie } from "./auth.ts";
@@ -32,8 +35,10 @@ import { encodeFrame, type DemoFrame } from "./frames.ts";
 import {
   DEMO_GATEWAY_ID_FALLBACK,
   DEMO_MODELS,
+  DEMO_MODEL_OVERRIDE_VAR,
   DEMO_REASONING_EFFORT,
   DEMO_TEMPERATURE,
+  demoModelsFromOverride,
   demoSessionAffinity
 } from "./model-config.ts";
 import {
@@ -49,23 +54,18 @@ declare global {
   interface Env {
     AI: Ai;
     DEMO_AI_GATEWAY_ID?: string;
+    DEMO_MODEL_OVERRIDE?: string;
   }
 }
 
-// Grok 4.3 is available through the Cloudflare AI binding via AI Gateway
-// Unified Billing. Kimi K2.7 Code stays as a pre-output fallback because it is
-// optimized for coding/tooling workloads and has been reliable for demo tool
-// turns. Earlier live testing eliminated cheaper candidates on
-// streaming-tool-call reliability:
-//  - @cf/zai-org/glm-4.7-flash: args parsed fine, but tool-enabled calls
-//    frequently sat silent until the 120s whole-turn abort (steps:0) while
-//    no-tools calls answered in ~130ms — unusable latency variance.
-//  - @cf/mistralai/mistral-small-3.1-24b-instruct: fast, but streamed tool
-//    args arrived token-DUPLICATED ({"{"queryquery":":...) — SDK rejected
-//    every call.
-//  - @cf/meta/llama-3.3-70b-instruct-fp8-fast: emitted its llama-format
-//    function JSON as plain TEXT content; never surfaced as a tool call.
-// A live demo needs reliable tool turns more than the absolute cheapest model.
+// The 2026-07-07 live /demo/chat gauntlet selected GPT-5.4 primary with
+// GPT-5.4 Mini fallback. Grok 4.3 and Kimi K2.7 Code remain useful controls,
+// but were slower or less stable in the exact SSE + tool-call path. Sonnet 4.6
+// is viable after the Cloudflare Anthropic system-field normalization below,
+// but slower and more likely to exhaust the demo's tight tool budget. Gemini
+// still fails after its first tool call because the OpenAI-compatible transcript
+// must preserve Google's provider-specific thought_signature on follow-up.
+// See research/demo-model-gauntlet-2026-07-07.md for the measured matrix.
 /** Throttle-bucket subject for loopback dev requests (no cookie, no WorkOS). */
 const DEV_SUBJECT = "dev-loopback";
 const TOOL_BUDGET_MESSAGE =
@@ -200,7 +200,8 @@ async function runTurn(
   let finalText = "";
   let steps = 0;
   let finishReason = "none";
-  let selectedModel = DEMO_MODELS[0]?.model ?? "unknown";
+  const demoModels = demoModelsFromOverride(env.DEMO_MODEL_OVERRIDE);
+  let selectedModel = demoModels[0]?.model ?? "unknown";
   const attemptedModels: string[] = [];
   try {
     const workersai = createWorkersAI({
@@ -208,11 +209,13 @@ async function runTurn(
       // Gateway routing is mandatory: a missing gateway id/config fails model
       // calls. Spend/rate rules are account-side posture tracked in Solo todo
       // 848, not something this binding can enforce by itself.
-      gateway: { id: env.DEMO_AI_GATEWAY_ID ?? DEMO_GATEWAY_ID_FALLBACK }
+      gateway: { id: env.DEMO_AI_GATEWAY_ID ?? DEMO_GATEWAY_ID_FALLBACK },
+      providers: [openai, cloudflareAnthropic, google],
+      resume: false
     });
     const sessionAffinity = await demoSessionAffinity(subject);
-    for (let index = 0; index < DEMO_MODELS.length; index += 1) {
-      const config = DEMO_MODELS[index];
+    for (let index = 0; index < demoModels.length; index += 1) {
+      const config = demoModels[index];
       if (!config) continue;
       selectedModel = config.model;
       attemptedModels.push(config.model);
@@ -232,19 +235,13 @@ async function runTurn(
         finishReason = "empty-fallback";
         logEvent("demo-model-fallback", {
           fromModel: config.model,
-          toModel: DEMO_MODELS[index + 1]?.model,
+          toModel: demoModels[index + 1]?.model,
           reason
         });
       };
       try {
         const result = streamText({
-          model: workersai(config.model, {
-            // Cloudflare prompt caching is automatic; session affinity routes a
-            // demo subject's turns to the same backend to improve prefix cache
-            // hit rate. Keep the raw auth subject out of the model header.
-            sessionAffinity,
-            reasoning_effort: DEMO_REASONING_EFFORT
-          }),
+          model: workersai(config.model, modelSettings(config.model, sessionAffinity)),
           system: DEMO_SYSTEM_PROMPT,
           messages,
           tools: tools as ToolSet,
@@ -286,12 +283,12 @@ async function runTurn(
             case "abort":
               finishReason = "abort";
               if (abortSignal.aborted && !emittedUsefulOutput) throw new Error("turn aborted before useful output");
-              if (!emittedUsefulOutput && index < DEMO_MODELS.length - 1) throw new Error("model aborted before useful output");
+              if (!emittedUsefulOutput && index < demoModels.length - 1) throw new Error("model aborted before useful output");
               attemptEmit({ type: "error", message: "The turn was aborted before finishing." });
               break;
             case "error":
               finishReason = "error";
-              if (!emittedUsefulOutput && index < DEMO_MODELS.length - 1) throw new Error(errorText(part.error));
+              if (!emittedUsefulOutput && index < demoModels.length - 1) throw new Error(errorText(part.error));
               attemptEmit({ type: "error", message: errorText(part.error) });
               break;
             case "finish":
@@ -304,7 +301,7 @@ async function runTurn(
                 reasoningTokens: part.totalUsage.outputTokenDetails.reasoningTokens,
                 totalTokens: part.totalUsage.totalTokens
               });
-              if (!emittedUsefulOutput && index < DEMO_MODELS.length - 1) {
+              if (!emittedUsefulOutput && index < demoModels.length - 1) {
                 fallbackToNextModel(`model finished (${part.finishReason}) before useful output`);
                 break;
               }
@@ -318,12 +315,12 @@ async function runTurn(
               break; // source/raw/tool-call etc. — no frame mapping
           }
         }
-        if (emittedUsefulOutput || index === DEMO_MODELS.length - 1) return;
+        if (emittedUsefulOutput || index === demoModels.length - 1) return;
         fallbackToNextModel("model stream ended before useful output");
       } catch (error) {
         finishReason = "exception";
         if (abortSignal.aborted && !emittedUsefulOutput) throw error;
-        if (emittedUsefulOutput || index === DEMO_MODELS.length - 1) throw error;
+        if (emittedUsefulOutput || index === demoModels.length - 1) throw error;
         fallbackToNextModel(errorText(error));
       }
     }
@@ -338,6 +335,7 @@ async function runTurn(
       auth: subject === DEV_SUBJECT ? "dev-bypass" : "cookie",
       model: selectedModel,
       attemptedModels,
+      modelOverride: env.DEMO_MODEL_OVERRIDE ? DEMO_MODEL_OVERRIDE_VAR : undefined,
       temperature: DEMO_TEMPERATURE,
       reasoningEffort: DEMO_REASONING_EFFORT,
       sessionAffinity: true,
@@ -363,6 +361,76 @@ async function runTurn(
       ms: Date.now() - t0
     });
   }
+}
+
+function modelSettings(model: string, sessionAffinity: string) {
+  // Cloudflare prompt caching is automatic; session affinity routes a demo
+  // subject's turns to the same backend to improve prefix cache hit rate. Keep
+  // the raw auth subject out of the model header. Third-party catalog models
+  // must use the AI Gateway delegate option shape; Workers-AI-only settings
+  // like `reasoning_effort` are rejected by provider-native endpoints.
+  if (model.startsWith("@")) {
+    return {
+      sessionAffinity,
+      reasoning_effort: DEMO_REASONING_EFFORT
+    } as const;
+  }
+  return {
+    extraHeaders: { "x-session-affinity": sessionAffinity },
+    resume: false
+  } as const;
+}
+
+const cloudflareAnthropic = {
+  wireFormat: "anthropic",
+  create: ({
+    modelId,
+    fetch,
+    baseURL
+  }: {
+    modelId: string;
+    fetch: typeof globalThis.fetch;
+    baseURL?: string;
+  }) =>
+    createAnthropic({
+      apiKey: "unused",
+      fetch: normalizeAnthropicFetch(fetch),
+      ...(baseURL ? { baseURL } : {})
+    })(modelId)
+} as const;
+
+function normalizeAnthropicFetch(fetchImpl: typeof fetch): typeof fetch {
+  return (async (input, init) => {
+    if (init?.body) {
+      const body = JSON.parse(bodyText(init.body)) as Record<string, unknown>;
+      const system = body.system;
+      // Cloudflare's Anthropic Messages endpoint currently rejects Anthropic's
+      // text-block array form for `system` even though @ai-sdk/anthropic emits
+      // it. The same endpoint accepts stream/tools; it just wants a plain string.
+      if (Array.isArray(system)) {
+        body.system = system
+          .map((part) =>
+            typeof part === "object" &&
+            part !== null &&
+            (part as { type?: unknown; text?: unknown }).type === "text" &&
+            typeof (part as { text?: unknown }).text === "string"
+              ? (part as { text: string }).text
+              : ""
+          )
+          .filter(Boolean)
+          .join("\n\n");
+      }
+      return fetchImpl(input, { ...init, body: JSON.stringify(body) });
+    }
+    return fetchImpl(input, init);
+  }) as typeof fetch;
+}
+
+function bodyText(body: BodyInit): string {
+  if (typeof body === "string") return body;
+  if (body instanceof Uint8Array) return new TextDecoder().decode(body);
+  if (body instanceof ArrayBuffer) return new TextDecoder().decode(body);
+  return "{}";
 }
 
 /**

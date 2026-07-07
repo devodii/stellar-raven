@@ -1,0 +1,1736 @@
+{
+  "runId": "2026-07-07-anthropic-gemini-reprobe",
+  "prompts": [
+    {
+      "id": "rpc-simulate",
+      "expectTools": true,
+      "text": "Which Stellar RPC method should I use to simulate a Soroban contract invocation before submitting it, and what does it return?"
+    },
+    {
+      "id": "soroswap-builder",
+      "expectTools": true,
+      "text": "What is Soroswap on Stellar, and who builds it? Keep it to 3 bullets."
+    },
+    {
+      "id": "open-rfps",
+      "expectTools": true,
+      "text": "Are there any open SCF RFPs right now related to passkeys or smart accounts? Use current data and say what it is current as of."
+    },
+    {
+      "id": "activity-leaderboard",
+      "expectTools": true,
+      "text": "Which Stellar projects are most active by development activity right now? Give top 5 with the activity basis."
+    },
+    {
+      "id": "no-market-hallucination",
+      "expectTools": false,
+      "text": "What is the current XLM price and 24-hour trading volume? If this gateway cannot provide current market data, say so plainly and do not invent numbers."
+    },
+    {
+      "id": "skill-routing",
+      "expectTools": true,
+      "text": "I'm writing a Soroban smart contract and need the build/test/deploy workflow. Show the practical sequence."
+    },
+    {
+      "id": "zk-repos",
+      "expectTools": true,
+      "text": "Find current high-signal ZK Soroban repos to study and include activity caveats."
+    },
+    {
+      "id": "wallet-recovery",
+      "expectTools": true,
+      "text": "Search for Stellar wallet recovery patterns, then use whatever exact operation you found to answer. Do not assume operation names."
+    }
+  ],
+  "results": [
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "rpc-simulate",
+      "prompt": "Which Stellar RPC method should I use to simulate a Soroban contract invocation before submitting it, and what does it return?",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1901,
+      "firstMeaningfulMs": 1901,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 18
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1901
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "soroswap-builder",
+      "prompt": "What is Soroswap on Stellar, and who builds it? Keep it to 3 bullets.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 230,
+      "firstMeaningfulMs": 230,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 6
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 230
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "open-rfps",
+      "prompt": "Are there any open SCF RFPs right now related to passkeys or smart accounts? Use current data and say what it is current as of.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 209,
+      "firstMeaningfulMs": 208,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 208
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "activity-leaderboard",
+      "prompt": "Which Stellar projects are most active by development activity right now? Give top 5 with the activity basis.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 228,
+      "firstMeaningfulMs": 228,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 228
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "no-market-hallucination",
+      "prompt": "What is the current XLM price and 24-hour trading volume? If this gateway cannot provide current market data, say so plainly and do not invent numbers.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 211,
+      "firstMeaningfulMs": 210,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 210
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "skill-routing",
+      "prompt": "I'm writing a Soroban smart contract and need the build/test/deploy workflow. Show the practical sequence.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 221,
+      "firstMeaningfulMs": 221,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 221
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "zk-repos",
+      "prompt": "Find current high-signal ZK Soroban repos to study and include activity caveats.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 244,
+      "firstMeaningfulMs": 244,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 244
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-sonnet-4.6",
+      "promptId": "wallet-recovery",
+      "prompt": "Search for Stellar wallet recovery patterns, then use whatever exact operation you found to answer. Do not assume operation names.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 248,
+      "firstMeaningfulMs": 248,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 248
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "rpc-simulate",
+      "prompt": "Which Stellar RPC method should I use to simulate a Soroban contract invocation before submitting it, and what does it return?",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 877,
+      "firstMeaningfulMs": 877,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 15
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 877
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "soroswap-builder",
+      "prompt": "What is Soroswap on Stellar, and who builds it? Keep it to 3 bullets.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 228,
+      "firstMeaningfulMs": 228,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 7
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 228
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "open-rfps",
+      "prompt": "Are there any open SCF RFPs right now related to passkeys or smart accounts? Use current data and say what it is current as of.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 243,
+      "firstMeaningfulMs": 243,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 243
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "activity-leaderboard",
+      "prompt": "Which Stellar projects are most active by development activity right now? Give top 5 with the activity basis.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 253,
+      "firstMeaningfulMs": 253,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 253
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "no-market-hallucination",
+      "prompt": "What is the current XLM price and 24-hour trading volume? If this gateway cannot provide current market data, say so plainly and do not invent numbers.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 504,
+      "firstMeaningfulMs": 504,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 504
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "skill-routing",
+      "prompt": "I'm writing a Soroban smart contract and need the build/test/deploy workflow. Show the practical sequence.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 228,
+      "firstMeaningfulMs": 228,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 228
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "zk-repos",
+      "prompt": "Find current high-signal ZK Soroban repos to study and include activity caveats.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 263,
+      "firstMeaningfulMs": 263,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 263
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "anthropic/claude-haiku-4.5",
+      "promptId": "wallet-recovery",
+      "prompt": "Search for Stellar wallet recovery patterns, then use whatever exact operation you found to answer. Do not assume operation names.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 231,
+      "firstMeaningfulMs": 231,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 231
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "rpc-simulate",
+      "prompt": "Which Stellar RPC method should I use to simulate a Soroban contract invocation before submitting it, and what does it return?",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 3079,
+      "firstMeaningfulMs": 2481,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 11
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 2481
+        },
+        {
+          "type": "tool-start",
+          "id": "39910048-4718-48db-b86a-c74d89d2644f",
+          "tool": "search",
+          "input": {
+            "query": "simulate transaction RPC method"
+          },
+          "atMs": 2481
+        },
+        {
+          "type": "tool-result",
+          "id": "39910048-4718-48db-b86a-c74d89d2644f",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "stellarDocs.search_rpc_horizon_data_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 193,
+                "tier": "gated",
+                "description": "Search Stellar docs about querying chain data: Stellar RPC (JSON-RPC API structure, pagination, data formats, running your own RPC node admin guide, RPC providers, guides for getLedgerEntries and simulateTransaction from… [clipped for the demo]",
+                "signature": "type SearchRpcHorizonDataDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_rpc_horizon_data_docs(input: SearchRpcHorizonDataDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "stellarDocs.search_sdk_cli_tools_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 85,
+                "tier": "gated",
+                "description": "Search Stellar docs about official developer tools and SDKs: the client SDKs list (JavaScript/TypeScript stellar-sdk npm package, Python, and the other language SDKs — which SDK to install for building Stellar and Soroba… [clipped for the demo]",
+                "signature": "type SearchSdkCliToolsDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_sdk_cli_tools_docs(input: SearchSdkCliToolsDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "skills.stellar-dev.data#when-to-use-this-skill",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 71,
+                "tier": "gated",
+                "description": "When to use this skill — - Calling Stellar RPC methods (getLatestLedger, getLedgerEntries, getEvents, simulateTransaction, sendTransaction) - Querying Horizon endpoints (accounts, transactions,…"
+              },
+              {
+                "id": "scout.explainRepo",
+                "service": "scout",
+                "kind": "operation",
+                "score": 48,
+                "tier": "gated",
+                "description": "Deep code answer about a Stellar repo (routing × DeepWiki). Get a source-grounded ANSWER to a deep code question about a Stellar repo — not just a link. StellarLight routes the question to the authoritative repo (error/r… [clipped for the demo]",
+                "signature": "type ExplainRepoInput = {\n    /** The deep code question (e.g. 'where are transaction result codes defined'). */\n    q: string;\n    /** Optional owner/name to pin the repo (e.g. stellar/stellar-core). Omit to auto-route. */\n    repo?: string;\n}\ntype ExplainRepoOutput = { /* 13 top-level fields: alternateRepos, answer, answered, codeVerified, meta, note, note2, ok, q, repo, repoMeta, routedVia, sou… [clipped for the demo]"
+              },
+              {
+                "id": "skills.stellar-dev.data",
+                "service": "skills",
+                "kind": "skill",
+                "score": 48,
+                "tier": "gated",
+                "description": "Querying Stellar chain data via Stellar RPC (preferred) and Horizon (legacy). Covers RPC JSON-RPC methods, Horizon REST endpoints, streaming, pagination, historical queries, Hubble/Galexie for deep history, and the RPC/H… [clipped for the demo]",
+                "availableSections": [
+                  "best-practices",
+                  "historical-data-access",
+                  "horizon-api-legacy",
+                  "migration-horizon-to-rpc",
+                  "network-configuration",
+                  "overview",
+                  "quick-navigation",
+                  "related-skills",
+                  "stellar-rpc",
+                  "when-to-use-this-skill"
+                ]
+              }
+            ],
+            "total": 12,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 2481
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 3078
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "soroswap-builder",
+      "prompt": "What is Soroswap on Stellar, and who builds it? Keep it to 3 bullets.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1644,
+      "firstMeaningfulMs": 1041,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 6
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1041
+        },
+        {
+          "type": "tool-start",
+          "id": "1e4211a8-60c7-4996-b3de-196cc454b295",
+          "tool": "search",
+          "input": {
+            "query": "Soroswap"
+          },
+          "atMs": 1041
+        },
+        {
+          "type": "tool-result",
+          "id": "1e4211a8-60c7-4996-b3de-196cc454b295",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "scout.searchProjects",
+                "service": "scout",
+                "kind": "operation",
+                "score": 75,
+                "tier": "gated",
+                "description": "Search Stellar projects (prior art / competitor lookup). Search the curated Stellar project/product directory — what's been built, by whom, with SCF-funding and live/inactive status (wallets, DEXes, anchors, lending, ora… [clipped for the demo]",
+                "signature": "type SearchProjectsInput = {\n    /** Filter by category */\n    category?: \"Infrastructure\" | \"Tooling\" | \"User-Facing App\" | \"Asset\" | \"Protocol/Contract\" | \"Anchor\" | \"Partner Integration\";\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. … [clipped for the demo]"
+              },
+              {
+                "id": "skills.lumenloop.stellar-ecosystem-digest#worked-example-what-s-new-in-stellar-rwa-in-the-last-30-days",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 44,
+                "tier": "gated",
+                "description": "Worked example — \"What's new in Stellar RWA in the last 30 days?\" — Today is 2026-06-08, so the window is 2026-05-09 → 2026-06-08."
+              },
+              {
+                "id": "skills.stellar-dev.zk-proofs#what-s-available-verify-before-building",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 44,
+                "tier": "gated",
+                "description": "What's available — verify before building — | Primitive | CAP | Status | |-----------|-----|--------| | BLS12-381 ops (G1/G2 add, mul, MSM, pairing check, hash-to-curve, Fr arithmetic) | CAP-0059 |…"
+              },
+              {
+                "id": "lumenloop.find_av_passages",
+                "service": "lumenloop",
+                "kind": "operation",
+                "score": 35,
+                "tier": "gated",
+                "description": "Find specific passages inside long AV transcripts via per-chunk embedding similarity. Use this when you want to quote what was said, not just \"which video\". Returns the parent video metadata plus the matched chunk text a… [clipped for the demo]",
+                "signature": "type FindAvPassagesInput = {\n    date_end?: string;\n    date_start?: string;\n    /** Max passages to return */\n    limit?: number;\n    /** Topic or phrase to match against transcript passages */\n    query: string;\n}\ntype FindAvPassagesOutput = {\n    /** Array of AV items: AI summary, start_offset (opaque transcript chunk offset, not seconds), link. */\n    results?: unknown[];\n    /** Present inste… [clipped for the demo]"
+              },
+              {
+                "id": "lumenloop.find_content_about_project",
+                "service": "lumenloop",
+                "kind": "operation",
+                "score": 35,
+                "tier": "gated",
+                "description": "Find articles, AV content, events, and tweets that are semantically related to a project. Uses embedding similarity to find cross-domain content that DISCUSSES the project. Supports optional date/source/type filters for … [clipped for the demo]",
+                "signature": "type FindContentAboutProjectInput = {\n    /** ISO date/timestamp upper bound (inclusive). */\n    date_end?: string;\n    /** For articles only: force a specific date field. Default is COALESCE(publishing_date, created_at). */\n    date_field?: \"publishing_date\" | \"created_at\";\n    /** ISO date/timestamp lower bound (inclusive). For articles, applies to COALESCE(publishing_date, created_at) by defaul… [clipped for the demo]"
+              }
+            ],
+            "total": 41,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1041
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1643
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "open-rfps",
+      "prompt": "Are there any open SCF RFPs right now related to passkeys or smart accounts? Use current data and say what it is current as of.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1546,
+      "firstMeaningfulMs": 1016,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 6
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1016
+        },
+        {
+          "type": "tool-start",
+          "id": "f133c13c-36d9-4d7e-b9c1-ed1536f91191",
+          "tool": "search",
+          "input": {
+            "query": "SCF RFP passkeys smart accounts"
+          },
+          "atMs": 1016
+        },
+        {
+          "type": "tool-result",
+          "id": "f133c13c-36d9-4d7e-b9c1-ed1536f91191",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "skills.lumenloop.scf-submission-radar",
+                "service": "skills",
+                "kind": "skill",
+                "score": 142,
+                "tier": "gated",
+                "description": "Position a Stellar Community Fund (SCF) idea against prior submissions before applying, using LumenLoop's SCF data. Use when the user is preparing an SCF application, wants to find similar past proposals, check what's be… [clipped for the demo]",
+                "availableSections": [
+                  "output-a-positioning-brief",
+                  "pointers",
+                  "recipe",
+                  "related-skills",
+                  "the-tools-you-use",
+                  "when-to-use-this-skill",
+                  "worked-example-on-chain-invoice-financing-for-smes",
+                  "file:reference/positioning-brief-template.md"
+                ]
+              },
+              {
+                "id": "skills.stellar-dev.dapp#smart-accounts-passkey-wallets",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 140,
+                "tier": "gated",
+                "description": "Smart Accounts (Passkey Wallets) — For passwordless authentication using WebAuthn passkeys, use Smart Account Kit."
+              },
+              {
+                "id": "lumenloop.find_similar_scf_submissions",
+                "service": "lumenloop",
+                "kind": "operation",
+                "score": 134,
+                "tier": "gated",
+                "description": "Search SCF (Stellar Community Fund) submissions by embedding similarity. Pass a natural-language query for topic/category discovery or an existing submission slug to find similar prior proposals. Returns title, descripti… [clipped for the demo]",
+                "signature": "type FindSimilarScfSubmissionsInput = {\n    /** Restrict to a specific category (e.g. \"Developer Tooling\") */\n    category?: string;\n    /** Max results */\n    limit?: number;\n    /** Natural-language query (e.g. \"ZK proofs for compliance\"). Mutually exclusive with `slug`. */\n    query?: string;\n    /** Restrict to a specific SCF round (e.g. \"SCF #29\") */\n    round?: string;\n    /** Existing SCF s… [clipped for the demo]"
+              },
+              {
+                "id": "lumenloop.get_scf_submissions",
+                "service": "lumenloop",
+                "kind": "operation",
+                "score": 134,
+                "tier": "gated",
+                "description": "Get Stellar Community Fund submissions linked to a project, including the full application/proposal text (markdown: sections, milestones, deliverables, budget detail), funding amount, award status, round, and category. S… [clipped for the demo]",
+                "signature": "type GetScfSubmissionsInput = {\n    /** Project name for fuzzy matching (ILIKE) */\n    name?: string;\n    /** Project slug (preferred — resolve names via search_directory first) */\n    slug?: string;\n}\ntype GetScfSubmissionsOutput = {\n    /** Number of submissions. */\n    count?: unknown;\n    /** SCF submissions: title, round, category, award_type, funding, full application/proposal text, links, l… [clipped for the demo]"
+              },
+              {
+                "id": "scout.getRfps",
+                "service": "scout",
+                "kind": "operation",
+                "score": 112,
+                "tier": "gated",
+                "description": "List Stellar RFPs (SCF-funded sponsor briefs). The curated set of Stellar RFPs / sponsor briefs (mirrors the /ideas page) — open ones are eligible for SCF grant funding when winners are picked; closed ones are past round… [clipped for the demo]",
+                "signature": "type GetRfpsInput = {\n    /** Filter by RFP category (e.g. 'defi', 'payments', 'infrastructure'). An unrecognized value returns 400 with the valid category list. */\n    category?: string;\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. */\n… [clipped for the demo]"
+              }
+            ],
+            "total": 40,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1016
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1546
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "activity-leaderboard",
+      "prompt": "Which Stellar projects are most active by development activity right now? Give top 5 with the activity basis.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1723,
+      "firstMeaningfulMs": 1146,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1146
+        },
+        {
+          "type": "tool-start",
+          "id": "7bae35dd-b0cd-4903-911c-66a3c5c10bb6",
+          "tool": "search",
+          "input": {
+            "query": "stellar projects development activity"
+          },
+          "atMs": 1146
+        },
+        {
+          "type": "tool-result",
+          "id": "7bae35dd-b0cd-4903-911c-66a3c5c10bb6",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "skills.lumenloop.stellar-project-dossier",
+                "service": "skills",
+                "kind": "skill",
+                "score": 198,
+                "tier": "gated",
+                "description": "Build a due-diligence profile of a single Stellar project from the LumenLoop directory — details, related content, talks, SCF history, and similar projects. Use when the user names a project and asks to vet, profile, res… [clipped for the demo]",
+                "availableSections": [
+                  "further-reading",
+                  "gotchas",
+                  "output-the-dossier",
+                  "related-skills",
+                  "the-dossier-pipeline-run-in-order",
+                  "when-to-use-this-skill",
+                  "worked-example-the-lobstr-dossier",
+                  "file:reference/dossier-template.md"
+                ]
+              },
+              {
+                "id": "skills.lumenloop.stellar-ecosystem-scout",
+                "service": "skills",
+                "kind": "skill",
+                "score": 181,
+                "tier": "gated",
+                "description": "Map a sector or topic of the Stellar ecosystem into a landscape of projects, categories, regions, and related content using the LumenLoop directory and semantic search. Use when the user asks to survey, map, or get an ov… [clipped for the demo]",
+                "availableSections": [
+                  "further-reading",
+                  "gotchas",
+                  "output-the-landscape",
+                  "related-skills",
+                  "the-scouting-recipe",
+                  "when-to-use-this-skill",
+                  "worked-example-mapping-rwa-tokenization",
+                  "file:reference/landscape-template.md"
+                ]
+              },
+              {
+                "id": "scout.searchProjects",
+                "service": "scout",
+                "kind": "operation",
+                "score": 173,
+                "tier": "gated",
+                "description": "Search Stellar projects (prior art / competitor lookup). Search the curated Stellar project/product directory — what's been built, by whom, with SCF-funding and live/inactive status (wallets, DEXes, anchors, lending, ora… [clipped for the demo]",
+                "signature": "type SearchProjectsInput = {\n    /** Filter by category */\n    category?: \"Infrastructure\" | \"Tooling\" | \"User-Facing App\" | \"Asset\" | \"Protocol/Contract\" | \"Anchor\" | \"Partner Integration\";\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. … [clipped for the demo]"
+              },
+              {
+                "id": "stellarDocs.search_sdk_cli_tools_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 173,
+                "tier": "gated",
+                "description": "Search Stellar docs about official developer tools and SDKs: the client SDKs list (JavaScript/TypeScript stellar-sdk npm package, Python, and the other language SDKs — which SDK to install for building Stellar and Soroba… [clipped for the demo]",
+                "signature": "type SearchSdkCliToolsDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_sdk_cli_tools_docs(input: SearchSdkCliToolsDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "stellarDocs.search_wallet_dapp_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 146,
+                "tier": "gated",
+                "description": "Search Stellar docs about building applications, wallets and dapps: the Build a Wallet with the Wallet SDK tutorial series (including anchor SEP-24 deposit/withdrawal integration), Build a Payment App with the JS SDK tut… [clipped for the demo]",
+                "signature": "type SearchWalletDappDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_wallet_dapp_docs(input: SearchWalletDappDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              }
+            ],
+            "total": 94,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1146
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1723
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "no-market-hallucination",
+      "prompt": "What is the current XLM price and 24-hour trading volume? If this gateway cannot provide current market data, say so plainly and do not invent numbers.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1764,
+      "firstMeaningfulMs": 1215,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1215
+        },
+        {
+          "type": "tool-start",
+          "id": "37d301fe-8b3e-42ab-ab68-035ab7c79756",
+          "tool": "search",
+          "input": {
+            "query": "XLM price market data"
+          },
+          "atMs": 1215
+        },
+        {
+          "type": "tool-result",
+          "id": "37d301fe-8b3e-42ab-ab68-035ab7c79756",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "scout.searchProjects",
+                "service": "scout",
+                "kind": "operation",
+                "score": 48,
+                "tier": "gated",
+                "description": "Search Stellar projects (prior art / competitor lookup). Search the curated Stellar project/product directory — what's been built, by whom, with SCF-funding and live/inactive status (wallets, DEXes, anchors, lending, ora… [clipped for the demo]",
+                "signature": "type SearchProjectsInput = {\n    /** Filter by category */\n    category?: \"Infrastructure\" | \"Tooling\" | \"User-Facing App\" | \"Asset\" | \"Protocol/Contract\" | \"Anchor\" | \"Partner Integration\";\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. … [clipped for the demo]"
+              },
+              {
+                "id": "scout.searchRepos",
+                "service": "scout",
+                "kind": "operation",
+                "score": 43,
+                "tier": "gated",
+                "description": "Search the Stellar GitHub repo / code-reference index. Search the indexed Stellar ecosystem GitHub code repos — the actual source, graded for quality. Indexes GitHub topics + description + language + README, expands tech… [clipped for the demo]",
+                "signature": "type SearchReposInput = {\n    /** Filter by primary language (case-insensitive substring, e.g. 'Rust', 'TypeScript') */\n    language?: string;\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. */\n    limit?: number;\n    /** Only return repos… [clipped for the demo]"
+              },
+              {
+                "id": "skills.lumenloop.stellar-builder-quickstart#when-to-use-this-skill",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 14,
+                "tier": "gated",
+                "description": "When to use this skill — - A user describes a Stellar idea (\"a tipping app\", \"a yield vault\", \"a stablecoin for X corridor\", \"an RWA marketplace\") and asks \"how do I build this?\" or \"where do I…"
+              },
+              {
+                "id": "skills.stellar-dev.data",
+                "service": "skills",
+                "kind": "skill",
+                "score": 111,
+                "tier": "backfill",
+                "description": "Querying Stellar chain data via Stellar RPC (preferred) and Horizon (legacy). Covers RPC JSON-RPC methods, Horizon REST endpoints, streaming, pagination, historical queries, Hubble/Galexie for deep history, and the RPC/H… [clipped for the demo]",
+                "availableSections": [
+                  "best-practices",
+                  "historical-data-access",
+                  "horizon-api-legacy",
+                  "migration-horizon-to-rpc",
+                  "network-configuration",
+                  "overview",
+                  "quick-navigation",
+                  "related-skills",
+                  "stellar-rpc",
+                  "when-to-use-this-skill"
+                ]
+              },
+              {
+                "id": "stellarDocs.search_rpc_horizon_data_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 111,
+                "tier": "backfill",
+                "description": "Search Stellar docs about querying chain data: Stellar RPC (JSON-RPC API structure, pagination, data formats, running your own RPC node admin guide, RPC providers, guides for getLedgerEntries and simulateTransaction from… [clipped for the demo]",
+                "signature": "type SearchRpcHorizonDataDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_rpc_horizon_data_docs(input: SearchRpcHorizonDataDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              }
+            ],
+            "total": 103,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1215
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1764
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "skill-routing",
+      "prompt": "I'm writing a Soroban smart contract and need the build/test/deploy workflow. Show the practical sequence.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1816,
+      "firstMeaningfulMs": 1385,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1385
+        },
+        {
+          "type": "tool-start",
+          "id": "c34b4aa2-a355-4cdf-b911-9af4fc82f54e",
+          "tool": "search",
+          "input": {
+            "query": "soroban build test deploy workflow"
+          },
+          "atMs": 1385
+        },
+        {
+          "type": "tool-result",
+          "id": "c34b4aa2-a355-4cdf-b911-9af4fc82f54e",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "stellarDocs.search_soroban_contract_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 181,
+                "tier": "gated",
+                "description": "Search Stellar docs about Soroban smart contract development in Rust: getting started (setup, hello world, storing data, deploy to testnet), 25 example contracts, contract storage (persistent vs temporary vs instance, TT… [clipped for the demo]",
+                "signature": "type SearchSorobanContractDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_soroban_contract_docs(input: SearchSorobanContractDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "skills.stellar-dev.smart-contracts",
+                "service": "skills",
+                "kind": "skill",
+                "score": 115,
+                "tier": "gated",
+                "description": "Stellar smart contract development (Rust, soroban-sdk). Entry point with project setup, contract anatomy, and build/deploy workflow, routing to three companion files in this directory — development.md (storage, auth, cro… [clipped for the demo]",
+                "availableSections": [
+                  "before-mainnet",
+                  "build-deploy-invoke",
+                  "contract-anatomy",
+                  "documentation",
+                  "minimal-test",
+                  "platform-constraints",
+                  "project-setup",
+                  "related-skills",
+                  "when-to-use-this-skill",
+                  "file:development.md",
+                  "file:security.md",
+                  "file:testing.md"
+                ]
+              },
+              {
+                "id": "stellarDocs.search_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 115,
+                "tier": "gated",
+                "description": "Full-text keyword search across ALL official Stellar developer documentation on developers.stellar.org — every docs page under /docs/build, /docs/learn, /docs/tokens, /docs/data, /docs/tools, /docs/platforms, /docs/valid… [clipped for the demo]",
+                "signature": "type SearchDocsInput = {\n    hitsPerPage?: number;\n    /** Add full `content` to attributesToRetrieve (can be multi-KB per hit). */\n    includeContent?: boolean;\n    /** Also search the /meetings meeting-notes slice (drops the docs-only facet filter). */\n    includeMeetings?: boolean;\n    /** page * hitsPerPage beyond 1000 records is unreachable (paginationLimitedTo). */\n    page?: number;\n    /**… [clipped for the demo]"
+              },
+              {
+                "id": "skills.lumenloop.stellar-builder-quickstart",
+                "service": "skills",
+                "kind": "skill",
+                "score": 100,
+                "tier": "gated",
+                "description": "Go from a Stellar product idea to a build path: pick the right Stellar primitives, check ecosystem prior art via LumenLoop, and route to the relevant build skill (Soroban, SDK/dapp, assets, oracles). Use when the user wa… [clipped for the demo]",
+                "availableSections": [
+                  "gotchas",
+                  "read-next",
+                  "related-skills",
+                  "the-recipe",
+                  "when-to-use-this-skill",
+                  "worked-example-an-rwa-tokenization-marketplace-on-stellar",
+                  "file:reference/build-plan-template.md"
+                ]
+              },
+              {
+                "id": "scout.searchRepos",
+                "service": "scout",
+                "kind": "operation",
+                "score": 69,
+                "tier": "gated",
+                "description": "Search the Stellar GitHub repo / code-reference index. Search the indexed Stellar ecosystem GitHub code repos — the actual source, graded for quality. Indexes GitHub topics + description + language + README, expands tech… [clipped for the demo]",
+                "signature": "type SearchReposInput = {\n    /** Filter by primary language (case-insensitive substring, e.g. 'Rust', 'TypeScript') */\n    language?: string;\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. */\n    limit?: number;\n    /** Only return repos… [clipped for the demo]"
+              }
+            ],
+            "total": 33,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1385
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1816
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "zk-repos",
+      "prompt": "Find current high-signal ZK Soroban repos to study and include activity caveats.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1596,
+      "firstMeaningfulMs": 1031,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 4
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1031
+        },
+        {
+          "type": "tool-start",
+          "id": "0d073e4b-418e-41a3-a874-b2e857e8e3bc",
+          "tool": "search",
+          "input": {
+            "query": "ZK Soroban zero knowledge proof repos"
+          },
+          "atMs": 1031
+        },
+        {
+          "type": "tool-result",
+          "id": "0d073e4b-418e-41a3-a874-b2e857e8e3bc",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "scout.searchRepos",
+                "service": "scout",
+                "kind": "operation",
+                "score": 233,
+                "tier": "gated",
+                "description": "Search the Stellar GitHub repo / code-reference index. Search the indexed Stellar ecosystem GitHub code repos — the actual source, graded for quality. Indexes GitHub topics + description + language + README, expands tech… [clipped for the demo]",
+                "signature": "type SearchReposInput = {\n    /** Filter by primary language (case-insensitive substring, e.g. 'Rust', 'TypeScript') */\n    language?: string;\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. */\n    limit?: number;\n    /** Only return repos… [clipped for the demo]"
+              },
+              {
+                "id": "skills.stellar-dev.zk-proofs",
+                "service": "skills",
+                "kind": "skill",
+                "score": 217,
+                "tier": "gated",
+                "description": "Zero-knowledge proofs and privacy patterns on Stellar. Covers Groth16 verification in smart contracts via BLS12-381 host functions (CAP-0059, available), the BN254 + Poseidon proposals (CAP-0074/0075, status-sensitive), … [clipped for the demo]",
+                "availableSections": [
+                  "architecture-patterns",
+                  "pitfalls",
+                  "references",
+                  "related-skills",
+                  "testing",
+                  "the-on-chain-verifier-groth16-over-bls12-381",
+                  "walkthrough-circom-on-chain-verification-works-today",
+                  "walkthrough-noir-off-chain-verify-attestation-for-now",
+                  "walkthrough-risc-zero-same-gate-clear-path",
+                  "what-s-available-verify-before-building",
+                  "when-to-use-this-skill"
+                ]
+              },
+              {
+                "id": "skills.stellar-dev.standards#zero-knowledge-proofs-status-sensitive",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 154,
+                "tier": "gated",
+                "description": "Zero-Knowledge Proofs (Status-Sensitive) — For comprehensive ZK development guidance, see zk-proofs.md."
+              },
+              {
+                "id": "stellarDocs.search_wallet_dapp_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 39,
+                "tier": "gated",
+                "description": "Search Stellar docs about building applications, wallets and dapps: the Build a Wallet with the Wallet SDK tutorial series (including anchor SEP-24 deposit/withdrawal integration), Build a Payment App with the JS SDK tut… [clipped for the demo]",
+                "signature": "type SearchWalletDappDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_wallet_dapp_docs(input: SearchWalletDappDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "scout.searchProjects",
+                "service": "scout",
+                "kind": "operation",
+                "score": 35,
+                "tier": "gated",
+                "description": "Search Stellar projects (prior art / competitor lookup). Search the curated Stellar project/product directory — what's been built, by whom, with SCF-funding and live/inactive status (wallets, DEXes, anchors, lending, ora… [clipped for the demo]",
+                "signature": "type SearchProjectsInput = {\n    /** Filter by category */\n    category?: \"Infrastructure\" | \"Tooling\" | \"User-Facing App\" | \"Asset\" | \"Protocol/Contract\" | \"Anchor\" | \"Partner Integration\";\n    /** Max results per page. The default and cap VARY by endpoint (e.g. projects/search 20/100, builders 50/200, leaderboard 50/300, research 8/25). A value below 1 or above the cap is clamped, not rejected. … [clipped for the demo]"
+              }
+            ],
+            "total": 7,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1031
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1596
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-anthropic-gemini-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "wallet-recovery",
+      "prompt": "Search for Stellar wallet recovery patterns, then use whatever exact operation you found to answer. Do not assume operation names.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1588,
+      "firstMeaningfulMs": 1045,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 1,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Bad Request"
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "step",
+          "index": 1,
+          "atMs": 1045
+        },
+        {
+          "type": "tool-start",
+          "id": "eb46e92d-1432-4afe-b9c1-1081457c2ac9",
+          "tool": "search",
+          "input": {
+            "query": "wallet recovery patterns"
+          },
+          "atMs": 1045
+        },
+        {
+          "type": "tool-result",
+          "id": "eb46e92d-1432-4afe-b9c1-1081457c2ac9",
+          "tool": "search",
+          "ok": true,
+          "output": {
+            "hits": [
+              {
+                "id": "stellarDocs.search_wallet_dapp_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 54,
+                "tier": "gated",
+                "description": "Search Stellar docs about building applications, wallets and dapps: the Build a Wallet with the Wallet SDK tutorial series (including anchor SEP-24 deposit/withdrawal integration), Build a Payment App with the JS SDK tut… [clipped for the demo]",
+                "signature": "type SearchWalletDappDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_wallet_dapp_docs(input: SearchWalletDappDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "skills.stellar-dev.dapp#quick-navigation",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 35,
+                "tier": "gated",
+                "description": "Quick Navigation — - SDK setup and env config: SDK Initialization - Wallet integrations: Wallet Integration - Tx build/send patterns: Transaction Building, Transaction Submission - React + Next.js…"
+              },
+              {
+                "id": "skills.stellar-dev.dapp#wallet-integration",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 26,
+                "tier": "gated",
+                "description": "Wallet Integration"
+              },
+              {
+                "id": "stellarDocs.search_soroban_contract_docs",
+                "service": "stellarDocs",
+                "kind": "operation",
+                "score": 15,
+                "tier": "gated",
+                "description": "Search Stellar docs about Soroban smart contract development in Rust: getting started (setup, hello world, storing data, deploy to testnet), 25 example contracts, contract storage (persistent vs temporary vs instance, TT… [clipped for the demo]",
+                "signature": "type SearchSorobanContractDocsInput = {\n    hitsPerPage?: number;\n    includeContent?: boolean;\n    query: string;\n}\nstellarDocs.search_soroban_contract_docs(input: SearchSorobanContractDocsInput): Promise<{ ok: true, data: unknown } | { ok: false, error: { kind: \"error\" | \"soft-empty\", message: string, hint?: string } }>"
+              },
+              {
+                "id": "skills.stellar-dev.standards#quick-mapping-by-use-case",
+                "service": "skills",
+                "kind": "skill-section",
+                "score": 14,
+                "tier": "gated",
+                "description": "Quick mapping by use case"
+              }
+            ],
+            "total": 8,
+            "truncated": true,
+            "nextSteps": "These hits are composable: write ONE `execute` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. `await lumenloop.search_directory({ query: \"...\" })` then `lumenloop.get_project({ slug })` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under `.data` (`r.data.projects`, never `r.projects`); check `r.ok` first. Skill hits are operational playbooks — read the sections you need in-script via `codemode.skill.read(id, { sections })` (keys: the hit's `availableSections`). Hits whose `signature` shows a `codemode.skill.run(\"<exact id>\", input)` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under `.data`, constituent calls audited in `data.calls`). Scores compare only within the same `tier` (gated hits always rank above backfill hits). Demo rule: in-script discovery helpers are disabled; use this one search result, one execute script, then summarize. More entries matched than shown (truncated) — use the best visible hits for this demo turn."
+          },
+          "atMs": 1045
+        },
+        {
+          "type": "error",
+          "message": "Bad Request",
+          "atMs": 1588
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    }
+  ]
+}

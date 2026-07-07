@@ -46,7 +46,7 @@
       "id": "q-live-hackathon-recent-winners",
       "question": "Which projects won the most recent Stellar hackathon, and what did they build?",
       "golden": {
-        "answer": "A grounded answer identifies the most recent hackathon from live data (scout.getHackathons / scout.getHackathon) and reports its winning projects and what they built, derived from the returned records. Exact placements (1st/2nd/3rd) should only be asserted if the data actually carries placement fields — the upstream detail surface has been observed to return winner lists WITHOUT placement order.",
+        "answer": "A grounded answer identifies the most recent hackathon from live data (scout.getHackathons / scout.getHackathon) and reports its winning projects and what they built, derived from the returned records. Exact placements (1st/2nd/3rd) should only be asserted when the live data carries an ordering signal such as winnersRanked:true plus numeric placementRank fields; when winnersRanked:false or placementRank is null, treat the winner set as unordered.",
         "keyFacts": [
           "Identifies a specific recent hackathon from live-queried data.",
           "Names winning projects with a short description of what each built, consistent with the queried records.",
@@ -60,7 +60,7 @@
         "sources": ["https://stellarlight.xyz"]
       },
       "tags": { "category": "scf-grants-builders", "service": "scout", "difficulty": "medium", "freshness": true, "liveData": true },
-      "graderNotes": "LIVE-DATA CASE: grade grounding + placement caution. The upstream review (sl-hackathon-blend-winners, DEFER; sl-hackathon-kale-reflector-1st, REJECT) found the detail endpoint returns winner names without placement fields and that returned order does not prove placement — a candidate asserting unproven exact placements repeats exactly that error and is wrong. A live-derived winner list with honest placement framing is correct."
+      "graderNotes": "LIVE-DATA CASE: grade grounding + placement caution. Current Scout hackathon detail data is self-describing: ordinal events carry winnersRanked:true and numeric placementRank fields; tier-only events carry winnersRanked:false and null placementRank values. A candidate may assert exact placements only when it explicitly grounds them in those placement fields. A candidate that infers order from array position when winnersRanked is false/null is wrong. A live-derived winner list with honest placement framing is correct."
     },
     {
       "id": "q-live-zk-repos-current",

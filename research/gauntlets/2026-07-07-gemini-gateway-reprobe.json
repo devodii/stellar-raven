@@ -1,0 +1,391 @@
+{
+  "runId": "2026-07-07-gemini-gateway-reprobe",
+  "prompts": [
+    {
+      "id": "rpc-simulate",
+      "expectTools": true,
+      "text": "Which Stellar RPC method should I use to simulate a Soroban contract invocation before submitting it, and what does it return?"
+    },
+    {
+      "id": "soroswap-builder",
+      "expectTools": true,
+      "text": "What is Soroswap on Stellar, and who builds it? Keep it to 3 bullets."
+    },
+    {
+      "id": "open-rfps",
+      "expectTools": true,
+      "text": "Are there any open SCF RFPs right now related to passkeys or smart accounts? Use current data and say what it is current as of."
+    },
+    {
+      "id": "activity-leaderboard",
+      "expectTools": true,
+      "text": "Which Stellar projects are most active by development activity right now? Give top 5 with the activity basis."
+    },
+    {
+      "id": "no-market-hallucination",
+      "expectTools": false,
+      "text": "What is the current XLM price and 24-hour trading volume? If this gateway cannot provide current market data, say so plainly and do not invent numbers."
+    },
+    {
+      "id": "skill-routing",
+      "expectTools": true,
+      "text": "I'm writing a Soroban smart contract and need the build/test/deploy workflow. Show the practical sequence."
+    },
+    {
+      "id": "zk-repos",
+      "expectTools": true,
+      "text": "Find current high-signal ZK Soroban repos to study and include activity caveats."
+    },
+    {
+      "id": "wallet-recovery",
+      "expectTools": true,
+      "text": "Search for Stellar wallet recovery patterns, then use whatever exact operation you found to answer. Do not assume operation names."
+    }
+  ],
+  "results": [
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "rpc-simulate",
+      "prompt": "Which Stellar RPC method should I use to simulate a Soroban contract invocation before submitting it, and what does it return?",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 1984,
+      "firstMeaningfulMs": 1984,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 18
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 1984
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "soroswap-builder",
+      "prompt": "What is Soroswap on Stellar, and who builds it? Keep it to 3 bullets.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 371,
+      "firstMeaningfulMs": 371,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 8
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 371
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "open-rfps",
+      "prompt": "Are there any open SCF RFPs right now related to passkeys or smart accounts? Use current data and say what it is current as of.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 355,
+      "firstMeaningfulMs": 355,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 5
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 355
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "activity-leaderboard",
+      "prompt": "Which Stellar projects are most active by development activity right now? Give top 5 with the activity basis.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 441,
+      "firstMeaningfulMs": 441,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 9
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 441
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "no-market-hallucination",
+      "prompt": "What is the current XLM price and 24-hour trading volume? If this gateway cannot provide current market data, say so plainly and do not invent numbers.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 411,
+      "firstMeaningfulMs": 411,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 7
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 411
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": true,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "skill-routing",
+      "prompt": "I'm writing a Soroban smart contract and need the build/test/deploy workflow. Show the practical sequence.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 359,
+      "firstMeaningfulMs": 359,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 7
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 359
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "zk-repos",
+      "prompt": "Find current high-signal ZK Soroban repos to study and include activity caveats.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 341,
+      "firstMeaningfulMs": 341,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 7
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 341
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    },
+    {
+      "runId": "2026-07-07-gemini-gateway-reprobe",
+      "model": "google/gemini-3.5-flash",
+      "promptId": "wallet-recovery",
+      "prompt": "Search for Stellar wallet recovery patterns, then use whatever exact operation you found to answer. Do not assume operation names.",
+      "repeat": 1,
+      "responseStatus": 200,
+      "terminal": "error",
+      "durationMs": 312,
+      "firstMeaningfulMs": 312,
+      "tokenChars": 0,
+      "thinkingChars": 0,
+      "searchCalls": 0,
+      "executeCalls": 0,
+      "toolFailures": 0,
+      "errors": [
+        "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API."
+      ],
+      "parseError": null,
+      "responseText": "",
+      "finalText": "",
+      "frames": [
+        {
+          "type": "ready",
+          "atMs": 7
+        },
+        {
+          "type": "error",
+          "message": "Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.",
+          "atMs": 312
+        }
+      ],
+      "pass": {
+        "http": true,
+        "terminal": false,
+        "firstFrame": true,
+        "latency": true,
+        "expectedTools": false,
+        "noToolFailures": true,
+        "noMarketNumber": true,
+        "overall": false
+      }
+    }
+  ]
+}

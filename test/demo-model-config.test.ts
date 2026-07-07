@@ -2,28 +2,47 @@ import { streamText } from "ai";
 import { createWorkersAI } from "workers-ai-provider";
 import { describe, expect, it } from "vitest";
 import {
-  DEMO_GROK_MODEL,
+  DEMO_FALLBACK_MODEL,
   DEMO_GATEWAY_ID_FALLBACK,
-  DEMO_KIMI_MODEL,
+  DEMO_GROK_CONTROL_MODEL,
+  DEMO_KIMI_CONTROL_MODEL,
   DEMO_MODEL,
+  DEMO_MODEL_OVERRIDE_VAR,
   DEMO_MODELS,
+  DEMO_PRIMARY_MODEL,
   DEMO_REASONING_EFFORT,
   DEMO_TEMPERATURE,
+  demoModelsFromOverride,
   demoSessionAffinity
 } from "../src/demo/model-config";
 
 describe("demo model config", () => {
-  it("uses Grok 4.3 with Kimi 2.7 Code fallback, conservative sampling, and medium reasoning", () => {
-    expect(DEMO_GROK_MODEL).toBe("xai/grok-4.3");
-    expect(DEMO_KIMI_MODEL).toBe("@cf/moonshotai/kimi-k2.7-code");
-    expect(DEMO_MODEL).toBe(DEMO_GROK_MODEL);
+  it("uses the gauntlet winner with a fast fallback, conservative sampling, and medium reasoning", () => {
+    expect(DEMO_PRIMARY_MODEL).toBe("openai/gpt-5.4");
+    expect(DEMO_FALLBACK_MODEL).toBe("openai/gpt-5.4-mini");
+    expect(DEMO_GROK_CONTROL_MODEL).toBe("xai/grok-4.3");
+    expect(DEMO_KIMI_CONTROL_MODEL).toBe("@cf/moonshotai/kimi-k2.7-code");
+    expect(DEMO_MODEL).toBe(DEMO_PRIMARY_MODEL);
     expect(DEMO_MODELS).toEqual([
-      { model: DEMO_GROK_MODEL, role: "primary" },
-      { model: DEMO_KIMI_MODEL, role: "fallback" }
+      { model: DEMO_PRIMARY_MODEL, role: "primary" },
+      { model: DEMO_FALLBACK_MODEL, role: "fallback" }
     ]);
     expect(DEMO_TEMPERATURE).toBe(0.1);
     expect(DEMO_REASONING_EFFORT).toBe("medium");
     expect(DEMO_GATEWAY_ID_FALLBACK).toBe("stellar-raven-demo");
+    expect(DEMO_MODEL_OVERRIDE_VAR).toBe("DEMO_MODEL_OVERRIDE");
+  });
+
+  it("keeps default models unless the server env supplies a gauntlet override", () => {
+    expect(demoModelsFromOverride(undefined)).toBe(DEMO_MODELS);
+    expect(demoModelsFromOverride("  ")).toBe(DEMO_MODELS);
+    expect(demoModelsFromOverride("openai/gpt-5.4-mini")).toEqual([
+      { model: "openai/gpt-5.4-mini", role: "primary" }
+    ]);
+    expect(demoModelsFromOverride("openai/gpt-5.4-mini,anthropic/claude-haiku-4.5")).toEqual([
+      { model: "openai/gpt-5.4-mini", role: "primary" },
+      { model: "anthropic/claude-haiku-4.5", role: "fallback" }
+    ]);
   });
 
   it("derives stable non-raw session affinity keys", async () => {
@@ -36,7 +55,7 @@ describe("demo model config", () => {
     expect(a).not.toContain("subject");
   });
 
-  it("passes reasoning effort, temperature, and session affinity to workers-ai-provider", async () => {
+  it("passes reasoning effort, temperature, and session affinity for Workers AI catalog models", async () => {
     const calls: Array<{ model: string; inputs: Record<string, unknown>; options?: { extraHeaders?: Record<string, string> } }> =
       [];
     const binding = {
@@ -51,7 +70,7 @@ describe("demo model config", () => {
 
     const workersai = createWorkersAI({ binding: binding as unknown as Ai });
     const result = streamText({
-      model: workersai(DEMO_MODEL, {
+      model: workersai(DEMO_KIMI_CONTROL_MODEL, {
         sessionAffinity: "demo-test-affinity",
         reasoning_effort: DEMO_REASONING_EFFORT
       } as never),
@@ -65,7 +84,7 @@ describe("demo model config", () => {
     }
 
     expect(calls).toHaveLength(1);
-    expect(calls[0]?.model).toBe(DEMO_MODEL);
+    expect(calls[0]?.model).toBe(DEMO_KIMI_CONTROL_MODEL);
     expect(calls[0]?.inputs.temperature).toBe(DEMO_TEMPERATURE);
     expect(calls[0]?.inputs.reasoning_effort).toBe(DEMO_REASONING_EFFORT);
     expect(calls[0]?.options?.extraHeaders?.["x-session-affinity"]).toBe("demo-test-affinity");

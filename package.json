@@ -29,6 +29,9 @@
     "site:og": "node scripts/gen-og.mjs"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.94",
+    "@ai-sdk/google": "^3.0.89",
+    "@ai-sdk/openai": "^3.0.81",
     "@cloudflare/codemode": "0.4.2",
     "@cloudflare/workers-oauth-provider": "^0.8.1",
     "@modelcontextprotocol/sdk": "^1.29.0",

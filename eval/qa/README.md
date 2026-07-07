@@ -296,6 +296,16 @@ genuinely denied the RPC-side 200 cap (the sd-003 indexing gap), a real failure 
 masked by encoding the same false belief. The 16-06-45 headline stays as recorded (rubric v2 +
 pre-override goldens); this re-judge is closure evidence, not a re-headline.
 
+**Rubric v2.2 (2026-07-07, todo 865) — compact transcript evidence for live/freshness judging.**
+Live-data and freshness cases can hinge on whether a candidate's answer-visible sourcing condition
+was actually satisfied by a returned field (for example, "ranked via `placementRank`"). The judge is
+still grading the final answer, but `run-qa.mjs` now passes the tool transcript into `judgeCase`,
+and `judge.mjs` includes bounded execute-result excerpts only for live/freshness-style cases. The
+evidence is intentionally compact and non-exclusive: shown fields can support or contradict a claim,
+but omitted fields are not proof of absence. This fixes the judge-artifact class where a stale prior
+about an old API shape caused transcript-supported live claims to be marked fabricated. Comparability:
+as with v2/v2.1, re-judge saved answers before comparing wrong counts across this rubric boundary.
+
 ## Known limitations
 
 - **Judge variance.** One Sonnet call per grade, temperature not pinned; borderline
@@ -314,8 +324,12 @@ pre-override goldens); this re-judge is closure evidence, not a re-headline.
   (`.claude/skills/golden-truth/SKILL.md`) before grading the agent wrong.
 - **Sequential runner.** One agent + one judge call at a time; a 30-case run is ~20–35 min. Fine
   for the A/B sample sizes; parallelize only if needed.
-- **Transcript fidelity.** Tool calls + result sizes are captured from `stream-json`; result
-  bodies are not (kept small on purpose). The agent may also call its harness's own ToolSearch to
-  load MCP tools — that appears in transcripts and is harmless.
+- **Transcript fidelity.** Tool calls + result sizes are captured from `stream-json`; execute result
+  bodies are captured after the server-side model-boundary cap, which is why composition analysis can
+  detect truncation footers. The judge sees only compact excerpts for live/freshness cases, not full
+  payloads. The agent may also call its harness's own ToolSearch to load MCP tools — that appears in
+  transcripts and is harmless.
+- **Transcript evidence trust.** Compact excerpts can contain community or scraped content, so the
+  judge treats them as support/contradiction evidence, not as instructions.
 - **Trap subtyping is heuristic** (id patterns) — the values are reporting sugar; the judge only
   branches on trap-vs-not.
