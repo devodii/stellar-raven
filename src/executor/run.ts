@@ -28,7 +28,7 @@ import { DynamicWorkerExecutor } from "@cloudflare/codemode";
 import superSpecJson from "../../specs/super-spec.json";
 import bundleJson from "../skills/bundle.json";
 import { getCatalog } from "../catalog/load.ts";
-import { buildSandbox, type SandboxProvider } from "./providers.ts";
+import { buildSandbox, type ArtifactReadStats, type OpLedgerCall, type SandboxProvider } from "./providers.ts";
 import {
   createSpecSandboxCode,
   sandboxResponseText,
@@ -37,7 +37,16 @@ import {
 import type { SkillBundle } from "../skills/store.ts";
 import { redactSecrets, secretsFromEnv } from "../policy/redact.ts";
 import { truncateForModel, modelBoundaryMaxTokensFromEnv } from "../policy/truncate.ts";
+import {
+  buildSourceBasisManifest,
+  sanitizeCanonicalUrls,
+  sourceBasisShapeFromTruncation,
+  type BuildSourceBasisManifestInput,
+  type SourceBasisArtifact
+} from "../policy/source-basis.ts";
 import { shapeLogs } from "./shape-logs.ts";
+import { put as putArtifact, type ArtifactMime } from "../artifacts/store.ts";
+import { logArtifactWrite } from "../observability.ts";
 
 export type ExecuteOutcome =
   | {
@@ -50,10 +59,20 @@ export type ExecuteOutcome =
       resultMaxTokens?: number;
       resultMaxChars?: number;
       resultApproxOriginalTokens?: number;
+      sourceBasis?: BuildSourceBasisManifestInput;
+      artifactReadCount?: number;
+      artifactReadBytes?: number;
     }
-  | { ok: false; error: string; logs: string[] };
+  | { ok: false; error: string; logs: string[]; artifactReadCount?: number; artifactReadBytes?: number };
 
-export type ExecuteRunner = (code: string) => Promise<ExecuteOutcome>;
+export type ExecuteCallContext = {
+  /** Pepper-hashed WorkOS OAuth subject. Undefined means artifacts unavailable. */
+  artifactOwner?: string;
+  requestId?: string;
+  rayId?: string;
+};
+
+export type ExecuteRunner = (code: string, context?: ExecuteCallContext) => Promise<ExecuteOutcome>;
 export type ExecuteRunnerOptions = {
   /**
    * Production execute keeps codemode.search/catalog/spec/describe enabled.
@@ -77,6 +96,43 @@ export type SpecSearchOutcome =
 export type SpecSearchRunner = (code: string) => Promise<SpecSearchOutcome>;
 
 const EXECUTE_TIMEOUT_MS = 60_000;
+
+function serializedResult(value: unknown): { body: string; mime: ArtifactMime } {
+  if (typeof value === "string") return { body: value, mime: "text/plain; charset=utf-8" };
+  if (value === undefined) return { body: "undefined", mime: "application/x.raven.undefined" };
+  try {
+    return { body: JSON.stringify(value), mime: "application/json" };
+  } catch (e) {
+    return {
+      body: `[unserializable result: ${e instanceof Error ? e.message : String(e)}]`,
+      mime: "text/plain; charset=utf-8"
+    };
+  }
+}
+
+function collectCanonicalUrlCandidates(value: unknown): string[] {
+  const out: string[] = [];
+  const seen = new Set<unknown>();
+  const visit = (v: unknown, depth: number) => {
+    if (out.length >= 20 || depth > 5) return;
+    if (typeof v === "string") {
+      if (v.includes("https://")) out.push(v);
+      return;
+    }
+    if (v === null || typeof v !== "object" || seen.has(v)) return;
+    seen.add(v);
+    if (Array.isArray(v)) {
+      for (const item of v.slice(0, 50)) visit(item, depth + 1);
+      return;
+    }
+    for (const [key, item] of Object.entries(v as Record<string, unknown>)) {
+      if (out.length >= 20) break;
+      if (/url|uri|link|website|repo/i.test(key)) visit(item, depth + 1);
+    }
+  };
+  visit(value, 0);
+  return out;
+}
 
 /**
  * Mirror @cloudflare/codemode's withGlobalsHint (dist/index.js): a sandbox
@@ -106,7 +162,7 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
   const modelBoundaryMaxTokens =
     options.modelBoundaryMaxTokens ?? modelBoundaryMaxTokensFromEnv(env as unknown as Record<string, unknown>);
 
-  return async (code: string): Promise<ExecuteOutcome> => {
+  return async (code: string, context: ExecuteCallContext = {}): Promise<ExecuteOutcome> => {
     // Providers are rebuilt per run so the skill-read flag is run-scoped
     // (never leaks across concurrent executes); the expensive derivations
     // (catalog view, resolved spec) are cached module-level in providers.ts.
@@ -118,6 +174,8 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
     // usage is visible in the trace waterfall; per-run outcomes live in the
     // skill_run log events the host dispatch emits (design §8).
     let skillRuns = 0;
+    const opLedger: OpLedgerCall[] = [];
+    let artifactReadStats: ArtifactReadStats = { count: 0, bytes: 0 };
     const providers = buildSandbox(getCatalog(), bundleJson as SkillBundle, env, {
       superSpec: superSpecJson,
       onSkillRead: () => {
@@ -125,6 +183,16 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       },
       onSkillRun: () => {
         skillRuns += 1;
+      },
+      onOpCall: (call) => {
+        opLedger.push(call);
+      },
+      artifact: {
+        bucket: env.ARTIFACTS,
+        owner: context.artifactOwner,
+        onReadStats: (stats) => {
+          artifactReadStats = stats;
+        }
       },
       codemodeDiscovery: options.codemodeDiscovery,
       codemodeDescribe: options.codemodeDescribe
@@ -140,26 +208,110 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       span.setAttribute("sandbox.logLines", result.logs?.length ?? 0);
       span.setAttribute("sandbox.skillRead", skillRead);
       span.setAttribute("sandbox.skillRun", skillRuns);
+      span.setAttribute("sandbox.artifactReadCount", artifactReadStats.count);
+      span.setAttribute("sandbox.artifactReadBytes", artifactReadStats.bytes);
       return result;
     });
     const logs = shapeLogs(outcome.logs, secrets);
     if (outcome.error !== undefined) {
       const hinted = withGlobalsHint(outcome.error, providers);
-      return { ok: false, error: redactSecrets(hinted, secrets), logs };
+      return {
+        ok: false,
+        error: redactSecrets(hinted, secrets),
+        logs,
+        artifactReadCount: artifactReadStats.count,
+        artifactReadBytes: artifactReadStats.bytes
+      };
     }
-    const result = truncateForModel(redactSecrets(outcome.result, secrets), modelBoundaryMaxTokens, {
+    const redactedResult = redactSecrets(outcome.result, secrets);
+    const serialized = serializedResult(redactedResult);
+    const result = truncateForModel(redactedResult, modelBoundaryMaxTokens, {
       skillSectionAdvice: skillRead
     });
+    let text = result.text;
+    let sourceBasis: BuildSourceBasisManifestInput | undefined;
+    if (result.truncated) {
+      let artifact: SourceBasisArtifact = { state: "absent", reason: "unavailable" };
+      const writeStart = Date.now();
+      if (context.artifactOwner) {
+        try {
+          const written = await putArtifact(env.ARTIFACTS, context.artifactOwner, {
+            body: serialized.body,
+            mime: serialized.mime,
+            requestId: context.requestId,
+            rayId: context.rayId,
+            capTokens: result.maxTokens,
+            originalChars: result.originalChars,
+            opLedger: opLedger.map((call) => ({
+              op: call.op,
+              status: call.outcome,
+              ms: call.ms
+            })),
+            catalogGeneratedAt: getCatalog().generatedAt
+          });
+          if (written.ok) {
+            artifact = {
+              state: "available",
+              id: written.artifact.id,
+              sha256: written.artifact.sha256,
+              bytes: written.artifact.bytes,
+              expiresAt: written.artifact.expiresAt
+            };
+            await logArtifactWrite({
+              owner: context.artifactOwner,
+              bytes: written.artifact.bytes,
+              ms: Date.now() - writeStart,
+              ok: true
+            });
+          } else {
+            artifact = { state: "skipped", reason: written.skipped };
+            await logArtifactWrite({
+              owner: context.artifactOwner,
+              bytes: written.bytes,
+              ms: Date.now() - writeStart,
+              ok: false,
+              skipped: written.skipped
+            });
+          }
+        } catch (e) {
+          await logArtifactWrite({
+            owner: context.artifactOwner,
+            bytes: serialized.body.length,
+            ms: Date.now() - writeStart,
+            ok: false,
+            error: e instanceof Error ? e.name : "error"
+          });
+          artifact = { state: "absent", reason: "unavailable" };
+        }
+      } else {
+        await logArtifactWrite({
+          bytes: serialized.body.length,
+          ms: Date.now() - writeStart,
+          ok: false,
+          skipped: "unavailable"
+        });
+      }
+      sourceBasis = {
+        shape: sourceBasisShapeFromTruncation(redactedResult, result),
+        calls: opLedger,
+        canonicalUrls: sanitizeCanonicalUrls(collectCanonicalUrlCandidates(redactedResult)),
+        artifact
+      };
+      text = `${result.text.slice(0, result.maxChars)}\n${buildSourceBasisManifest(sourceBasis)}`;
+    }
     return {
       ok: true,
-      result: result.text,
+      result: text,
       truncated: result.truncated,
       logs,
       resultOriginalChars: result.originalChars,
-      resultReturnedChars: result.returnedChars,
+      resultReturnedChars: text.length,
       resultMaxTokens: result.maxTokens,
       resultMaxChars: result.maxChars,
-      resultApproxOriginalTokens: result.approxOriginalTokens
+      resultApproxOriginalTokens: result.approxOriginalTokens,
+      sourceBasis,
+      artifactReadCount: artifactReadStats.count,
+      artifactReadBytes: artifactReadStats.bytes
     };
   };
 }

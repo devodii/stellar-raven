@@ -23,6 +23,41 @@ import fxListDocs from "../fixtures/skill-runners/lumenloop.list_documents.ts";
 // touch it and the test env legitimately lacks it.
 const run = createExecuteRunner(env as unknown as Env);
 
+function uniqueOwner(label: string): string {
+  return `smoke-owner-${label}-${crypto.randomUUID()}`;
+}
+
+async function ownerPrefix(owner: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(owner));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `art/${hex.slice(0, 16)}/`;
+}
+
+async function artifactKeysFor(owner: string): Promise<string[]> {
+  const listed = await env.ARTIFACTS.list({ prefix: await ownerPrefix(owner) });
+  return listed.objects.map((o) => o.key);
+}
+
+function artifactIdFrom(text: string): string {
+  const match = /artifact: id=([0-9a-f-]{36}) /.exec(text);
+  if (!match?.[1]) throw new Error(`artifact id missing from:\n${text.slice(-2000)}`);
+  return match[1];
+}
+
+const BIG_SECRET_RESULT_CODE = `async () => {
+  const refused = await lumenloop.search_directory({ limit: 2 });
+  return {
+    sourceUrl: "https://user:pass@example.test/path?secret=1#frag",
+    refused,
+    rows: Array.from({ length: 2500 }, (_, i) => ({
+      i,
+      nested: { envSecret: "smoke-test-lumenloop-key" },
+      adminEcho: "smoke-test-admin-token",
+      pad: "x".repeat(40)
+    }))
+  };
+}`;
+
 afterEach(() => {
   vi.unstubAllGlobals();
 });
@@ -32,6 +67,124 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
     const outcome = await run("async (codemode) => 1 + 1");
     expect(outcome.ok).toBe(true);
     if (outcome.ok) expect(outcome.result).toBe("2");
+  });
+
+  it("writes an artifact only for a truncated result and stores redacted bytes before slicing", async () => {
+    const owner = uniqueOwner("write");
+    const outcome = await run(BIG_SECRET_RESULT_CODE, {
+      artifactOwner: owner,
+      requestId: "smoke-request",
+      rayId: "smoke-ray"
+    });
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) throw new Error(outcome.error);
+    expect(outcome.truncated).toBe(true);
+    expect(outcome.result).toContain("--- SOURCE BASIS ---");
+    expect(outcome.result).not.toContain("--- TRUNCATED ---");
+    expect(outcome.result).toContain("artifact: id=");
+    expect(outcome.result).toContain("lumenloop.search_directory=error/");
+    expect(outcome.result).toContain("https://example.test/path");
+    expect(outcome.sourceBasis?.artifact?.state).toBe("available");
+
+    const id = artifactIdFrom(outcome.result);
+    const keys = await artifactKeysFor(owner);
+    expect(keys.some((key) => key.endsWith(`/${id}`))).toBe(true);
+    const key = keys.find((k) => k.endsWith(`/${id}`));
+    if (!key) throw new Error("missing stored artifact key");
+    const stored = await env.ARTIFACTS.get(key);
+    const storedText = (await stored?.text()) ?? "";
+    expect(storedText).not.toContain("smoke-test-lumenloop-key");
+    expect(storedText).not.toContain("smoke-test-admin-token");
+    expect(storedText).toContain("[REDACTED]");
+  });
+
+  it("does not write artifacts for non-truncated results, log truncation, or thrown errors", async () => {
+    const owner = uniqueOwner("no-write");
+    const before = await artifactKeysFor(owner);
+
+    const small = await run("async () => ({ ok: true })", { artifactOwner: owner });
+    expect(small.ok).toBe(true);
+    if (small.ok) expect(small.truncated).toBe(false);
+
+    const logHeavy = await run(`async () => {
+      console.log("x".repeat(200000));
+      return "ok";
+    }`, { artifactOwner: owner });
+    expect(logHeavy.ok).toBe(true);
+
+    const thrown = await run(`async () => {
+      throw new Error("x".repeat(100000));
+    }`, { artifactOwner: owner });
+    expect(thrown.ok).toBe(false);
+
+    expect(await artifactKeysFor(owner)).toEqual(before);
+  });
+
+  it("ownerless truncated results get a generic unavailable artifact line with no auth-mode wording", async () => {
+    const outcome = await run(BIG_SECRET_RESULT_CODE);
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) throw new Error(outcome.error);
+    expect(outcome.truncated).toBe(true);
+    expect(outcome.result).toContain("artifact: absent (unavailable)");
+    const artifactLine = outcome.result.split("\n").find((line) => line.startsWith("artifact:")) ?? "";
+    expect(artifactLine).not.toMatch(/admin|dev|local|oauth/i);
+  });
+
+  it("reads artifacts inside the sandbox for the same owner, rejects other owners, and caps read loops", async () => {
+    const owner = uniqueOwner("read");
+    const written = await run(BIG_SECRET_RESULT_CODE, { artifactOwner: owner });
+    expect(written.ok).toBe(true);
+    if (!written.ok) throw new Error(written.error);
+    const id = artifactIdFrom(written.result);
+
+    const sameOwner = await run(`async () => {
+      const r = await codemode.artifact.read("${id}");
+      return {
+        ok: r.ok,
+        count: r.data.rows.length,
+        firstSecret: r.data.rows[0].nested.envSecret,
+        firstAdmin: r.data.rows[0].adminEcho
+      };
+    }`, { artifactOwner: owner });
+    expect(sameOwner.ok).toBe(true);
+    if (sameOwner.ok) {
+      expect(JSON.parse(sameOwner.result)).toEqual({
+        ok: true,
+        count: 2500,
+        firstSecret: "[REDACTED]",
+        firstAdmin: "[REDACTED]"
+      });
+      expect(sameOwner.artifactReadCount).toBe(1);
+      expect(sameOwner.artifactReadBytes).toBeGreaterThan(24_000);
+    }
+
+    const wrongOwner = await run(`async () => {
+      const r = await codemode.artifact.read("${id}");
+      return { ok: r.ok, kind: r.error.kind, message: r.error.message };
+    }`, { artifactOwner: uniqueOwner("wrong") });
+    expect(wrongOwner.ok).toBe(true);
+    if (wrongOwner.ok) {
+      expect(JSON.parse(wrongOwner.result)).toEqual({
+        ok: false,
+        kind: "error",
+        message: "artifact not found"
+      });
+    }
+
+    const capped = await run(`async () => {
+      let last = null;
+      for (let i = 0; i < 5; i++) last = await codemode.artifact.read("${id}");
+      return { ok: last.ok, message: last.error.message };
+    }`, { artifactOwner: owner });
+    expect(capped.ok).toBe(true);
+    if (capped.ok) {
+      expect(JSON.parse(capped.result)).toEqual({
+        ok: false,
+        message: "artifact read cap exceeded: max 4 reads per execute"
+      });
+      expect(capped.artifactReadCount).toBe(5);
+      expect(capped.artifactReadBytes).toBeGreaterThan(24_000 * 4);
+    }
   });
 
   it("sandbox has NO network: fetch() rejects (globalOutbound: null)", async () => {

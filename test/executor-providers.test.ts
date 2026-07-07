@@ -11,6 +11,7 @@ import { loadManifest, type Catalog } from "../src/catalog/search.ts";
 import { buildSandbox } from "../src/executor/providers.ts";
 import type { FetchLike } from "../src/adapters/types.ts";
 import type { SkillBundle } from "../src/skills/store.ts";
+import { put as putArtifact, type ArtifactPutInput } from "../src/artifacts/store.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const catalog: Catalog = loadManifest(
@@ -25,6 +26,70 @@ const env = {
   ALGOLIA_APPLICATION_ID: "TESTAPPID",
   ALGOLIA_API_KEY: "test-algolia-key-1234"
 };
+
+type Stored = {
+  body: string;
+  customMetadata: Record<string, string>;
+  httpMetadata?: Headers | R2HTTPMetadata;
+};
+
+class MemoryR2Object {
+  constructor(
+    readonly key: string,
+    private readonly body: string,
+    readonly customMetadata: Record<string, string>,
+    readonly httpMetadata?: Headers | R2HTTPMetadata
+  ) {}
+
+  async text(): Promise<string> {
+    return this.body;
+  }
+}
+
+class MemoryR2Bucket {
+  readonly objects = new Map<string, Stored>();
+
+  async put(key: string, body: string, options?: R2PutOptions): Promise<R2Object> {
+    const customMetadata = options?.customMetadata ? { ...options.customMetadata } : {};
+    this.objects.set(key, { body, customMetadata, httpMetadata: options?.httpMetadata });
+    return new MemoryR2Object(key, body, customMetadata, options?.httpMetadata) as unknown as R2Object;
+  }
+
+  async get(key: string): Promise<R2ObjectBody | null> {
+    const stored = this.objects.get(key);
+    if (!stored) return null;
+    return new MemoryR2Object(
+      key,
+      stored.body,
+      stored.customMetadata,
+      stored.httpMetadata
+    ) as unknown as R2ObjectBody;
+  }
+
+  async head(key: string): Promise<R2Object | null> {
+    const stored = this.objects.get(key);
+    if (!stored) return null;
+    return new MemoryR2Object(
+      key,
+      stored.body,
+      stored.customMetadata,
+      stored.httpMetadata
+    ) as unknown as R2Object;
+  }
+}
+
+function artifactInput(overrides: Partial<ArtifactPutInput> = {}): ArtifactPutInput {
+  return {
+    body: JSON.stringify({ rows: [{ id: 1, value: "full" }] }),
+    mime: "application/json",
+    capTokens: 6000,
+    originalChars: 34,
+    opLedger: [{ op: "scout.getProject", status: "ok", ms: 12 }],
+    catalogGeneratedAt: catalog.generatedAt,
+    now: new Date(),
+    ...overrides
+  };
+}
 
 type Sandbox = ReturnType<typeof buildSandbox>;
 function fnsOf(providers: Sandbox, name: string) {
@@ -58,9 +123,11 @@ describe("sandbox surface shape", () => {
     expect(providers.find((p) => p.name === "skills")).toBeUndefined();
   });
 
-  it("codemode has spec, search, catalog, describe, skill_read, skill_run + the skill prelude", () => {
+  it("codemode has spec, search, catalog, describe, skills/artifacts + the nested preludes", () => {
     const codemode = providers.find((p) => p.name === "codemode")!;
     expect(Object.keys(codemode.fns).sort()).toEqual([
+      "artifact_info",
+      "artifact_read",
       "catalog",
       "describe",
       "search",
@@ -69,13 +136,15 @@ describe("sandbox surface shape", () => {
       "spec"
     ]);
     expect(codemode.prelude).toContain("codemode.skill =");
+    expect(codemode.prelude).toContain("codemode.artifact =");
   });
 
   it("can disable codemode discovery helpers for the public demo while leaving skills wired", () => {
     const demoProviders = buildSandbox(catalog, bundle, env, { codemodeDiscovery: false });
     const codemode = demoProviders.find((p) => p.name === "codemode")!;
-    expect(Object.keys(codemode.fns).sort()).toEqual(["skill_read", "skill_run"]);
+    expect(Object.keys(codemode.fns).sort()).toEqual(["artifact_info", "artifact_read", "skill_read", "skill_run"]);
     expect(codemode.prelude).toContain("codemode.skill =");
+    expect(codemode.prelude).toContain("codemode.artifact =");
   });
 
   it("can expose exact-id describe without broader codemode discovery", async () => {
@@ -84,7 +153,7 @@ describe("sandbox surface shape", () => {
       codemodeDescribe: true
     });
     const codemode = demoProviders.find((p) => p.name === "codemode")!;
-    expect(Object.keys(codemode.fns).sort()).toEqual(["describe", "skill_read", "skill_run"]);
+    expect(Object.keys(codemode.fns).sort()).toEqual(["artifact_info", "artifact_read", "describe", "skill_read", "skill_run"]);
     expect(codemode.fns.search).toBeUndefined();
     const described = (await codemode.fns.describe!("scout.searchProjects")) as {
       ok: boolean;
@@ -112,6 +181,74 @@ describe("sandbox surface shape", () => {
     // … and RETURNS the service envelope through the SAME guard operations
     // get (no .data-trap inversion — that is skill.read's shape, not run's).
     expect(codemode.prelude).toContain('__guardEnvelope(raw, "codemode.skill.run")');
+  });
+});
+
+describe("codemode.artifact provider", () => {
+  it("ownerless sessions get a generic unavailable envelope", async () => {
+    const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
+    const codemode = fnsOf(buildSandbox(catalog, bundle, env, { artifact: { bucket } }), "codemode");
+
+    await expect(codemode.artifact_info!("not-an-id")).resolves.toMatchObject({
+      ok: false,
+      error: { kind: "error", message: "artifact is unavailable for this request" }
+    });
+    await expect(codemode.artifact_read!("not-an-id")).resolves.toMatchObject({
+      ok: false,
+      error: { kind: "error", message: "artifact is unavailable for this request" }
+    });
+  });
+
+  it("maps missing, wrong-owner, expired, and invalid ids to one standard error envelope", async () => {
+    const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
+    const fresh = await putArtifact(bucket, "owner-a", artifactInput());
+    if (!fresh.ok) throw new Error("unexpected skip");
+    const expired = await putArtifact(
+      bucket,
+      "owner-b",
+      artifactInput({ now: new Date("2020-01-01T00:00:00.000Z") })
+    );
+    if (!expired.ok) throw new Error("unexpected skip");
+
+    const codemode = fnsOf(
+      buildSandbox(catalog, bundle, env, { artifact: { bucket, owner: "owner-b" } }),
+      "codemode"
+    );
+    const notFound = { ok: false, error: { service: "artifact", kind: "error", message: "artifact not found" } };
+
+    await expect(codemode.artifact_read!(fresh.artifact.id)).resolves.toEqual(notFound);
+    await expect(codemode.artifact_read!(crypto.randomUUID())).resolves.toEqual(notFound);
+    await expect(codemode.artifact_read!(expired.artifact.id)).resolves.toEqual(notFound);
+    await expect(codemode.artifact_read!("../bad")).resolves.toEqual(notFound);
+  });
+
+  it("reads full data into the sandbox and enforces the per-execute read cap", async () => {
+    const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
+    const written = await putArtifact(bucket, "owner-a", artifactInput());
+    if (!written.ok) throw new Error("unexpected skip");
+    const stats: Array<{ count: number; bytes: number }> = [];
+    const codemode = fnsOf(
+      buildSandbox(catalog, bundle, env, {
+        artifact: {
+          bucket,
+          owner: "owner-a",
+          onReadStats: (s) => stats.push(s)
+        }
+      }),
+      "codemode"
+    );
+
+    for (let i = 0; i < 4; i++) {
+      await expect(codemode.artifact_read!(written.artifact.id)).resolves.toMatchObject({
+        ok: true,
+        data: { rows: [{ id: 1, value: "full" }] }
+      });
+    }
+    await expect(codemode.artifact_read!(written.artifact.id)).resolves.toMatchObject({
+      ok: false,
+      error: { kind: "error", message: "artifact read cap exceeded: max 4 reads per execute" }
+    });
+    expect(stats.at(-1)).toEqual({ count: 5, bytes: written.artifact.bytes * 4 });
   });
 });
 

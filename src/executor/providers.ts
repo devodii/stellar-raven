@@ -75,13 +75,33 @@ import { runSkill, assertRunnersWired } from "../skills/run.ts";
 import { RUNNERS } from "../skills/runners/index.ts";
 import type { OpsFacade, SkillRunner } from "../skills/runners/types.ts";
 import { resolveSpecRefs } from "./spec-sandbox.ts";
-import { logEvent } from "../observability.ts";
+import { logArtifactRead, logEvent } from "../observability.ts";
+import { info as artifactInfo, read as artifactRead, type ArtifactMetadata } from "../artifacts/store.ts";
 
 /** Structurally identical to @cloudflare/codemode's ResolvedProvider. */
 export type SandboxProvider = {
   name: string;
   fns: Record<string, (...args: unknown[]) => Promise<unknown>>;
   prelude?: string;
+};
+
+export const ARTIFACT_READ_CAP = 4;
+
+export type OpLedgerCall = {
+  op: string;
+  outcome: "ok" | "error" | "soft-empty";
+  ms: number;
+};
+
+export type ArtifactReadStats = {
+  count: number;
+  bytes: number;
+};
+
+export type ArtifactSandboxDeps = {
+  bucket?: R2Bucket;
+  owner?: string;
+  onReadStats?: (stats: ArtifactReadStats) => void;
 };
 
 /**
@@ -132,6 +152,19 @@ const SKILL_PRELUDE = [
   "      run: async (name, input) => {",
   "        const raw = await codemode.skill_run(name, input);",
   '        return typeof __guardEnvelope === "function" ? __guardEnvelope(raw, "codemode.skill.run") : raw;',
+  "      }",
+  "    };"
+].join("\n");
+
+const ARTIFACT_PRELUDE = [
+  "    codemode.artifact = {",
+  "      info: async (id) => {",
+  "        const raw = await codemode.artifact_info(id);",
+  '        return typeof __guardEnvelope === "function" ? __guardEnvelope(raw, "codemode.artifact.info") : raw;',
+  "      },",
+  "      read: async (id) => {",
+  "        const raw = await codemode.artifact_read(id);",
+  '        return typeof __guardEnvelope === "function" ? __guardEnvelope(raw, "codemode.artifact.read") : raw;',
   "      }",
   "    };"
 ].join("\n");
@@ -228,7 +261,7 @@ function envelopeGuardPrelude(opsByService: Map<string, string[]>): string {
 export function buildOpsFns(
   catalog: Catalog,
   env: AdapterEnv,
-  deps?: { fetchImpl?: FetchLike }
+  deps?: { fetchImpl?: FetchLike; onOpCall?: (call: OpLedgerCall) => void }
 ): OpsFacade {
   const secrets = secretsFromEnv(env as Record<string, unknown>);
   const fetchImpl = deps?.fetchImpl;
@@ -246,10 +279,16 @@ export function buildOpsFns(
       const refused = guard(entry, args); // arg validation only (ADR-0003)
       if (refused) {
         // guard only ever returns the error variant; narrow for the compiler.
+        const ms = Date.now() - t0;
         logEvent("op", {
           id: entry.id,
           outcome: refused.ok ? "ok" : refused.error.kind,
-          ms: Date.now() - t0
+          ms
+        });
+        deps?.onOpCall?.({
+          op: entry.id,
+          outcome: refused.ok ? "ok" : refused.error.kind,
+          ms
         });
         return refused;
       }
@@ -259,10 +298,16 @@ export function buildOpsFns(
         env,
         fetchImpl
       );
+      const ms = Date.now() - t0;
       logEvent("op", {
         id: entry.id,
         outcome: result.ok ? "ok" : result.error.kind,
-        ms: Date.now() - t0
+        ms
+      });
+      deps?.onOpCall?.({
+        op: entry.id,
+        outcome: result.ok ? "ok" : result.error.kind,
+        ms
       });
       return redactSecrets(result, secrets);
     };
@@ -440,7 +485,8 @@ export function buildCodemodeProvider(
    * to the bundled RUNNERS; overridable only so tests can pin dispatch
    * behavior against synthetic runners.
    */
-  skillRun?: { facade: OpsFacade; secrets: string[]; registry?: Record<string, SkillRunner> }
+  skillRun?: { facade: OpsFacade; secrets: string[]; registry?: Record<string, SkillRunner> },
+  artifact?: ArtifactSandboxDeps
 ): SandboxProvider {
   // Derived once per catalog object, shared across runs (read-only data).
   let catalogView = catalogViewCache.get(catalog);
@@ -454,6 +500,39 @@ export function buildCodemodeProvider(
   }
   const enableDiscovery = discovery ?? true;
   const enableDescribe = enableDiscovery || describeOnly === true;
+  let artifactReads = 0;
+  let artifactReadBytes = 0;
+  const artifactUnavailable = () => ({
+    ok: false,
+    error: {
+      service: "artifact",
+      kind: "error",
+      message: "artifact is unavailable for this request"
+    }
+  });
+  const artifactNotFound = () => ({
+    ok: false,
+    error: {
+      service: "artifact",
+      kind: "error",
+      message: "artifact not found"
+    }
+  });
+  const publicArtifactMeta = (meta: ArtifactMetadata) => ({
+    id: meta.id,
+    createdAt: meta.createdAt,
+    expiresAt: meta.expiresAt,
+    bytes: meta.bytes,
+    sha256: meta.sha256,
+    mime: meta.mime,
+    requestId: meta.requestId,
+    rayId: meta.rayId,
+    capTokens: meta.capTokens,
+    originalChars: meta.originalChars,
+    opLedger: meta.opLedger,
+    catalogGeneratedAt: meta.catalogGeneratedAt
+  });
+
   const fns: Record<string, (...args: unknown[]) => Promise<unknown>> = {
     ...(enableDiscovery
       ? {
@@ -596,12 +675,99 @@ export function buildCodemodeProvider(
       return runSkill(catalog, skillRun.registry ?? RUNNERS, skillRun.facade, name, input, {
         secrets: skillRun.secrets
       });
+    },
+
+    artifact_info: async (id?: unknown) => {
+      if (!artifact?.bucket || !artifact.owner) return artifactUnavailable();
+      try {
+        const r = await artifactInfo(artifact.bucket, artifact.owner, id);
+        if (!r.ok) return artifactNotFound();
+        return { ok: true, data: publicArtifactMeta(r.artifact) };
+      } catch {
+        return artifactUnavailable();
+      }
+    },
+
+    artifact_read: async (id?: unknown) => {
+      const nextRead = artifactReads + 1;
+      const t0 = Date.now();
+      if (!artifact?.bucket || !artifact.owner) {
+        artifactReads = nextRead;
+        artifact?.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
+        await logArtifactRead({
+          owner: artifact?.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: false,
+          reason: "unavailable",
+          readCount: artifactReads
+        });
+        return artifactUnavailable();
+      }
+      if (nextRead > ARTIFACT_READ_CAP) {
+        artifactReads = nextRead;
+        artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
+        await logArtifactRead({
+          owner: artifact.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: false,
+          reason: "read-cap",
+          readCount: artifactReads
+        });
+        return {
+          ok: false,
+          error: {
+            service: "artifact",
+            kind: "error",
+            message: `artifact read cap exceeded: max ${ARTIFACT_READ_CAP} reads per execute`
+          }
+        };
+      }
+
+      artifactReads = nextRead;
+      try {
+        const r = await artifactRead(artifact.bucket, artifact.owner, id);
+        if (!r.ok) {
+          await logArtifactRead({
+            owner: artifact.owner,
+            bytes: 0,
+            ms: Date.now() - t0,
+            hit: false,
+            reason: r.error.kind === "not-found" ? "not-found" : "error",
+            readCount: artifactReads
+          });
+          artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
+          return r.error.kind === "not-found" ? artifactNotFound() : { ok: false, error: { service: "artifact", kind: "error", message: r.error.message } };
+        }
+        artifactReadBytes += r.artifact.bytes;
+        await logArtifactRead({
+          owner: artifact.owner,
+          bytes: r.artifact.bytes,
+          ms: Date.now() - t0,
+          hit: true,
+          readCount: artifactReads
+        });
+        artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
+        return { ok: true, data: r.value };
+      } catch {
+        await logArtifactRead({
+          owner: artifact.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: false,
+          reason: "error",
+          readCount: artifactReads
+        });
+        artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
+        return artifactNotFound();
+      }
     }
   };
 
   return {
     name: "codemode",
-    prelude: SKILL_PRELUDE,
+    prelude: `${SKILL_PRELUDE}\n${ARTIFACT_PRELUDE}`,
     fns
   };
 }
@@ -616,6 +782,8 @@ export function buildSandbox(
     superSpec?: unknown;
     onSkillRead?: () => void;
     onSkillRun?: () => void;
+    onOpCall?: (call: OpLedgerCall) => void;
+    artifact?: ArtifactSandboxDeps;
     codemodeDiscovery?: boolean;
     codemodeDescribe?: boolean;
   }
@@ -640,7 +808,8 @@ export function buildSandbox(
       },
       deps?.codemodeDiscovery,
       deps?.codemodeDescribe,
-      { facade: ops, secrets: secretsFromEnv(env as Record<string, unknown>) }
+      { facade: ops, secrets: secretsFromEnv(env as Record<string, unknown>) },
+      deps?.artifact
     )
   ];
 }

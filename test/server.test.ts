@@ -219,9 +219,12 @@ describe("execute behavior", () => {
 
   it("delegates to the injected runner and renders result + logs", async () => {
     let seenCode: string | undefined;
+    let seenOwner: string | undefined;
     const execClient = await connectedClient({
-      runExecute: async (code) => {
+      executeContext: () => ({ artifactOwner: "owner-a", requestId: "req-a", rayId: "ray-a" }),
+      runExecute: async (code, context) => {
         seenCode = code;
+        seenOwner = context?.artifactOwner;
         return {
           ok: true,
           result: JSON.stringify({ echoed: code.length }),
@@ -236,10 +239,29 @@ describe("execute behavior", () => {
     });
     expect(result.isError).toBeFalsy();
     expect(seenCode).toBe("async () => 1");
+    expect(seenOwner).toBe("owner-a");
     const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
     expect(text).toContain('{"echoed":13}');
     expect(text).toContain("--- console (1 lines) ---");
     expect(text).toContain("hello from sandbox");
+  });
+
+  it("threads fresh execute context per call so a cached runner cannot capture one owner", async () => {
+    const seenOwners: Array<string | undefined> = [];
+    let owner = "owner-a";
+    const execClient = await connectedClient({
+      executeContext: () => ({ artifactOwner: owner }),
+      runExecute: async (_code, context) => {
+        seenOwners.push(context?.artifactOwner);
+        return { ok: true, result: JSON.stringify({ owner: context?.artifactOwner ?? null }), truncated: false, logs: [] };
+      }
+    });
+
+    await execClient.callTool({ name: "execute", arguments: { code: "async () => 1" } });
+    owner = "owner-b";
+    await execClient.callTool({ name: "execute", arguments: { code: "async () => 2" } });
+
+    expect(seenOwners).toEqual(["owner-a", "owner-b"]);
   });
 
   it("budgets the logs block so console output cannot bypass the result cap", async () => {
@@ -270,7 +292,7 @@ describe("execute behavior", () => {
     const execClient = await connectedClient({
       modelBoundaryMaxTokens: 1000,
       runExecute: async () => {
-        const result = `${"r".repeat(4_000)}\n--- TRUNCATED --- Result was ~25000 tokens (limit: 1000).`;
+        const result = `${"r".repeat(4_000)}\n--- SOURCE BASIS ---\nshape: object; 100000 chars; ~25000 tokens`;
         return {
           ok: true,
           result,
@@ -290,7 +312,8 @@ describe("execute behavior", () => {
     });
     expect(result.isError).toBeFalsy();
     const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
-    expect(text).toContain("Result was ~25000 tokens (limit: 1000)");
+    expect(text).toContain("--- SOURCE BASIS ---");
+    expect(text).not.toContain("--- TRUNCATED --- Result was");
     expect(text).toContain("console output was");
     expect(text).toContain("limit: 1000");
     expect(text.length).toBeLessThan(11_000);

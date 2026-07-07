@@ -199,9 +199,14 @@ Per call (`src/executor/run.ts`):
 6. **Output hygiene, three budgeted channels** — everything model-facing is capped at
    ~6k tokens (4 chars/token, `src/policy/truncate.ts`), because each channel is
    model-authored and would otherwise smuggle payloads past the others:
-   - *result*: redacted again, then `truncateForModel` with an actionable footer
-     (select fields / slice / aggregate in-script). The `skillSectionAdvice` flag can change
-     footer wording only — advice flags never widen the budget or move the cut.
+   - *result*: redacted again, then `truncateForModel` computes the fixed cut. If the
+     result fits, the returned bytes are byte-identical to the pre-lane behavior. If it
+     truncates, the old generic footer is replaced with a compact source-basis block from
+     `src/policy/source-basis.ts`: shape/loss detail, the manifest-operation call ledger,
+     sanitized data-derived URLs, and an artifact availability line. The cut itself stays
+     `maxTokens * 4`; the source-basis block is appended after the cut and has its own hard
+     character budget. The `skillSectionAdvice` flag can change source-basis guidance only
+     — advice flags never widen the budget or move the cut.
    - *logs*: `shapeLogs` (`src/executor/shape-logs.ts`) applies structural caps first —
      100 lines × 2,000 chars — **redacting each line before clipping** (clip-first would
      let a secret straddling the boundary leak its prefix), then the joined block gets its
@@ -210,8 +215,48 @@ Per call (`src/executor/run.ts`):
    - *error text*: `throw new Error(payload)` is the third channel — same budget.
 7. **Errors as data** — a failed run returns `isError: true` with `Execution failed: …`
    plus the console block; nothing throws across the tool boundary. The `execute`
-   telemetry event records ok/ms/code preview/result preview + all three truncation flags;
+   telemetry event records ok/ms/code preview/result preview + all three truncation flags,
+   artifact read counts/bytes, and the full structured source-basis detail when present;
    `execute_logs_shaped` fires only when structural shaping actually lost something.
+
+### Artifact/source-basis lane
+
+Artifacts exist only for oversized **result** payloads. Logs and thrown error text keep their
+own model-boundary caps and are never persisted.
+
+The write path lives at the final result boundary in `src/executor/run.ts`: serialize the
+sandbox result, redact it with `redactSecrets`, run the model-boundary truncation decision,
+and only when that decision truncates, write the full redacted serialized result string to
+R2 through `src/artifacts/store.ts`. The R2 object body is a small JSON envelope
+`{ encoding, mime, body }`, where `body` is the exact UTF-8 result string the boundary used
+before slicing. The key is `art/<ownerHash>/<id>` (`id = crypto.randomUUID()`, owner hash =
+short SHA-256 prefix); the raw OAuth subject is never in the key. Custom metadata carries
+`createdAt`, `expiresAt`, byte size, SHA-256, MIME, request/ray id, cap/original sizing,
+the operation ledger, and the catalog `generatedAt`, so eval review can inspect provenance
+without reading the payload.
+
+Ownership is OAuth-only in v1. `src/server.ts` derives `artifactOwner` per tool call from
+`getMcpAuthContext()?.props.subject`, the peppered WorkOS subject set by the OAuth provider.
+The cached execute runner never captures that owner; it receives an `ExecuteCallContext` per
+call. Admin-token bypasses, local-dev bypasses, and `/demo` pass no owner: truncated results
+still get a source-basis block, but the artifact line is a generic unavailable/absent state
+and no R2 write is made.
+
+The read path is inside the sandbox, not a public URL. `src/executor/providers.ts` exposes
+flat host functions `codemode.artifact_info` / `codemode.artifact_read`; the prelude wraps
+them as `codemode.artifact.info(id)` and `codemode.artifact.read(id)` because nested objects
+do not cross codemode's provider proxy. Both return the normal envelope shape. `info` returns
+metadata only. `read` parses the stored value back into the sandbox (`r.data`) so code can
+filter/project the full payload without spending model context; the only exit remains the
+same final result cap above. Missing, expired, wrong-owner, invalid-id, and ownerless reads
+are all `{ ok:false, error:{ kind:"error", ... } }` from the sandbox's perspective. Store-level
+7-day logical expiry is enforced on every `info`/`read`; the bucket's 30-day lifecycle is only
+the GC backstop.
+
+Abuse controls are per execute call: `codemode.artifact.read` is capped at 4 reads, and the
+provider records read count/bytes for the `execute` event. `artifact_write` and
+`artifact_read` log events include bytes, latency, hit/miss/skip reason, and only the owner
+hash prefix — never payload previews or raw subjects.
 
 ## 4. The envelope contract
 

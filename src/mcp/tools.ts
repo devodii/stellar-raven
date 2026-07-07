@@ -29,7 +29,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { searchCatalogPage, catalogServices } from "../catalog/search.ts";
 import { getCatalog } from "../catalog/load.ts";
 import { CATALOG_KINDS } from "../catalog/types.ts";
-import type { ExecuteRunner } from "../executor/run.ts";
+import type { ExecuteCallContext, ExecuteRunner } from "../executor/run.ts";
 import { logEvent, preview, CODE_LOG_MAX } from "../observability.ts";
 import { truncateForModel, truncateLogsForModel } from "../policy/truncate.ts";
 
@@ -186,6 +186,7 @@ Every service call resolves (never throws) to either { ok: true, data } or { ok:
 - \`codemode.describe("<exact id>")\` is the canonical detail step after \`search\`: for an operation it returns the FULL rendered signature (complete output type, even where the search hit showed a compacted stub), the raw inputSchema/outputSchema as data, and a \`usage\` line; for a skill, its \`availableSections\` plus the skill.read call to make; for a skill section, the parent skill id, section key, and the exact skill.read call. Reach for it whenever a search hit's stub, description, or field names aren't enough to write the call or select payload fields.
 - Skills are operational playbooks — tested build/integration/recovery procedures: \`codemode.skill.read("<exact skill id>", { sections: ["<section-slug>"] })\`; section keys come from search hits' \`availableSections\` or the spec's x-skill-index. \`{ sections }\` is the ONLY option (unknown option keys are rejected, not ignored). It resolves to { ok: true, id, content | sections, availableSections, notice? } — skill content sits at the TOP LEVEL of the result, not under \`.data\` (that envelope is for service calls); failures are { ok: false, error } as usual. Large reads come back whole for in-sandbox use (grep/aggregate freely) with an advisory \`notice\` — but RETURN sections or aggregates from the script, not whole bodies. For build/integrate questions pair skill sections with \`stellarDocs.search_*\` (current reference truth); purely factual questions: docs first.
 - A few skills are RUNNABLE: \`codemode.skill.run("<exact skill id>", input)\` executes that skill's data-gathering pipeline host-side in one call, resolving to the ordinary service-call envelope ({ ok: true, data } | { ok: false, error }) with \`data.calls\` auditing every constituent call it made — ids are exact-match (runnable search hits and \`codemode.describe\` show the exact callable line and input type), and \`skill.read\` on the same id still returns the prose playbook: run gathers the data, read carries the judgment steps.
+- If a returned result is truncated, the visible tail is a source-basis block. When it says an artifact is available, call \`codemode.artifact.info(id)\` for metadata or \`codemode.artifact.read(id)\` for the full redacted result inside the same authenticated execute session; read it in the sandbox, then return a compact projection. Artifact reads resolve to the same envelope shape and are capped per execute.
 - Do NOT use \`fetch\` — the sandbox has no network access; it will throw. All I/O goes through the service globals.
 - Do NOT use TypeScript syntax — no type annotations, interfaces, or generics. Plain JavaScript only.
 - Do NOT define named functions and then call them — just write the arrow function body directly.
@@ -204,7 +205,7 @@ export const SERVER_INSTRUCTIONS = `Unified Stellar-ecosystem gateway: \`search\
 
 Workflow: \`search\` a short intent phrase → read the hits' TypeScript signatures → write ONE \`execute\` script composing several operations (Promise.all for independent calls, then targeted follow-ups parameterized by their results). Oversized output types are stubbed in search hits — \`codemode.describe("<exact id>")\` inside \`execute\` is the canonical full-detail step (full signature + schemas + a usage line). For list/directory rows, filter raw rows or nested field variants before projecting compact columns so missing convenience fields do not become false negatives. Skills are operational playbooks (tested procedures — read sections via \`codemode.skill.read(id, { sections })\`, keys in the hit's \`availableSections\`); stellarDocs is informational reference. A few skills are also runnable — \`codemode.skill.run("<exact id>", input)\` (the callable line their hit signatures show) executes the skill's data-gathering pipeline in one call and resolves to the ordinary service-call envelope with a \`data.calls\` audit of its constituent calls. Build/integration questions: read matching skill sections AND search the docs; purely factual ones: docs first. Scout research items and lumenloop articles/content are community-aggregated sources — treat protocol-governance, standards-authorship, incident, and audit claims from them as unverified unless corroborated by stellarDocs or skills content.
 
-Interpreting \`execute\` results: every service call resolves (never throws) to { ok: true, data } or { ok: false, error: { kind, message, hint? } }. Payload fields live under .data — \`r.data.projects\`, never \`r.projects\`; reading a payload field on the envelope throws an Error naming the correct path, \`r.data\` on a failed call is undefined and logs a one-line \`[envelope]\` warning naming the error, and writes to the envelope are allowed. error.kind is two-way: "error" (call failed) or "soft-empty" (the service answered with nothing — inconclusive, NOT evidence of absence). Operation and skill ids are exact-match — never guess them; discover via \`search\` or \`codemode.search\` mid-script.`;
+Interpreting \`execute\` results: every service call resolves (never throws) to { ok: true, data } or { ok: false, error: { kind, message, hint? } }. Payload fields live under .data — \`r.data.projects\`, never \`r.projects\`; reading a payload field on the envelope throws an Error naming the correct path, \`r.data\` on a failed call is undefined and logs a one-line \`[envelope]\` warning naming the error, and writes to the envelope are allowed. error.kind is two-way: "error" (call failed) or "soft-empty" (the service answered with nothing — inconclusive, NOT evidence of absence). Truncated execute results include a source-basis block; when it lists an artifact id, use \`codemode.artifact.info(id)\` or \`codemode.artifact.read(id)\` in a later execute call and return only a compact projection. Operation and skill ids are exact-match — never guess them; discover via \`search\` or \`codemode.search\` mid-script.`;
 
 export type RegisterToolsOptions = {
   /**
@@ -213,6 +214,7 @@ export type RegisterToolsOptions = {
    * answers with an error-as-data explaining the sandbox is not wired.
    */
   runExecute?: ExecuteRunner;
+  executeContext?: () => ExecuteCallContext;
   /**
    * Host-side token cap for all execute model-boundary channels: final result
    * is shaped by the runner, logs/errors here.
@@ -320,7 +322,7 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
       const t0 = Date.now();
       let outcome;
       try {
-        outcome = await runExecute(args.code);
+        outcome = await runExecute(args.code, options.executeContext?.());
       } catch (e) {
         // The runner is designed never to throw; belt-and-braces anyway.
         outcome = {
@@ -356,7 +358,10 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
         logLines: outcome.logs.length,
         logsTruncated: shapedLogs.truncated,
         errorTruncated: shapedError ? shapedError.truncated : null,
-        error: outcome.ok ? null : preview(outcome.error)
+        error: outcome.ok ? null : preview(outcome.error),
+        artifactReadCount: outcome.artifactReadCount ?? 0,
+        artifactReadBytes: outcome.artifactReadBytes ?? 0,
+        sourceBasis: outcome.ok ? outcome.sourceBasis ?? null : null
       });
 
       const logsBlock =

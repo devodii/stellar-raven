@@ -32,6 +32,54 @@ export function logEvent(evt: string, fields: Record<string, unknown>): void {
   }
 }
 
+async function sha256Prefix(value: string, chars = 16): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, chars);
+}
+
+export async function artifactOwnerHashPrefix(owner: string | undefined): Promise<string | null> {
+  return owner ? sha256Prefix(owner) : null;
+}
+
+export async function logArtifactWrite(fields: {
+  owner?: string;
+  bytes: number;
+  ms: number;
+  ok: boolean;
+  skipped?: string;
+  error?: string;
+}): Promise<void> {
+  logEvent("artifact_write", {
+    ownerHash: await artifactOwnerHashPrefix(fields.owner),
+    bytes: fields.bytes,
+    ms: fields.ms,
+    ok: fields.ok,
+    skipped: fields.skipped ?? null,
+    error: fields.error ?? null
+  });
+}
+
+export async function logArtifactRead(fields: {
+  owner?: string;
+  bytes: number;
+  ms: number;
+  hit: boolean;
+  reason?: string;
+  readCount: number;
+}): Promise<void> {
+  logEvent("artifact_read", {
+    ownerHash: await artifactOwnerHashPrefix(fields.owner),
+    bytes: fields.bytes,
+    ms: fields.ms,
+    hit: fields.hit,
+    reason: fields.reason ?? null,
+    readCount: fields.readCount
+  });
+}
+
 export function preview(text: string, max = PREVIEW_LOG_MAX): string {
   return text.length > max ? `${text.slice(0, max)}…[+${text.length - max} chars]` : text;
 }

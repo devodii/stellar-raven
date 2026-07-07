@@ -116,7 +116,8 @@ describe("demo tools at the worker boundary", () => {
       }`
     })) as string;
 
-    expect(result).toContain("--- TRUNCATED ---");
+    expect(result).toContain("--- SOURCE BASIS ---");
+    expect(result).not.toContain("--- TRUNCATED ---");
     expect(result).toContain("--- demo advisory ---");
     expect(result).toContain("Answer only from the visible returned fields");
     expect(budgetReport()).toMatchObject({ executeCalls: 1, executeResultTruncated: 1 });

@@ -16,7 +16,7 @@
  *     only on a loopback hostname (a deployed var is inert on the public domain).
  */
 import OAuthProvider from "@cloudflare/workers-oauth-provider";
-import { createMcpHandler } from "agents/mcp";
+import { createMcpHandler, getMcpAuthContext } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerTools, SERVER_INSTRUCTIONS } from "./mcp/tools";
 import { createExecuteRunner, type ExecuteRunner } from "./executor/run";
@@ -49,6 +49,11 @@ function getRunner(env: Env): ExecuteRunner {
   return cachedRunner;
 }
 
+function oauthArtifactOwner(): string | undefined {
+  const subject = getMcpAuthContext()?.props.subject;
+  return typeof subject === "string" && subject.length > 0 ? subject : undefined;
+}
+
 // Stateless: fresh McpServer per request (research/codemode.md §6). Used
 // both as the provider's /mcp apiHandler (token already validated there)
 // and directly for the two bypasses.
@@ -58,8 +63,16 @@ const mcpHandler = {
     // (per-session, unlike tool descriptions which models skim once) — the
     // workflow + result-envelope contract lives there too.
     const server = new McpServer(SERVER_INFO, { instructions: SERVER_INSTRUCTIONS });
+    const requestId = crypto.randomUUID();
+    const rayId = request.headers.get("cf-ray") ?? undefined;
+    const runner = getRunner(env);
     registerTools(server, {
-      runExecute: getRunner(env),
+      runExecute: (code, callContext) => runner(code, callContext),
+      executeContext: () => ({
+        artifactOwner: oauthArtifactOwner(),
+        requestId,
+        rayId
+      }),
       modelBoundaryMaxTokens: modelBoundaryMaxTokensFromEnv(env as unknown as Record<string, unknown>)
     });
     return createMcpHandler(server, { route: "/mcp" })(request, env, ctx);

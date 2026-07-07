@@ -1,4 +1,4 @@
-import { CHARS_PER_TOKEN, DEFAULT_MAX_TOKENS, truncateForModel } from "./truncate.ts";
+import { CHARS_PER_TOKEN, DEFAULT_MAX_TOKENS, truncateForModel, type Truncated } from "./truncate.ts";
 
 export const SOURCE_BASIS_MANIFEST_MAX_CHARS = 1600;
 
@@ -57,6 +57,10 @@ export type BuildSourceBasisManifestOptions = {
 
 export function sourceBasisShapeFromValue(value: unknown, maxTokens = DEFAULT_MAX_TOKENS): SourceBasisShape {
   const truncated = truncateForModel(value, maxTokens);
+  return sourceBasisShapeFromTruncation(value, truncated);
+}
+
+export function sourceBasisShapeFromTruncation(value: unknown, truncated: Truncated): SourceBasisShape {
   const base = {
     serializedChars: truncated.originalChars,
     approxTokens: truncated.approxOriginalTokens,
