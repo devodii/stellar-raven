@@ -10,6 +10,7 @@ evidence:
   - Solo project 49, todo 822, comments 2204-2210
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-soroban-reentrancy, partial) — recurred; re-verified at rs-soroban-env source (reentry_mode Prohibited default, sole __check_auth exception) and docs corpus reliable-negative on "reentrancy" (Solo scratchpad 521)
   - live re-verified 2026-07-06 (eval round todo 846): security.md still carries the verbatim "possible but rarely exploitable" self-reentrancy sentence, unqualified against the host's forbid-any-reentry behavior
+  - eval/qa/results/2026-07-07T19-58-35-variantA.json (q-soroban-reentrancy, partial) -- recurred; candidate copied the same `security.md` "self-reentrancy is possible but rarely exploitable" sentence from `skills.stellar-dev.smart-contracts`, while rs-soroban-env HEAD 883fd563 still routes normal contract calls through `ContractReentryMode::Prohibited` and errors on any reentry in Prohibited mode
 ---
 
 ## Finding
