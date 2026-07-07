@@ -14,6 +14,7 @@
 import { describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
 import { demoPage, DEMO_PAGE_HEADERS } from "../src/demo/page";
+import { DEMO_CAPS } from "../src/demo/budget";
 // The reusable ADR-0003 leak guard (backed by scripts/exposure.mjs data) —
 // the design requires running it over the rendered demo HTML.
 import { assertNoNonExposedRefsInText } from "../scripts/emitted-text-guard.mjs";
@@ -59,6 +60,7 @@ describe("demo page states", () => {
   it("authenticated: composer + trace client wired to /demo/chat", () => {
     expect(chatHtml).toContain('id="composer-form"');
     expect(chatHtml).toContain('id="log"');
+    expect(chatHtml).toContain(`maxlength="${DEMO_CAPS.maxUserMessageChars}"`);
     expect(chatHtml).toContain('fetch("/demo/chat"');
     expect(chatHtml).toContain("Ask about Stellar and Raven will search its connected sources");
     expect(chatHtml).not.toContain("full power and glory of Stellar Raven");

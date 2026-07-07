@@ -41,6 +41,17 @@ through to its `defaultHandler` (`src/auth/workos.ts`), which — besides `/auth
 `npm run site:fonts`), embedded in the Worker bundle — nothing is served from `public/`, which
 holds GitHub-only assets (`public/README.md`).
 
+`/demo` is the browser playground surface, intercepted before the OAuth provider's default
+handler in `src/server.ts`. The page (`src/demo/page.ts`) is cookie-gated through WorkOS:
+unauthenticated users see a static example trace and `/demo/login`; authenticated users get a
+same-origin SSE chat UI backed by `/demo/chat`. The chat handler (`src/demo/chat.ts`) runs the
+same host-side catalog search and execute runner through AI SDK tools (`src/demo/tools.ts`),
+but with demo-only caps from `DEMO_CAPS`: step count, search/execute call counts, execute code
+length, replay history, output tokens, hourly KV throttle, and AI Gateway spend/rate posture.
+In-script discovery is deliberately narrower than production (`codemode.describe` only for
+exact visible hit ids; no `codemode.search/catalog/spec`) so the public playground remains a
+small guided demo, not a full agent harness.
+
 Each authorized request gets a **fresh, stateless `McpServer`** served over streamable HTTP
 by `createMcpHandler` (from `agents/mcp`) — no Durable Objects, no session state. Tool
 registration and all model-facing prose live in `src/mcp/tools.ts`; the initialize-time
@@ -197,8 +208,9 @@ Per call (`src/executor/run.ts`):
    Worker Loader isolates are not auto-instrumented
    (`research/observability-cloudflare.md`).
 6. **Output hygiene, three budgeted channels** — everything model-facing is capped at
-   ~6k tokens (4 chars/token, `src/policy/truncate.ts`), because each channel is
-   model-authored and would otherwise smuggle payloads past the others:
+   ~6k tokens by default (4 chars/token, `src/policy/truncate.ts`), with a bounded
+   host-side override via `EXECUTE_MODEL_BOUNDARY_MAX_TOKENS` (1,000-32,000 tokens).
+   Each channel is model-authored and would otherwise smuggle payloads past the others:
    - *result*: redacted again, then `truncateForModel` computes the fixed cut. If the
      result fits, the returned bytes are byte-identical to the pre-lane behavior. If it
      truncates, the old generic footer is replaced with a compact source-basis block from

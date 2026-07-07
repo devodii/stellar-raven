@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { createHmac } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import http from "node:http";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import path from "node:path";
+import { mintDemoCookie } from "../src/demo/auth.ts";
 
 const DEFAULT_MODELS = [
   "openai/gpt-5.4",
@@ -87,7 +87,7 @@ for (let modelIndex = 0; modelIndex < models.length; modelIndex += 1) {
   const server = await startWrangler({ model, port });
   try {
     const subject = `gauntlet:${runId}:${model}`;
-    const cookie = demoSecret ? mintDemoCookie(demoSecret, subject) : "";
+    const cookie = demoSecret ? await mintDemoCookie(demoSecret, subject) : "";
     for (let repeat = 1; repeat <= repeats; repeat += 1) {
       for (const prompt of PROMPTS) {
         const label = `${model} :: ${prompt.id} :: ${repeat}/${repeats}`;
@@ -365,17 +365,6 @@ async function readDevVars(file) {
     vars[key] = value;
   }
   return vars;
-}
-
-function mintDemoCookie(secret, subject) {
-  const now = Math.floor(Date.now() / 1000);
-  const payload = base64url(JSON.stringify({ sub: subject, iat: now, exp: now + 2 * 60 * 60 }));
-  const mac = createHmac("sha256", secret).update(payload).digest("base64url");
-  return `__Host-RAVEN_DEMO=${payload}.${mac}`;
-}
-
-function base64url(text) {
-  return Buffer.from(text).toString("base64url");
 }
 
 function sleep(ms) {

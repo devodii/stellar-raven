@@ -78,11 +78,12 @@ const TOOL_BUDGET_MESSAGE =
 const TURN_TIMEOUT_MS = 120_000;
 /**
  * Pre-parse request-body cap: well above the worst legitimate replay
- * (maxHistoryMessages × a full 800-token assistant answer + JSON overhead),
- * so JSON.parse and the per-entry validation walk are both bounded before
- * clampHistory ever runs.
+ * (maxHistoryMessages × a full maxOutputTokens assistant answer at the
+ * same 4-chars/token estimate used by the model-boundary cap, plus JSON
+ * overhead), so JSON.parse and the per-entry validation walk are both
+ * bounded before clampHistory ever runs.
  */
-const MAX_BODY_CHARS = 128 * 1024;
+const MAX_BODY_CHARS = 384 * 1024;
 
 const SSE_HEADERS: Record<string, string> = {
   "content-type": "text/event-stream",

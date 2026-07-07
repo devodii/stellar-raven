@@ -152,7 +152,7 @@ content cannot re-enter the public repo.
   are never emitted, so they cannot appear in search or resolve in the sandbox.
 - **Retrieval:** `codemode.skill.read(name, { sections?: string[] })` returns only the requested
   portions (exact-match-guarded names — no fuzzy resolution, per ADR-0019's wrong-entity lesson).
-- **Executable skills (BUILT 2026-07-06, todo 806):** two composite playbooks are additionally
+- **Executable skills (BUILT 2026-07-06, todo 806):** one composite playbook is additionally
   *runnable* — `skills.lumenloop.stellar-ecosystem-digest` carries `runnable: true` + real
   input/output schemas (the dossier runner was retired on measured evidence, todo 849)
   on their existing `kind: "skill"` entries (one skill, one id, two affordances: read + run) and
@@ -276,7 +276,7 @@ compat ≥ 2026-06-11 + `nodejs_compat`, `worker_loaders` binding `LOADER`.
 3. **Adapters + `execute`** — per-service clients in `src/adapters/`, `DynamicWorkerExecutor`
    with namespaced providers, and `codemode.search/describe` sandbox globals. *(shipped)*
 4. **Skills store** — sectioned retrieval (`skill.read`), build-time exposure policy, and
-   `skill.run` for the runnable skill set (v1 shipped two; the dossier runner was
+   `skill.run` for the runnable skill set (v1 shipped one after the dossier runner was
    retired on measured evidence — design doc §10 postscript). *(shipped)*
 5. **Policy + observability** — build-time exposure filtering, paid lane excluded, redaction,
    truncation, structured logs, and execute spans. *(shipped)*
@@ -295,5 +295,5 @@ Phases 2–3 are independently parallelizable after 1; 4–6 after 3.
 | Docs search path | **Decided: direct Algolia REST** — dedicated key in hand (`.env` → Worker secrets `ALGOLIA_APPLICATION_ID`/`ALGOLIA_API_KEY`); MCP as documented fallback | MCP-only (slower, protocol overhead) |
 | `request_research` (paid) | off at launch | on with budget gate from day one |
 | Server auth | **Decided: WorkOS OAuth** (`workers-oauth-provider` + AuthKit; admin/dev bypasses — §4, README.md) | plain bearer secret (retired placeholder) |
-| Skills scope | **18 of 19 mirrored public skills exposed**; retired onboarding surfaces never emitted, and two composite skills are runnable via `codemode.skill.run` | re-expose an onboarding skill only after a transport-agnostic rewrite and a fresh ADR |
+| Skills scope | **18 of 19 mirrored public skills exposed**; retired onboarding surfaces never emitted, and one composite skill is runnable via `codemode.skill.run` | re-expose an onboarding skill only after a transport-agnostic rewrite and a fresh ADR |
 | Statefulness | stateless `createMcpHandler` | `McpAgent` + CodemodeRuntime DO (approvals/audit) |

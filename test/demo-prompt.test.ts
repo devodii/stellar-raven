@@ -8,6 +8,7 @@
 import { describe, expect, it } from "vitest";
 import { assertNoNonExposedRefsInText } from "../scripts/emitted-text-guard.mjs";
 import { SERVER_INSTRUCTIONS } from "../src/mcp/tools";
+import { DEMO_CAPS } from "../src/demo/budget";
 import { DEMO_PREAMBLE, DEMO_SYSTEM_PROMPT } from "../src/demo/prompt";
 
 describe("demo system prompt", () => {
@@ -16,9 +17,9 @@ describe("demo system prompt", () => {
     expect(DEMO_SYSTEM_PROMPT.endsWith(DEMO_PREAMBLE)).toBe(true);
     // The demo's turn budget is stated to the model (numbers enforced in
     // src/demo/budget.ts; drift here is a lie to the model, not a crash).
-    expect(DEMO_PREAMBLE).toContain("5 steps");
-    expect(DEMO_PREAMBLE).toContain("2 `search` calls");
-    expect(DEMO_PREAMBLE).toContain("2 `execute` calls");
+    expect(DEMO_PREAMBLE).toContain(`${DEMO_CAPS.maxSteps} steps`);
+    expect(DEMO_PREAMBLE).toContain(`${DEMO_CAPS.maxSearchCallsPerTurn} \`search\` calls`);
+    expect(DEMO_PREAMBLE).toContain(`${DEMO_CAPS.maxExecuteCallsPerTurn} \`execute\` calls`);
     expect(DEMO_PREAMBLE).toContain("optional second `search`");
     expect(DEMO_PREAMBLE).toContain("truncated, mismatched, or need a better endpoint-discovery query");
     expect(DEMO_PREAMBLE).toContain("optional second `execute`");

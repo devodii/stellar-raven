@@ -64,6 +64,21 @@ describe("demo tools at the worker boundary", () => {
     expect(second.budgetReport()).toMatchObject({ searchCalls: 2, searchRefusals: 1 });
   });
 
+  it("clips long signatures without amputating the final callable line", async () => {
+    const { search } = makeTools();
+    const result = (await search.execute({
+      query: "stellar ecosystem digest",
+      kind: "skill",
+      limit: 6
+    })) as { hits: Array<{ id: string; signature?: string }> };
+    const digest = result.hits.find((hit) => hit.id === "skills.lumenloop.stellar-ecosystem-digest");
+    expect(digest?.signature).toBeTruthy();
+    const signature = digest!.signature!;
+    expect(signature).toContain("… [middle clipped for the demo]");
+    expect(signature).toContain('codemode.skill.run("skills.lumenloop.stellar-ecosystem-digest"');
+    expect(signature.split("\n").at(-1)).toContain('codemode.skill.run("skills.lumenloop.stellar-ecosystem-digest"');
+  });
+
   it("keeps in-script codemode search disabled in demo execute", async () => {
     const { execute, budgetReport } = makeTools();
     const result = (await execute.execute({

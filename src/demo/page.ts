@@ -20,6 +20,7 @@
  * page needs zero JavaScript and the live client gets toggling for free.
  */
 import { BASE, FAVICON, FONT_FACE, TOKENS, ravenSvg } from "../site.ts";
+import { DEMO_CAPS } from "./budget.ts";
 
 // ---------------------------------------------------------------------------
 // Page CSS — on top of the shared FONT_FACE/TOKENS/BASE design system.
@@ -760,7 +761,7 @@ function chatBody(): string {
     `<div class="composer"><form id="composer-form">` +
     // maxlength mirrors DEMO_CAPS.maxUserMessageChars (src/demo/budget.ts);
     // the server clamps regardless — this just fails early in the UI.
-    `<textarea id="composer-input" maxlength="4000" rows="1" ` +
+    `<textarea id="composer-input" maxlength="${DEMO_CAPS.maxUserMessageChars}" rows="1" ` +
     `placeholder="Ask about the Stellar ecosystem…" ` +
     `aria-label="Message the playground agent"></textarea>` +
     `<button id="send" class="btn btn-primary" type="submit">Send</button>` +

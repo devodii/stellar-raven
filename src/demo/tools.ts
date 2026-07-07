@@ -68,8 +68,9 @@ type SearchStructured = {
 // Demo deltas over the production page shape: a smaller default page and
 // clipped per-hit prose. Full pages (~16-19KB of hits) blow up the follow-up
 // call's prefill on a reasoning model — live tool turns routinely stalled past
-// the whole-turn timeout before these caps. Signature clipping keeps the head
-// (input type + callable line come first; only oversized output stubs get cut).
+// the whole-turn timeout before these caps. Signature clipping preserves the
+// final callable line (renderSignature emits it last) and clips the middle
+// output-type block within the same total budget.
 const DEMO_SEARCH_DEFAULT_LIMIT = 5;
 const DEMO_HIT_DESCRIPTION_CHARS = 220;
 const DEMO_HIT_SIGNATURE_CHARS = 400;
@@ -78,12 +79,23 @@ function clip(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max)}… [clipped for the demo]`;
 }
 
+function clipSignature(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const lastNewline = text.lastIndexOf("\n");
+  if (lastNewline === -1) return clip(text, max);
+  const callableLine = text.slice(lastNewline + 1);
+  const marker = "\n… [middle clipped for the demo]\n";
+  const headChars = max - callableLine.length - marker.length;
+  if (headChars <= 0) return callableLine;
+  return `${text.slice(0, headChars)}${marker}${callableLine}`;
+}
+
 function compactHitForDemo(hit: SearchHit): SearchHit {
   return {
     ...hit,
     description: clip(hit.description, DEMO_HIT_DESCRIPTION_CHARS),
     ...(hit.signature !== undefined
-      ? { signature: clip(hit.signature, DEMO_HIT_SIGNATURE_CHARS) }
+      ? { signature: clipSignature(hit.signature, DEMO_HIT_SIGNATURE_CHARS) }
       : {})
   };
 }

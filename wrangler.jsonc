@@ -23,11 +23,10 @@
       "binding": "LOADER"
     }
   ],
-  // Workers AI binding for the /demo agent playground (cheap tool-calling
-  // model, Cloudflare-billed — no BYOK; design:
-  // research/demo-playground-design.md). @cf/* models bill as ordinary
-  // Workers AI Neurons, not Unified Billing credits. Demo-only: the MCP
-  // surface never touches this binding.
+  // Workers AI binding for the /demo agent playground. The primary model is
+  // currently openai/gpt-5.4 routed through Workers AI / AI Gateway Unified
+  // Billing, with provider fallbacks configured in src/demo/model-config.ts.
+  // Demo-only: the MCP surface never touches this binding.
   "ai": {
     "binding": "AI",
     "remote": true
@@ -83,9 +82,12 @@
     // Traces (open beta): auto-instruments host-side adapter fetches +
     // handler spans; Worker Loader isolates are NOT auto-instrumented — the
     // execute boundary gets a custom span (tracing.enterSpan in
-    // src/executor/run.ts). Spans bill as observability events (shared 10M/mo
-    // Paid quota with logs); traffic is low, so 100% sampling. Full survey:
-    // research/observability-cloudflare.md.
+    // src/executor/run.ts). Spans bill as observability events shared with
+    // Workers Logs. Cloudflare docs currently drift on the included Paid
+    // event count: Workers Logs says 20M/month, while the traces pricing page
+    // still says 10M/month; confirm in the dashboard/API before exact budget
+    // math. Traffic is low, so 100% sampling. Full survey:
+    // research/observability-cloudflare.md and ideas/observability-r2-retention.md.
     "traces": {
       "enabled": true
     }

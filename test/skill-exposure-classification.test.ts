@@ -33,6 +33,7 @@ const inventory = JSON.parse(readFileSync(INVENTORY_PATH, "utf8")) as {
     targetSurface: string;
     rationale: string;
     evidenceRefs: string[];
+    localOnlyEvidence?: string;
     leakGuardIds?: string[];
   }>;
 };
@@ -151,6 +152,22 @@ describe("skill exposure inventory artifact", () => {
     }
   });
 
+  it("keeps inventory evidence portable or explicitly marked local-only", () => {
+    const machineLocalRef = /^(\/Users\/|\/tmp\/)/;
+    for (const entry of inventory.entries) {
+      const portableRefs = entry.evidenceRefs.filter((ref) => !machineLocalRef.test(ref));
+      const hasLocalOnlyMarker = typeof entry.localOnlyEvidence === "string"
+        && entry.localOnlyEvidence.trim().length > 20;
+      expect(
+        portableRefs.length > 0 || hasLocalOnlyMarker,
+        `${entry.id} needs portable evidenceRefs or localOnlyEvidence`
+      ).toBe(true);
+      if (!hasLocalOnlyMarker) {
+        expect(entry.evidenceRefs.some((ref) => machineLocalRef.test(ref)), entry.id).toBe(false);
+      }
+    }
+  });
+
   it("covers every required historical/non-exposed source family exactly once", () => {
     const ids = inventory.entries.map((entry) => entry.id);
     expect(ids).toEqual(REQUIRED_INVENTORY_IDS);
@@ -190,7 +207,8 @@ describe("skill exposure inventory artifact", () => {
       "lumenloop-api-integrate",
       "lumenloop-api-keys",
       "lumenloop-api-query",
-      "lumenloop-api-research"
+      "lumenloop-api-research",
+      "stellar-developer-activity"
     ]);
 
     const emittedFiles = [
