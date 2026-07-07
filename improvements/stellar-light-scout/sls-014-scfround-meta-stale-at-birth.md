@@ -1,13 +1,14 @@
 ---
 id: sls-014
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-06
 evidence:
   - eval/qa/results/2026-07-06T18-48-22-variantA.json (q-scf-current-round, wrong)
   - verdict-review workflow wf_01b3347d-1b8 (triage: upstream-data-gap, verdict stands on outcome)
   - live verification 2026-07-06: production scout.getRfps reproduced the stale scfRound meta verbatim; communityfund.stellar.org/awards fetched the same day shows SCF #45 in Submission
   - Solo project 49, todo 846
+  - fixed upstream per Scout changelog 2026-07-06: getRfps meta.scfRound now parses the awards page structured round data on a 6-hour revalidate and no longer asserts stale negatives on fetch failure.
 ---
 
 ## Finding

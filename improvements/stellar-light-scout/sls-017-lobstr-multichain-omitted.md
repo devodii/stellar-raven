@@ -1,12 +1,24 @@
 ---
 id: sls-017
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-07
 evidence:
   - eval/qa/results/2026-07-07T19-58-35-variantA.json (q-eco-wallets-overview)
   - "live verification 2026-07-07: lobstr.co homepage self-describes as 'Stellar & XRPL Wallet' (Stellar and XRP Ledger); Scout/Lumenloop directory payloads for LOBSTR carry no XRPL/multichain signal"
+  - "prevalence sweep 2026-07-07: Scout returned 45 Wallet-typed records for q=wallet. In the first 20, multichain support was present for Hana, HOT Wallet, Bitget Wallet, Klever, Unstoppable Wallet, Ledger, and Trezor; Decaf appears outside Wallet type as Payments but its record explicitly says Solana and Stellar. xBull, Beans, Freighter, Vesseo/Vibrant, Albedo, Rabet, and Solar own-site checks did not reveal an omitted non-Stellar chain in this sample. Result: keep verified as a LOBSTR stale-omission, not a broad multichain-wallet prevalence claim."
   - Solo todo 870 comment 2308
+  - upstream issue filed 2026-07-07: https://github.com/Stellar-Light/stellar-scout/issues/4
+probe:
+  type: http-text
+  url: https://stellarlight.xyz/api/projects/search?q=LOBSTR&limit=10
+  expect:
+    status: 200
+    contains:
+      - Lobstr
+    excludes:
+      - XRPL
+      - XRP Ledger
 ---
 ## Finding
 
@@ -16,6 +28,14 @@ entries returned by the Scout/Lumenloop surfaces describe it purely in
 Stellar terms with no chain-support field and no XRPL mention — so a consumer
 synthesizing from directory data alone concludes "single-chain Stellar-only"
 by omission.
+
+A 2026-07-07 prevalence sweep keeps this as verified but narrows the claim:
+this is LOBSTR-specific in the sampled wallet set, not evidence that Scout
+systematically drops multichain support. Scout already describes multichain
+support for Hana, HOT Wallet, Bitget Wallet, Klever, Unstoppable Wallet,
+Ledger, Trezor, and Decaf. Spot checks of xBull, Beans, Freighter,
+Vesseo/Vibrant, Albedo, Rabet, and Solar did not reveal another omitted
+non-Stellar chain in the first-page wallet sample.
 
 ## Evidence
 

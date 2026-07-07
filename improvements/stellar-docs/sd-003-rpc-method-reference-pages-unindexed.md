@@ -1,7 +1,7 @@
 ---
 id: sd-003
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-rpc-gettransactions-pagination-xdr)
@@ -9,6 +9,7 @@ evidence:
   - Solo project 49, todo 807, scratchpad 521
   - 2026-07-03 corrected-golden re-judge (todo 827): the saved agent answer flips partial → wrong under the fixed golden — the agent explicitly denied a getTransactions 200 cap ("did not find RPC-doc confirmation"), a real wrong answer this gap causes that the old golden masked by encoding the same false belief
   - live re-verified 2026-07-06 (eval round todo 846): get_doc_page_sections on the getTransactions method page still returns the identical soft-empty ("auto-generated API-reference pages are not indexed")
+  - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2566
 ---
 
 ## Finding

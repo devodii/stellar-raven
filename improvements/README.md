@@ -15,7 +15,9 @@ that collection.
 - `stellar-light-scout/` — findings about the Stellar Light/Scout API (response
   semantics, missing fields, content-type consistency; positive trust anchors too).
 - `stellar-docs/` — findings about the Stellar Docs search surface (Algolia index):
-  ranking, tokenization, vocabulary coverage.
+  ranking, tokenization, vocabulary coverage. Docs-content findings also belong
+  here when the indexed source content is stale, ambiguous, or missing a current
+  explanation needed by grounded agents (for example `sd-007`).
 - `skills/` — findings about the **upstream skill sources** mirrored here as
   ecosystem-skills. Recommendations target the source repos; never edit the mirror
   in this repo to "fix" a finding.

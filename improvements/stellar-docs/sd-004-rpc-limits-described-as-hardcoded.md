@@ -1,13 +1,14 @@
 ---
 id: sd-004
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - developers.stellar.org method pages (getTransactions, getEvents, getLedgers) fetched 2026-07-03
   - stellar/stellar-rpc cmd/stellar-rpc/internal/config/options.go (same day)
   - Solo project 49, todo 828, scratchpad 521 (golden-truth deep-verification round)
   - live re-verified 2026-07-06 (eval round todo 846): the indexed RPC Structure→Pagination page still says the getEvents limit is "hardcoded in Stellar-RPC for performance reasons"; the method pages remain unindexed (sd-003) so their wording could not be re-fetched via search, but the sibling indexed page shows the same unfixed pattern
+  - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2567
 ---
 
 ## Finding

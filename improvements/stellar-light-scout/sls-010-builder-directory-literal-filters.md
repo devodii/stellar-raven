@@ -1,12 +1,13 @@
 ---
 id: sls-010
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03 (scout.getBuilders 16-probe fan-out; Solo scratchpad 521 follow-up, todo 826 comment 2224)
   - consumer-side workaround shipped: eval/qa/golden-overrides.json q-builder-by-region-latam graderNotes instruct per-country fan-out
   - live re-check 2026-07-06 (eval round todo 846): claim (1) FIXED — location:"Latin America" now returns 19 builders with country-valued locations (Chile, Brazil, Costa Rica), confirming region→country synonym expansion shipped; claim (2) strict-literal q bio matching was not probed this round, so the finding stays open on that half
+  - upstream issue filed 2026-07-07: https://github.com/Stellar-Light/stellar-scout/issues/2
 ---
 
 ## Finding

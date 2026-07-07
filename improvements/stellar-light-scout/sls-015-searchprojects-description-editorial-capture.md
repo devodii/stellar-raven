@@ -1,13 +1,14 @@
 ---
 id: sls-015
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-06
 evidence:
   - agentic lane run 2026-07-06, workflow wf_b5be4d53-41f (30 cases x sonnet-5, low + medium efforts), compared against the 2026-07-04 agentic run
   - verdict-review workflow wf_01b3347d-1b8 (round-close review, eval round todo 846)
   - live verification 2026-07-06: the emitted searchProjects catalog description carries both the upstream product name-drops and the gateway's counter-balancing routing note
   - Solo project 49, todo 846
+  - fixed upstream per Scout changelog 2026-07-06: searchProjects description now scopes named-product mentions to directory facts and routes editorial/analysis content to content platforms.
 ---
 
 ## Finding

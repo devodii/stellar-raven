@@ -1,12 +1,24 @@
 ---
 id: sls-016
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-07
 evidence:
   - eval/qa/results/2026-07-07T19-26-06-variantA.json (q-live-hackathon-recent-winners)
   - "live probe 2026-07-07: GET /api/hackathons/{stellar-agents-x402-stripe-mpp,stellar-hacks-zk-gaming} — itemized per-place amounts appear only in description markdown ('First Place:** $5,000 in XLM' …); structured winner entries carry an identical pool-level award label"
   - Solo todo 870 round record (scratchpad artifact-source-basi--545)
+  - upstream issue filed 2026-07-07: https://github.com/Stellar-Light/stellar-scout/issues/5
+probe:
+  type: http-text
+  url: https://stellarlight.xyz/api/hackathons/stellar-agents-x402-stripe-mpp
+  expect:
+    status: 200
+    contains:
+      - "First Place:** $5,000 in XLM"
+      - "10K Prize Pool"
+    excludes:
+      - awardAmountUSD
+      - prizeTiers
 ---
 ## Finding
 

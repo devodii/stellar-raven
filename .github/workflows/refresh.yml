@@ -108,6 +108,8 @@ jobs:
               fi
             } > drift-report.md
           fi
+      - name: run improvement recurrence probes
+        run: npm run improvements:probes
       - name: open or update drift issue
         if: steps.drift.outputs.drift == 'true'
         env:

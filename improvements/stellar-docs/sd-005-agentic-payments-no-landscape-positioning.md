@@ -1,13 +1,14 @@
 ---
 id: sd-005
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-06
 evidence:
   - eval/qa/results/2026-07-06T18-48-22-variantA.json (q-defi-agentic-payment-standards-compare, partial — verdict stands)
   - verdict-review workflow wf_01b3347d-1b8 (triage: upstream-data-gap; the answering agent's retrieval was exhaustive and correct)
   - live verification 2026-07-06: get_doc_page_sections full-content read, Algolia term probes, full read of the agentic-payments skill, lumenloop title/summary probes — all zero AP2/ACP content
   - Solo project 49, todo 846
+  - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2565
 ---
 
 ## Finding

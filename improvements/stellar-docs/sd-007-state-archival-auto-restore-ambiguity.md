@@ -1,7 +1,7 @@
 ---
 id: sd-007
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-07
 evidence:
   - developers.stellar.org state-archival page fetched 2026-07-07
@@ -9,6 +9,15 @@ evidence:
   - stellar/stellar-protocol core/cap-0066.md at 1b1c22e02fc0cec6fff1175c2d7d08ad83a828e1
   - stellar/stellar-core InvokeHostFunctionOpFrame.cpp and InvokeHostFunctionTests.cpp at d6f2546791774d0b2cd925b8a4026adf967a92a3
   - Solo project 49, todo 870 eval-review follow-up
+  - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2568
+probe:
+  type: http-text
+  url: https://developers.stellar.org/docs/learn/fundamentals/contract-development/storage/state-archival
+  expect:
+    status: 200
+    contains:
+      - Contract Data Automatic Restoration
+      - will fail immediately
 ---
 
 ## Finding

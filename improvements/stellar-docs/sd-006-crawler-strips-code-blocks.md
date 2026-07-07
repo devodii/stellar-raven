@@ -1,13 +1,14 @@
 ---
 id: sd-006
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-06
 evidence:
   - eval/qa/results/2026-07-06T18-48-22-variantA.json (q-tool-cli-install, partial — verdict stands, mixed root cause)
   - verdict-review workflow wf_01b3347d-1b8 (triage: the code-block gap is the upstream share of a mixed verdict)
   - live verification 2026-07-06: index-record probe of /docs/tools/cli/install-cli plus regex sweep of the full index for install command strings
   - Solo project 49, todo 846
+  - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2569
 ---
 
 ## Finding

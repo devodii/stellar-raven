@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "updated": "2026-07-07",
+  "notes": [
+    "Verified with gh on 2026-07-07. LumenLoop API/backend intake remains unclear: the public org has skills/data/feed repos, but no obvious public API or feedback tracker.",
+    "Algolia ranking-only docs findings may not have a clear public intake even though developers.stellar.org content lives in stellar/stellar-docs."
+  ],
+  "services": {
+    "skills": {
+      "default": {
+        "type": "github-issues",
+        "repos": [
+          "stellar/stellar-dev-skill",
+          "lumenloop/lumenloop-skills",
+          "OpenZeppelin/openzeppelin-skills",
+          "Stellar-Light/stellar-scout"
+        ],
+        "rule": "Target the source repository that owns the referenced skill; never file against this repo's mirror."
+      },
+      "sourceRepos": {
+        "stellar-dev": "stellar/stellar-dev-skill",
+        "lumenloop": "lumenloop/lumenloop-skills",
+        "openzeppelin-stellar": "OpenZeppelin/openzeppelin-skills",
+        "stellar-light": "Stellar-Light/stellar-scout"
+      }
+    },
+    "stellar-light-scout": {
+      "type": "github-issues",
+      "repo": "Stellar-Light/stellar-scout",
+      "alsoAvailable": "The API exposes keyless POST /api/feedback, but GitHub issues are the primary intake for durable upstream delivery from this repo."
+    },
+    "stellar-docs": {
+      "type": "mixed",
+      "contentRepo": "stellar/stellar-docs",
+      "contentRule": "developers.stellar.org content and content-structure findings file in stellar/stellar-docs.",
+      "rankingRule": "Pure Algolia ranking/tokenization findings may need docs/search-owner triage; record intake unclear per finding when the repo cannot plausibly own the search behavior."
+    },
+    "lumenloop": {
+      "type": "unclear",
+      "repoSearch": {
+        "checked": "2026-07-07",
+        "publicReposObserved": [
+          "lumenloop/awesome-stellar-community-fund",
+          "lumenloop/stellar-ecosystem-db",
+          "lumenloop/lumenloop-skills",
+          "lumenloop/scf-review-boilerplate",
+          "lumenloop/scf-ai-threat-model",
+          "lumenloop/stellar-ecosystem-feeds"
+        ]
+      },
+      "decision": "unclear — API/content findings have no confirmed public tracker"
+    }
+  },
+  "findings": {
+    "sk-001": { "repo": "stellar/stellar-dev-skill" },
+    "sk-002": { "repo": "stellar/stellar-dev-skill" },
+    "sk-003": { "repo": "stellar/stellar-dev-skill" },
+    "sk-004": { "repo": "lumenloop/lumenloop-skills" },
+    "sk-005": { "repo": "lumenloop/lumenloop-skills" },
+    "sk-006": { "repo": "stellar/stellar-dev-skill" },
+    "sk-007": { "repo": "lumenloop/lumenloop-skills" },
+    "sd-001": { "intake": "unclear", "reason": "Algolia ranking/tokenization behavior; not clearly owned by stellar/stellar-docs issue intake." },
+    "sd-002": { "intake": "unclear", "reason": "Ranking-only finding and currently proposed/possibly fixed." },
+    "sd-003": { "repo": "stellar/stellar-docs", "reason": "API reference content/indexability." },
+    "sd-004": { "repo": "stellar/stellar-docs", "reason": "Docs wording/content correction." },
+    "sd-005": { "repo": "stellar/stellar-docs", "reason": "Docs content gap." },
+    "sd-006": { "repo": "stellar/stellar-docs", "reason": "Crawler/indexed content structure for docs pages." },
+    "sd-007": { "repo": "stellar/stellar-docs", "reason": "Docs content ambiguity; in-charter per README." }
+  }
+}
