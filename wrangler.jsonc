@@ -23,6 +23,24 @@
       "binding": "LOADER"
     }
   ],
+  // Workers AI binding for the /demo agent playground (cheap tool-calling
+  // model, Cloudflare-billed — no BYOK; design:
+  // research/demo-playground-design.md). @cf/* models bill as ordinary
+  // Workers AI Neurons, not Unified Billing credits. Demo-only: the MCP
+  // surface never touches this binding.
+  "ai": {
+    "binding": "AI",
+    "remote": true
+  },
+  "vars": {
+    // AI Gateway every /demo model call routes through (design Decisions
+    // 3/5: gateway-side limits are the account-level cost backstop —
+    // per-request caps alone don't bound aggregate spend). Using the
+    // account's existing "default" gateway (logs on). Its rate-limit /
+    // spend-limit rules are dashboard-side config — keep at least one
+    // spend-limit rule on it while /demo is live.
+    "DEMO_AI_GATEWAY_ID": "default"
+  },
   // Token/client/grant storage for @cloudflare/workers-oauth-provider
   // (research/auth-workos.md). The binding MUST be named OAUTH_KV — the
   // library reads it by that name. Namespace pre-created for this project.

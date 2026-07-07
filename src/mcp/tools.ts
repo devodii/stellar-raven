@@ -131,8 +131,9 @@ export const executeInputSchema = {
 // the search nextSteps text below. Leave-with-the-feature rule: if the
 // runnable set ever returns to zero, those sentences leave in the SAME change
 // (ADR-0003 spirit — consumers are never told about, and never sold, what
-// the gateway cannot do).
-const SEARCH_DESCRIPTION = `Ranked lexical search over the unified catalog of everything this server can do: every service operation (lumenloop.*, scout.*, stellarDocs.*), every skill, and every skill section.
+// the gateway cannot do). Exported (with EXECUTE_DESCRIPTION) so the /demo
+// playground drives the exact production tool contract.
+export const SEARCH_DESCRIPTION = `Ranked lexical search over the unified catalog of everything this server can do: every service operation (lumenloop.*, scout.*, stellarDocs.*), every skill, and every skill section.
 
 Returns ranked hits with rendered TypeScript signatures so you can call them from the \`execute\` tool without guessing.
 
@@ -154,7 +155,7 @@ Returns ranked hits with rendered TypeScript signatures so you can call them fro
 - Operation signatures are compact: the input type and callable line are always complete, but a very large OUTPUT type is stubbed down to its top-level field names. When you need the full output shape (or the raw JSON schemas), call \`codemode.describe("<exact id>")\` inside \`execute\`.
 - Deeper or arbitrary discovery lives inside \`execute\`: \`codemode.search(...)\` (this same ranked search, mid-script), \`codemode.describe(id)\` (one entry's full detail), \`codemode.catalog()\` (the full catalog as plain data for code-shaped grepping), and \`codemode.spec()\` (the unified OpenAPI super spec) — use them for follow-ups without another tool round-trip.`;
 
-const EXECUTE_DESCRIPTION = `Execute JavaScript in a sandboxed Worker isolate with access to the service SDKs discovered via the \`search\` tool.
+export const EXECUTE_DESCRIPTION = `Execute JavaScript in a sandboxed Worker isolate with access to the service SDKs discovered via the \`search\` tool.
 
 Write an async arrow function in JavaScript that returns the result. One script should compose MANY operations: broad discovery calls first (in parallel where independent), then targeted deeper calls parameterized by their results, then return one merged, compact value.
 
