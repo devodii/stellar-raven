@@ -12,7 +12,7 @@
  * digital signal; the type is the IBM Plex superfamily — Plex Serif (display),
  * Plex Sans (body), Plex Mono (utility), one shared skeleton — set on the right
  * so the copy never fights the animation. The pitch is benefit-first ("all of
- * Stellar, one connection"): hero + stat strip + four-pillar bento + one-vs-many
+ * Stellar context, one connection"): hero + stat strip + four-pillar bento + one-vs-many
  * contrast; the `search`/`execute` mechanics live in a mono footnote for the
  * technical crowd. The CTA is per-client install (the connect panel).
  *
@@ -458,7 +458,7 @@ const SCRIPT = `
 // ---------------------------------------------------------------------------
 
 const OG_ALT =
-  "Stellar Raven — all of Stellar, one connection. A Bayer-dithered orange globe " +
+  "Stellar Raven — Stellar docs and ecosystem context, one connection. A Bayer-dithered orange globe " +
   "beside the endpoint raven.stellar.buzz/mcp.";
 
 function head(
@@ -609,7 +609,7 @@ const JSONLD =
         url: `https://${HOST}/`,
         name: "Stellar Raven",
         description:
-          "All of Stellar — official docs, live ecosystem data, community intel, and proven playbooks — in one MCP connection for AI agents."
+          "Stellar docs, live ecosystem data, community intel, and proven playbooks in one MCP connection for AI agents."
       },
       {
         "@type": "SoftwareApplication",
@@ -625,13 +625,13 @@ const JSONLD =
           "Community intel (news, media, events, governance, SCF)",
           "Curated skill playbooks read section by section",
           "Sandboxed no-network code execution composing multiple sources",
-          "One OAuth sign-in, no API keys"
+          "One OAuth sign-in, no service API keys"
         ],
         description:
-          "A remote MCP server that gives AI agents the whole Stellar ecosystem in one connection: " +
+          "A remote MCP server that gives AI agents Stellar docs and ecosystem context in one connection: " +
           "official docs, live ecosystem data, community intel, and curated playbooks, unified in one " +
           "catalog. Its search tool ranks every operation and skill; its execute tool runs agent-written " +
-          "JavaScript in a sandboxed, no-network runtime. One OAuth sign-in, no API keys.",
+          "JavaScript in a sandboxed, no-network runtime. One OAuth sign-in, no service API keys.",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         author: { "@type": "Organization", name: "Stellar", url: "https://stellar.org" }
       }
@@ -646,7 +646,7 @@ export function landingPage(): string {
   return (
     head(
       "Stellar Raven — the Stellar MCP server for AI agents",
-      "One connection gives your AI agent all of Stellar: official docs, live ecosystem data, community intel, and proven playbooks. One sign-in, no API keys.",
+      "One connection gives your AI agent Stellar docs, live ecosystem data, community intel, and proven playbooks. One sign-in, no service API keys.",
       BASE,
       JSONLD
     ) +
@@ -655,9 +655,9 @@ export function landingPage(): string {
     `<main class="wrap"><section class="hero" id="connect"><div class="hero-in">
   <p class="eyebrow">Remote MCP server <span class="live"><span class="dot"></span>live</span></p>
   <h1 class="title">Stellar <span class="r">Raven</span></h1>
-  <p class="lede"><b>The whole Stellar ecosystem, one connection.</b> Raven gives your AI agent the
+  <p class="lede"><b>Stellar docs and ecosystem context, one connection.</b> Raven gives your AI agent the
     official docs, live ecosystem data, community intel, and proven playbooks — and cross-references
-    them into answers no single source can give. No API keys. Nothing else to install. Paste, sign
+    them into answers no single source can give. No service API keys. Paste the endpoint, sign
     in, ask.</p>
 
   <div class="connect">
@@ -667,9 +667,9 @@ export function landingPage(): string {
     </div>
     <div class="tabs">${tabButtons()}</div>
     ${panels()}
-    <div class="connect-foot"><span class="tk"><b>No API keys</b> — one browser sign-in</span>
+    <div class="connect-foot"><span class="tk"><b>No service API keys</b> — one browser sign-in</span>
       <span class="tk"><b>Sandboxed</b> — agent code runs with no network</span>
-      <span class="tk"><b>Zero upkeep</b> — tracks the live services daily</span></div>
+      <span class="tk"><b>Low upkeep</b> — checked against live services daily</span></div>
     <div class="connect-legal">By using Stellar Raven you acknowledge you have read and agreed to the
       <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of
       Service</a> and <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy
@@ -687,14 +687,14 @@ export function landingPage(): string {
 
   <section class="sec" id="roof">
     <p class="eyebrow">Under one roof</p>
-    <h2>Finally, all of Stellar in one place.</h2>
+    <h2>Finally, Stellar context in one place.</h2>
     <p class="sub">Wired up separately, this is a stack of servers, API keys, and upkeep.
-      Raven bundles it behind one endpoint — and keeps it current so you never have to.</p>
+      Raven bundles it behind one endpoint — and keeps the catalog checked against live services.</p>
     <div class="bento">
       <div class="cell">
         <div class="tag">Official docs</div>
         <h3>The source of truth, ranked for agents</h3>
-        <p>The complete Stellar developer docs, searched the way agents actually ask.</p>
+        <p>Official Stellar developer docs, searched the way agents actually ask.</p>
         <div class="chips"><span class="chip">smart contracts</span><span class="chip">SDKs</span><span class="chip">RPC &amp; Horizon</span><span class="chip">SEPs &amp; standards</span></div>
       </div>
       <div class="cell">
@@ -763,7 +763,7 @@ export function landingPage(): string {
   </div>
 </div>` +
     `<footer><div class="wrap foot">
-  <div class="l">${escapeHtml(HOST)} <b>·</b> all of Stellar, one connection</div>
+  <div class="l">${escapeHtml(HOST)} <b>·</b> Stellar context, one connection</div>
   <div class="foot-links">
     <a href="https://github.com/kalepail/stellar-raven" target="_blank" rel="noopener">GitHub</a>
     <a href="https://stellar.org" target="_blank" rel="noopener">Stellar</a>

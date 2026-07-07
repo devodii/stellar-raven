@@ -633,22 +633,29 @@ const SAMPLE_CODE = `async () => {
   ]);
   return {
     playbook: skill.ok ? skill.sections : skill.error,
-    docs: docs.ok ? docs.data.hits.map(h => ({ url: h.url, snippet: h.snippet })) : docs.error
+    docs: docs.ok ? docs.data.hits.map(h => ({ url: h.url, breadcrumb: h.breadcrumb })) : docs.error
   };
 }`;
 
 const SAMPLE_RESULT = `{
-  "playbook": {
-    "build-deploy-invoke": "## Build, deploy, invoke\\n\\n\`\`\`bash\\n# Build optimized WASM → target/wasm32v1-none/release/*.wasm\\nstellar contract build\\n\\n# Create and fund an identity (testnet)\\nstellar keys generate alice --network testnet --fund\\n\\n# Deploy (constructor args go after the \`--\`)\\nstellar contract deploy \\\\\\n  --wasm target/wasm32v1-none/release/my_contract.wasm \\\\\\n  --source-account alice \\\\\\n  --network testnet\\n\`\`\`\\n\\nTo upload WASM without instantiating (e.g. for factories or upgrades), use \`stellar contract upload\` …"
-  },
+  "playbook": [
+    {
+      "section": "build-deploy-invoke",
+      "content": "## Build, deploy, invoke\\n\\n\`\`\`bash\\n# Build optimized WASM → target/wasm32v1-none/release/*.wasm\\nstellar contract build\\n\\n# Create and fund an identity (testnet)\\nstellar keys generate alice --network testnet --fund\\n\\n# Deploy (constructor args go after the \`--\`)\\nstellar contract deploy \\\\\\n  --wasm target/wasm32v1-none/release/my_contract.wasm \\\\\\n  --source-account alice \\\\\\n  --network testnet \\\\\\n  -- \\\\\\n  --admin alice\\n\\n# Invoke\\nstellar contract invoke \\\\\\n  --id CONTRACT_ID \\\\\\n  --source-account alice \\\\\\n  --network testnet \\\\\\n  -- \\\\\\n  increment\\n\`\`\`\\n\\nTo upload WASM without instantiating (e.g. for factories or upgrades), use \`stellar contract upload\` …"
+    }
+  ],
   "docs": [
     {
       "url": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/deploy-to-testnet",
-      "snippet": "Deploy the compiled contract to Testnet with the Stellar CLI …"
+      "breadcrumb": "Getting Started > 2. Deploy to Testnet"
     },
     {
-      "url": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup",
-      "snippet": "Install Rust, the wasm32 target, and the Stellar CLI before your first build …"
+      "url": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/deploy-to-testnet#configure-a-source-account",
+      "breadcrumb": "Getting Started > 2. Deploy to Testnet > Configure a Source Account"
+    },
+    {
+      "url": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/deploy-to-testnet#deploy",
+      "breadcrumb": "Getting Started > 2. Deploy to Testnet > Deploy"
     }
   ]
 }`;
@@ -659,7 +666,8 @@ const SAMPLE_ANSWER =
   "Build the WASM with `stellar contract build`, create and fund a testnet identity " +
   "(`stellar keys generate alice --network testnet --fund`), then deploy it: " +
   "`stellar contract deploy --wasm target/wasm32v1-none/release/my_contract.wasm " +
-  "--source-account alice --network testnet` — constructor args go after the `--`. The " +
+  "--source-account alice --network testnet -- --admin alice` if your constructor needs " +
+  "that argument. Constructor args go after the `--`. The " +
   "build-deploy-invoke playbook section and the getting-started docs above walk the same " +
   "flow end to end, including invoking the deployed contract.";
 
@@ -732,7 +740,7 @@ function lockedBody(): string {
     `<h1>Test drive <span class="r">Raven</span></h1>` +
     `<p class="lede">${esc(EXPLAINER)}</p>` +
     `<div class="cta"><a class="btn btn-primary" href="/demo/login">Sign in to try it</a>` +
-    `<span class="hint">WorkOS sign-in &middot; no API keys &middot; rate-limited</span></div>` +
+    `<span class="hint">WorkOS sign-in &middot; no service API keys &middot; rate-limited</span></div>` +
     `</section>` +
     `<section class="example"><div class="exhead"><p class="eyebrow">Example session</p>` +
     `<span class="exnote">static sample &mdash; sign in to run your own</span></div>` +
