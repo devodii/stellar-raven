@@ -49,6 +49,10 @@ Current skills:
 
 ## Working norms (from `CLAUDE.md`)
 
+- **Solo first.** Before starting dev servers, long-running commands, terminals, agents, todos, or
+  scratchpads, check the Solo MCP project/process state and reuse the existing Solo process when
+  available. In this repo, the normal dev server is the Solo `dev` command (`npm run dev`), so get
+  its URL from Solo instead of spawning another Wrangler process.
 - **Independent adversarial review is a quality gate, not a speed bump.** Reviewer ≠ author; let
   it run to completion; reconcile every finding before finalizing. Coordinate multi-agent work,
   todos, and scratchpads through the Solo MCP project bound in `CLAUDE.md`.

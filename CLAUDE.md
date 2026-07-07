@@ -19,6 +19,25 @@ CI + daily live-drift refresh: github.com/kalepail/stellar-raven Actions (repo r
 stellar-raven-codemode 2026-07-02). Work is
 coordinated via Solo MCP project 49 (todos + scratchpads; backlog items tracked there).
 
+## Solo first
+
+Use Solo MCP as the first stop for project state, process management, coordination, and long-lived
+work. At the start of any task that may touch a running service, another agent, a todo/scratchpad,
+or a dev command, call Solo (`whoami`/`list_processes` as needed) to confirm project scope and
+current process state before using raw shell commands.
+
+- **Dev servers and long-running commands:** check Solo processes first (`list_processes`,
+  `get_process_ports`, `wait_for_bound_port`). Reuse the existing Solo command and URL when one
+  exists (for this repo the normal dev command is the Solo `dev` process, `npm run dev`, usually on
+  `http://localhost:8787`). Start/restart through Solo (`start_process`/`restart_process`) instead
+  of spawning a duplicate shell process.
+- **Coordination:** use Solo todos/scratchpads/process output for shared state and multi-agent work.
+  If a task needs an independent reviewer or helper, spawn/coordinate that agent through Solo and
+  let it finish.
+- **Fallback:** use local shell process management only for short foreground commands or when Solo
+  has no matching process/tool. If you must start a non-Solo long-running process, say why and stop
+  it before finalizing.
+
 ## Research docs (current truth, live-verified; refresh before trusting)
 
 - `research/services/lumenloop.md` — 21 tools, envelope, quirks (partner items hidden from
