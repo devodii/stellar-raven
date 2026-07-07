@@ -41,7 +41,7 @@ body{display:flex;flex-direction:column}
   linear-gradient(180deg,rgba(14,21,13,.85) 0%,rgba(14,21,13,.62) 34%,rgba(14,21,13,.38) 66%,rgba(14,21,13,.66) 100%)}
 
 .pwrap{width:100%;max-width:940px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
-main.play{flex:1;display:flex;flex-direction:column;padding-bottom:34px}
+main.play{display:flex;flex-direction:column;padding-bottom:18px}
 .top-in .end{margin-left:auto}
 
 /* honest-context line under the header */
@@ -58,6 +58,7 @@ main.play{flex:1;display:flex;flex-direction:column;padding-bottom:34px}
 
 /* ---- transcript ---- */
 #log{flex:1}
+#log:empty{flex:0;min-height:clamp(52px,10vh,96px)}
 .msg{max-width:76%;padding:12px 16px;margin:14px 0;border-radius:14px;font-size:14.5px;
   line-height:1.62;white-space:pre-wrap;overflow-wrap:anywhere}
 .msg.user{margin-left:auto;color:var(--fog);background:var(--orange-soft);
@@ -142,8 +143,7 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
   font-size:11.5px;line-height:1.6;color:#febc2e}
 
 /* ---- composer ---- */
-.composer{position:sticky;bottom:0;z-index:3;padding:16px 0 18px;
-  background:linear-gradient(180deg,transparent,rgba(14,21,13,.88) 30%,rgba(14,21,13,.98) 100%)}
+.composer{position:sticky;bottom:0;z-index:3;padding:14px 0 10px;background:transparent}
 .composer form{display:flex;gap:10px;align-items:flex-end;padding:10px;border-radius:14px;
   border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(9,15,9,.96),rgba(5,9,5,.98));
   box-shadow:0 18px 52px -42px rgba(0,0,0,.95),0 18px 62px -52px rgba(255,85,0,.58)}
@@ -157,12 +157,10 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
 .sysnote{min-height:18px;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--ash)}
 .sysnote.err{color:#ff8b66}
 .sysnote a{color:var(--orange);text-decoration:underline;text-underline-offset:2px}
-.demo-callout{margin-top:8px;padding:10px 12px;border:1px solid rgba(255,255,255,.07);border-radius:10px;
-  background:rgba(6,10,6,.9);font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--ash)}
-.demo-callout b{color:var(--orange-2);font-weight:500}
-.site-foot{position:relative;z-index:2;box-sizing:border-box;width:100%;max-width:940px;margin:0 auto;padding:0 22px 26px;
-  background:transparent;border:0;border-top:1px solid rgba(255,255,255,.08);box-shadow:none;
-  font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--ash)}
+.site-foot{position:relative;z-index:2;box-sizing:border-box;width:100%;max-width:940px;margin:0 auto;padding:8px 22px 28px;
+  background:none;border:0;border-top:1px solid rgba(255,255,255,.08);box-shadow:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--ash)}
 .site-foot b{color:var(--dim);font-weight:500}
 .site-foot code{color:var(--orange-2);font-size:.95em}
 
@@ -183,7 +181,7 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
   .tcard .tlabel{display:none}
   .flow{grid-template-columns:1fr}
   .composer .btn-primary{padding:12px 14px}
-  .site-foot{padding:0 16px 22px}
+  .site-foot{padding:8px 16px 24px}
 }
 `;
 
@@ -772,7 +770,7 @@ function chatBody(): string {
     `placeholder="Ask about the Stellar ecosystem…" ` +
     `aria-label="Message the playground agent"></textarea>` +
     `<button id="send" class="btn btn-primary" type="submit">Send</button>` +
-    `</form><div id="sysnote" class="sysnote"></div>${demoCallout()}</div>` +
+    `</form><div id="sysnote" class="sysnote"></div></div>` +
     `</main>${demoFooter()}` +
     `<script>${DEMO_SCRIPT}</script>`
   );
@@ -790,18 +788,11 @@ function flowHtml(): string {
   );
 }
 
-function demoCallout(): string {
-  return (
-    `<div class="demo-callout"><b>Demo mode:</b> one search, one execute, then a short summary. ` +
-    `This is only a taste of the full power and glory of Stellar Raven when running in your own agents.</div>`
-  );
-}
-
 function demoFooter(): string {
   return (
-    `<footer class="site-foot"><b>Public playground.</b> This demo is intentionally narrow and ` +
-    `rate-limited; connect your own agent to <code>/mcp</code> for longer runs, transport auth, ` +
-    `and the full production tool surface.</footer>`
+    `<footer class="site-foot"><b>Public playground.</b> Demo mode runs one search, one execute, ` +
+    `then a short summary. It is intentionally narrow and rate-limited; connect your own agent to ` +
+    `<code>/mcp</code> for longer runs, transport auth, and the full production tool surface.</footer>`
   );
 }
 

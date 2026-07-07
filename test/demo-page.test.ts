@@ -58,9 +58,9 @@ describe("demo page states", () => {
     expect(chatHtml).toContain('id="log"');
     expect(chatHtml).toContain('fetch("/demo/chat"');
     expect(chatHtml).toContain("one search, one execute, then a short summary");
-    expect(chatHtml).toContain("full power and glory of Stellar Raven");
-    expect(chatHtml.match(/full power and glory of Stellar Raven/g)).toHaveLength(1);
+    expect(chatHtml).not.toContain("full power and glory of Stellar Raven");
     expect(chatHtml).toContain("connect your own agent to <code>/mcp</code>");
+    expect(chatHtml).toContain("backdrop-filter:none");
     for (const t of ["token", "tool-start", "tool-result", "step", "done", "error"]) {
       expect(chatHtml).toContain(`"${t}"`);
     }
