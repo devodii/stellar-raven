@@ -2,7 +2,7 @@
 
 # Stellar/Soroban ecosystem skills — index
 
-Mirror of **19 agent skills** across **4 sources** · synced 2026-07-06T21:16:02Z. Each skill lives under [`skills/<source>/<skill>/`](./skills/). Large SKILL.md files are best **grepped** for the section you need.
+Mirror of **19 agent skills** across **4 sources** · synced 2026-07-07T20:57:57Z. Each skill lives under [`skills/<source>/<skill>/`](./skills/). Large SKILL.md files are best **grepped** for the section you need.
 
 ## Sources (pinned)
 
@@ -10,8 +10,8 @@ Mirror of **19 agent skills** across **4 sources** · synced 2026-07-06T21:16:02
 | --- | --- | --- | --- |
 | `lumenloop` | [`lumenloop/lumenloop-skills`](https://github.com/lumenloop/lumenloop-skills) `skills/` | [`d92c56bda17a`](https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills) | 8 |
 | `openzeppelin-stellar` | [`OpenZeppelin/openzeppelin-skills`](https://github.com/OpenZeppelin/openzeppelin-skills) `skills/` | [`d72005b53b6d`](https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills) | 3 |
-| `stellar-dev` | [`stellar/stellar-dev-skill`](https://github.com/stellar/stellar-dev-skill) `skills/` | [`54e469abe6ba`](https://github.com/stellar/stellar-dev-skill/tree/54e469abe6ba3ae80992fd17381ee933280b7127/skills) | 7 |
-| `stellar-light` | [`Stellar-Light/stellar-scout`](https://github.com/Stellar-Light/stellar-scout) (root) | [`da9b6e5d6f32`](https://github.com/Stellar-Light/stellar-scout/tree/da9b6e5d6f32e132eeb585e0af8ef6220e7ee927) | 1 |
+| `stellar-dev` | [`stellar/stellar-dev-skill`](https://github.com/stellar/stellar-dev-skill) `skills/` | [`3d75a157f6fe`](https://github.com/stellar/stellar-dev-skill/tree/3d75a157f6fe14e06a91df5d0abf3aeb79b3a532/skills) | 7 |
+| `stellar-light` | [`Stellar-Light/stellar-scout`](https://github.com/Stellar-Light/stellar-scout) (root) | [`282322e29c2e`](https://github.com/Stellar-Light/stellar-scout/tree/282322e29c2ebec1e83dd83dddadfe086e942e8e) | 1 |
 
 _Every source is public GitHub, pinned to a full commit SHA (independently verifiable); each source's upstream LICENSE/NOTICE files are vendored alongside its skills (see `THIRD-PARTY-NOTICES.md` at the repo root)._
 
@@ -29,7 +29,7 @@ _Stellar-ecosystem analyst skills — survey/map a sector, profile a project, di
 | [`stellar-content-auditor`](./skills/lumenloop/stellar-content-auditor/) | `lumenloop` | 8 KB | Audit and enrich a draft (blog post, talking points, tweet, announcement) against the LumenLoop Stellar ecosystem data — resolve the projects you mention to their canonical names and X/@ handles, pull supporting facts and citations from indexed content, and flag wrong handles or unsupported claims. Use when the user shares draft copy about Stellar and wants project handles/names/facts checked, or asks to fact-check, enrich, or add citations and links to a post. |
 | [`stellar-builder-quickstart`](./skills/lumenloop/stellar-builder-quickstart/) | `lumenloop` | 12 KB | Go from a Stellar product idea to a build path: pick the right Stellar primitives, check ecosystem prior art via LumenLoop, and route to the relevant build skill (Soroban, SDK/dapp, assets, oracles). Use when the user wants to start building something on Stellar and needs orientation on approach and existing work. |
 | [`lumenloop-mcp-connect`](./skills/lumenloop/lumenloop-mcp-connect/) | `lumenloop` | 16 KB | Connect your AI assistant (Claude, ChatGPT, Gemini, Cursor, or any MCP client) to LumenLoop's free read-only Stellar ecosystem MCP at https://mcp.lumenloop.com and learn its 18 query tools. Use when the user wants to set up or troubleshoot the lumenloop connector, asks what Stellar ecosystem data is available, or needs to know which lumenloop skill fits a task. |
-| [`stellar-scout`](./skills/stellar-light/stellar-scout/) | `stellar-light` | 67 KB | Scouts the Stellar ecosystem before you build. Validates ideas against existing projects, matches open SCF-funded RFPs, drafts SCF pitches, finds audit firms, compares RFPs, recommends Soroban SDK skills, and cites primary sources (audits, SEPs, papers). Use whenever someone asks what to build on Stellar, vets an idea, preps an SCF grant application or hackathon entry, needs an auditor, or needs prior-art / security findings on a Soroban protocol. |
+| [`stellar-scout`](./skills/stellar-light/stellar-scout/) | `stellar-light` | 69 KB | Scouts the Stellar ecosystem before you build. Validates ideas against existing projects, matches open SCF-funded RFPs, drafts SCF pitches, finds audit firms, compares RFPs, recommends Soroban SDK skills, and cites primary sources (audits, SEPs, papers). Use whenever someone asks what to build on Stellar, vets an idea, preps an SCF grant application or hackathon entry, needs an auditor, or needs prior-art / security findings on a Soroban protocol. |
 
 ## Soroban & smart contracts
 
@@ -57,7 +57,7 @@ _SDF's developer skills for building on Stellar off-chain: dapps/wallets, chain 
 
 ## Ecosystem directory (stellarlight.xyz catalog snapshot)
 
-_The broader map of what exists across the Stellar agent-skill ecosystem — 30 entries from [`https://stellarlight.xyz/api/skills`](https://stellarlight.xyz/api/skills), fetched 2026-07-06T21:16:02Z. Only `skill-md` entries are downloadable SKILL.md skills; `mcp-server` / `sdk` / `cli` / `tool` entries are pointers to runtime tools, not skills. Not all are mirrored here._
+_The broader map of what exists across the Stellar agent-skill ecosystem — 30 entries from [`https://stellarlight.xyz/api/skills`](https://stellarlight.xyz/api/skills), fetched 2026-07-07T20:57:57Z. Only `skill-md` entries are downloadable SKILL.md skills; `mcp-server` / `sdk` / `cli` / `tool` entries are pointers to runtime tools, not skills. Not all are mirrored here._
 
 | Entry | Source | Kind |
 | --- | --- | --- |

@@ -18,8 +18,11 @@
       "q-scf-history-soroswap",
       "q-scf-regional-india",
       "q-scf-total-distributed",
+      "q-sor-bindings-from-wasm-no-address",
+      "q-soroban-deploy-cli",
       "q-soroban-storage-types",
-      "q-ti-rpc-gettransactions-pagination-xdr"
+      "q-ti-rpc-gettransactions-pagination-xdr",
+      "q-tool-cli-testnet-identity-howto"
     ]
   },
   "mapping": {
@@ -9105,7 +9108,7 @@
       "id": "q-sor-bindings-from-wasm-no-address",
       "question": "How do I generate TypeScript bindings from a `.wasm` / a contract-id with no deployed address yet, discover the contract's functions and constructor params from them, and deploy passing constructor args via the JS SDK?",
       "golden": {
-        "answer": "Use the contract spec embedded in the Wasm. Current CLI help confirms:\n`stellar contract bindings typescript --wasm <file> --output-dir <dir>` is valid, alongside\n`--wasm-hash` and `--contract-id`. The official docs describe the generated package as the suggested\nfrontend path because it hides the XDR encoding details and exposes a fully typed contract API\n(https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world-frontend,\nhttps://developers.stellar.org/docs/learn/fundamentals/contract-development/types/fully-typed-contracts).\n\nA local `.wasm` is enough to discover the public functions and argument types because the built Wasm\ncontains the contract specification/interface types; the Hello World docs explicitly say that the\nWasm is the artifact needed to deploy, share the interface, or integration-test against the contract\n(https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world).\n\nFor deployment, first prove the constructor shape with the CLI:\n\n```sh\nstellar contract deploy \\\n  --wasm target/wasm32v1-none/release/my_contract.wasm \\\n  --source alice \\\n  --network testnet \\\n  -- \\\n  --admin alice \\\n  --initial_value 100\n```\n\nLocal `stellar contract deploy --help` verifies constructor args are passed after `--` as\n`--arg-name value`. In raw JS, the same flow is: upload/build Wasm, create/deploy from Wasm hash plus\nsalt and constructor args, simulate, assemble/prep the transaction, sign, submit, then use the\ngenerated package or `contract.Client` for calls. The Stellar SDK transaction guide is the primary\nsource for JS Wasm upload/invocation flow (https://developers.stellar.org/docs/build/guides/transactions/invoke-contract-tx-sdk).",
+        "answer": "Use the contract spec embedded in the Wasm. Current CLI help confirms `stellar contract bindings typescript --wasm <file> --output-dir <dir>` is valid, alongside `--wasm-hash` and `--contract-id`. Official docs describe the generated package as the suggested frontend path because it hides XDR encoding details and exposes a typed contract API.\n\nA local `.wasm` is enough to discover public functions and argument types because the built Wasm contains the contract specification/interface types. The Hello World docs also say the Wasm is the artifact needed to deploy, share the interface, or integration-test against the contract.\n\nFor deployment, first sanity-check the constructor shape with the CLI:\n\n```sh\nstellar contract deploy \\\n  --wasm target/wasm32v1-none/release/my_contract.wasm \\\n  --source-account alice \\\n  --network testnet \\\n  -- \\\n  --admin alice \\\n  --initial_value 100\n```\n\nConstructor arguments belong after `--` as `--arg-name value`. In raw JS, the same flow is: upload/build Wasm, create/deploy from Wasm hash plus salt and constructor args, simulate, assemble/prep the transaction, sign, submit, then use the generated package or contract client for calls. The JS SDK transaction guide is the primary source for raw SDK Wasm upload/invocation details.",
         "keyFacts": [
           "States that `stellar contract bindings typescript` can generate a typed NPM package from `--wasm`, `--wasm-hash`, or `--contract-id`; no deployed address is required when using a local Wasm artifact.",
           "Explains that the Wasm contains the contract specification/interface types, so generated bindings expose callable functions and constructor argument shapes.",
@@ -9114,7 +9117,7 @@
         ],
         "avoid": [
           "Do not say a deployed `C...` address is required to inspect a local contract's interface.",
-          "Do not recommend obsolete `soroban` CLI commands or the old `wasm32-unknown-unknown` target for current new contracts.",
+          "Do not recommend obsolete `soroban` CLI commands, the old `wasm32-unknown-unknown` target, or noncanonical `--source`-only examples for current new contracts. `--source` is acceptable only as an alias note for `--source-account`.",
           "Do not answer with EVM ABI/ethers.js assumptions."
         ],
         "sources": [
@@ -9131,7 +9134,7 @@
         "confidence": "medium",
         "freshness": false
       },
-      "graderNotes": "Verified against Stellar Docs MCP and local `stellar 25.2.0` help. Raw JS SDK deployment helper names are version-sensitive; Phase 3 should check current `@stellar/stellar-sdk` types if it wants to lock `createCustomContract` constructor-arg syntax exactly.\nAlso good if the answer: Mentions `stellar contract deploy --wasm ... --source ... --network ... -- --constructor_arg value` as the CLI sanity check before raw JS SDK deployment. | Calls out version drift around exact JS SDK helper names and advises checking the generated package README/types for the contract-specific constructor signature.\nGolden cites: Must cite official Stellar docs for TypeScript bindings or fully typed contracts. | Must cite official Stellar docs or CLI evidence for deploy constructor argument syntax."
+      "graderNotes": "Verified against Stellar Docs MCP and local `stellar 25.2.0` help. Raw JS SDK deployment helper names are version-sensitive; Phase 3 should check current `@stellar/stellar-sdk` types if it wants to lock `createCustomContract` constructor-arg syntax exactly.\nAlso good if the answer: Mentions `stellar contract deploy --wasm ... --source ... --network ... -- --constructor_arg value` as the CLI sanity check before raw JS SDK deployment. | Calls out version drift around exact JS SDK helper names and advises checking the generated package README/types for the contract-specific constructor signature.\nGolden cites: Must cite official Stellar docs for TypeScript bindings or fully typed contracts. | Must cite official Stellar docs or CLI evidence for deploy constructor argument syntax.\nCorrected 2026-07-07: the CLI sanity-check snippet now uses canonical `--source-account`. `--source` remains a valid alias per CLI 27.0.0 and stellar-cli source, so alias usage alone is not a factual failure; stale target/`--global`/EVM ABI assumptions remain failures."
     },
     {
       "id": "q-sor-build-target-wasm32v1",
@@ -10455,20 +10458,24 @@
       "id": "q-soroban-deploy-cli",
       "question": "How do I deploy a Soroban smart contract to Stellar testnet using the Stellar CLI?",
       "golden": {
-        "answer": "Soroban contracts are written in **Rust** (the `soroban-sdk`) and compiled to a **Wasm** artifact,\nthen deployed with the **Stellar CLI** (`stellar`, formerly `soroban-cli`). Canonical testnet flow:\n\n1. `stellar contract build` — compiles the contract to `target/wasm32-...` `.wasm`.\n2. Have a funded testnet identity (`stellar keys generate ...` then fund via **Friendbot**) and/or\n   `stellar network` configured for testnet.\n3. `stellar contract deploy --wasm <path>.wasm --source <identity> --network testnet` — uploads the\n   Wasm and instantiates the contract, returning a **contract ID** (`C…`).\n4. Invoke with `stellar contract invoke --id <C…> --source <identity> --network testnet -- <fn> ...`.\n\nSource of truth: developers.stellar.org \"Deploy to Testnet\" getting-started guide + the CLI reference.",
+        "answer": "Soroban/Stellar smart contracts are written in **Rust** with `soroban-sdk`, built to a **Wasm** artifact, and deployed with the unified **Stellar CLI** (`stellar`, formerly `soroban-cli`). Canonical testnet flow:\n\n1. Build the contract: `stellar contract build`. Current output is under `target/wasm32v1-none/release/<contract>.wasm`.\n2. Create and fund a testnet identity: `stellar keys generate alice --network testnet --fund` (or create/fund by another Friendbot/Lab flow).\n3. Deploy with the canonical source-account flag: `stellar contract deploy --wasm target/wasm32v1-none/release/<contract>.wasm --source-account alice --network testnet` plus `--alias <name>` if desired. Constructor arguments go after the separator, e.g. `-- --admin alice`.\n4. Invoke with the returned `C...` contract ID: `stellar contract invoke --id <C...> --source-account alice --network testnet -- <fn> ...`.\n\n`--source` is still accepted by the CLI as an alias for `--source-account`, but canonical docs/help should show `--source-account`. Source of truth: current developers.stellar.org contract/CLI docs and `stellar contract deploy --help`.",
         "keyFacts": [
-          "Contracts are built to a Wasm artifact first (`stellar contract build`, a `cargo`/Rust build).",
-          "Deployment uses the Stellar CLI `stellar contract deploy` command (with the built .wasm).",
-          "A network must be specified/targeted as testnet (e.g. `--network testnet`) and a funded source identity/account used."
+          "Contracts are built to a Wasm artifact first with `stellar contract build`; current output is under `target/wasm32v1-none/release/`.",
+          "Deployment uses the Stellar CLI `stellar contract deploy` command with the built `.wasm` and the canonical `--source-account <identity>` flag.",
+          "A network must be specified/targeted as testnet (e.g. `--network testnet`) and a funded source identity/account used; current key generation is `stellar keys generate <name> --network testnet --fund`.",
+          "Deploy returns a `C...` contract ID used for subsequent `stellar contract invoke --id <C...> --source-account <identity> --network testnet -- <fn> ...` calls."
         ],
         "avoid": [
           "Do NOT say Soroban contracts are written in Solidity or compiled to EVM bytecode.",
           "Do NOT present `soroban deploy` as the current canonical command without noting the CLI is now `stellar` (the soroban-cli was renamed/merged into stellar-cli).",
+          "Do NOT present `wasm32-unknown-unknown`, `--global`, or `--source` as the current canonical happy-path deploy flow. `--source` may be mentioned only as an alias for `--source-account`.",
           "Do NOT invent flags/commands that are not in the Stellar CLI."
         ],
         "sources": [
-          "https://developers.stellar.org/docs/build/smart-contracts/getting-started/deploy-to-testnet",
-          "https://developers.stellar.org/docs/tools/cli"
+          "https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world",
+          "https://developers.stellar.org/docs/learn/fundamentals/contract-development/rust-dialect",
+          "https://developers.stellar.org/docs/tools/cli/cookbook/deploy-contract",
+          "https://developers.stellar.org/docs/tools/cli/cookbook/stellar-keys"
         ]
       },
       "tags": {
@@ -10478,7 +10485,7 @@
         "confidence": "high",
         "freshness": false
       },
-      "graderNotes": "Exemplar (Phase-1 hand-authored). VERIFIED against the live 'Deploy to Testnet' docs (2026-06): binary is `stellar`; canonical command is `stellar contract deploy --wasm target/wasm32v1-none/release/<name>.wasm --source-account <id> --network testnet --alias <name>`; returns a C... contract id. Build target is wasm32v1-none.\nAlso good if the answer: Deploy returns a contract ID (C... address) used for subsequent `stellar contract invoke`. | A testnet account can be funded via Friendbot before deploying.\nGolden cites: At least one primary developers.stellar.org docs page (getting-started / deploy guide)."
+      "graderNotes": "Exemplar (Phase-1 hand-authored). VERIFIED against the live 'Deploy to Testnet' docs (2026-06): binary is `stellar`; canonical command is `stellar contract deploy --wasm target/wasm32v1-none/release/<name>.wasm --source-account <id> --network testnet --alias <name>`; returns a C... contract id. Build target is wasm32v1-none.\nAlso good if the answer: Deploy returns a contract ID (C... address) used for subsequent `stellar contract invoke`. | A testnet account can be funded via Friendbot before deploying.\nGolden cites: At least one primary developers.stellar.org docs page (getting-started / deploy guide).\nCorrected 2026-07-07 via golden-truth workflow after Discord feedback on the demo: active golden answer now uses `wasm32v1-none`, omits obsolete `--global`, and shows canonical `--source-account`. Grading nuance: do not mark an answer wrong solely for using `--source`, because CLI 27.0.0 confirms it is an alias; do mark it stale/noncanonical if it presents `--source` as the preferred docs-form while omitting `--source-account`, or if it also uses the old target/`--global` path."
     },
     {
       "id": "q-soroban-event-indexing-design",
@@ -12786,7 +12793,7 @@
       "id": "q-tool-cli-testnet-identity-howto",
       "question": "How do I set up a funded testnet identity (keypair) with the Stellar CLI so I can sign transactions on testnet?",
       "golden": {
-        "answer": "Use the **unified `stellar` CLI** (not the old `soroban` binary):\n\n1. **Generate a named identity and fund it on testnet in one step:**\n   `stellar keys generate <name> --network testnet --fund`\n   (the `--fund` flag funds the new account via **Friendbot**; without it the account is unfunded and\n   unusable until funded).\n2. **Inspect the public key:** `stellar keys address <name>`.\n3. **Use it as the signer** by name in later commands, e.g.\n   `stellar contract invoke --source <name> --network testnet ...`.\n\nNote: **testnet is periodically reset**, so a funded testnet account is not permanent. A brand-new\naccount needs the base reserve from Friendbot before it can sign/submit.",
+        "answer": "Use the **unified `stellar` CLI** (not the old `soroban` binary):\n\n1. **Generate a named identity and fund it on testnet in one step:**\n   `stellar keys generate <name> --network testnet --fund`\n   (the `--fund` flag funds the new account via **Friendbot**; without it the account is unfunded and unusable until funded).\n2. **Inspect the public key:** `stellar keys address <name>`.\n3. **Use it as the signer/source account** by name in later commands, e.g.\n   `stellar contract invoke --source-account <name> --network testnet ...`.\n\nNote: **testnet is periodically reset**, so a funded testnet account is not permanent. A brand-new account needs the base reserve from Friendbot before it can sign/submit. `--source` is still accepted by the contract CLI as an alias for `--source-account`, but canonical examples should show `--source-account`.",
         "keyFacts": [
           "Uses the Stellar CLI to generate a named identity (e.g. `stellar keys generate <name> --network testnet`).",
           "Funds the testnet account via Friendbot (the CLI can fund on generate, or `--fund`)."
@@ -12807,7 +12814,7 @@
         "confidence": "high",
         "freshness": false
       },
-      "graderNotes": "Axis-C how-to rebalance. Procedure → stellar_docs_mcp. Distinct from q-infra-friendbot-fund-testnet (funding focus) and q-tool-cli-install. Trap = deprecated `soroban` binary or unfunded account.\nAlso good if the answer: Notes the identity can then be referenced by name as the source/signer in subsequent CLI commands. | Mentions inspecting the public key (e.g. `stellar keys address <name>`).\nGolden cites: A Stellar CLI / keys / testnet setup page on developers.stellar.org."
+      "graderNotes": "Axis-C how-to rebalance. Procedure → stellar_docs_mcp. Distinct from q-infra-friendbot-fund-testnet (funding focus) and q-tool-cli-install. Trap = deprecated `soroban` binary or unfunded account.\nAlso good if the answer: Notes the identity can then be referenced by name as the source/signer in subsequent CLI commands. | Mentions inspecting the public key (e.g. `stellar keys address <name>`).\nGolden cites: A Stellar CLI / keys / testnet setup page on developers.stellar.org.\nCorrected 2026-07-07: the signer example now uses `--source-account`. `--source` is a valid alias, so do not fail alias-only answers unless they frame it as canonical while omitting `--source-account` or pair it with stale `--global`/old-target instructions."
     },
     {
       "id": "q-tool-flutter-mobile-sdk",

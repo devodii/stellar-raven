@@ -639,7 +639,7 @@ const SAMPLE_CODE = `async () => {
 
 const SAMPLE_RESULT = `{
   "playbook": {
-    "build-deploy-invoke": "## Build, deploy, invoke\\n\\n\`\`\`bash\\n# Build optimized WASM → target/wasm32-unknown-unknown/release/*.wasm\\nstellar contract build\\n\\n# Create and fund an identity (testnet)\\nstellar keys generate --global alice --network testnet --fund\\n\\n# Deploy (constructor args go after the \`--\`)\\nstellar contract deploy \\\\\\n  --wasm target/wasm32-unknown-unknown/release/my_contract.wasm \\\\\\n  --source alice \\\\\\n  --network testnet\\n\`\`\`\\n\\nTo upload WASM without instantiating (e.g. for factories or upgrades), use \`stellar contract upload\` …"
+    "build-deploy-invoke": "## Build, deploy, invoke\\n\\n\`\`\`bash\\n# Build optimized WASM → target/wasm32v1-none/release/*.wasm\\nstellar contract build\\n\\n# Create and fund an identity (testnet)\\nstellar keys generate alice --network testnet --fund\\n\\n# Deploy (constructor args go after the \`--\`)\\nstellar contract deploy \\\\\\n  --wasm target/wasm32v1-none/release/my_contract.wasm \\\\\\n  --source-account alice \\\\\\n  --network testnet\\n\`\`\`\\n\\nTo upload WASM without instantiating (e.g. for factories or upgrades), use \`stellar contract upload\` …"
   },
   "docs": [
     {
@@ -657,9 +657,9 @@ const SAMPLE_USER = "How do I deploy a Soroban smart contract to testnet?";
 
 const SAMPLE_ANSWER =
   "Build the WASM with `stellar contract build`, create and fund a testnet identity " +
-  "(`stellar keys generate --global alice --network testnet --fund`), then deploy it: " +
-  "`stellar contract deploy --wasm target/wasm32-unknown-unknown/release/my_contract.wasm " +
-  "--source alice --network testnet` — constructor args go after the `--`. The " +
+  "(`stellar keys generate alice --network testnet --fund`), then deploy it: " +
+  "`stellar contract deploy --wasm target/wasm32v1-none/release/my_contract.wasm " +
+  "--source-account alice --network testnet` — constructor args go after the `--`. The " +
   "build-deploy-invoke playbook section and the getting-started docs above walk the same " +
   "flow end to end, including invoking the deployed contract.";
 

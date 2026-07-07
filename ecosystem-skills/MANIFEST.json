@@ -1,5 +1,5 @@
 {
-  "synced_at": "2026-07-06T21:16:02Z",
+  "synced_at": "2026-07-07T20:57:57Z",
   "status": "complete",
   "missing_sources": [],
   "skill_count": 19,
@@ -189,9 +189,9 @@
       "repo": "stellar-dev-skill",
       "path": "skills",
       "ref": "main",
-      "commit": "54e469abe6ba3ae80992fd17381ee933280b7127",
-      "commit_date": "2026-06-29T15:04:45Z",
-      "url": "https://github.com/stellar/stellar-dev-skill/tree/54e469abe6ba3ae80992fd17381ee933280b7127/skills",
+      "commit": "3d75a157f6fe14e06a91df5d0abf3aeb79b3a532",
+      "commit_date": "2026-07-07T20:57:51Z",
+      "url": "https://github.com/stellar/stellar-dev-skill/tree/3d75a157f6fe14e06a91df5d0abf3aeb79b3a532/skills",
       "license_files": [
         "LICENSE"
       ],
@@ -211,8 +211,8 @@
           "files": [
             {
               "path": "SKILL.md",
-              "size": 12579,
-              "sha": "a130ddbf818fbce2479ebfc9951d5cc7169f862c"
+              "size": 12587,
+              "sha": "11e6f72ac8257203cd6fd29d5b4f5dce1c2482d4"
             }
           ]
         },
@@ -241,13 +241,13 @@
           "files": [
             {
               "path": "SKILL.md",
-              "size": 6578,
-              "sha": "8b94146a81a76b62ca362dc3d3e87ca6f51d8550"
+              "size": 6567,
+              "sha": "8280c63b280108a227f148c65f51ef00eccc7d55"
             },
             {
               "path": "development.md",
-              "size": 11325,
-              "sha": "9863553cce0a302807c474c2847ca7f977c9f0fc"
+              "size": 11289,
+              "sha": "3e1e4ac28771f0c7452246751e14939053996757"
             },
             {
               "path": "security.md",
@@ -256,8 +256,8 @@
             },
             {
               "path": "testing.md",
-              "size": 8735,
-              "sha": "a11f832e29ba6d2d4d442bc5e8f3dc7f4b2c4d39"
+              "size": 8714,
+              "sha": "f08e359d305b5b82030ff883db83d54dd45cfd95"
             }
           ]
         },
@@ -290,9 +290,9 @@
       "repo": "stellar-scout",
       "path": "",
       "ref": "main",
-      "commit": "da9b6e5d6f32e132eeb585e0af8ef6220e7ee927",
-      "commit_date": "2026-07-06T21:13:24Z",
-      "url": "https://github.com/Stellar-Light/stellar-scout/tree/da9b6e5d6f32e132eeb585e0af8ef6220e7ee927",
+      "commit": "282322e29c2ebec1e83dd83dddadfe086e942e8e",
+      "commit_date": "2026-07-07T16:07:16Z",
+      "url": "https://github.com/Stellar-Light/stellar-scout/tree/282322e29c2ebec1e83dd83dddadfe086e942e8e",
       "license_files": [
         "LICENSE"
       ],
@@ -307,8 +307,8 @@
             },
             {
               "path": "SKILL.md",
-              "size": 26864,
-              "sha": "6a21dc811e6d10b98337f9716051b2c73d030a26"
+              "size": 27389,
+              "sha": "709c36afecab68fb0cf127883093fc0b8fb1288f"
             },
             {
               "path": "references/api-reference.md",
@@ -317,8 +317,8 @@
             },
             {
               "path": "references/examples.md",
-              "size": 13201,
-              "sha": "cc8f7c1fab778d98c759d4f53ddb57c72e161a78"
+              "size": 14176,
+              "sha": "74551fcbc2b6656e26314ee86dd206243e5d65cd"
             }
           ]
         }
@@ -327,7 +327,7 @@
   ],
   "catalog": {
     "source": "https://stellarlight.xyz/api/skills",
-    "fetched_at": "2026-07-06T21:16:02Z",
+    "fetched_at": "2026-07-07T20:57:57Z",
     "counts": {
       "returned": 30,
       "bySource": {
