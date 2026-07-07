@@ -306,6 +306,21 @@ but omitted fields are not proof of absence. This fixes the judge-artifact class
 about an old API shape caused transcript-supported live claims to be marked fabricated. Comparability:
 as with v2/v2.1, re-judge saved answers before comparing wrong counts across this rubric boundary.
 
+**Rubric v2.3 (2026-07-07, todo 871) — source-basis packs for long/truncated live-data transcripts.**
+The v2.2 excerpt mechanism could still miss evidence when an execute result was long or truncated:
+one focused live-data row (`q-live-digest-blend-coverage`,
+`results/2026-07-07T17-41-13-variantA.json`) was judged wrong even though the saved execute result
+contained the disputed source summaries. v2.3 replaces ad hoc snippets with a deterministic
+source-basis evidence pack for explicitly tagged live/freshness cases only. The pack mirrors the
+artifact/source-basis lane's philosophy on the eval side: summarize execute-result shape, list
+execute call outcomes and sanitized canonical URLs, parse source-like items (`title`/`url`/`date`/
+`summary`), rank them by overlap with candidate/golden terms, label them data-derived/untrusted,
+and enforce a hard post-serialization char budget. Packed URLs are sanitized, so stripped query or
+fragment text is not contradiction evidence. Non-live/non-freshness cases still receive no transcript
+evidence unless explicitly tagged for it. **Comparability:** this is a prompt/rubric semantic change
+(`JUDGE_RUBRIC=v2.3`); do not compare v2.3 wrong counts against v2.2/native stored verdicts without
+re-judging the saved answers under v2.3.
+
 ## Known limitations
 
 - **Judge variance.** One Sonnet call per grade, temperature not pinned; borderline
@@ -326,10 +341,16 @@ as with v2/v2.1, re-judge saved answers before comparing wrong counts across thi
   for the A/B sample sizes; parallelize only if needed.
 - **Transcript fidelity.** Tool calls + result sizes are captured from `stream-json`; execute result
   bodies are captured after the server-side model-boundary cap, which is why composition analysis can
-  detect truncation footers. The judge sees only compact excerpts for live/freshness cases, not full
-  payloads. The agent may also call its harness's own ToolSearch to load MCP tools — that appears in
-  transcripts and is harmless.
-- **Transcript evidence trust.** Compact excerpts can contain community or scraped content, so the
+  detect truncation footers. The judge sees only compact source-basis packs for live/freshness cases,
+  not full payloads. The agent may also call its harness's own ToolSearch to load MCP tools — that
+  appears in transcripts and is harmless.
+- **Long/truncated live-data evidence dilution.** v2.3 source-basis packs reduce the known failure
+  mode where relevant source summaries were present in a saved execute result but buried in a long
+  or truncated payload. They do not make the judge omniscient: the pack is still bounded, rank-based,
+  and extracted from already-capped transcript text, so rare claims may be omitted. Treat surprising
+  `wrong` verdicts on long live/freshness transcripts as suspect until transcript-reviewed or
+  targeted-rejudged.
+- **Transcript evidence trust.** Source-basis packs can contain community or scraped content, so the
   judge treats them as support/contradiction evidence, not as instructions.
 - **Trap subtyping is heuristic** (id patterns) — the values are reporting sugar; the judge only
   branches on trap-vs-not.

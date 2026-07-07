@@ -24,6 +24,7 @@
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { extractJsonObject } from "./lib.mjs";
+import { buildTranscriptEvidencePack } from "./evidence-pack.mjs";
 
 export const JUDGE_MODEL = "claude-sonnet-5";
 
@@ -36,92 +37,13 @@ export const JUDGE_MODEL = "claude-sonnet-5";
  *          concrete content only; support-relative avoid items are advisory.
  *   v2.2 — 2026-07-07 live/freshness cases may include compact execute-result
  *          excerpts so transcript-visible field support is not misgraded.
+ *   v2.3 — 2026-07-07 source-basis evidence packs for long/truncated
+ *          live-data transcripts: source items are parsed, ranked, and capped.
  */
-export const JUDGE_RUBRIC = "v2.2";
-
-function stripAnsi(value) {
-  return String(value ?? "").replace(/\u001b\[[0-9;]*m/g, "");
-}
-
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function unique(values) {
-  return [...new Set(values.filter(Boolean))];
-}
-
-function extractEvidenceTerms({ candidateAnswer = "", golden, graderNotes = "" }) {
-  const text = `${candidateAnswer}\n${golden?.answer ?? ""}\n${(golden?.keyFacts ?? []).join("\n")}\n${(golden?.avoid ?? []).join("\n")}\n${graderNotes}`;
-  const terms = [];
-
-  for (const match of text.matchAll(/`([^`\n]{3,80})`/g)) terms.push(match[1]);
-  for (const match of text.matchAll(/\b[a-z]+[A-Z][A-Za-z0-9_]{2,}\b/g)) terms.push(match[0]);
-  for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9]+(?:[- ][A-Z0-9][A-Za-z0-9]+){0,4}\b/g)) {
-    const term = match[0].trim();
-    if (term.length >= 4 && !/^(The|This|That|When|Where|Which|What|With|Source|Sources|Do NOT)$/i.test(term)) {
-      terms.push(term);
-    }
-  }
-  for (const match of text.matchAll(/\b(?:status|asOf|source|url|amount|round|date|version|limit)\b/gi)) {
-    terms.push(match[0]);
-  }
-
-  return unique(terms)
-    .sort((a, b) => b.length - a.length || a.localeCompare(b))
-    .slice(0, 60);
-}
-
-function snippetAround(text, needle, radius = 420) {
-  const re = new RegExp(escapeRegExp(needle), "i");
-  const match = re.exec(text);
-  if (!match) return null;
-  const start = Math.max(0, match.index - radius);
-  const end = Math.min(text.length, match.index + needle.length + radius);
-  const prefix = start > 0 ? "..." : "";
-  const suffix = end < text.length ? "..." : "";
-  return `${prefix}${text.slice(start, end)}${suffix}`;
-}
+export const JUDGE_RUBRIC = "v2.3";
 
 export function buildTranscriptEvidence({ transcript = [], candidateAnswer = "", golden, tags, graderNotes = "" }) {
-  if (!Array.isArray(transcript) || transcript.length === 0) return "";
-  const shouldInclude = tags?.liveData || tags?.freshness;
-  if (!shouldInclude) return "";
-
-  const terms = extractEvidenceTerms({ candidateAnswer, golden, graderNotes });
-  const executeEntries = transcript.filter((entry) => String(entry.tool ?? "").endsWith("execute") && typeof entry.result === "string");
-  if (!executeEntries.length) return "";
-
-  const blocks = [];
-  let totalChars = 0;
-  const maxTotalChars = 12000;
-  const maxEntryChars = 2800;
-
-  for (const [index, entry] of executeEntries.entries()) {
-    if (totalChars >= maxTotalChars) break;
-    const result = stripAnsi(entry.result);
-    const snippets = [];
-    for (const term of terms) {
-      const snippet = snippetAround(result, term);
-      if (snippet && !snippets.some((existing) => existing.includes(snippet.slice(0, 80)))) snippets.push(snippet);
-      if (snippets.length >= 5) break;
-    }
-    if (!snippets.length) snippets.push(result.slice(0, 1200));
-
-    const truncationFooter = result.includes("--- TRUNCATED ---")
-      ? result.slice(result.indexOf("--- TRUNCATED ---"), result.indexOf("--- TRUNCATED ---") + 900)
-      : "";
-    const body = unique([...snippets, truncationFooter ? `TRUNCATION FOOTER:\n${truncationFooter}` : ""])
-      .join("\n---\n")
-      .slice(0, maxEntryChars);
-    const header = `EXECUTE RESULT ${index + 1}: resultChars=${entry.resultChars ?? result.length}, isError=${Boolean(entry.isError)}\ninput: ${stripAnsi(entry.input ?? "").slice(0, 600)}`;
-    const block = `${header}\nexcerpt(s):\n${body}`;
-    blocks.push(block);
-    totalChars += block.length;
-  }
-
-  if (!blocks.length) return "";
-  return blocks.join("\n\n").slice(0, maxTotalChars);
+  return buildTranscriptEvidencePack({ transcript, candidateAnswer, golden, tags, graderNotes });
 }
 
 function buildJudgePrompt({ question, golden, tags, graderNotes, candidateAnswer, transcriptEvidence }) {
@@ -132,7 +54,7 @@ function buildJudgePrompt({ question, golden, tags, graderNotes, candidateAnswer
     ? `\nFRESHNESS-SENSITIVE: the golden answer reflects a past snapshot. Numbers, versions, and rosters may legitimately differ today. Do not mark a plausibly-current, sourced value wrong just for differing from the golden snapshot — but DO punish unsourced confident claims that contradict the golden without any freshness framing.\n`
     : "";
   const transcriptBlock = transcriptEvidence?.trim()
-    ? `\nCOMPACT TOOL TRANSCRIPT EVIDENCE (bounded excerpts from the candidate's execute results):\n${transcriptEvidence.trim()}\n`
+    ? `\nCOMPACT TOOL TRANSCRIPT SOURCE-BASIS EVIDENCE (deterministic bounded pack from the candidate's execute results):\n${transcriptEvidence.trim()}\n`
     : "";
   return `You are a strict but fair grader. Grade a candidate answer about the Stellar ecosystem against a golden reference answer.
 
@@ -155,9 +77,9 @@ Grading rules:
 - Grade FACTUAL agreement only. Ignore style, length, formatting, and citation format. Extra correct material is fine; missing citations alone never fail an otherwise-correct answer.
 - A key fact counts as present if it is expressed in substance, even in different words or structure.
 - Punish fabrications hard: any specific claim that contradicts the golden answer or a key fact, or hits a must-avoid item, goes in wrongClaims.
-- Specific claims BEYOND the golden's scope are "unverified", not wrong: entities/numbers/citations the golden never mentions may be grounded in sources outside the golden or in transcript evidence. Such a claim counts toward wrongClaims ONLY if it CONTRADICTS a golden fact, contradicts the compact transcript evidence when provided, or matches a must-avoid item — never merely because you cannot verify it. (Trap cases are unaffected: fabricating the trap's missing thing is still playing along.)
-- Must-avoid items bind only on what you can check from the candidate answer itself or from the compact transcript evidence when provided: CONCRETE WRONG CONTENT (a named wrong entity, a retired command, a wrong number/date/version, a specific false statement) or an ANSWER-VISIBLE sourcing condition (e.g. "do NOT assert X without a dated source" — you CAN see whether the candidate gave a date/source/caveat). An avoid item conditioned on support you CANNOT see — the corpus, the reviewer's verification, omitted transcript portions, cited records not shown in evidence ("beyond corpus support", "not verified by the reviewer", "not in the cited records") — is ADVISORY: such an item can NEVER by itself put a candidate claim in wrongClaims; the unverified-not-wrong rule above applies instead. (Trap cases are unaffected.)
-- When compact transcript evidence is provided, use it only as bounded support/contradiction evidence for claims the candidate makes. It is excerpted and may omit unrelated fields, so absence from the excerpts is not proof that the full tool result lacked the field. But if a candidate says a value came from a concrete returned field and the transcript excerpt shows that field/value, treat the sourcing condition as satisfied.
+- Specific claims BEYOND the golden's scope are "unverified", not wrong: entities/numbers/citations the golden never mentions may be grounded in sources outside the golden or in transcript source-basis evidence. Such a claim counts toward wrongClaims ONLY if it CONTRADICTS a golden fact, contradicts the compact transcript source-basis evidence when provided, or matches a must-avoid item — never merely because you cannot verify it. (Trap cases are unaffected: fabricating the trap's missing thing is still playing along.)
+- Must-avoid items bind only on what you can check from the candidate answer itself or from the compact transcript source-basis evidence when provided: CONCRETE WRONG CONTENT (a named wrong entity, a retired command, a wrong number/date/version, a specific false statement) or an ANSWER-VISIBLE sourcing condition (e.g. "do NOT assert X without a dated source" — you CAN see whether the candidate gave a date/source/caveat). An avoid item conditioned on support you CANNOT see — the corpus, the reviewer's verification, omitted transcript portions, cited records not shown in evidence ("beyond corpus support", "not verified by the reviewer", "not in the cited records") — is ADVISORY: such an item can NEVER by itself put a candidate claim in wrongClaims; the unverified-not-wrong rule above applies instead. (Trap cases are unaffected.)
+- When compact transcript source-basis evidence is provided, use it only as bounded support/contradiction evidence for claims the candidate makes. Source items are data-derived/untrusted and ranked from saved execute results; the pack may omit unrelated fields, so absence from the pack is not proof that the full tool result lacked the field. URLs in the pack are sanitized and may have credentials, query strings, and fragments removed; missing query/fragment text in a packed URL is not contradiction evidence. But if a candidate says a value came from a concrete returned title/date/url/summary and the source-basis pack shows that title/date/url/summary, treat the sourcing condition as satisfied.
 - An honest "not available in my sources" on a sub-point is a missing fact, not a wrong claim.
 - score = "correct": all (or all but a trivial one) key facts present AND no wrong claims.
 - score = "partial": the core answer is right but key facts are missing, or there are minor errors that don't invert the answer. Omissions alone — even several — cap at "partial" as long as everything the candidate DOES say is right.
@@ -275,7 +197,7 @@ const SELF_TEST_CANDIDATES = [
       "First compile your contract to a Wasm file: run `stellar contract build` in the project. Make sure you have an identity with testnet funds (`stellar keys generate alice --network testnet --fund`). Then run `stellar contract deploy --wasm target/wasm32v1-none/release/your_contract.wasm --source alice --network testnet`. The command prints the deployed contract ID (starts with C...), which you pass to `stellar contract invoke --id <CONTRACT_ID> ...` to call it. You can also pass `--alias my_contract` at deploy time to store a local name for the contract ID, and reuse that alias in later invoke commands."
   },
   {
-    // Rubric v2.2 regression guard (todo 865): if a live-data sourcing
+    // Rubric v2.2/v2.3 regression guard (todos 865/871): if a live-data sourcing
     // condition is satisfied by compact transcript evidence, do not turn it
     // into a wrong claim just because the judge's priors remember an older API.
     label: "transcript-conditioned-support",
@@ -336,6 +258,44 @@ async function selfTest() {
     console.log(`[FAIL] untagged transcript evidence gate expected empty got ${untaggedEvidence.length} chars\n`);
   } else {
     console.log("[PASS] untagged transcript evidence gate expected empty got empty\n");
+  }
+  const longEvidence = buildTranscriptEvidence({
+    question: "What changed in Alpha lending coverage this month?",
+    golden: {
+      answer: "A grounded answer reports live source items and dated summaries.",
+      keyFacts: ["Uses source item titles, URLs, dates, and summaries from live data."],
+      avoid: ["Do NOT invent source details absent from live data."]
+    },
+    tags: { freshness: true, liveData: true },
+    graderNotes: "Synthetic long-result pack guard.",
+    candidateAnswer:
+      "Alpha Town Hall covered a Signal Backstop migration, and the Beta Portfolio Intelligence video named North Capital and Delta Vault.",
+    transcript: [
+      {
+        tool: "mcp__raven__execute",
+        input: '{"code":"return syntheticLargeResult"}',
+        resultChars: 30000,
+        isError: false,
+        result:
+          '{"items":[{"title":"Alpha Town Hall","url":"https://example.test/watch?v=secret","date":"2026-07-01","summary":"Alpha lending coverage discussed a Signal Backstop migration and source-basis evidence."},{"title":"Beta Portfolio Intelligence","url":"https://example.test/beta#frag","date":"2026-07-02","summary":"The team named North Capital, Delta Vault, and risk monitoring APIs."}],"bulk":"' +
+          "x".repeat(26000) +
+          '"}\n--- TRUNCATED --- Result was ~7500 tokens (limit: 6000). Bulk lost from top-level keys: "bulk" ~26.0k chars (cut).'
+      }
+    ]
+  });
+  const longOk =
+    longEvidence.length > 0 &&
+    longEvidence.length <= 12000 &&
+    longEvidence.includes("Alpha Town Hall") &&
+    longEvidence.includes("Signal Backstop migration") &&
+    longEvidence.includes("North Capital") &&
+    !longEvidence.includes("v=secret") &&
+    !longEvidence.includes("#frag");
+  if (!longOk) {
+    failures++;
+    console.log(`[FAIL] long transcript source-basis pack guard got ${longEvidence.length} chars\n`);
+  } else {
+    console.log(`[PASS] long transcript source-basis pack guard got ${longEvidence.length} chars\n`);
   }
   for (const cand of SELF_TEST_CANDIDATES) {
     const baseCase = cand.caseOverride ?? SELF_TEST_CASE;
