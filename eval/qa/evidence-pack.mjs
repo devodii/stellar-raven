@@ -1,4 +1,5 @@
 const EVIDENCE_PACK_MAX_CHARS = 12000;
+export const PACK_VERSION = "p3";
 const MAX_CANONICAL_URLS = 8;
 const INITIAL_MAX_ITEMS = 18;
 const INITIAL_MAX_FACTS = 28;
@@ -14,6 +15,14 @@ function stripAnsi(value) {
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function termMatchRegExp(term, flags = "gi") {
+  const escaped = escapeRegExp(term);
+  if (isNumericLikeClaimTerm(term)) {
+    return new RegExp(`(?<![\\p{L}\\p{N},.])${escaped}(?![\\p{L}\\p{N},.])`, flags.includes("u") ? flags : `${flags}u`);
+  }
+  return new RegExp(escaped, flags);
 }
 
 function unique(values) {
@@ -36,7 +45,7 @@ function truncate(value, maxChars) {
 function truncateAroundTerm(value, term, maxChars) {
   const text = cleanText(value);
   if (text.length <= maxChars) return text;
-  const match = new RegExp(escapeRegExp(term), "i").exec(text);
+  const match = termMatchRegExp(term, "i").exec(text);
   if (!match) return truncate(text, maxChars);
   const room = Math.max(0, maxChars - 6);
   const before = Math.floor((room - match[0].length) / 2);
@@ -109,8 +118,31 @@ function claimTermPriority(term) {
   return 2;
 }
 
-function extractCandidateClaimTerms(candidateAnswer = "") {
+export const GENERIC_CANDIDATE_CLAIM_STOP_RE =
+  /^(?:The|This|That|Source|Sources|Article|Articles|Event|Events|Most|Recent|Overall|Net|Question|Answer|Candidate|Golden)$/i;
+
+function isNumericLikeClaimTerm(value) {
+  return /^\$?\s?\d/i.test(value) || /\d/.test(value) && /(?:%|[KMB]\b|seconds?|minutes?|hours?|days?|weeks?|months?|years?)$/i.test(value);
+}
+
+function isProperNounPhrase(value) {
+  return /\b[A-Z][A-Za-z0-9]+(?:[- ][A-Z0-9][A-Za-z0-9]+)+\b/.test(value);
+}
+
+function literalCaseContext({ question = "", golden }) {
+  return cleanText(
+    `${question}\n${golden?.answer ?? ""}\n${(golden?.keyFacts ?? []).join("\n")}\n${(golden?.avoid ?? []).join("\n")}`
+  );
+}
+
+function appearsLiterallyInQuestionOrGoldenEntity(term, contextText) {
+  if (!isProperNounPhrase(term)) return false;
+  return contextText.includes(term);
+}
+
+function extractCandidateClaimTerms({ candidateAnswer = "", question = "", golden } = {}) {
   const text = String(candidateAnswer ?? "");
+  const contextText = literalCaseContext({ question, golden });
   const found = [];
   const addMatches = (regex) => {
     for (const match of text.matchAll(regex)) {
@@ -136,7 +168,8 @@ function extractCandidateClaimTerms(candidateAnswer = "") {
           const numeric = Number(value.replace(/,/g, "").replace(/[KMB]$/i, ""));
           if (Number.isFinite(numeric) && numeric < 100 && !/[KMB]$/i.test(value)) return false;
         }
-        return !/^(The|This|That|Source|Sources|Articles|Events|Most|Recent|Overall|Articles|Net|Blend Capital)$/i.test(value);
+        if (GENERIC_CANDIDATE_CLAIM_STOP_RE.test(value)) return false;
+        return !appearsLiterallyInQuestionOrGoldenEntity(value, contextText);
       })
       .sort((a, b) => b.priority - a.priority || a.index - b.index || a.value.localeCompare(b.value))
       .map((term) => term.value)
@@ -151,10 +184,6 @@ function executeEntries(transcript) {
   return (Array.isArray(transcript) ? transcript : []).filter(
     (entry) => String(entry.tool ?? "").endsWith("execute") && typeof entry.result === "string"
   );
-}
-
-function transcriptResultEntries(transcript) {
-  return (Array.isArray(transcript) ? transcript : []).filter((entry) => typeof entry.result === "string");
 }
 
 function tryParseJsonPrefix(result) {
@@ -351,13 +380,12 @@ function overlapsSourceItem(snippet, rankedItemsForDedupe) {
   });
 }
 
-function collectClaimSnippets(transcript, claimTerms, rankedItemsForDedupe) {
-  const entries = transcriptResultEntries(transcript);
+function collectClaimSnippets(entries, claimTerms, rankedItemsForDedupe) {
   const snippets = [];
   const seen = new Set();
   const seenRangesByEntry = new Map();
   for (const [termIndex, term] of claimTerms.entries()) {
-    const re = new RegExp(escapeRegExp(term), "gi");
+    const re = termMatchRegExp(term, "gi");
     for (const [entryIndex, entry] of entries.entries()) {
       const text = stripAnsi(entry.result);
       let match;
@@ -523,7 +551,7 @@ function serializePack({
     `calls: ${callsLine(entries)}`,
     `canonicalUrls: ${canonicalUrlsLine(ranked, urlLimit)}`,
     `fields: ${shownFacts.length ? shownFacts.map((fact) => `${truncate(fact.path, 90)}=${JSON.stringify(truncate(fact.value, 80))}`).join("; ") : "none"}`,
-    "claimSnippets: candidate-claim anchored snippets from raw transcript result text; omitted snippets are not proof of absence"
+    "claimSnippets: candidate-claim anchored snippets from execute result text only; omitted snippets are not proof of absence"
   ];
   if (!shownClaimSnippets.length) {
     lines.push("- none extracted");
@@ -564,6 +592,7 @@ function serializePack({
 export function buildTranscriptEvidencePack({
   transcript = [],
   candidateAnswer = "",
+  question = "",
   golden,
   tags,
   graderNotes = "",
@@ -577,8 +606,8 @@ export function buildTranscriptEvidencePack({
   const items = collectSourceItems(entries);
   const ranked = rankedItems(items, terms);
   const facts = collectRelevantFacts(entries, terms);
-  const claimTerms = extractCandidateClaimTerms(candidateAnswer);
-  const claimSnippets = collectClaimSnippets(transcript, claimTerms, ranked);
+  const claimTerms = extractCandidateClaimTerms({ candidateAnswer, question, golden });
+  const claimSnippets = collectClaimSnippets(entries, claimTerms, ranked);
 
   let itemLimit = Math.min(ranked.length, INITIAL_MAX_ITEMS);
   let factLimit = Math.min(facts.length, INITIAL_MAX_FACTS);

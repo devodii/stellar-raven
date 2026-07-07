@@ -22,9 +22,11 @@
  * cases do not receive transcript evidence.
  */
 import { spawnSync } from "node:child_process";
-import { pathToFileURL } from "node:url";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { extractJsonObject } from "./lib.mjs";
-import { buildTranscriptEvidencePack } from "./evidence-pack.mjs";
+import { buildTranscriptEvidencePack, PACK_VERSION } from "./evidence-pack.mjs";
 
 export const JUDGE_MODEL = "claude-sonnet-5";
 
@@ -37,13 +39,14 @@ export const JUDGE_MODEL = "claude-sonnet-5";
  *          concrete content only; support-relative avoid items are advisory.
  *   v2.2 — 2026-07-07 live/freshness cases may include compact execute-result
  *          excerpts so transcript-visible field support is not misgraded.
- *   v2.3 — 2026-07-07 source-basis evidence packs for long/truncated
- *          live-data transcripts: source items are parsed, ranked, and capped.
+ *   v2.3 — 2026-07-07 source-basis evidence packs plus claim snippets.
+ *   v2.4 — 2026-07-07 integrity counter-pressure: execute-only claim snippets,
+ *          numeric-boundary matching, and prompt/pack fingerprint stamping.
  */
-export const JUDGE_RUBRIC = "v2.3";
+export const JUDGE_RUBRIC = "v2.4";
 
-export function buildTranscriptEvidence({ transcript = [], candidateAnswer = "", golden, tags, graderNotes = "" }) {
-  return buildTranscriptEvidencePack({ transcript, candidateAnswer, golden, tags, graderNotes });
+export function buildTranscriptEvidence({ transcript = [], candidateAnswer = "", question = "", golden, tags, graderNotes = "" }) {
+  return buildTranscriptEvidencePack({ transcript, candidateAnswer, question, golden, tags, graderNotes });
 }
 
 function buildJudgePrompt({ question, golden, tags, graderNotes, candidateAnswer, transcriptEvidence }) {
@@ -91,6 +94,10 @@ Output ONLY this JSON object, with the fields in exactly this order, nothing els
 {"rationale": "2-4 sentences working through the key facts", "missingFacts": ["key facts absent from the candidate"], "wrongClaims": ["candidate claims that are wrong/fabricated"], "score": "correct|partial|wrong"}`;
 }
 
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
 /**
  * Grade one candidate answer. Synchronous under the hood (spawnSync) but
  * exported async so callers can swap in a parallel implementation later.
@@ -101,6 +108,7 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
       ? input.transcriptEvidence
       : buildTranscriptEvidence(input);
   const prompt = buildJudgePrompt({ ...input, transcriptEvidence });
+  const promptSha256 = sha256(prompt);
   const res = spawnSync(
     "claude",
     ["-p", "--model", model, "--output-format", "json", "--strict-mcp-config"],
@@ -112,7 +120,9 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
       missingFacts: [],
       wrongClaims: [],
       rationale: `judge CLI failed: ${res.error?.message ?? `exit ${res.status}`}: ${String(res.stderr).slice(0, 500)}`,
-      rubric: JUDGE_RUBRIC
+      rubric: JUDGE_RUBRIC,
+      packVersion: PACK_VERSION,
+      promptSha256
     };
   }
   let envelope;
@@ -129,7 +139,9 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
       missingFacts: [],
       wrongClaims: [],
       rationale: `judge returned unparseable verdict: ${String(resultText).slice(0, 500)}`,
-      rubric: JUDGE_RUBRIC
+      rubric: JUDGE_RUBRIC,
+      packVersion: PACK_VERSION,
+      promptSha256
     };
   }
   return {
@@ -138,7 +150,9 @@ export async function judgeCase(input, { model = JUDGE_MODEL, timeoutMs = 180_00
     wrongClaims: Array.isArray(verdict.wrongClaims) ? verdict.wrongClaims : [],
     rationale: typeof verdict.rationale === "string" ? verdict.rationale : "",
     costUsd: envelope?.total_cost_usd,
-    rubric: JUDGE_RUBRIC
+    rubric: JUDGE_RUBRIC,
+    packVersion: PACK_VERSION,
+    promptSha256
   };
 }
 
@@ -233,6 +247,57 @@ const SELF_TEST_CANDIDATES = [
     ],
     answer:
       "The most recent hackathon with confirmed winners is Stellar Hacks: Agents. The ranked placements are confirmed by the returned `winnersRanked:true` and `placementRank` fields: 1st Place — Cards402.com, which built virtual Visa cards for AI agents using Stellar payments; 2nd Place — CleverCon, an AI agent marketplace with stablecoin payments."
+  },
+  {
+    label: "transcript-contradiction-counterpressure",
+    expectNot: "correct",
+    caseOverride: {
+      question: "Which project won the latest synthetic Stellar grant round?",
+      golden: {
+        answer:
+          "A grounded answer names the project shown by live data as the winner and does not invent another winner.",
+        keyFacts: ["Names Beta Bridge as the winner returned by live data."],
+        avoid: ["Do NOT name Alpha Pay as the winner when the returned data names Beta Bridge."]
+      },
+      tags: { category: "scf-grants-builders", service: "scout", difficulty: "easy", freshness: true, liveData: true },
+      graderNotes: "Synthetic contradiction guard: compact transcript evidence contradicts Alpha Pay."
+    },
+    transcript: [
+      {
+        tool: "mcp__raven__execute",
+        input: '{"code":"return grantRound"}',
+        resultChars: 127,
+        isError: false,
+        result:
+          '{"ok":true,"data":{"round":"Synthetic Round","winner":{"name":"Beta Bridge","summary":"payments bridge winner"},"finalists":["Alpha Pay"]}}'
+      }
+    ],
+    answer:
+      "The latest synthetic Stellar grant round winner was Alpha Pay. The returned data identified Alpha Pay as the winner."
+  },
+  {
+    label: "numeric-false-support-counterpressure",
+    expectNot: "correct",
+    caseOverride: {
+      question: "How much funding did the synthetic project receive?",
+      golden: {
+        answer: "A grounded answer reports the funding amount returned by live data: 12,000 USDC.",
+        keyFacts: ["Reports the returned funding amount as 12,000 USDC."],
+        avoid: ["Do NOT report 2,000 USDC when the returned amount is 12,000 USDC."]
+      },
+      tags: { category: "defi", service: "scout", difficulty: "easy", freshness: true, liveData: true },
+      graderNotes: "Synthetic numeric-boundary guard: 2,000 must not be supported by matching inside 12,000."
+    },
+    transcript: [
+      {
+        tool: "mcp__raven__execute",
+        input: '{"code":"return funding"}',
+        resultChars: 98,
+        isError: false,
+        result: '{"ok":true,"data":{"project":"Gamma Pay","amount":"12,000 USDC","note":"award amount"}}'
+      }
+    ],
+    answer: "Gamma Pay received 2,000 USDC in funding."
   }
 ];
 
@@ -259,6 +324,20 @@ async function selfTest() {
   } else {
     console.log("[PASS] untagged transcript evidence gate expected empty got empty\n");
   }
+  const evidencePackSource = readFileSync(fileURLToPath(new URL("./evidence-pack.mjs", import.meta.url)), "utf8");
+  const stopReMatch = evidencePackSource.match(/GENERIC_CANDIDATE_CLAIM_STOP_RE\s*=\s*\/\^\(\?:([^/]+)\)\$\/i/);
+  const stopTerms = stopReMatch ? stopReMatch[1].split("|") : [];
+  const duplicateStopTerms = stopTerms.filter((term, index) => stopTerms.indexOf(term) !== index);
+  const literalCasedEntities = stopTerms.filter((term) => /(?:\\s| |Blend Capital)/.test(term));
+  if (!stopReMatch || duplicateStopTerms.length || literalCasedEntities.length || evidencePackSource.includes("Blend Capital")) {
+    failures++;
+    console.log(
+      `[FAIL] generic claim stoplist guard duplicates=${JSON.stringify(duplicateStopTerms)} literalEntities=${JSON.stringify(literalCasedEntities)}\n`
+    );
+  } else {
+    console.log("[PASS] generic claim stoplist guard has no duplicated/literal-cased project entries\n");
+  }
+
   const longEvidence = buildTranscriptEvidence({
     question: "What changed in Alpha lending coverage this month?",
     golden: {
@@ -299,6 +378,67 @@ async function selfTest() {
   } else {
     console.log(`[PASS] long transcript source-basis pack guard got ${longEvidence.length} chars\n`);
   }
+  const numericBoundaryEvidence = buildTranscriptEvidence({
+    question: "How much funding did the synthetic project receive?",
+    golden: {
+      answer: "A grounded answer reports 12,000 USDC.",
+      keyFacts: ["Reports 12,000 USDC."],
+      avoid: ["Do NOT report 2,000 USDC."]
+    },
+    tags: { freshness: true, liveData: true },
+    candidateAnswer: "The project received 2,000 USDC.",
+    transcript: [
+      {
+        tool: "mcp__raven__execute",
+        input: '{"code":"return funding"}',
+        resultChars: 80,
+        isError: false,
+        result: '{"ok":true,"data":{"amount":"12,000 USDC","otherAmount":"112,000 USDC"}}'
+      }
+    ]
+  });
+  const numericOk = numericBoundaryEvidence && !numericBoundaryEvidence.includes('term="2,000"');
+  if (!numericOk) {
+    failures++;
+    console.log(`[FAIL] numeric boundary pack guard leaked false support:\n${numericBoundaryEvidence}\n`);
+  } else {
+    console.log("[PASS] numeric boundary pack guard did not support 2,000 from larger amounts\n");
+  }
+
+  const executeOnlyEvidence = buildTranscriptEvidence({
+    question: "What did the synthetic search result say?",
+    golden: {
+      answer: "Execute results, not search priors, should support claims.",
+      keyFacts: ["Claim snippets come from execute results only."],
+      avoid: []
+    },
+    tags: { freshness: true, liveData: true },
+    candidateAnswer: "The answer is supported by Search Prior Project.",
+    transcript: [
+      {
+        tool: "mcp__raven__search",
+        input: '{"query":"Search Prior Project"}',
+        resultChars: 120,
+        isError: false,
+        result: '{"hits":[{"title":"Search Prior Project","description":"catalog prior text only"}]}'
+      },
+      {
+        tool: "mcp__raven__execute",
+        input: '{"code":"return {}"}',
+        resultChars: 21,
+        isError: false,
+        result: '{"ok":true,"data":{}}'
+      }
+    ]
+  });
+  const executeOnlyOk = executeOnlyEvidence && !executeOnlyEvidence.includes("Search Prior Project");
+  if (!executeOnlyOk) {
+    failures++;
+    console.log(`[FAIL] execute-only claim snippet guard leaked search result text:\n${executeOnlyEvidence}\n`);
+  } else {
+    console.log("[PASS] execute-only claim snippet guard ignored search result text\n");
+  }
+
   for (const cand of SELF_TEST_CANDIDATES) {
     const baseCase = cand.caseOverride ?? SELF_TEST_CASE;
     const kase = cand.avoidExtra
@@ -308,10 +448,10 @@ async function selfTest() {
         }
       : baseCase;
     const verdict = await judgeCase({ ...kase, candidateAnswer: cand.answer, transcript: cand.transcript });
-    const ok = verdict.score === cand.expect;
+    const ok = cand.expectNot ? verdict.score !== cand.expectNot : verdict.score === cand.expect;
     if (!ok) failures++;
     console.log(
-      `[${ok ? "PASS" : "FAIL"}] candidate=${cand.label} expected=${cand.expect} got=${verdict.score}` +
+      `[${ok ? "PASS" : "FAIL"}] candidate=${cand.label} expected=${cand.expect ?? `not ${cand.expectNot}`} got=${verdict.score}` +
         `\n  rationale: ${verdict.rationale}\n  missing: ${JSON.stringify(verdict.missingFacts)}\n  wrong: ${JSON.stringify(verdict.wrongClaims)}\n`
     );
   }

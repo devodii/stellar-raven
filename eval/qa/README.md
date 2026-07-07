@@ -332,6 +332,27 @@ the candidate had Instance auto-restore right but still described Persistent as
 RestoreFootprintOp-only — a genuine failure whose root cause is the sd-007 docs ambiguity, which
 the old golden had masked by encoding the same stale belief. Numbers as-is, nothing tuned.
 
+**Calibrated record (2026-07-07 v2.4/p3 noise floor, todo 876).** The stored 30-row run above was
+re-judged three times under final rubric `v2.4` + evidence pack `p3`
+(`results/2026-07-07T19-58-35-variantA-rejudge-v2.4-p3-pass1.json`,
+`...pass2.json`, `...pass3.json`): pass 1 **20C/7P/3W**, pass 2 **20C/7P/3W**,
+pass 3 **21C/7P/2W**. Per-row any-flip rate was **7/30 = 23.3%**:
+`q-eco-wallets-overview` p/p/c, `q-edge-1xlm-activation-fee` p/c/p,
+`q-protocol-tier1-org-list` p/p/c, `q-soroban-reentrancy` w/w/p,
+`q-soroban-storage-types` w/w/p, `q-ti-cli-rust-windows-troubleshooting` c/p/p,
+`q-tool-cli-install` p/p/w. Pairwise score disagreement was **14/90 = 15.6%**.
+The committed monitor-only noise floor is the stricter per-row number, **23.3%**: isolated
+single-run score movement at or below that scale is variance until confirmed by live transcript
+review or a repeated mechanism. The three passes cost $8.51 reported judge CLI cost total.
+
+MissingFacts clustering over those same three v2.4/p3 pass files (`cluster-missing-facts.mjs`)
+found 45 missingFacts: version/number 15, other 13, caveat 7, enumeration-tail 6,
+cross-source corroboration 4. The result confirms heterogeneity rather than one systematic
+synthesis-depth class: the largest bucket is only one third of the facts and spans six unrelated
+cases; enumeration-tail/caveat/corroboration omissions are real but not yet a mechanism candidate.
+The full stored-row judge-regression gate remains deliberately deferred because committed replay
+fixtures conflict with the repo's results-local-only convention.
+
 **Second judge-artifact class (2026-07-03 evening, Solo todo 826):** the rubric-v2 addendum can
 be bypassed by **avoid-clause phrasing** — a golden must-avoid banning claims "beyond corpus
 support" makes a corpus-blind judge read beyond-golden specifics as avoid-matched, wrong again.
@@ -390,11 +411,22 @@ fragment text is not contradiction evidence. Non-live/non-freshness cases still 
 evidence unless explicitly tagged for it. Todo 873 extended the same v2.3 pack format with
 claim-anchored snippets: salient candidate-answer claims (amounts, numbers, durations, percentages,
 proper-noun phrases) are matched against raw transcript result text so non-source-shaped prose can
-support the answer without dumping whole payloads. The judge prompt did not change, so the rubric
-stamp stays v2.3. **Comparability:** this is a prompt/rubric semantic change relative to v2.2
+support the answer without dumping whole payloads. **Comparability:** this is a prompt/rubric
+semantic change relative to v2.2
 (`JUDGE_RUBRIC=v2.3`); do not compare v2.3 wrong counts against v2.2/native stored verdicts without
 re-judging the saved answers under v2.3. For same-rubric v2.3 rows judged before todo 873, targeted
 rejudge is still needed when the pack shape matters.
+
+**Rubric v2.4 + pack p3 (2026-07-07, todo 876) — evidence-pack integrity counter-pressure.**
+The claim-snippet pack now removes case-literal proper-noun subjects generically instead of using
+case constants, boundary-matches numeric/amount claims so `2,000` cannot match inside `12,000`,
+and restricts claim snippets to execute results only. `PACK_VERSION` is exported from
+`evidence-pack.mjs` as `p3`; every judge verdict carries `{rubric, packVersion, promptSha256}`,
+where `promptSha256` hashes the fully interpolated judge prompt, and `run-qa.mjs` stores each row's
+evidence-pack SHA-256 and character count. **Comparability:** compare stored rows only when the
+rubric, packVersion, and promptSha256/pack-hash semantics match, or re-judge saved answers under
+the target tuple. The v2.4 self-test includes contradiction and numeric false-support
+counter-pressure fixtures plus the todo-865 untagged transcript-evidence negative guard.
 
 ## Known limitations
 

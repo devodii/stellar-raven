@@ -41,11 +41,13 @@
  *   --no-judge         collect answers only (judge later)
  */
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { QA_DIR, loadCases, stratifiedSample, summarize, formatSummaryTable } from "./lib.mjs";
-import { judgeCase, JUDGE_MODEL } from "./judge.mjs";
+import { buildTranscriptEvidence, judgeCase, JUDGE_MODEL, JUDGE_RUBRIC } from "./judge.mjs";
+import { PACK_VERSION } from "./evidence-pack.mjs";
 
 // Variant→tool mapping post-ADR-0001: A (host-side ranked query) shipped as
 // `search` (the `search_ranked` A/B alias retired with the decision). B
@@ -56,6 +58,10 @@ const VARIANT_TOOL = { A: "search", B: null };
 const AGENT_MODEL = "claude-sonnet-5";
 const MAX_TURNS = 24;
 const AGENT_TIMEOUT_MS = 10 * 60_000;
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
 
 function agentPrompt(question, searchTool) {
   const promptAppend = process.env.QA_AGENT_PROMPT_APPEND?.trim();
@@ -247,11 +253,25 @@ async function main() {
       const t0 = Date.now();
       process.stdout.write(`[${i + 1}/${cases.length}] ${c.id} … `);
       const run = runAgent(c.question, { searchTool, mcpConfigPath, model });
+      const transcriptEvidence = run.answer
+        ? buildTranscriptEvidence({ ...c, candidateAnswer: run.answer, transcript: run.transcript })
+        : "";
       let verdict = null;
       if (!noJudge) {
         verdict = run.answer
-          ? await judgeCase({ ...c, candidateAnswer: run.answer, transcript: run.transcript }, { model: judgeModel })
-          : { score: "error", missingFacts: [], wrongClaims: [], rationale: run.error ?? "empty answer" };
+          ? await judgeCase(
+              { ...c, candidateAnswer: run.answer, transcript: run.transcript, transcriptEvidence },
+              { model: judgeModel }
+            )
+          : {
+              score: "error",
+              missingFacts: [],
+              wrongClaims: [],
+              rationale: run.error ?? "empty answer",
+              rubric: JUDGE_RUBRIC,
+              packVersion: PACK_VERSION,
+              promptSha256: null
+            };
       }
       const durationMs = Date.now() - t0;
       rows.push({
@@ -262,6 +282,11 @@ async function main() {
         transcript: run.transcript,
         agent: { model, turns: run.turns, costUsd: run.costUsd, error: run.error ?? null },
         verdict,
+        evidencePack: {
+          packVersion: PACK_VERSION,
+          chars: transcriptEvidence.length,
+          sha256: transcriptEvidence ? sha256(transcriptEvidence) : null
+        },
         durationMs
       });
       console.log(
@@ -287,6 +312,8 @@ async function main() {
           port,
           model,
           judgeModel: noJudge ? null : judgeModel,
+          judgeRubric: noJudge ? null : JUDGE_RUBRIC,
+          packVersion: PACK_VERSION,
           casesPath,
           sampleN: sampleN ?? null,
           ids: ids ?? null,
