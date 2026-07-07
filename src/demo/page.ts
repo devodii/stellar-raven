@@ -695,7 +695,7 @@ function sampleTrace(): string {
     `<div class="osec"><div class="oh">result</div><pre>${esc(SAMPLE_RESULT)}</pre></div>` +
     `</div></details>` +
     `<div class="stepline">step 3</div>` +
-    `<div class="msg assistant">${esc(SAMPLE_ANSWER)}</div>`
+    `<div class="msg assistant md"><p class="mdp">${staticInlineCode(SAMPLE_ANSWER)}</p></div>`
   );
 }
 
@@ -788,4 +788,16 @@ function esc(value: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function staticInlineCode(value: string): string {
+  let html = "";
+  let last = 0;
+  const inlineCode = /`([^`\n]+)`/g;
+  for (let match = inlineCode.exec(value); match; match = inlineCode.exec(value)) {
+    html += esc(value.slice(last, match.index));
+    html += `<code>${esc(match[1] ?? "")}</code>`;
+    last = match.index + match[0].length;
+  }
+  return html + esc(value.slice(last));
 }
