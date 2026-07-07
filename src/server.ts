@@ -19,7 +19,7 @@ import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { createMcpHandler, getMcpAuthContext } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerTools, SERVER_INSTRUCTIONS } from "./mcp/tools";
-import { createExecuteRunner, type ExecuteRunner } from "./executor/run";
+import type { ExecuteRunner } from "./executor/run";
 import { modelBoundaryMaxTokensFromEnv } from "./policy/truncate";
 import {
   allowDevUnauthenticated,
@@ -30,19 +30,21 @@ import {
 } from "./auth/gate";
 import { demoLoginRedirect } from "./auth/workos";
 import { verifyDemoCookie } from "./demo/auth";
-import { handleDemoChat } from "./demo/chat";
 import { DEMO_PAGE_HEADERS, demoPage } from "./demo/page";
 import { logEvent } from "./observability";
 
 const SERVER_INFO = { name: "stellar-raven-codemode", version: "0.1.0" };
+const DEV_LOCAL_ARTIFACT_OWNER = "dev-local";
 
 // One runner per isolate (providers + catalog + spec are env-stable); each
 // `execute` call still gets its own fresh Dynamic Worker via LOADER.load().
 let cachedRunner: ExecuteRunner | undefined;
 let cachedRunnerMaxTokens: number | undefined;
-function getRunner(env: Env): ExecuteRunner {
+let executeRunnerModule: Promise<typeof import("./executor/run")> | undefined;
+async function getRunner(env: Env): Promise<ExecuteRunner> {
   const modelBoundaryMaxTokens = modelBoundaryMaxTokensFromEnv(env as unknown as Record<string, unknown>);
   if (!cachedRunner || cachedRunnerMaxTokens !== modelBoundaryMaxTokens) {
+    const { createExecuteRunner } = await (executeRunnerModule ??= import("./executor/run"));
     cachedRunner = createExecuteRunner(env, { modelBoundaryMaxTokens });
     cachedRunnerMaxTokens = modelBoundaryMaxTokens;
   }
@@ -54,22 +56,35 @@ function oauthArtifactOwner(): string | undefined {
   return typeof subject === "string" && subject.length > 0 ? subject : undefined;
 }
 
+export function resolveArtifactOwner(
+  oauthSubject: string | undefined,
+  devBypassFired: boolean
+): string | undefined {
+  if (oauthSubject) return oauthSubject;
+  return devBypassFired ? DEV_LOCAL_ARTIFACT_OWNER : undefined;
+}
+
 // Stateless: fresh McpServer per request (research/codemode.md §6). Used
 // both as the provider's /mcp apiHandler (token already validated there)
 // and directly for the two bypasses.
 const mcpHandler = {
-  fetch(request: Request, env: Env, ctx: ExecutionContext): Response | Promise<Response> {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext,
+    opts: { devBypassFired?: boolean } = {}
+  ): Promise<Response> {
     // instructions surfaces in the client's system prompt at initialize time
     // (per-session, unlike tool descriptions which models skim once) — the
     // workflow + result-envelope contract lives there too.
     const server = new McpServer(SERVER_INFO, { instructions: SERVER_INSTRUCTIONS });
     const requestId = crypto.randomUUID();
     const rayId = request.headers.get("cf-ray") ?? undefined;
-    const runner = getRunner(env);
+    const runner = await getRunner(env);
     registerTools(server, {
       runExecute: (code, callContext) => runner(code, callContext),
       executeContext: () => ({
-        artifactOwner: oauthArtifactOwner(),
+        artifactOwner: resolveArtifactOwner(oauthArtifactOwner(), opts.devBypassFired === true),
         requestId,
         rayId
       }),
@@ -128,6 +143,7 @@ async function handleDemoRoute(
 
   // /demo/chat — handleDemoChat owns the full gauntlet (method, origin, auth,
   // throttle, body) and answers 405 for non-POST itself.
+  const { handleDemoChat } = await import("./demo/chat");
   return handleDemoChat(request, env, ctx);
 }
 
@@ -150,7 +166,7 @@ export default {
       }
       if (allowDevUnauthenticated(env, url.hostname)) {
         logEvent("mcp_request", { auth: "dev-bypass", method: request.method });
-        return mcpHandler.fetch(request, env, ctx);
+        return mcpHandler.fetch(request, env, ctx, { devBypassFired: true });
       }
     }
 

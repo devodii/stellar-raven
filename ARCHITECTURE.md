@@ -235,12 +235,15 @@ short SHA-256 prefix); the raw OAuth subject is never in the key. Custom metadat
 the operation ledger, and the catalog `generatedAt`, so eval review can inspect provenance
 without reading the payload.
 
-Ownership is OAuth-only in v1. `src/server.ts` derives `artifactOwner` per tool call from
-`getMcpAuthContext()?.props.subject`, the peppered WorkOS subject set by the OAuth provider.
-The cached execute runner never captures that owner; it receives an `ExecuteCallContext` per
-call. Admin-token bypasses, local-dev bypasses, and `/demo` pass no owner: truncated results
-still get a source-basis block, but the artifact line is a generic unavailable/absent state
-and no R2 write is made.
+Production ownership is OAuth-only in v1. `src/server.ts` derives `artifactOwner` per tool
+call from `getMcpAuthContext()?.props.subject`, the peppered WorkOS subject set by the OAuth
+provider. The cached execute runner never captures that owner; it receives an
+`ExecuteCallContext` per call. Admin-token bypasses and `/demo` pass no owner: truncated
+results still get a source-basis block, but the artifact line is a generic
+unavailable/absent state and no R2 write is made. The loopback-only dev bypass is the one
+exception for local eval fidelity: it receives the fixed owner `dev-local` only from the
+branch where `allowDevUnauthenticated(env, loopbackHostname)` actually fired; the env var
+alone never assigns that owner on production hostnames.
 
 The read path is inside the sandbox, not a public URL. `src/executor/providers.ts` exposes
 flat host functions `codemode.artifact_info` / `codemode.artifact_read`; the prelude wraps

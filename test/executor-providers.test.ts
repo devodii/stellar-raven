@@ -250,6 +250,43 @@ describe("codemode.artifact provider", () => {
     });
     expect(stats.at(-1)).toEqual({ count: 5, bytes: written.artifact.bytes * 4 });
   });
+
+  it("logs a stable per-event read ordinal under concurrent successful reads", async () => {
+    const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
+    const written = await putArtifact(bucket, "owner-a", artifactInput());
+    if (!written.ok) throw new Error("unexpected skip");
+    const stats: Array<{ count: number; bytes: number }> = [];
+    const codemode = fnsOf(
+      buildSandbox(catalog, bundle, env, {
+        artifact: {
+          bucket,
+          owner: "owner-a",
+          onReadStats: (s) => stats.push(s)
+        }
+      }),
+      "codemode"
+    );
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      await Promise.all(Array.from({ length: 4 }, () => codemode.artifact_read!(written.artifact.id)));
+      const readCounts = logSpy.mock.calls
+        .map((call) => {
+          try {
+            return JSON.parse(String(call[0])) as { evt?: string; hit?: boolean; readCount?: number };
+          } catch {
+            return null;
+          }
+        })
+        .filter((event): event is { evt: string; hit: boolean; readCount: number } => event?.evt === "artifact_read" && event.hit === true)
+        .map((event) => event.readCount)
+        .sort((a, b) => a - b);
+
+      expect(readCounts).toEqual([1, 2, 3, 4]);
+      expect(stats.at(-1)).toEqual({ count: 4, bytes: written.artifact.bytes * 4 });
+    } finally {
+      logSpy.mockRestore();
+    }
+  });
 });
 
 describe("dispatch behavior (error-as-data, exposure, parallelism)", () => {

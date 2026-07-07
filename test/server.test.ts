@@ -12,11 +12,47 @@
  * sandbox (codemode.spec()/search/catalog, covered by spec-sandbox.test.ts
  * and executor-providers.test.ts).
  */
-import { describe, expect, it, beforeAll } from "vitest";
+import { describe, expect, it, beforeAll, vi } from "vitest";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { registerTools, SEARCH_KINDS, type RegisterToolsOptions } from "../src/mcp/tools";
+import { allowDevUnauthenticated } from "../src/auth/gate";
+
+vi.mock("cloudflare:workers", () => ({
+  tracing: {
+    async trace<T>(_name: string, fn: () => T | Promise<T>): Promise<T> {
+      return await fn();
+    }
+  },
+  WorkerEntrypoint: class WorkerEntrypoint {}
+}));
+vi.mock("@cloudflare/workers-oauth-provider", () => ({
+  default: class OAuthProvider {
+    fetch(): Response {
+      return new Response(null, { status: 404 });
+    }
+  }
+}));
+vi.mock("agents/mcp", () => ({
+  createMcpHandler: vi.fn(() => () => new Response(null, { status: 404 })),
+  getMcpAuthContext: vi.fn(() => undefined)
+}));
+vi.mock("@cloudflare/codemode", () => ({
+  DynamicWorkerExecutor: class DynamicWorkerExecutor {}
+}));
+vi.mock("../src/executor/run", () => ({
+  createExecuteRunner: vi.fn()
+}));
+vi.mock("../src/executor/run.ts", () => ({
+  createExecuteRunner: vi.fn()
+}));
+vi.mock("../src/demo/chat", () => ({
+  handleDemoChat: vi.fn()
+}));
+vi.mock("../src/demo/chat.ts", () => ({
+  handleDemoChat: vi.fn()
+}));
 
 type JsonSchema = {
   type?: string;
@@ -77,6 +113,36 @@ describe("tool registration", () => {
     expect(schema.properties?.code?.type).toBe("string");
     // execute mirrors upstream REQUEST_TYPES: spec + calls in one sandbox.
     expect(execute!.description).toContain("codemode.spec()");
+  });
+});
+
+describe("artifact owner resolution", () => {
+  it("OAuth subject wins and is passed through unchanged", async () => {
+    const { resolveArtifactOwner } = await import("../src/server");
+    expect(resolveArtifactOwner("peppered-subject", true)).toBe("peppered-subject");
+  });
+
+  it("dev loopback bypass gets the fixed local owner only when the gate fired", async () => {
+    const { resolveArtifactOwner } = await import("../src/server");
+    const gateFired = allowDevUnauthenticated(
+      { DEV_ALLOW_UNAUTHENTICATED: "true" } as Env,
+      "localhost"
+    );
+    expect(resolveArtifactOwner(undefined, gateFired)).toBe("dev-local");
+  });
+
+  it("admin-token bypass gets no owner", async () => {
+    const { resolveArtifactOwner } = await import("../src/server");
+    expect(resolveArtifactOwner(undefined, false)).toBeUndefined();
+  });
+
+  it("prod-hostname requests get no dev owner even if the dev env var exists", async () => {
+    const { resolveArtifactOwner } = await import("../src/server");
+    const gateFired = allowDevUnauthenticated(
+      { DEV_ALLOW_UNAUTHENTICATED: "true" } as Env,
+      "stellar-raven.example"
+    );
+    expect(resolveArtifactOwner(undefined, gateFired)).toBeUndefined();
   });
 });
 

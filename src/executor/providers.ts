@@ -690,6 +690,7 @@ export function buildCodemodeProvider(
 
     artifact_read: async (id?: unknown) => {
       const nextRead = artifactReads + 1;
+      const readOrdinal = nextRead;
       const t0 = Date.now();
       if (!artifact?.bucket || !artifact.owner) {
         artifactReads = nextRead;
@@ -700,7 +701,7 @@ export function buildCodemodeProvider(
           ms: Date.now() - t0,
           hit: false,
           reason: "unavailable",
-          readCount: artifactReads
+          readCount: readOrdinal
         });
         return artifactUnavailable();
       }
@@ -713,7 +714,7 @@ export function buildCodemodeProvider(
           ms: Date.now() - t0,
           hit: false,
           reason: "read-cap",
-          readCount: artifactReads
+          readCount: readOrdinal
         });
         return {
           ok: false,
@@ -735,7 +736,7 @@ export function buildCodemodeProvider(
             ms: Date.now() - t0,
             hit: false,
             reason: r.error.kind === "not-found" ? "not-found" : "error",
-            readCount: artifactReads
+            readCount: readOrdinal
           });
           artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
           return r.error.kind === "not-found" ? artifactNotFound() : { ok: false, error: { service: "artifact", kind: "error", message: r.error.message } };
@@ -746,7 +747,7 @@ export function buildCodemodeProvider(
           bytes: r.artifact.bytes,
           ms: Date.now() - t0,
           hit: true,
-          readCount: artifactReads
+          readCount: readOrdinal
         });
         artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
         return { ok: true, data: r.value };
@@ -757,7 +758,7 @@ export function buildCodemodeProvider(
           ms: Date.now() - t0,
           hit: false,
           reason: "error",
-          readCount: artifactReads
+          readCount: readOrdinal
         });
         artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
         return artifactNotFound();
