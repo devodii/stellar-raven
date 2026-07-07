@@ -243,12 +243,23 @@ tests assert exactly that per runner.
    the input case-insensitively ⇒ `"exact-title"`; else exactly one hit ⇒ `"single-hit"`;
    else **multiple hits** ⇒ the run fails as data:
    `{ ok: false, error: { service: "skills", kind: "error", message: 'ambiguous project
-   "<input>" — pass the exact slug', hint: 'candidates: <slug — title; …>' } }`
-   (fail-with-list, same style as store.ts's unknown-section error). **Zero hits** ⇒
+   "<input>" — pass the exact slug', hint: 'candidates (none matches "<input>" exactly):
+   <slug — title; …>. If none of these IS the project, do not substitute a
+   similar-sounding one — absence from the LumenLoop directory is not evidence the
+   project does not exist.' } }` (fail-with-list, same style as store.ts's
+   unknown-section error). **Zero hits** ⇒
    `{ ok: false, error: { kind: "soft-empty", message: 'no directory project matched
    "<input>"', hint: 'absence from the LumenLoop directory is not evidence the project
-   does not exist — try alternate names via lumenloop.search_directory' } }` — this is the
-   `q-edge-noinfo-fake-project-quasarswap` honesty path.
+   does not exist — try alternate names via lumenloop.search_directory' } }`.
+   **Fabrication-trap reality (2026-07-06 live verification)**: live
+   `lumenloop.search_directory` fuzzy-matches almost any string, so a nonexistent
+   project name (`q-edge-noinfo-fake-project-quasarswap`) usually takes the AMBIGUITY
+   branch, not the zero-hit rung — the zero-hit rung fires when upstream itself
+   soft-empties. Both branches are therefore honesty paths: the ambiguity hint carries
+   the same absence-is-not-evidence framing (no candidate is exact by construction —
+   the exact rungs run first) and explicitly forbids resolving to a similar-sounding
+   candidate, so the trap case never gets an invitation to build a wrong-project
+   dossier one retry away.
 2. **Parallel fan-out** (`Promise.all`; no replay machinery exists, so this is safe):
    - `lumenloop.get_project({ slug })` (skipped if step 1 already fetched it full — the
      slug-direct probe uses `compact: true`, so a full fetch still runs; one extra call,
@@ -677,7 +688,10 @@ The gate, in order:
 - Import-discipline test (drift belt, §2): read each runner module source; assert its
   import specifiers ⊆ `{"./types.ts"}` (consequence: no helper modules) and the source
   contains none of the tokens `fetch(`, `env.`, `process.`, `import(`, `globalThis`,
-  `self.`, `Reflect`.
+  `self.`, `Reflect`, `eval(`, `Function(`, `constructor` (the last three added
+  post-review: dynamic-eval spellings that could reconstitute egress past the lexical
+  belt — still a belt, not a boundary; the behavioral fetch-stub test and first-party
+  review remain the enforcement).
 - **Behavioral confinement test** (the belt the lint can't be): stub `globalThis.fetch`
   to throw (`vi.stubGlobal`), run every runner end-to-end against the stub facade — a
   smuggled network call fails CI at runtime regardless of how it was spelled.
@@ -710,13 +724,22 @@ The gate, in order:
 - Analyzer smoke: `analyze-composition.mjs` against a fixture transcript (one skill.run
   case, one plain-ops case) — adoption flag, expansion counts, truncation flag.
 
-**Smoke (live, wrangler dev)**
+**Smoke — two lanes, honestly split (as built)**
 
-- `test/smoke` addition: one `execute` calling
+- `test/smoke` addition (offline workerd lane — that lane is offline-ENFORCED by its
+  miniflare `outboundService`, a todo-833 property this design does not override): one
+  `execute` calling
   `codemode.skill.run("skills.lumenloop.stellar-project-dossier", { project: "blend" })`
-  and one digest run — assert envelope shape, `calls[].ok` all true, sections non-null,
-  and the unknown-name error path live. This is also the standing behavioral guard
-  against upstream payload drift (§4.2 note, §11 row 18).
+  and one digest run, with the host-side lumenloop adapter routed to the live-captured
+  runner fixtures — assert envelope shape, `calls[].ok` all true, sections non-null,
+  the envelope-guard traps, and the unknown-name error path. This pins the FULL
+  dispatch chain (prelude → provider RPC → runSkill → sub-facade → adapter) at the
+  real worker boundary.
+- The standing behavioral guard against LIVE upstream payload drift (§4.2 note) is the
+  live verification lane: rollout step 6 runs both runners against wrangler dev
+  (`--host localhost`), and the §11 row 18 live-drift checklist re-verifies projections
+  (and refreshes the fixtures the offline lanes share) whenever drift touches a
+  declared op.
 
 **Eval** — §10 verbatim: ranked-id diff + routing `--gate`, the 6-case `--ids`
 before/after, the 2 new live-lane digest cases, plan regrade + composition analyzer,
@@ -749,6 +772,49 @@ adoption reading.
 None. Every decision above is settled with rationale; an implementer who needs to deviate
 (e.g. an upstream schema makes a §4 projection field unavailable, or the eval forces a
 surfacing change) updates this document in the same change.
+
+### 14.1 As-built deviations (2026-07-06 build)
+
+The shipped code deviates from the section sketches above in the following acknowledged
+ways (each carries its rationale in-file too). Where a §4/§12 contract changed
+materially — the fabrication-trap path, the ambiguity hint, the token lint, the smoke
+split — the section itself was updated; the rest are recorded here so later
+re-verification (the step-8 docs pass, the live-drift projection re-checks) diffs
+against the real contracts:
+
+- **Fixtures are `.ts` modules, not `.json`** (`test/fixtures/skill-runners/*.ts`):
+  typed default exports import cleanly in both vitest lanes without resolveJsonModule.
+- **`runSkill` takes a 6th `deps` param** (`{ secrets?: string[] }`) feeding the
+  aggregate redaction belt — the §6 sketch's 5-arg signature had no channel for it.
+- **outputSchema warn-belt runs AFTER the `calls` attach** (§6 sketch listed it
+  before): the belt then validates the exact bytes the model receives, including the
+  host-attached `calls` the schema declares.
+- **`asErrorEnvelope` has a malformed-error rung**: a runner result shaped
+  `{ ok: false }` with a missing/non-object `error` becomes a runner-bug ERROR
+  envelope instead of slipping through as `{ ok: true, data: { ok: false, … } }`.
+- **Output `url` fields are `string | null`** (§4.1/§4.2 sketches said `string`):
+  live research rows carry no url; projected as null, never guessed.
+- **`links` / `based_in` / `operating_region` project array→joined-string**: live
+  directory rows carry these as string arrays; joined ", " into the declared strings.
+- **SCF `status` can be null** (live award rows omit it); **entity-mode item
+  `summary` projects to `""`** (live entity rows carry none).
+- **Anchor shape-drift fails the run** (an unexpected `get_project`/primary-content
+  payload shape is treated as that call erroring, and the anchor erroring fails the
+  run) — the §4.2 drift rule applied to the anchor consistently.
+- **`skill_run` is logged for resolution misses too** (unknown/non-runnable/invalid
+  input) — refusals are outcomes, mirroring op-refusal logging (§8's intent).
+- **`assertRunnersWired` compares canonical key-sorted JSON**, not raw
+  `JSON.stringify`: the manifest emitter sorts keys for byte-determinism, so raw
+  equality would false-alarm on every real build; semantic drift still throws.
+- **Super-spec `run_skill` requestBody requires `input`** (the §5 sketch left it
+  loose): every runner input schema has required fields, so an inputless call can
+  never validate anyway — fail at the schema, not the dispatch.
+- **Section `softEmpty: true` also covers OK-with-zero-rows**: an upstream OK payload
+  with zero rows and an upstream soft-empty envelope project identically (both are
+  "answered with nothing").
+- **§12 smoke lives in the offline-enforced workerd lane against live-captured
+  fixtures** (full dispatch-chain coverage); live upstream-drift smoke is the rollout
+  step 6 wrangler-dev/live lane plus the §11 row 18 checklist (see §12).
 
 ## 15. Review notes (2026-07-06)
 

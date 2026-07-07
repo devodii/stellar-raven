@@ -16,11 +16,15 @@
  */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 // Loaded via native type stripping (Node >= 23.6) — the same way
 // eval/run-routing.mjs imports src/catalog/search.ts. Still zero deps.
 import { extractKeywords } from "../src/catalog/extract-keywords.ts";
 import { tokenize } from "../src/catalog/vendor/search-scoring.ts";
+// The runnable-skill allowlist-as-data (research/skill-run-design.md §2/§5):
+// the SAME registry the runtime dispatch and the super-spec emitter consume,
+// so the exposed runnable surface cannot drift between emitters.
+import { RUNNERS } from "../src/skills/runners/index.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_PATH = join(ROOT, "catalog", "manifest.json");
@@ -667,6 +671,60 @@ function buildSkills(manifest) {
 }
 
 // ---------------------------------------------------------------------------
+// Runnable skills — attach `runnable: true` + the runner's schemas to the
+// matching skill entries (research/skill-run-design.md §5: a contract
+// broadening on the EXISTING kind:"skill" entry, never a second entry/kind —
+// one skill, one id, two affordances). Fail-loud drift guards in every
+// direction, mirroring assertRetirementNamesResolve /
+// assertLumenloopExclusionsResolve: registry keys and declared ops are
+// exact-match data pinned to the emitted surface, so upstream drift breaks
+// the BUILD, never surfaces as a runtime TypeError dressed up as a runner
+// bug. Exported for the guard tests (test/catalog.test.ts); main() below is
+// gated so importing this module never builds.
+// ---------------------------------------------------------------------------
+
+export function attachRunnableSkills(entries, registry = RUNNERS) {
+  const opIds = new Set(entries.filter((e) => e.kind === "operation").map((e) => e.id));
+  const byId = new Map(entries.map((e) => [e.id, e]));
+  for (const [id, runner] of Object.entries(registry)) {
+    const entry = byId.get(id);
+    // A registry key with no emitted skill entry = the skill was renamed or
+    // retired (or the key is a typo). Silence here would ship a runner the
+    // catalog never advertises — dead code at best, id drift at worst.
+    if (!entry || entry.kind !== "skill") {
+      throw new Error(
+        `RUNNERS registry key "${id}" matched no emitted skill entry — the skill was renamed/` +
+          `retired upstream or the id is wrong; reconcile src/skills/runners/index.ts with the ` +
+          `skills mirror (registry drift must break the build, not silently un-expose the runner).`
+      );
+    }
+    // Every declared op must resolve to an emitted operation entry: this is
+    // the guard that turns an upstream constituent-op retirement (e.g. a
+    // live-drift refresh dropping one) into a build failure instead of a
+    // missing facade fn at dispatch time.
+    for (const opId of runner.ops) {
+      if (!opIds.has(opId)) {
+        throw new Error(
+          `runner "${id}" declares op "${opId}" which resolves to no emitted operation entry — ` +
+            `upstream retired/renamed it or exposure now excludes it; reconcile the runner's ` +
+            `declared ops (and its pipeline) before rebuilding.`
+        );
+      }
+    }
+  }
+  return entries.map((entry) => {
+    const runner = registry[entry.id];
+    if (!runner) return entry;
+    return {
+      ...entry,
+      runnable: true,
+      inputSchema: runner.inputSchema,
+      outputSchema: runner.outputSchema
+    };
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Assemble
 // ---------------------------------------------------------------------------
 
@@ -675,8 +733,11 @@ function buildSkills(manifest) {
 // excluded scout endpoint by its raw REST spelling, or mention a retired
 // skill. This is the systemic backstop for the whole leak class — a scrub or
 // rewrite that goes stale fails the build here instead of shipping a pointer
-// to a capability consumers must never learn about.
-function assertNoNonExposedRefs(entries) {
+// to a capability consumers must never learn about. Runnable-skill entries
+// contribute their schema JSON too (design §5): schema `description` strings
+// are emitted text — a runner schema naming a non-exposed op would teach the
+// model exactly what ADR-0003 forbids. Exported for the guard tests.
+export function assertNoNonExposedRefs(entries) {
   const opIds = new Set(entries.filter((e) => e.kind === "operation").map((e) => e.id));
   // Service-callable tokens ("scout.matchPartners"); the lookbehind skips
   // dotted prefixes so skill ids like "skills.lumenloop.<name>" never match,
@@ -691,7 +752,15 @@ function assertNoNonExposedRefs(entries) {
     `\\b(?:${[...EXCLUDED_LUMENLOOP_OPS].join("|")})\\b`
   );
   for (const entry of entries) {
-    const text = [entry.description ?? "", ...(entry.keywords ?? [])].join("\n");
+    const text = [
+      entry.description ?? "",
+      ...(entry.keywords ?? []),
+      // Runnable schemas ship to the model (signatures, describe, super
+      // spec) — their whole JSON is guarded text like any description.
+      ...(entry.runnable === true
+        ? [JSON.stringify(entry.inputSchema), JSON.stringify(entry.outputSchema)]
+        : [])
+    ].join("\n");
     for (const token of text.match(callableRe) ?? []) {
       if (TLDS.has(token.split(".")[1])) continue;
       if (!opIds.has(token)) {
@@ -738,19 +807,23 @@ function main() {
   assertScoutExclusionsResolve(stellarLight.openapi);
 
   const stellarDocsEntries = buildStellarDocs(stellarDocsSpec);
-  const entries = [
-    ...attachOperationKeywords(buildLumenloop(lumenloop)),
-    ...attachOperationKeywords(buildScout(stellarLight)),
-    // Docs ops carry page-title vocabulary (hundreds of distinct frequency-1
-    // tokens post-DF) — the default 64 cap truncates the alphabetical tail,
-    // so they get a roomier cap. Still bounded: 12 ops × ≤256 short tokens.
-    ...attachOperationKeywords(
-      stellarDocsEntries,
-      stellarDocsTitleExtras(stellarDocsEntries, stellarDocsTitles),
-      { cap: 256 }
-    ),
-    ...buildSkills(skillsManifest)
-  ].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  // Runnable attachment runs over the FULLY assembled set: its declared-op
+  // guard needs every service's operation entries in scope, not just skills.
+  const entries = attachRunnableSkills(
+    [
+      ...attachOperationKeywords(buildLumenloop(lumenloop)),
+      ...attachOperationKeywords(buildScout(stellarLight)),
+      // Docs ops carry page-title vocabulary (hundreds of distinct frequency-1
+      // tokens post-DF) — the default 64 cap truncates the alphabetical tail,
+      // so they get a roomier cap. Still bounded: 12 ops × ≤256 short tokens.
+      ...attachOperationKeywords(
+        stellarDocsEntries,
+        stellarDocsTitleExtras(stellarDocsEntries, stellarDocsTitles),
+        { cap: 256 }
+      ),
+      ...buildSkills(skillsManifest)
+    ].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+  );
 
   const ids = new Set();
   for (const entry of entries) {
@@ -796,6 +869,12 @@ function main() {
       `${lumenloop.skills.filter((s) => s.set !== "partner").length} public/mirrored, ` +
       `${lumenloop.skills.filter((s) => s.set === "partner").length} partner name-only stubs)`
   );
+  // Transparency, inclusion side: name the runnable skills the build attached
+  // (the registry is the allowlist-as-data — design §2).
+  console.log(`  runnable skills: [${Object.keys(RUNNERS).sort().join(", ")}]`);
 }
 
-main();
+// Gated so the guard tests (test/catalog.test.ts) can import the exported
+// functions above without triggering a build; `node scripts/build-catalog.mjs`
+// still builds exactly as before.
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) main();

@@ -5186,14 +5186,238 @@
     {
       "description": "Produce a dated, cited digest of recent Stellar ecosystem activity on a theme or named entity from LumenLoop's news, audio-video, event, and published research content. Use when the user asks what's new or recent or happening in an area of Stellar, or wants a roundup or newsletter-style summary.",
       "id": "skills.lumenloop.stellar-ecosystem-digest",
-      "inputSchema": null,
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "days": {
+            "default": 30,
+            "maximum": 90,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "perTypeLimit": {
+            "default": 5,
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "subject": {
+            "description": "Theme phrase (\"RWA tokenization\") or entity name (\"Soroswap\").",
+            "minLength": 1,
+            "type": "string"
+          },
+          "subjectType": {
+            "default": "theme",
+            "description": "theme = semantic search over content; entity = entity-mention lookup.",
+            "enum": [
+              "theme",
+              "entity"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject"
+        ],
+        "type": "object"
+      },
       "kind": "skill",
-      "outputSchema": null,
+      "outputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "calls": {
+            "description": "Host-recorded constituent-call audit trail — attached by runSkill, never runner-authored.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "errorKind": {
+                  "enum": [
+                    "error",
+                    "soft-empty"
+                  ],
+                  "type": "string"
+                },
+                "ms": {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "ok": {
+                  "type": "boolean"
+                },
+                "op": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op",
+                "ok",
+                "ms"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "counts": {
+            "additionalProperties": false,
+            "properties": {
+              "articles": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "av": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "events": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "research": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "articles",
+              "av",
+              "events",
+              "research"
+            ],
+            "type": "object"
+          },
+          "items": {
+            "description": "Flat, url/id-deduped, date-desc; shape-stable across both modes. null ⇔ the call errored.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "summary": {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "articles",
+                    "av",
+                    "events",
+                    "research"
+                  ],
+                  "type": "string"
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "type",
+                "title",
+                "url",
+                "date",
+                "summary"
+              ],
+              "type": "object"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "softEmpty": {
+            "description": "true ⇔ the window matched nothing — a quiet window, not a failure.",
+            "type": "boolean"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "subjectType": {
+            "enum": [
+              "theme",
+              "entity"
+            ],
+            "type": "string"
+          },
+          "upcomingEvents": {
+            "description": "theme mode: null ⇔ that call errored; entity mode: always null (not attempted).",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "startAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "startAt"
+              ],
+              "type": "object"
+            },
+            "type": [
+              "array",
+              "null"
+            ]
+          },
+          "window": {
+            "additionalProperties": false,
+            "description": "As-of framing, always present — answers must state the window they cover.",
+            "properties": {
+              "dateEnd": {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              "dateStart": {
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "dateStart",
+              "dateEnd"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "subject",
+          "subjectType",
+          "window",
+          "items",
+          "counts",
+          "softEmpty",
+          "upcomingEvents",
+          "calls"
+        ],
+        "type": "object"
+      },
       "provenance": {
         "commit": "d92c56bda17ab702d3202335cfe814d64e70e191",
         "fetchedAt": "2026-07-06T21:16:02Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "runnable": true,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -6889,14 +7113,305 @@
     {
       "description": "Build a due-diligence profile of a single Stellar project from the LumenLoop directory — details, related content, talks, SCF history, and similar projects. Use when the user names a project and asks to vet, profile, research, or summarize it, or wants a dossier or background on a Stellar team.",
       "id": "skills.lumenloop.stellar-project-dossier",
-      "inputSchema": null,
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "contentLimit": {
+            "default": 8,
+            "description": "Max coverage items per content type.",
+            "maximum": 20,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "project": {
+            "description": "Project name or directory slug (e.g. \"blend\", \"LOBSTR\").",
+            "minLength": 1,
+            "type": "string"
+          },
+          "similarLimit": {
+            "default": 5,
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "project"
+        ],
+        "type": "object"
+      },
       "kind": "skill",
-      "outputSchema": null,
+      "outputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "calls": {
+            "description": "Host-recorded constituent-call audit trail — attached by runSkill, never runner-authored.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "errorKind": {
+                  "enum": [
+                    "error",
+                    "soft-empty"
+                  ],
+                  "type": "string"
+                },
+                "ms": {
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "ok": {
+                  "type": "boolean"
+                },
+                "op": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "op",
+                "ok",
+                "ms"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "content": {
+            "additionalProperties": false,
+            "properties": {
+              "items": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "date": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "summary": {
+                      "maxLength": 200,
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "enum": [
+                        "articles",
+                        "av",
+                        "events",
+                        "research"
+                      ],
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "url",
+                    "date",
+                    "summary"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "softEmpty": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "softEmpty",
+              "items"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "profile": {
+            "additionalProperties": false,
+            "description": "null ⇔ the constituent call errored (see calls); softEmpty sections answered with nothing — a finding, not a failure.",
+            "properties": {
+              "basedIn": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "category": {
+                "type": "string"
+              },
+              "description": {
+                "maxLength": 400,
+                "type": "string"
+              },
+              "links": {
+                "description": "website/x/discord/… as the directory row carries them.",
+                "type": "object"
+              },
+              "operatingRegion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "category",
+              "tags",
+              "basedIn",
+              "operatingRegion",
+              "links",
+              "description"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "resolvedBy": {
+            "description": "How the input resolved to a directory slug — always exact-match, never fuzzy.",
+            "enum": [
+              "input-slug",
+              "exact-slug",
+              "exact-title",
+              "single-hit"
+            ],
+            "type": "string"
+          },
+          "scf": {
+            "additionalProperties": false,
+            "properties": {
+              "count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "softEmpty": {
+                "type": "boolean"
+              },
+              "submissions": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "awardType": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "round": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "round",
+                    "awardType",
+                    "title",
+                    "status"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 10,
+                "type": "array"
+              }
+            },
+            "required": [
+              "count",
+              "softEmpty",
+              "submissions"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "similar": {
+            "additionalProperties": false,
+            "properties": {
+              "items": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "type": "string"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "title",
+                    "category"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "softEmpty": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "softEmpty",
+              "items"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "resolvedBy",
+          "profile",
+          "scf",
+          "content",
+          "similar",
+          "calls"
+        ],
+        "type": "object"
+      },
       "provenance": {
         "commit": "d92c56bda17ab702d3202335cfe814d64e70e191",
         "fetchedAt": "2026-07-06T21:16:02Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "runnable": true,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
