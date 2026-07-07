@@ -11,6 +11,8 @@
  * (design Decision 5, all in-request enforced here because stepCountIs alone
  * does not cap tool calls within one model step):
  *  - search `limit` clamped to DEMO_CAPS.maxSearchLimit,
+ *  - ≤ DEMO_CAPS.maxSearchCallsPerTurn catalog searches per buildDemoTools()
+ *    call (structured refusal as data, never a throw),
  *  - ≤ DEMO_CAPS.maxExecuteCallsPerTurn sandbox runs per buildDemoTools()
  *    call (structured refusal as data, never a throw),
  *  - execute code length capped at DEMO_CAPS.maxExecuteCodeChars.
@@ -91,7 +93,6 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
     execute: async (args) => {
       const id = crypto.randomUUID();
       emit({ type: "tool-start", id, tool: "search", input: args });
-      searchCalls += 1;
       const t0 = Date.now();
       const catalog = getCatalog();
 
@@ -115,6 +116,23 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
         return structured;
       };
 
+      if (searchCalls >= DEMO_CAPS.maxSearchCallsPerTurn) {
+        const refusal = {
+          hits: [],
+          total: 0,
+          truncated: false,
+          nextSteps: "Search call limit reached for this demo turn. Use the first search result set and move to one execute call, then summarize."
+        };
+        logEvent("demo-search-refused", {
+          reason: "call-limit",
+          query: args.query,
+          searchCalls
+        });
+        emit({ type: "tool-result", id, tool: "search", ok: false, output: refusal });
+        return refusal;
+      }
+      searchCalls += 1;
+
       if (args.service !== undefined && !services.includes(args.service)) {
         return respond({
           hits: [],
@@ -136,8 +154,8 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
       const hits = page.hits.map(compactHitForDemo);
       const nextSteps =
         hits.length > 0
-          ? `These hits are composable: write ONE \`execute\` script that calls the several relevant operations (Promise.all across services for independent calls), then follows up with deeper calls parameterized by their results — e.g. \`await lumenloop.search_directory({ query: "..." })\` then \`lumenloop.get_project({ slug })\`. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under \`.data\` (\`r.data.projects\`, never \`r.projects\`); check \`r.ok\` first. Skill hits are operational playbooks — read the sections you need in-script via \`codemode.skill.read(id, { sections })\` (keys: the hit's \`availableSections\`), and pair them with stellarDocs searches for current reference truth. Hits whose \`signature\` shows a \`codemode.skill.run("<exact id>", input)\` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under \`.data\`, constituent calls audited in \`data.calls\`). Scores compare only within the same \`tier\` (gated hits always rank above backfill hits). Signatures with a stubbed output type (\`{ /* N top-level fields: ... */ }\`) list the payload's top-level field names — for the full output shape call \`codemode.describe("<exact id>")\` inside \`execute\`. Use \`codemode.search(...)\` mid-script for follow-up discovery; search again here with narrower terms or \`kind\`/\`service\` filters if none fit.${truncated ? " More entries matched than shown (truncated) — raise `limit` or narrow the query if none of these fit." : ""}`
-          : "No hits. Try fewer, more specific words (e.g. \"account trustlines\" not a full sentence), or drop the `kind`/`service` filters. Do not conclude the capability is missing from one empty result.";
+          ? `These hits are composable: write ONE \`execute\` script that calls the several relevant operations from this result set (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. \`await lumenloop.search_directory({ query: "..." })\` then \`lumenloop.get_project({ slug })\` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under \`.data\` (\`r.data.projects\`, never \`r.projects\`); check \`r.ok\` first. Skill hits are operational playbooks — read the sections you need in-script via \`codemode.skill.read(id, { sections })\` (keys: the hit's \`availableSections\`), and pair them with returned stellarDocs operations when present. Hits whose \`signature\` shows a \`codemode.skill.run("<exact id>", input)\` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under \`.data\`, constituent calls audited in \`data.calls\`). Scores compare only within the same \`tier\` (gated hits always rank above backfill hits). Signatures with a stubbed output type (\`{ /* N top-level fields: ... */ }\`) list the payload's top-level field names — for the full output shape call \`codemode.describe("<exact id>")\` inside \`execute\`. Demo rule: do not perform follow-up discovery; use this one search result, one execute script, then summarize.${truncated ? " More entries matched than shown (truncated) — use the best visible hits for this demo turn." : ""}`
+          : "No hits. This single-search demo cannot run follow-up discovery; say the search found no matching exposed catalog entries and suggest a shorter query for a new turn. Do not conclude the capability is missing from one empty result.";
       return respond({ hits, total, truncated, nextSteps });
     }
   });
@@ -193,7 +211,14 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void })
         ms: Date.now() - t0,
         codeChars: args.code.length,
         code: preview(args.code, CODE_LOG_MAX),
-        resultChars: outcome.ok ? outcome.result.length : 0,
+        // resultChars is kept for dashboard/back-compat. The explicit
+        // original/returned fields below are the sizing data for cap tuning.
+        resultChars: outcome.ok ? (outcome.resultReturnedChars ?? outcome.result.length) : 0,
+        resultOriginalChars: outcome.ok ? (outcome.resultOriginalChars ?? outcome.result.length) : null,
+        resultReturnedChars: outcome.ok ? (outcome.resultReturnedChars ?? outcome.result.length) : null,
+        resultOriginalApproxTokens: outcome.ok ? outcome.resultApproxOriginalTokens : null,
+        resultLimitTokens: outcome.ok ? outcome.resultMaxTokens : null,
+        resultLimitChars: outcome.ok ? outcome.resultMaxChars : null,
         resultPreview: outcome.ok ? preview(outcome.result) : null,
         resultTruncated: outcome.ok ? outcome.truncated : null,
         logLines: outcome.logs.length,

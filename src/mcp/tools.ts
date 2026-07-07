@@ -337,7 +337,14 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
         ms: Date.now() - t0,
         codeChars: args.code.length,
         code: preview(args.code, CODE_LOG_MAX),
-        resultChars: outcome.ok ? outcome.result.length : 0,
+        // resultChars is kept for dashboard/back-compat. The explicit
+        // original/returned fields below are the sizing data for cap tuning.
+        resultChars: outcome.ok ? (outcome.resultReturnedChars ?? outcome.result.length) : 0,
+        resultOriginalChars: outcome.ok ? (outcome.resultOriginalChars ?? outcome.result.length) : null,
+        resultReturnedChars: outcome.ok ? (outcome.resultReturnedChars ?? outcome.result.length) : null,
+        resultOriginalApproxTokens: outcome.ok ? outcome.resultApproxOriginalTokens : null,
+        resultLimitTokens: outcome.ok ? outcome.resultMaxTokens : null,
+        resultLimitChars: outcome.ok ? outcome.resultMaxChars : null,
         resultPreview: outcome.ok ? preview(outcome.result) : null,
         resultTruncated: outcome.ok ? outcome.truncated : null,
         logLines: outcome.logs.length,

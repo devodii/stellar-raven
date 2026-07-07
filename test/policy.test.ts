@@ -138,11 +138,17 @@ describe("truncation at the model boundary", () => {
 
   it("clips oversized results with an actionable footer", () => {
     const big = { rows: Array.from({ length: 5000 }, (_, i) => `row-${i}-${"x".repeat(20)}`) };
-    const { text, truncated } = truncateForModel(big);
+    const result = truncateForModel(big);
+    const { text, truncated } = result;
     expect(truncated).toBe(true);
     expect(text.length).toBeLessThan(26_000);
     expect(text).toContain("--- TRUNCATED ---");
     expect(text).toContain("select only the fields you need");
+    expect(result.originalChars).toBe(JSON.stringify(big).length);
+    expect(result.returnedChars).toBe(text.length);
+    expect(result.maxTokens).toBe(6000);
+    expect(result.maxChars).toBe(24_000);
+    expect(result.approxOriginalTokens).toBe(Math.round(result.originalChars / 4));
   });
 
   it("skill-read advice flag changes footer TEXT only — never which bytes are kept", () => {
@@ -251,19 +257,24 @@ describe("truncation at the model boundary", () => {
 
   it("passes normal-sized console logs through untouched", () => {
     const logs = Array.from({ length: 100 }, (_, i) => `[step ${i}] fetched page, 42 hits`).join("\n");
-    const { text, truncated } = truncateLogsForModel(logs);
+    const { text, truncated, originalChars, returnedChars } = truncateLogsForModel(logs);
     expect(text).toBe(logs);
     expect(truncated).toBe(false);
+    expect(originalChars).toBe(logs.length);
+    expect(returnedChars).toBe(logs.length);
   });
 
   it("clips oversized console logs with a logs-specific footer", () => {
     // Payload smuggled via console.log: 100 max-length lines ≈ 200k chars,
     // far past the ~6k-token budget.
     const logs = Array.from({ length: 100 }, () => "x".repeat(2_000)).join("\n");
-    const { text, truncated } = truncateLogsForModel(logs);
+    const { text, truncated, originalChars, returnedChars, maxChars } = truncateLogsForModel(logs);
     expect(truncated).toBe(true);
     expect(text.length).toBeLessThan(26_000);
     expect(text).toContain("--- TRUNCATED ---");
     expect(text).toContain("log counts and previews");
+    expect(originalChars).toBe(logs.length);
+    expect(returnedChars).toBe(text.length);
+    expect(maxChars).toBe(24_000);
   });
 });

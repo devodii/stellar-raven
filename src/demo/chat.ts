@@ -64,7 +64,7 @@ declare global {
 const DEV_SUBJECT = "dev-loopback";
 /**
  * Whole-turn ceiling (design Decision 5: "abort/timeout on the whole turn").
- * Worst legitimate turn: 5 model steps + 2 sandbox executes; generous so it
+ * Worst legitimate turn: 3 model steps + 1 sandbox execute; generous so it
  * only trips hung provider streams, not slow-but-live turns.
  */
 const TURN_TIMEOUT_MS = 120_000;

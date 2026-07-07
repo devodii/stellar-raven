@@ -40,15 +40,21 @@ body{display:flex;flex-direction:column}
 .scrim{background:
   linear-gradient(180deg,rgba(14,21,13,.85) 0%,rgba(14,21,13,.62) 34%,rgba(14,21,13,.38) 66%,rgba(14,21,13,.66) 100%)}
 
-.pwrap{width:100%;max-width:880px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+.pwrap{width:100%;max-width:940px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
 main.play{flex:1;display:flex;flex-direction:column;padding-bottom:34px}
 .top-in .end{margin-left:auto}
 
 /* honest-context line under the header */
 .fineprint{font-family:var(--mono);font-size:11.5px;color:var(--ash);line-height:1.65;
-  border-left:2px solid rgba(255,85,0,.35);padding-left:12px;margin:6px 0 18px}
+  border-left:2px solid rgba(255,85,0,.28);padding-left:12px;margin:6px 0 18px}
 .fineprint b{color:var(--dim);font-weight:500}
 .fineprint code{color:var(--orange);font-size:.95em}
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.flow span{display:flex;align-items:center;justify-content:center;gap:8px;min-height:34px;padding:7px 10px;
+  border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.035);
+  color:var(--dim);font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase}
+.flow b{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:rgba(255,85,0,.13);
+  color:var(--orange);font-size:10px;font-weight:600}
 
 /* ---- transcript ---- */
 #log{flex:1}
@@ -136,11 +142,11 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
   font-size:11.5px;line-height:1.6;color:#febc2e}
 
 /* ---- composer ---- */
-.composer{position:sticky;bottom:0;z-index:3;padding:16px 0 20px;
-  background:linear-gradient(180deg,transparent,var(--bg) 38%)}
+.composer{position:sticky;bottom:0;z-index:3;padding:16px 0 18px;
+  background:linear-gradient(180deg,transparent,rgba(14,21,13,.88) 30%,rgba(14,21,13,.98) 100%)}
 .composer form{display:flex;gap:10px;align-items:flex-end;padding:10px;border-radius:14px;
-  border:1px solid var(--line-2);background:rgba(6,10,6,.92);
-  box-shadow:0 24px 60px -30px rgba(0,0,0,.8)}
+  border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(9,15,9,.96),rgba(5,9,5,.98));
+  box-shadow:0 18px 52px -42px rgba(0,0,0,.95),0 18px 62px -52px rgba(255,85,0,.58)}
 .composer form:focus-within{border-color:rgba(255,85,0,.45)}
 .composer textarea{flex:1;min-height:44px;max-height:170px;padding:9px 8px;background:transparent;
   border:0;outline:none;resize:vertical;color:var(--fog);font-family:var(--sans);
@@ -151,6 +157,14 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
 .sysnote{min-height:18px;margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--ash)}
 .sysnote.err{color:#ff8b66}
 .sysnote a{color:var(--orange);text-decoration:underline;text-underline-offset:2px}
+.demo-callout{margin-top:8px;padding:10px 12px;border:1px solid rgba(255,255,255,.07);border-radius:10px;
+  background:rgba(6,10,6,.9);font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--ash)}
+.demo-callout b{color:var(--orange-2);font-weight:500}
+.site-foot{position:relative;z-index:2;box-sizing:border-box;width:100%;max-width:940px;margin:0 auto;padding:0 22px 26px;
+  background:transparent;border:0;border-top:1px solid rgba(255,255,255,.08);box-shadow:none;
+  font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--ash)}
+.site-foot b{color:var(--dim);font-weight:500}
+.site-foot code{color:var(--orange-2);font-size:.95em}
 
 /* ---- locked state ---- */
 .gate{padding:34px 0 8px;max-width:660px}
@@ -167,6 +181,9 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
   .pwrap{padding:0 16px}
   .msg{max-width:90%}
   .tcard .tlabel{display:none}
+  .flow{grid-template-columns:1fr}
+  .composer .btn-primary{padding:12px 14px}
+  .site-foot{padding:0 16px 22px}
 }
 `;
 
@@ -402,7 +419,7 @@ const DEMO_SCRIPT = `
     c.badge.textContent = f.ok ? "ok" : "error";
     c.badge.className = "st " + (f.ok ? "ok" : "err");
     var out = f.output;
-    if (c.tool === "search" && out && typeof out === "object" && Array.isArray(out.hits)) {
+    if (f.ok && c.tool === "search" && out && typeof out === "object" && Array.isArray(out.hits)) {
       var ol = el("ol", "hits");
       for (var i = 0; i < out.hits.length; i++) {
         var h = out.hits[i] || {};
@@ -586,7 +603,7 @@ const DEMO_SCRIPT = `
 // hard-coded (Web Crypto is async, and these headers are a sync module const);
 // test/demo-page.test.ts recomputes it from the rendered page, so an edit to
 // DEMO_SCRIPT fails the suite with the new value to paste here.
-const DEMO_SCRIPT_SHA256 = "sha256-8sWM6T+NEhg7YrX00pt4h5WmM4tptSBCVkg3WqjCbbQ=";
+const DEMO_SCRIPT_SHA256 = "sha256-xs0oM6+VHVELqhY1b2nX56CMArcAc5qRsRFp7MkD8IQ=";
 
 export const DEMO_PAGE_HEADERS: Record<string, string> = {
   "content-type": "text/html; charset=utf-8",
@@ -678,6 +695,7 @@ function sampleTrace(): string {
     `<pre class="code">${esc(SAMPLE_CODE)}</pre>` +
     `<div class="osec"><div class="oh">result</div><pre>${esc(SAMPLE_RESULT)}</pre></div>` +
     `</div></details>` +
+    `<div class="stepline">step 3</div>` +
     `<div class="msg assistant">${esc(SAMPLE_ANSWER)}</div>`
   );
 }
@@ -688,8 +706,8 @@ function sampleTrace(): string {
 
 const EXPLAINER =
   "Type a question and a small tool-calling model works it the way any connected agent " +
-  "would: it searches Raven’s unified catalog, writes JavaScript against the operations " +
-  "it finds, and runs that code in the no-network sandbox — every call rendered as an " +
+  "would: one search across Raven’s unified catalog, one JavaScript script against the " +
+  "operations it finds, and one grounded summary — every call rendered as an " +
   "inspectable trace. The playground runs the same server-side search and execute " +
   "implementations that back /mcp (same catalog, same sandbox, same result envelopes); it " +
   "does not exercise the MCP OAuth transport — signing in starts an ordinary browser " +
@@ -725,6 +743,7 @@ function lockedBody(): string {
     `<p class="eyebrow">Agent playground <span class="live"><span class="dot"></span>live tools</span></p>` +
     `<h1>Watch an agent <span class="r">work Raven.</span></h1>` +
     `<p class="lede">${esc(EXPLAINER)}</p>` +
+    flowHtml() +
     `<div class="cta"><a class="btn btn-primary" href="/demo/login">Sign in to try it</a>` +
     `<span class="hint">WorkOS sign-in &middot; no API keys &middot; rate-limited</span></div>` +
     `</section>` +
@@ -744,6 +763,7 @@ function chatBody(): string {
     `<code>ok/data</code> or <code>error.kind</code> of <code>"error"</code> or ` +
     `<code>"soft-empty"</code> &mdash; soft-empty means the service answered with nothing, ` +
     `which is inconclusive, not proof of absence.</p>` +
+    flowHtml() +
     `<div id="log" aria-live="polite"></div>` +
     `<div class="composer"><form id="composer-form">` +
     // maxlength mirrors DEMO_CAPS.maxUserMessageChars (src/demo/budget.ts);
@@ -752,14 +772,37 @@ function chatBody(): string {
     `placeholder="Ask about the Stellar ecosystem…" ` +
     `aria-label="Message the playground agent"></textarea>` +
     `<button id="send" class="btn btn-primary" type="submit">Send</button>` +
-    `</form><div id="sysnote" class="sysnote"></div></div>` +
-    `</main>` +
+    `</form><div id="sysnote" class="sysnote"></div>${demoCallout()}</div>` +
+    `</main>${demoFooter()}` +
     `<script>${DEMO_SCRIPT}</script>`
   );
 }
 
 export function demoPage(opts: { authenticated: boolean }): string {
-  return demoHead() + topBar() + (opts.authenticated ? chatBody() : lockedBody()) + `</body></html>`;
+  return demoHead() + topBar() + (opts.authenticated ? chatBody() : lockedBody() + demoFooter()) + `</body></html>`;
+}
+
+function flowHtml(): string {
+  return (
+    `<div class="flow" aria-label="Demo turn flow">` +
+    `<span><b>1</b>search</span><span><b>2</b>execute</span><span><b>3</b>summary</span>` +
+    `</div>`
+  );
+}
+
+function demoCallout(): string {
+  return (
+    `<div class="demo-callout"><b>Demo mode:</b> one search, one execute, then a short summary. ` +
+    `This is only a taste of the full power and glory of Stellar Raven when running in your own agents.</div>`
+  );
+}
+
+function demoFooter(): string {
+  return (
+    `<footer class="site-foot"><b>Public playground.</b> This demo is intentionally narrow and ` +
+    `rate-limited; connect your own agent to <code>/mcp</code> for longer runs, transport auth, ` +
+    `and the full production tool surface.</footer>`
+  );
 }
 
 function esc(value: string): string {

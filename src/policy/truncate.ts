@@ -20,7 +20,20 @@
 export const DEFAULT_MAX_TOKENS = 6000;
 export const CHARS_PER_TOKEN = 4;
 
-export type Truncated = { text: string; truncated: boolean };
+export type Truncated = {
+  text: string;
+  truncated: boolean;
+  /** Serialized result size before truncation. */
+  originalChars: number;
+  /** Returned text size after any truncation footer has been appended. */
+  returnedChars: number;
+  /** Boundary used for this truncation decision. */
+  maxTokens: number;
+  /** Character budget implied by maxTokens and CHARS_PER_TOKEN. */
+  maxChars: number;
+  /** Same estimate the footer uses; useful for observability aggregates. */
+  approxOriginalTokens: number;
+};
 
 /**
  * Advice-only options for the truncation footer. SECURITY INVARIANT: these
@@ -167,14 +180,31 @@ export function truncateForModel(
     }
   }
   const maxChars = maxTokens * CHARS_PER_TOKEN;
-  if (text.length <= maxChars) return { text, truncated: false };
+  const approxOriginalTokens = Math.round(text.length / CHARS_PER_TOKEN);
+  if (text.length <= maxChars) {
+    return {
+      text,
+      truncated: false,
+      originalChars: text.length,
+      returnedChars: text.length,
+      maxTokens,
+      maxChars,
+      approxOriginalTokens
+    };
+  }
   // SECURITY: the cut position is fixed at maxChars regardless of shape; the
   // loss detail only changes the ADVICE TEXT appended after it. Callers
   // redact BEFORE this function (run.ts), so both the kept prefix and any key
   // names echoed in the footer are already scrubbed — never reorder that.
+  const returnedText = text.slice(0, maxChars) + footer(text.length, maxTokens, lossDetail(value, text.length, maxChars), advice);
   return {
-    text: text.slice(0, maxChars) + footer(text.length, maxTokens, lossDetail(value, text.length, maxChars), advice),
-    truncated: true
+    text: returnedText,
+    truncated: true,
+    originalChars: text.length,
+    returnedChars: returnedText.length,
+    maxTokens,
+    maxChars,
+    approxOriginalTokens
   };
 }
 
@@ -196,6 +226,26 @@ function logsFooter(originalChars: number, maxTokens: number): string {
  */
 export function truncateLogsForModel(text: string, maxTokens = DEFAULT_MAX_TOKENS): Truncated {
   const maxChars = maxTokens * CHARS_PER_TOKEN;
-  if (text.length <= maxChars) return { text, truncated: false };
-  return { text: text.slice(0, maxChars) + logsFooter(text.length, maxTokens), truncated: true };
+  const approxOriginalTokens = Math.round(text.length / CHARS_PER_TOKEN);
+  if (text.length <= maxChars) {
+    return {
+      text,
+      truncated: false,
+      originalChars: text.length,
+      returnedChars: text.length,
+      maxTokens,
+      maxChars,
+      approxOriginalTokens
+    };
+  }
+  const returnedText = text.slice(0, maxChars) + logsFooter(text.length, maxTokens);
+  return {
+    text: returnedText,
+    truncated: true,
+    originalChars: text.length,
+    returnedChars: returnedText.length,
+    maxTokens,
+    maxChars,
+    approxOriginalTokens
+  };
 }

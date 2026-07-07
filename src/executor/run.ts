@@ -40,7 +40,17 @@ import { truncateForModel } from "../policy/truncate.ts";
 import { shapeLogs } from "./shape-logs.ts";
 
 export type ExecuteOutcome =
-  | { ok: true; result: string; truncated: boolean; logs: string[] }
+  | {
+      ok: true;
+      result: string;
+      truncated: boolean;
+      logs: string[];
+      resultOriginalChars?: number;
+      resultReturnedChars?: number;
+      resultMaxTokens?: number;
+      resultMaxChars?: number;
+      resultApproxOriginalTokens?: number;
+    }
   | { ok: false; error: string; logs: string[] };
 
 export type ExecuteRunner = (code: string) => Promise<ExecuteOutcome>;
@@ -118,10 +128,20 @@ export function createExecuteRunner(env: Env): ExecuteRunner {
       const hinted = withGlobalsHint(outcome.error, providers);
       return { ok: false, error: redactSecrets(hinted, secrets), logs };
     }
-    const { text, truncated } = truncateForModel(redactSecrets(outcome.result, secrets), undefined, {
+    const result = truncateForModel(redactSecrets(outcome.result, secrets), undefined, {
       skillSectionAdvice: skillRead
     });
-    return { ok: true, result: text, truncated, logs };
+    return {
+      ok: true,
+      result: result.text,
+      truncated: result.truncated,
+      logs,
+      resultOriginalChars: result.originalChars,
+      resultReturnedChars: result.returnedChars,
+      resultMaxTokens: result.maxTokens,
+      resultMaxChars: result.maxChars,
+      resultApproxOriginalTokens: result.approxOriginalTokens
+    };
   };
 }
 

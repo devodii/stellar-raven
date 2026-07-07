@@ -48,6 +48,8 @@ describe("demo page states", () => {
     expect(lockedHtml).toContain('href="/demo/login"');
     expect(lockedHtml).toContain("Example session");
     expect(lockedHtml).toContain("soroban smart contract deploy");
+    expect(lockedHtml).toContain("search</span><span><b>2</b>execute");
+    expect(lockedHtml).toContain("connect your own agent to <code>/mcp</code>");
     expect(lockedHtml).not.toContain("<script>");
   });
 
@@ -55,6 +57,10 @@ describe("demo page states", () => {
     expect(chatHtml).toContain('id="composer-form"');
     expect(chatHtml).toContain('id="log"');
     expect(chatHtml).toContain('fetch("/demo/chat"');
+    expect(chatHtml).toContain("one search, one execute, then a short summary");
+    expect(chatHtml).toContain("full power and glory of Stellar Raven");
+    expect(chatHtml.match(/full power and glory of Stellar Raven/g)).toHaveLength(1);
+    expect(chatHtml).toContain("connect your own agent to <code>/mcp</code>");
     for (const t of ["token", "tool-start", "tool-result", "step", "done", "error"]) {
       expect(chatHtml).toContain(`"${t}"`);
     }
