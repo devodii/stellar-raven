@@ -49,6 +49,7 @@ export type BuildSourceBasisManifestInput = {
   calls: SourceBasisCall[];
   canonicalUrls?: string[];
   artifact?: SourceBasisArtifact;
+  skillSectionAdvice?: boolean;
 };
 
 export type BuildSourceBasisManifestOptions = {
@@ -149,8 +150,18 @@ function serializeManifest(
     `calls: ${callsLine(input.calls, limits.callLimit)}`,
     `canonicalUrls: ${urlsLine(urls, input.canonicalUrls?.length ?? 0, limits.urlLimit)}`,
     `artifact: ${artifactLine(input.artifact)}`,
-    "guidance: prefer a narrower re-run; for full data call codemode.artifact.read(id) inside execute (data into the sandbox is never truncated; project a small answer out)."
+    `guidance: ${guidanceLine(input)}`
   ].join("\n");
+}
+
+function guidanceLine(input: BuildSourceBasisManifestInput): string {
+  const skillClause = input.skillSectionAdvice
+    ? " This run read skill content: return specific sections or aggregates, not whole skill bodies."
+    : "";
+  if (input.artifact?.state === "available") {
+    return `prefer a narrower re-run; for full data call codemode.artifact.read(id) inside execute (data into the sandbox is never truncated; project a small answer out).${skillClause}`;
+  }
+  return `prefer a narrower re-run: select only the fields you need, slice arrays, or aggregate inside the sandbox before returning.${skillClause}`;
 }
 
 function shapeLine(shape: SourceBasisShape, detailLimit: number): string {

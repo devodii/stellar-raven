@@ -64,7 +64,7 @@ describe("source-basis manifest", () => {
 
     expect(text.length).toBeLessThanOrEqual(SOURCE_BASIS_MANIFEST_MAX_CHARS);
     expect(text).toContain("calls:");
-    expect(text).toContain("calls omitted");
+    expect(text).toContain("totals ok=");
     expect(text).toContain("canonicalUrls: data-derived/untrusted");
     expect(text).toContain("guidance:");
   });
@@ -123,5 +123,38 @@ describe("source-basis manifest", () => {
     });
 
     expect(() => assertNoNonExposedRefsInText(text, "source-basis manifest template")).not.toThrow();
+  });
+
+  it("narrows guidance when the artifact is skipped or absent", () => {
+    const base = {
+      shape: { kind: "string" as const, serializedChars: 10, approxTokens: 3, stringChars: 10 },
+      calls: []
+    };
+
+    const skipped = buildSourceBasisManifest({
+      ...base,
+      artifact: { state: "skipped", reason: "size-cap" }
+    });
+    const absent = buildSourceBasisManifest({
+      ...base,
+      artifact: { state: "absent", reason: "unavailable" }
+    });
+
+    expect(skipped).toContain("guidance: prefer a narrower re-run");
+    expect(absent).toContain("guidance: prefer a narrower re-run");
+    expect(skipped).not.toContain("codemode.artifact.read");
+    expect(absent).not.toContain("codemode.artifact.read");
+  });
+
+  it("wires skillSectionAdvice into the source-basis guidance without changing the budget", () => {
+    const text = buildSourceBasisManifest({
+      shape: { kind: "string", serializedChars: 10, approxTokens: 3, stringChars: 10 },
+      calls: calls(80),
+      artifact: { state: "absent" },
+      skillSectionAdvice: true
+    });
+
+    expect(text).toContain("return specific sections or aggregates, not whole skill bodies");
+    expect(text.length).toBeLessThanOrEqual(SOURCE_BASIS_MANIFEST_MAX_CHARS);
   });
 });

@@ -8,9 +8,13 @@
 
 export const ARTIFACT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 export const ARTIFACT_MAX_BYTES = 2 * 1024 * 1024;
+export const ARTIFACT_CUSTOM_METADATA_MAX_BYTES = 8_192;
 export const ARTIFACT_KEY_PREFIX = "art";
 
 const OWNER_HASH_HEX_CHARS = 16;
+const ARTIFACT_CUSTOM_METADATA_TARGET_BYTES = 7_600;
+const OP_LEDGER_METADATA_CALL_LIMIT = 12;
+const OP_LEDGER_OP_MAX_CHARS = 180;
 const ARTIFACT_NOT_FOUND = { ok: false as const, error: { kind: "not-found" as const } };
 const UTF8 = "utf-8";
 
@@ -117,6 +121,14 @@ function bytesOf(text: string): number {
   return new TextEncoder().encode(text).byteLength;
 }
 
+export function artifactCustomMetadataByteLength(meta: Record<string, string>): number {
+  let bytes = 0;
+  for (const [key, value] of Object.entries(meta)) {
+    bytes += bytesOf(key) + bytesOf(value);
+  }
+  return bytes;
+}
+
 function metadataFromCustom(id: string, key: string, meta: Record<string, string> | undefined): ArtifactMetadata | null {
   if (!meta) return null;
   const {
@@ -152,12 +164,14 @@ function metadataFromCustom(id: string, key: string, meta: Record<string, string
   ) {
     return null;
   }
+  const parsedBytes = Number(bytes);
+  if (!Number.isFinite(parsedBytes) || parsedBytes < 0) return null;
   return {
     id,
     key,
     createdAt,
     expiresAt,
-    bytes: Number(bytes),
+    bytes: parsedBytes,
     sha256,
     mime,
     requestId,
@@ -169,9 +183,50 @@ function metadataFromCustom(id: string, key: string, meta: Record<string, string
   };
 }
 
+function trimAtom(value: unknown, maxChars: number): string {
+  const text = typeof value === "string" ? value : String(value);
+  if (text.length <= maxChars) return text;
+  return `${text.slice(0, Math.max(0, maxChars - 3))}...`;
+}
+
+function normalizeStatus(value: unknown): ArtifactOperationSummary["status"] {
+  return value === "error" || value === "soft-empty" ? value : "ok";
+}
+
+function normalizeOpLedger(input: ArtifactOperationSummary[] | string): ArtifactOperationSummary[] {
+  if (Array.isArray(input)) return input;
+  try {
+    const parsed = JSON.parse(input) as unknown;
+    return Array.isArray(parsed) ? (parsed as ArtifactOperationSummary[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function opLedgerTotals(calls: ArtifactOperationSummary[]): Record<ArtifactOperationSummary["status"], number> {
+  const totals = { ok: 0, error: 0, "soft-empty": 0 };
+  for (const call of calls) totals[normalizeStatus(call.status)] += 1;
+  return totals;
+}
+
+function opLedgerMetadata(input: ArtifactOperationSummary[] | string): string {
+  const calls = normalizeOpLedger(input);
+  const shown = calls.slice(0, OP_LEDGER_METADATA_CALL_LIMIT).map((call) => ({
+    op: trimAtom(call.op, OP_LEDGER_OP_MAX_CHARS),
+    status: normalizeStatus(call.status),
+    ...(Number.isFinite(call.ms) ? { ms: Math.max(0, Math.round(call.ms as number)) } : {})
+  }));
+  return JSON.stringify({
+    calls: shown,
+    total: calls.length,
+    omitted: Math.max(0, calls.length - shown.length),
+    totals: opLedgerTotals(calls)
+  });
+}
+
 function customMetadata(input: ArtifactPutInput, id: string, key: string, createdAt: Date, bytes: number, sha256: string): ArtifactMetadata {
   const expiresAt = new Date(createdAt.getTime() + ARTIFACT_TTL_MS).toISOString();
-  return {
+  const meta: ArtifactMetadata = {
     id,
     key,
     createdAt: createdAt.toISOString(),
@@ -183,9 +238,10 @@ function customMetadata(input: ArtifactPutInput, id: string, key: string, create
     rayId: input.rayId ?? "",
     capTokens: input.capTokens,
     originalChars: input.originalChars,
-    opLedger: typeof input.opLedger === "string" ? input.opLedger : JSON.stringify(input.opLedger),
+    opLedger: opLedgerMetadata(input.opLedger),
     catalogGeneratedAt: input.catalogGeneratedAt
   };
+  return fitCustomMetadata(meta);
 }
 
 function toR2Metadata(meta: ArtifactMetadata): Record<string, string> {
@@ -202,6 +258,47 @@ function toR2Metadata(meta: ArtifactMetadata): Record<string, string> {
     opLedger: meta.opLedger,
     catalogGeneratedAt: meta.catalogGeneratedAt
   };
+}
+
+function fitCustomMetadata(meta: ArtifactMetadata): ArtifactMetadata {
+  const fitted = { ...meta };
+  let r2 = toR2Metadata(fitted);
+  if (artifactCustomMetadataByteLength(r2) <= ARTIFACT_CUSTOM_METADATA_TARGET_BYTES) return fitted;
+
+  const parsed = JSON.parse(fitted.opLedger) as {
+    calls?: ArtifactOperationSummary[];
+    total?: number;
+    omitted?: number;
+    totals?: Record<string, number>;
+  };
+  const calls = Array.isArray(parsed.calls) ? [...parsed.calls] : [];
+  while (calls.length > 0 && artifactCustomMetadataByteLength(r2) > ARTIFACT_CUSTOM_METADATA_TARGET_BYTES) {
+    calls.pop();
+    fitted.opLedger = JSON.stringify({
+      ...parsed,
+      calls,
+      omitted: Math.max(0, (parsed.total ?? 0) - calls.length),
+      truncated: true
+    });
+    r2 = toR2Metadata(fitted);
+  }
+
+  if (artifactCustomMetadataByteLength(r2) <= ARTIFACT_CUSTOM_METADATA_MAX_BYTES) return fitted;
+
+  fitted.opLedger = JSON.stringify({
+    calls: [],
+    total: parsed.total ?? 0,
+    omitted: parsed.total ?? 0,
+    totals: parsed.totals ?? {},
+    truncated: true
+  });
+  r2 = toR2Metadata(fitted);
+  if (artifactCustomMetadataByteLength(r2) <= ARTIFACT_CUSTOM_METADATA_MAX_BYTES) return fitted;
+
+  const withoutLedger = { ...r2, opLedger: "" };
+  const budget = ARTIFACT_CUSTOM_METADATA_MAX_BYTES - artifactCustomMetadataByteLength(withoutLedger);
+  fitted.opLedger = budget >= 2 ? "{}" : "";
+  return fitted;
 }
 
 function expired(meta: ArtifactMetadata, now: Date): boolean {
@@ -231,9 +328,6 @@ export async function put(
 
   const id = crypto.randomUUID();
   const key = await keyFor(subject, id);
-  if (await bucket.head(key)) {
-    throw new Error("artifact id collision");
-  }
 
   const sha256 = await sha256Hex(input.body);
   const now = input.now ?? new Date();

@@ -205,8 +205,10 @@ Per call (`src/executor/run.ts`):
      `src/policy/source-basis.ts`: shape/loss detail, the manifest-operation call ledger,
      sanitized data-derived URLs, and an artifact availability line. The cut itself stays
      `maxTokens * 4`; the source-basis block is appended after the cut and has its own hard
-     character budget. The `skillSectionAdvice` flag can change source-basis guidance only
-     — advice flags never widen the budget or move the cut.
+     character budget. Source-basis guidance names `codemode.artifact.read(id)` only when
+     the artifact is available; skipped/absent artifacts get narrower re-run advice. The
+     `skillSectionAdvice` flag adds a return-sections/aggregates-not-whole-skill-bodies
+     clause only — advice flags never widen the budget or move the cut.
    - *logs*: `shapeLogs` (`src/executor/shape-logs.ts`) applies structural caps first —
      100 lines × 2,000 chars — **redacting each line before clipping** (clip-first would
      let a secret straddling the boundary leak its prefix), then the joined block gets its
@@ -216,24 +218,27 @@ Per call (`src/executor/run.ts`):
 7. **Errors as data** — a failed run returns `isError: true` with `Execution failed: …`
    plus the console block; nothing throws across the tool boundary. The `execute`
    telemetry event records ok/ms/code preview/result preview + all three truncation flags,
-   artifact read counts/bytes, and the full structured source-basis detail when present;
-   `execute_logs_shaped` fires only when structural shaping actually lost something.
+   artifact read counts/bytes, and structured source-basis detail when present. The
+   telemetry copy caps `sourceBasis.calls` to totals plus the first 12 calls so call-heavy
+   runs cannot turn the log event into a payload dump; `execute_logs_shaped` fires only
+   when structural shaping actually lost something.
 
 ### Artifact/source-basis lane
 
 Artifacts exist only for oversized **result** payloads. Logs and thrown error text keep their
 own model-boundary caps and are never persisted.
 
-The write path lives at the final result boundary in `src/executor/run.ts`: serialize the
-sandbox result, redact it with `redactSecrets`, run the model-boundary truncation decision,
-and only when that decision truncates, write the full redacted serialized result string to
-R2 through `src/artifacts/store.ts`. The R2 object body is a small JSON envelope
+The write path lives at the final result boundary in `src/executor/run.ts`: redact the
+sandbox result with `redactSecrets`, run the model-boundary truncation decision, and only
+when that decision truncates, serialize/write the full redacted result string to R2 through
+`src/artifacts/store.ts`. The R2 object body is a small JSON envelope
 `{ encoding, mime, body }`, where `body` is the exact UTF-8 result string the boundary used
 before slicing. The key is `art/<ownerHash>/<id>` (`id = crypto.randomUUID()`, owner hash =
 short SHA-256 prefix); the raw OAuth subject is never in the key. Custom metadata carries
 `createdAt`, `expiresAt`, byte size, SHA-256, MIME, request/ray id, cap/original sizing,
-the operation ledger, and the catalog `generatedAt`, so eval review can inspect provenance
-without reading the payload.
+a budgeted operation ledger summary (first 12 calls plus totals, with a final guard under
+R2's 8,192-byte custom metadata limit), and the catalog `generatedAt`, so eval review can
+inspect provenance without reading the payload.
 
 Production ownership is OAuth-only in v1. `src/server.ts` derives `artifactOwner` per tool
 call from `getMcpAuthContext()?.props.subject`, the peppered WorkOS subject set by the OAuth
@@ -249,17 +254,22 @@ The read path is inside the sandbox, not a public URL. `src/executor/providers.t
 flat host functions `codemode.artifact_info` / `codemode.artifact_read`; the prelude wraps
 them as `codemode.artifact.info(id)` and `codemode.artifact.read(id)` because nested objects
 do not cross codemode's provider proxy. Both return the normal envelope shape. `info` returns
-metadata only. `read` parses the stored value back into the sandbox (`r.data`) so code can
-filter/project the full payload without spending model context; the only exit remains the
-same final result cap above. Missing, expired, wrong-owner, invalid-id, and ownerless reads
-are all `{ ok:false, error:{ kind:"error", ... } }` from the sandbox's perspective. Store-level
-7-day logical expiry is enforced on every `info`/`read`; the bucket's 30-day lifecycle is only
-the GC backstop.
+metadata only, including `requestId` and `rayId` deliberately: that correlation affordance lets
+sandbox code return compact audit pointers without exposing payload bytes. `read` parses the
+stored value back into the sandbox (`r.data`) so code can filter/project the full payload
+without spending model context; the only exit remains the same final result cap above. Missing,
+expired, wrong-owner, invalid-id, and ownerless reads are all
+`{ ok:false, error:{ kind:"error", ... } }` from the sandbox's perspective. Store-level 7-day
+logical expiry is enforced on every `info`/`read`; the bucket's 30-day lifecycle is only the
+GC backstop.
 
-Abuse controls are per execute call: `codemode.artifact.read` is capped at 4 reads, and the
-provider records read count/bytes for the `execute` event. `artifact_write` and
-`artifact_read` log events include bytes, latency, hit/miss/skip reason, and only the owner
-hash prefix — never payload previews or raw subjects.
+Abuse controls are per execute call: `codemode.artifact.info` is capped at 8 metadata probes
+and `codemode.artifact.read` is capped at 4 reads. The provider records read count/bytes for
+the `execute` event. `artifact_write` and `artifact_read` log events include kind
+(`info`/`read`), bytes, latency, hit/miss/skip reason, and only the owner hash prefix —
+never payload previews or raw subjects. The R2 binding also sets
+`preview_bucket_name = "stellar-raven-artifacts-dev"` so `wrangler dev --remote` cannot bind
+the local/dev owner path to the production artifact bucket.
 
 ## 4. The envelope contract
 

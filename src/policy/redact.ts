@@ -40,11 +40,29 @@ export function secretsFromEnv(env: Record<string, unknown>): string[] {
 
 function scrubString(text: string, secrets: string[]): string {
   let out = text;
-  for (const secret of secrets) {
+  for (const secret of secretVariants(secrets)) {
     // split/join — no regex escaping worries for arbitrary key material.
     if (out.includes(secret)) out = out.split(secret).join(REPLACEMENT);
   }
   return out;
+}
+
+function secretVariants(secrets: string[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const secret of secrets) {
+    for (const candidate of [secret, jsonEscapedSecret(secret)]) {
+      if (!candidate || seen.has(candidate)) continue;
+      seen.add(candidate);
+      out.push(candidate);
+    }
+  }
+  return out;
+}
+
+function jsonEscapedSecret(secret: string): string {
+  const encoded = JSON.stringify(secret);
+  return encoded.slice(1, -1);
 }
 
 /**
@@ -63,6 +81,7 @@ export function redactSecrets<T>(value: T, secrets: string[]): T {
   } catch {
     return value; // non-serializable: nothing we can scan
   }
-  if (serialized === undefined || !secrets.some((s) => serialized.includes(s))) return value;
-  return JSON.parse(scrubString(serialized, secrets)) as T;
+  const variants = secretVariants(secrets);
+  if (serialized === undefined || !variants.some((s) => serialized.includes(s))) return value;
+  return JSON.parse(scrubString(serialized, variants)) as T;
 }

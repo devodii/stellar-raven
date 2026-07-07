@@ -30,6 +30,7 @@ import { searchCatalogPage, catalogServices } from "../catalog/search.ts";
 import { getCatalog } from "../catalog/load.ts";
 import { CATALOG_KINDS } from "../catalog/types.ts";
 import type { ExecuteCallContext, ExecuteRunner } from "../executor/run.ts";
+import type { BuildSourceBasisManifestInput, SourceBasisCall } from "../policy/source-basis.ts";
 import { logEvent, preview, CODE_LOG_MAX } from "../observability.ts";
 import { truncateForModel, truncateLogsForModel } from "../policy/truncate.ts";
 
@@ -39,6 +40,7 @@ export const SEARCH_KINDS = CATALOG_KINDS;
 
 export const SEARCH_TOOL_NAME = "search";
 export const EXECUTE_TOOL_NAME = "execute";
+const SOURCE_BASIS_TELEMETRY_CALL_LIMIT = 12;
 
 export const rankedSearchInputSchema = {
   query: z
@@ -125,6 +127,26 @@ export const executeInputSchema = {
       "JavaScript async arrow function to execute in the sandbox, e.g. async () => { ... return result; }"
     )
 };
+
+function sourceBasisCallTotals(calls: SourceBasisCall[]): Record<SourceBasisCall["outcome"], number> {
+  const totals = { ok: 0, error: 0, "soft-empty": 0 };
+  for (const call of calls) totals[call.outcome] += 1;
+  return totals;
+}
+
+function sourceBasisForTelemetry(sourceBasis: BuildSourceBasisManifestInput | undefined): unknown {
+  if (!sourceBasis) return null;
+  const calls = sourceBasis.calls ?? [];
+  return {
+    ...sourceBasis,
+    calls: {
+      first: calls.slice(0, SOURCE_BASIS_TELEMETRY_CALL_LIMIT),
+      total: calls.length,
+      omitted: Math.max(0, calls.length - SOURCE_BASIS_TELEMETRY_CALL_LIMIT),
+      totals: sourceBasisCallTotals(calls)
+    }
+  };
+}
 
 // Runnable-skill sentences (research/skill-run-design.md §11 row 13) — one
 // each in SEARCH_DESCRIPTION, EXECUTE_DESCRIPTION, SERVER_INSTRUCTIONS, and
@@ -361,7 +383,7 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
         error: outcome.ok ? null : preview(outcome.error),
         artifactReadCount: outcome.artifactReadCount ?? 0,
         artifactReadBytes: outcome.artifactReadBytes ?? 0,
-        sourceBasis: outcome.ok ? outcome.sourceBasis ?? null : null
+        sourceBasis: outcome.ok ? sourceBasisForTelemetry(outcome.sourceBasis) : null
       });
 
       const logsBlock =

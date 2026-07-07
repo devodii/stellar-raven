@@ -120,6 +120,67 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
     expect(await artifactKeysFor(owner)).toEqual(before);
   });
 
+  it("keeps concurrent executes isolated across owners and operation ledgers on the cached runner", async () => {
+    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+      const url = new URL(typeof input === "string" || input instanceof URL ? input : input.url);
+      if (url.pathname.endsWith("/search_directory")) {
+        await new Promise((resolve) => setTimeout(resolve, 25));
+        return Response.json({
+          success: true,
+          data: { count: 1, projects: [{ slug: "alpha" }] },
+          error: null,
+          meta: { tool: "search_directory", format: "json" }
+        });
+      }
+      if (url.pathname.endsWith("/get_categories")) {
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        return Response.json({
+          success: true,
+          data: { categories: ["payments"] },
+          error: null,
+          meta: { tool: "get_categories", format: "json" }
+        });
+      }
+      return Response.json({ success: false, error: `unexpected ${url.pathname}` }, { status: 500 });
+    });
+
+    const ownerA = uniqueOwner("concurrent-a");
+    const ownerB = uniqueOwner("concurrent-b");
+    const [a, b] = await Promise.all([
+      run(`async () => {
+        const r = await lumenloop.search_directory({ query: "alpha" });
+        return { label: "a", ok: r.ok, rows: Array.from({ length: 1800 }, (_, i) => ({ i, pad: "a".repeat(40) })) };
+      }`, { artifactOwner: ownerA }),
+      run(`async () => {
+        const r = await lumenloop.get_categories({});
+        return { label: "b", ok: r.ok, rows: Array.from({ length: 1800 }, (_, i) => ({ i, pad: "b".repeat(40) })) };
+      }`, { artifactOwner: ownerB })
+    ]);
+
+    expect(a.ok).toBe(true);
+    expect(b.ok).toBe(true);
+    if (!a.ok) throw new Error(a.error);
+    if (!b.ok) throw new Error(b.error);
+    expect(a.sourceBasis?.calls.map((call) => call.op)).toEqual(["lumenloop.search_directory"]);
+    expect(b.sourceBasis?.calls.map((call) => call.op)).toEqual(["lumenloop.get_categories"]);
+
+    const idA = artifactIdFrom(a.result);
+    const idB = artifactIdFrom(b.result);
+    const keysA = await artifactKeysFor(ownerA);
+    const keysB = await artifactKeysFor(ownerB);
+    expect(keysA).toHaveLength(1);
+    expect(keysB).toHaveLength(1);
+    expect(keysA[0]).toContain(idA);
+    expect(keysB[0]).toContain(idB);
+
+    const metaA = (await env.ARTIFACTS.head(keysA[0]!))?.customMetadata;
+    const metaB = (await env.ARTIFACTS.head(keysB[0]!))?.customMetadata;
+    expect(metaA?.opLedger).toContain("lumenloop.search_directory");
+    expect(metaA?.opLedger).not.toContain("lumenloop.get_categories");
+    expect(metaB?.opLedger).toContain("lumenloop.get_categories");
+    expect(metaB?.opLedger).not.toContain("lumenloop.search_directory");
+  });
+
   it("ownerless truncated results get a generic unavailable artifact line with no auth-mode wording", async () => {
     const outcome = await run(BIG_SECRET_RESULT_CODE);
     expect(outcome.ok).toBe(true);

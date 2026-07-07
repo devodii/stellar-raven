@@ -385,6 +385,56 @@ describe("execute behavior", () => {
     expect(text.length).toBeLessThan(11_000);
   });
 
+  it("caps structured sourceBasis calls in execute telemetry to first 12 plus totals", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      const execClient = await connectedClient({
+        runExecute: async () => ({
+          ok: true,
+          result: "ok",
+          truncated: true,
+          logs: [],
+          sourceBasis: {
+            shape: { kind: "array", serializedChars: 100_000, approxTokens: 25_000, totalItems: 30 },
+            calls: Array.from({ length: 30 }, (_, i) => {
+              const outcomes = ["ok", "error", "soft-empty"] as const;
+              return {
+                op: `service.op_${i}`,
+                outcome: outcomes[i % outcomes.length]!,
+                ms: i
+              };
+            }),
+            artifact: { state: "absent", reason: "unavailable" }
+          }
+        })
+      });
+      await execClient.callTool({ name: "execute", arguments: { code: "async () => []" } });
+      const executeEvent = logSpy.mock.calls
+        .map((call) => {
+          try {
+            return JSON.parse(String(call[0])) as {
+              evt?: string;
+              sourceBasis?: { calls?: { first?: unknown[]; total?: number; omitted?: number; totals?: unknown } };
+            };
+          } catch {
+            return null;
+          }
+        })
+        .find((event) => event?.evt === "execute");
+
+      expect(executeEvent?.sourceBasis?.calls?.first).toHaveLength(12);
+      expect(executeEvent?.sourceBasis?.calls?.total).toBe(30);
+      expect(executeEvent?.sourceBasis?.calls?.omitted).toBe(18);
+      expect(executeEvent?.sourceBasis?.calls?.totals).toEqual({
+        ok: 10,
+        error: 10,
+        "soft-empty": 10
+      });
+    } finally {
+      logSpy.mockRestore();
+    }
+  });
+
   it("budgets error text so a thrown payload cannot bypass the result cap", async () => {
     // Error text is model-authored (`throw new Error(bigPayload)`) — without
     // its own budget it would be the third smuggling channel after result

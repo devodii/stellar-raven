@@ -85,6 +85,7 @@ export type SandboxProvider = {
   prelude?: string;
 };
 
+export const ARTIFACT_INFO_CAP = 8;
 export const ARTIFACT_READ_CAP = 4;
 
 export type OpLedgerCall = {
@@ -501,6 +502,7 @@ export function buildCodemodeProvider(
   const enableDiscovery = discovery ?? true;
   const enableDescribe = enableDiscovery || describeOnly === true;
   let artifactReads = 0;
+  let artifactInfos = 0;
   let artifactReadBytes = 0;
   const artifactUnavailable = () => ({
     ok: false,
@@ -678,12 +680,67 @@ export function buildCodemodeProvider(
     },
 
     artifact_info: async (id?: unknown) => {
-      if (!artifact?.bucket || !artifact.owner) return artifactUnavailable();
+      const nextInfo = artifactInfos + 1;
+      const infoOrdinal = nextInfo;
+      const t0 = Date.now();
+      if (!artifact?.bucket || !artifact.owner) {
+        artifactInfos = nextInfo;
+        await logArtifactRead({
+          kind: "info",
+          owner: artifact?.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: false,
+          reason: "unavailable",
+          readCount: infoOrdinal
+        });
+        return artifactUnavailable();
+      }
+      if (nextInfo > ARTIFACT_INFO_CAP) {
+        artifactInfos = nextInfo;
+        await logArtifactRead({
+          kind: "info",
+          owner: artifact.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: false,
+          reason: "info-cap",
+          readCount: infoOrdinal
+        });
+        return {
+          ok: false,
+          error: {
+            service: "artifact",
+            kind: "error",
+            message: `artifact info cap exceeded: max ${ARTIFACT_INFO_CAP} info calls per execute`
+          }
+        };
+      }
+
+      artifactInfos = nextInfo;
       try {
         const r = await artifactInfo(artifact.bucket, artifact.owner, id);
+        await logArtifactRead({
+          kind: "info",
+          owner: artifact.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: r.ok,
+          reason: r.ok ? undefined : "not-found",
+          readCount: infoOrdinal
+        });
         if (!r.ok) return artifactNotFound();
         return { ok: true, data: publicArtifactMeta(r.artifact) };
       } catch {
+        await logArtifactRead({
+          kind: "info",
+          owner: artifact.owner,
+          bytes: 0,
+          ms: Date.now() - t0,
+          hit: false,
+          reason: "error",
+          readCount: infoOrdinal
+        });
         return artifactUnavailable();
       }
     },
@@ -696,6 +753,7 @@ export function buildCodemodeProvider(
         artifactReads = nextRead;
         artifact?.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
         await logArtifactRead({
+          kind: "read",
           owner: artifact?.owner,
           bytes: 0,
           ms: Date.now() - t0,
@@ -709,6 +767,7 @@ export function buildCodemodeProvider(
         artifactReads = nextRead;
         artifact.onReadStats?.({ count: artifactReads, bytes: artifactReadBytes });
         await logArtifactRead({
+          kind: "read",
           owner: artifact.owner,
           bytes: 0,
           ms: Date.now() - t0,
@@ -731,6 +790,7 @@ export function buildCodemodeProvider(
         const r = await artifactRead(artifact.bucket, artifact.owner, id);
         if (!r.ok) {
           await logArtifactRead({
+            kind: "read",
             owner: artifact.owner,
             bytes: 0,
             ms: Date.now() - t0,
@@ -743,6 +803,7 @@ export function buildCodemodeProvider(
         }
         artifactReadBytes += r.artifact.bytes;
         await logArtifactRead({
+          kind: "read",
           owner: artifact.owner,
           bytes: r.artifact.bytes,
           ms: Date.now() - t0,
@@ -753,6 +814,7 @@ export function buildCodemodeProvider(
         return { ok: true, data: r.value };
       } catch {
         await logArtifactRead({
+          kind: "read",
           owner: artifact.owner,
           bytes: 0,
           ms: Date.now() - t0,

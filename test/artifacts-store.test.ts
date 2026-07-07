@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
+  ARTIFACT_CUSTOM_METADATA_MAX_BYTES,
   ARTIFACT_MAX_BYTES,
   ARTIFACT_TTL_MS,
+  artifactCustomMetadataByteLength,
   info,
   put,
   read,
   type ArtifactPutInput
 } from "../src/artifacts/store.ts";
+import { redactSecrets } from "../src/policy/redact.ts";
 
 type Stored = {
   body: string;
@@ -32,6 +35,11 @@ class MemoryR2Bucket {
 
   async put(key: string, body: string, options?: R2PutOptions): Promise<R2Object> {
     const customMetadata = options?.customMetadata ? { ...options.customMetadata } : {};
+    if (artifactCustomMetadataByteLength(customMetadata) > ARTIFACT_CUSTOM_METADATA_MAX_BYTES) {
+      const error = new Error("MetadataTooLarge: custom metadata exceeds 8192 bytes");
+      error.name = "MetadataTooLarge";
+      throw error;
+    }
     this.objects.set(key, { body, customMetadata, httpMetadata: options?.httpMetadata });
     return new MemoryR2Object(key, body, customMetadata, options?.httpMetadata) as unknown as R2Object;
   }
@@ -72,6 +80,15 @@ function input(overrides: Partial<ArtifactPutInput> = {}): ArtifactPutInput {
     now: new Date("2026-07-07T12:00:00.000Z"),
     ...overrides
   };
+}
+
+function largeLedger(count: number) {
+  const statuses = ["ok", "error", "soft-empty"] as const;
+  return Array.from({ length: count }, (_, i) => ({
+    op: `service.synthetic_operation_${String(i).padStart(3, "0")}_${"x".repeat(120)}`,
+    status: statuses[i % statuses.length]!,
+    ms: 10 + i
+  }));
 }
 
 describe("artifact store", () => {
@@ -130,6 +147,9 @@ describe("artifact store", () => {
 
     expect(written.artifact.key).toMatch(/^art\/[0-9a-f]{16}\/[0-9a-f-]{36}$/);
     expect(written.artifact.key).not.toContain(owner);
+    const stored = [...(bucket as unknown as MemoryR2Bucket).objects.values()][0];
+    expect(JSON.stringify(stored?.customMetadata)).not.toContain(owner);
+    expect(stored?.body).not.toContain(owner);
     await expect(read(bucket, "different-peppered-subject", written.artifact.id)).resolves.toEqual({
       ok: false,
       error: { kind: "not-found" }
@@ -200,10 +220,68 @@ describe("artifact store", () => {
       rayId: "ray-abc",
       capTokens: 6000,
       originalChars: 38,
-      opLedger: JSON.stringify([{ op: "scout.getProject", status: "ok", ms: 42 }]),
+      opLedger: JSON.stringify({
+        calls: [{ op: "scout.getProject", status: "ok", ms: 42 }],
+        total: 1,
+        omitted: 0,
+        totals: { ok: 1, error: 0, "soft-empty": 0 }
+      }),
       catalogGeneratedAt: "2026-07-07T00:00:00.000Z"
     });
     expect(metadata.artifact.sha256).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it("caps op ledger metadata so >150-call artifacts still write under R2's metadata limit", async () => {
+    const realBucket = new MemoryR2Bucket();
+    const bucket = realBucket as unknown as R2Bucket;
+    const ledger = largeLedger(180);
+    const written = await put(bucket, "owner", input({ opLedger: ledger }));
+    if (!written.ok) throw new Error("unexpected skip");
+
+    const stored = realBucket.objects.get(written.artifact.key);
+    if (!stored) throw new Error("missing stored object");
+    expect(artifactCustomMetadataByteLength(stored.customMetadata)).toBeLessThanOrEqual(
+      ARTIFACT_CUSTOM_METADATA_MAX_BYTES
+    );
+
+    const preFixMetadata = {
+      ...stored.customMetadata,
+      opLedger: JSON.stringify(ledger)
+    };
+    expect(artifactCustomMetadataByteLength(preFixMetadata)).toBeGreaterThan(
+      ARTIFACT_CUSTOM_METADATA_MAX_BYTES
+    );
+
+    const ledgerMetadata = stored.customMetadata.opLedger;
+    if (!ledgerMetadata) throw new Error("missing opLedger metadata");
+    const opLedger = JSON.parse(ledgerMetadata) as {
+      calls: unknown[];
+      total: number;
+      omitted: number;
+      totals: Record<string, number>;
+    };
+    expect(opLedger.calls).toHaveLength(12);
+    expect(opLedger.total).toBe(180);
+    expect(opLedger.omitted).toBe(168);
+    expect(opLedger.totals).toEqual({ ok: 60, error: 60, "soft-empty": 60 });
+  });
+
+  it("stores redacted bytes clean when secrets require JSON escaping", async () => {
+    const realBucket = new MemoryR2Bucket();
+    const bucket = realBucket as unknown as R2Bucket;
+    const secret = 'quote-"slash-\\-unicode-☃-secret';
+    const escaped = JSON.stringify(secret).slice(1, -1);
+    const redacted = redactSecrets(JSON.stringify({ raw: secret, nested: { again: secret } }), [
+      secret
+    ]);
+    const written = await put(bucket, "owner", input({ body: redacted, mime: "application/json" }));
+    if (!written.ok) throw new Error("unexpected skip");
+
+    const stored = realBucket.objects.get(written.artifact.key);
+    if (!stored) throw new Error("missing stored object");
+    expect(stored.body).not.toContain(secret);
+    expect(stored.body).not.toContain(escaped);
+    expect(stored.body).toContain("[REDACTED]");
   });
 
   it("makes missing, wrong-owner, expired, and invalid ids indistinguishable", async () => {

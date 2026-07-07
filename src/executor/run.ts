@@ -224,7 +224,6 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       };
     }
     const redactedResult = redactSecrets(outcome.result, secrets);
-    const serialized = serializedResult(redactedResult);
     const result = truncateForModel(redactedResult, modelBoundaryMaxTokens, {
       skillSectionAdvice: skillRead
     });
@@ -232,6 +231,7 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
     let sourceBasis: BuildSourceBasisManifestInput | undefined;
     if (result.truncated) {
       let artifact: SourceBasisArtifact = { state: "absent", reason: "unavailable" };
+      const serialized = serializedResult(redactedResult);
       const writeStart = Date.now();
       if (context.artifactOwner) {
         try {
@@ -295,7 +295,8 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
         shape: sourceBasisShapeFromTruncation(redactedResult, result),
         calls: opLedger,
         canonicalUrls: sanitizeCanonicalUrls(collectCanonicalUrlCandidates(redactedResult)),
-        artifact
+        artifact,
+        skillSectionAdvice: skillRead
       };
       text = `${result.text.slice(0, result.maxChars)}\n${buildSourceBasisManifest(sourceBasis)}`;
     }

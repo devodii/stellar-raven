@@ -63,6 +63,7 @@ export async function logArtifactWrite(fields: {
 }
 
 export async function logArtifactRead(fields: {
+  kind?: "read" | "info";
   owner?: string;
   bytes: number;
   ms: number;
@@ -71,6 +72,7 @@ export async function logArtifactRead(fields: {
   readCount: number;
 }): Promise<void> {
   logEvent("artifact_read", {
+    kind: fields.kind ?? "read",
     ownerHash: await artifactOwnerHashPrefix(fields.owner),
     bytes: fields.bytes,
     ms: fields.ms,

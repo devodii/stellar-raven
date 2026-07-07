@@ -58,7 +58,8 @@
   "r2_buckets": [
     {
       "binding": "ARTIFACTS",
-      "bucket_name": "stellar-raven-artifacts"
+      "bucket_name": "stellar-raven-artifacts",
+      "preview_bucket_name": "stellar-raven-artifacts-dev"
     }
   ],
   // Production hostnames: raven.stellar.buzz is the default/primary route;

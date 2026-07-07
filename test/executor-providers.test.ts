@@ -11,7 +11,12 @@ import { loadManifest, type Catalog } from "../src/catalog/search.ts";
 import { buildSandbox } from "../src/executor/providers.ts";
 import type { FetchLike } from "../src/adapters/types.ts";
 import type { SkillBundle } from "../src/skills/store.ts";
-import { put as putArtifact, type ArtifactPutInput } from "../src/artifacts/store.ts";
+import {
+  ARTIFACT_CUSTOM_METADATA_MAX_BYTES,
+  artifactCustomMetadataByteLength,
+  put as putArtifact,
+  type ArtifactPutInput
+} from "../src/artifacts/store.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const catalog: Catalog = loadManifest(
@@ -51,6 +56,11 @@ class MemoryR2Bucket {
 
   async put(key: string, body: string, options?: R2PutOptions): Promise<R2Object> {
     const customMetadata = options?.customMetadata ? { ...options.customMetadata } : {};
+    if (artifactCustomMetadataByteLength(customMetadata) > ARTIFACT_CUSTOM_METADATA_MAX_BYTES) {
+      const error = new Error("MetadataTooLarge: custom metadata exceeds 8192 bytes");
+      error.name = "MetadataTooLarge";
+      throw error;
+    }
     this.objects.set(key, { body, customMetadata, httpMetadata: options?.httpMetadata });
     return new MemoryR2Object(key, body, customMetadata, options?.httpMetadata) as unknown as R2Object;
   }
@@ -251,6 +261,65 @@ describe("codemode.artifact provider", () => {
     expect(stats.at(-1)).toEqual({ count: 5, bytes: written.artifact.bytes * 4 });
   });
 
+  it("caps artifact_info per execute and logs hit/miss telemetry with bytes zero", async () => {
+    const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
+    const written = await putArtifact(bucket, "owner-a", artifactInput({ requestId: "req-info", rayId: "ray-info" }));
+    if (!written.ok) throw new Error("unexpected skip");
+    const codemode = fnsOf(
+      buildSandbox(catalog, bundle, env, {
+        artifact: {
+          bucket,
+          owner: "owner-a"
+        }
+      }),
+      "codemode"
+    );
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      await expect(codemode.artifact_info!(written.artifact.id)).resolves.toMatchObject({
+        ok: true,
+        data: {
+          id: written.artifact.id,
+          requestId: "req-info",
+          rayId: "ray-info"
+        }
+      });
+      await expect(codemode.artifact_info!(crypto.randomUUID())).resolves.toMatchObject({
+        ok: false,
+        error: { kind: "error", message: "artifact not found" }
+      });
+      for (let i = 0; i < 6; i++) {
+        await codemode.artifact_info!(written.artifact.id);
+      }
+      await expect(codemode.artifact_info!(written.artifact.id)).resolves.toMatchObject({
+        ok: false,
+        error: { kind: "error", message: "artifact info cap exceeded: max 8 info calls per execute" }
+      });
+
+      const infoEvents = logSpy.mock.calls
+        .map((call) => {
+          try {
+            return JSON.parse(String(call[0])) as {
+              evt?: string;
+              kind?: string;
+              hit?: boolean;
+              bytes?: number;
+              reason?: string | null;
+            };
+          } catch {
+            return null;
+          }
+        })
+        .filter((event): event is { evt: string; kind: string; hit: boolean; bytes: number; reason?: string | null } => event?.evt === "artifact_read" && event.kind === "info");
+
+      expect(infoEvents[0]).toMatchObject({ hit: true, bytes: 0 });
+      expect(infoEvents[1]).toMatchObject({ hit: false, bytes: 0, reason: "not-found" });
+      expect(infoEvents.at(-1)).toMatchObject({ hit: false, bytes: 0, reason: "info-cap" });
+    } finally {
+      logSpy.mockRestore();
+    }
+  });
+
   it("logs a stable per-event read ordinal under concurrent successful reads", async () => {
     const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
     const written = await putArtifact(bucket, "owner-a", artifactInput());
@@ -272,12 +341,12 @@ describe("codemode.artifact provider", () => {
       const readCounts = logSpy.mock.calls
         .map((call) => {
           try {
-            return JSON.parse(String(call[0])) as { evt?: string; hit?: boolean; readCount?: number };
+            return JSON.parse(String(call[0])) as { evt?: string; kind?: string; hit?: boolean; readCount?: number };
           } catch {
             return null;
           }
         })
-        .filter((event): event is { evt: string; hit: boolean; readCount: number } => event?.evt === "artifact_read" && event.hit === true)
+        .filter((event): event is { evt: string; kind: string; hit: boolean; readCount: number } => event?.evt === "artifact_read" && event.kind === "read" && event.hit === true)
         .map((event) => event.readCount)
         .sort((a, b) => a - b);
 
