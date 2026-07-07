@@ -10,7 +10,7 @@
     "type": "fixed",
     "version": "openapi 1.6.1"
   },
-  "fetchedAt": "2026-07-06T21:16:58.912Z",
+  "fetchedAt": "2026-07-07T13:31:44.832Z",
   "openapi": {
     "components": {
       "parameters": {
@@ -2507,7 +2507,7 @@
       },
       {
         "count": 113,
-        "lastUpdatedAt": "2026-07-06T06:01:12.913Z",
+        "lastUpdatedAt": "2026-07-07T06:01:22.979Z",
         "name": "builders",
         "notes": "Synced from Stellar Passport — small and growing dataset"
       },
