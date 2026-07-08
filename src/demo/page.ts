@@ -177,9 +177,11 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
 .gate .cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px}
 .gate .cta .hint{font-family:var(--mono);font-size:11.5px;color:var(--ash)}
 .gate .consent{margin-top:18px}
-.gate .consent-row{display:inline-flex;align-items:center;gap:10px;cursor:pointer;
+.gate .consent-row{display:inline-flex;align-items:flex-start;gap:10px;cursor:pointer;
   font-family:var(--sans);font-size:11.5px;color:var(--ash);line-height:1.6}
-.gate .consent-row input{flex:none;width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
+/* centre the box on the FIRST line, not the whole phrase: half the leftover of
+   one line box (font-size:inherit so 1em is the row's 11.5px, not the control default). */
+.gate .consent-row input{flex:none;font-size:inherit;margin-top:calc((1.6em - 15px)/2);width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
 .gate .consent-row a{color:var(--dim);text-decoration:underline;text-underline-offset:2px}
 .gate .consent-row a:hover{color:var(--orange)}
 /* CSS-only consent gate — no script on the locked page. The sign-in button is

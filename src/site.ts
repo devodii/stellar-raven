@@ -836,9 +836,10 @@ main.auth{flex:1;display:flex;align-items:center;justify-content:center;padding:
 .scope-desc{grid-column:2;font-size:13.5px;color:var(--dim);margin-top:6px;line-height:1.5}
 .act{padding:24px 34px 32px}
 .act .btn-primary{width:100%;justify-content:center;padding:15px}
-.consent-row{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:12.5px;
+.consent-row{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12.5px;
   color:var(--dim);line-height:1.5;margin:0 0 16px}
-.consent-row input{flex:none;width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
+/* centre the box on the first line, not the whole phrase (see the demo page). */
+.consent-row input{flex:none;font-size:inherit;margin-top:calc((1.5em - 15px)/2);width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
 .consent-row a{color:var(--fog);text-decoration:underline;text-underline-offset:2px}
 .consent-row a:hover{color:var(--orange)}
 /* CSS-only gate (script-free page): the submit button is inert until #tos-agree
