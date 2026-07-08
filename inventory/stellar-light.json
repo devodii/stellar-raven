@@ -10,7 +10,7 @@
     "type": "fixed",
     "version": "openapi 1.6.1"
   },
-  "fetchedAt": "2026-07-07T13:31:44.832Z",
+  "fetchedAt": "2026-07-08T14:41:26.228Z",
   "openapi": {
     "components": {
       "parameters": {
@@ -238,56 +238,6 @@
         },
         "Project": {
           "properties": {
-            "anchorProfile": {
-              "description": "Structured corridor/coverage data for Anchor-typed projects, joined from the partner directory's stellar.toml enrichment — answers 'which anchors serve corridor X→Y' with filterable, dated fields instead of prose. Null for non-anchor projects or when no partner record matches.",
-              "nullable": true,
-              "properties": {
-                "asOf": {
-                  "description": "When the partner record was last updated — cite as the coverage as-of date.",
-                  "format": "date-time",
-                  "nullable": true,
-                  "type": "string"
-                },
-                "assets": {
-                  "description": "Asset codes the anchor issues/supports (from its stellar.toml CURRENCIES).",
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                },
-                "country": {
-                  "nullable": true,
-                  "type": "string"
-                },
-                "rampTypes": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                },
-                "regions": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                },
-                "seps": {
-                  "description": "Supported SEPs (e.g. 6, 24, 31) — the on/off-ramp interop surface.",
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                },
-                "slug": {
-                  "type": "string"
-                },
-                "url": {
-                  "format": "uri",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            },
             "builtBy": {
               "description": "The organization/entity behind this project ('who built X') — e.g. LOBSTR → Ultra Stellar, Soroswap → Paltalabs. Null when no org is linked. Browse the org's portfolio at https://stellarlight.xyz/entities/{slug}.",
               "nullable": true,
@@ -335,6 +285,39 @@
                 },
                 "score": {
                   "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "coverage": {
+              "description": "Structured corridor/coverage for Anchor-typed projects — answers 'which anchors serve currency/corridor X?' with filterable, dated fields instead of prose. Synced from the matching partner record; null for non-anchors or when no partner record matches.",
+              "nullable": true,
+              "properties": {
+                "asOf": {
+                  "description": "Date (YYYY-MM-DD) the coverage was synced from the partner record — cite as the as-of date.",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "countries": {
+                  "description": "Primary market/jurisdiction country names.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "currencies": {
+                  "description": "Fiat currencies supported (e.g. MXN, EUR, PHP).",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "seps": {
+                  "description": "Supported SEPs (sep-6, sep-24, sep-31) — the on/off-ramp interop surface.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
                 }
               },
               "type": "object"
@@ -452,6 +435,13 @@
                 "Inactive"
               ],
               "type": "string"
+            },
+            "supportedNetworks": {
+              "description": "Blockchain networks this project supports, lowercase (e.g. ['stellar','xrpl']), so a multichain wallet's omission of a chain isn't misread as a negative. Empty when unknown.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             },
             "types": {
               "description": "Capability tags (Wallet, DEX, Lending, Oracle, SDK, RPC, Faucet, NFT, RWA, Anchor, Stablecoin, Indexer, Explorer, Security, Gaming).",
@@ -2496,7 +2486,7 @@
     "sources": [
       {
         "count": 920,
-        "lastUpdatedAt": "2026-07-05T18:00:18.707Z",
+        "lastUpdatedAt": "2026-07-07T22:19:07.923Z",
         "name": "projects"
       },
       {
@@ -2507,7 +2497,7 @@
       },
       {
         "count": 113,
-        "lastUpdatedAt": "2026-07-07T06:01:22.979Z",
+        "lastUpdatedAt": "2026-07-08T06:00:30.364Z",
         "name": "builders",
         "notes": "Synced from Stellar Passport — small and growing dataset"
       },

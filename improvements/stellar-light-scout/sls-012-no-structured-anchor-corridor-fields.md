@@ -1,13 +1,14 @@
 ---
 id: sls-012
 service: stellar-light-scout
-status: reported-upstream
+status: fixed-upstream
 discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03 (scout.searchProjects category Anchor, scout.matchPartners, lumenloop.search_directory/get_project; Solo scratchpad 521 follow-up, todo 826 comment 2224)
   - consumer-side workaround shipped: eval/qa/golden-overrides.json q-crp-anchors-by-corridor (dated-citation guard instead of structured grounding)
   - live re-verified 2026-07-06 (eval round todo 846): 19 Anchor-category projects still carry coverage only in shortDescription prose — no countries[]/currencies[]/seps[] structured fields (and no regions field) on project rows
   - upstream issue filed 2026-07-07: https://github.com/Stellar-Light/stellar-scout/issues/3
+  - fixed upstream in 2026-07-08 drift: Project schema now exposes coverage.{countries,currencies,seps,asOf}; live category=Anchor check returned 14/19 anchors with non-null coverage, including Bitso/Mexico/MXN and Cash Abroad/Mexico, with dated asOf values
 ---
 
 ## Finding
@@ -32,6 +33,14 @@ SEP-24")` → Yellow Card 92 / HoneyCoin 88 / Fonbnk 72 with dated meta,
 Lumenloop directory + get_project on anchor slugs (region labels only). Docs
 side checked too: `search_anchor_sep_docs` returns SEP flow docs, no corridor
 listings — as expected, protocol docs are the wrong layer for this.
+
+Live re-check 2026-07-08: `GET /api/projects/search?category=Anchor&limit=50`
+returned 19 Anchor-category records, 14 with non-null `coverage`. Examples:
+Bitso carries `countries:["Mexico"]`, `currencies:["MXN","BRL","ARS","COP","USD"]`,
+`asOf:"2026-07-07"`; Cash Abroad carries `countries:["Mexico"]`,
+`asOf:"2026-07-07"`; MYKOBO carries `currencies:["EUR"]` and
+`seps:["sep-6","sep-24","sep-31"]`. The original "no structured fields anywhere"
+defect is fixed. A successor ranking/retrieval issue is tracked as `sls-018`.
 
 ## Recommendation
 

@@ -1,7 +1,7 @@
 ---
 id: sls-017
 service: stellar-light-scout
-status: reported-upstream
+status: fixed-upstream
 discovered: 2026-07-07
 evidence:
   - eval/qa/results/2026-07-07T19-58-35-variantA.json (q-eco-wallets-overview)
@@ -9,16 +9,7 @@ evidence:
   - "prevalence sweep 2026-07-07: Scout returned 45 Wallet-typed records for q=wallet. In the first 20, multichain support was present for Hana, HOT Wallet, Bitget Wallet, Klever, Unstoppable Wallet, Ledger, and Trezor; Decaf appears outside Wallet type as Payments but its record explicitly says Solana and Stellar. xBull, Beans, Freighter, Vesseo/Vibrant, Albedo, Rabet, and Solar own-site checks did not reveal an omitted non-Stellar chain in this sample. Result: keep verified as a LOBSTR stale-omission, not a broad multichain-wallet prevalence claim."
   - Solo todo 870 comment 2308
   - upstream issue filed 2026-07-07: https://github.com/Stellar-Light/stellar-scout/issues/4
-probe:
-  type: http-text
-  url: https://stellarlight.xyz/api/projects/search?q=LOBSTR&limit=10
-  expect:
-    status: 200
-    contains:
-      - Lobstr
-    excludes:
-      - XRPL
-      - XRP Ledger
+  - fixed upstream in 2026-07-08 drift: live LOBSTR project search now returns supportedNetworks ["stellar","xrpl"] and description text naming Stellar and XRP Ledger (XRPL)
 ---
 ## Finding
 
@@ -45,6 +36,11 @@ answering agent, working from live directory payloads, classified LOBSTR as
 (headline copy "Stellar & XRPL Wallet"; product copy naming both ledgers and
 Ultra Stellar as the independent operator). The error is faithful synthesis
 of incomplete upstream data, not agent fabrication.
+
+Live re-check 2026-07-08: `GET /api/projects/search?q=LOBSTR&limit=10`
+returns the LOBSTR row with `supportedNetworks:["stellar","xrpl"]` and
+shortDescription text saying it is for the Stellar and XRP Ledger (XRPL)
+networks. The original omission is fixed.
 
 ## Recommendation
 

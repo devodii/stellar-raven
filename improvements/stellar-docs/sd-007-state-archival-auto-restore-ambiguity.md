@@ -10,6 +10,9 @@ evidence:
   - stellar/stellar-core InvokeHostFunctionOpFrame.cpp and InvokeHostFunctionTests.cpp at d6f2546791774d0b2cd925b8a4026adf967a92a3
   - Solo project 49, todo 870 eval-review follow-up
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2568
+recurrences:
+  - date: 2026-07-08
+    evidence: improvements probe re-hit; state-archival page still contains both "Contract Data Automatic Restoration" and the underqualified "will fail immediately" wording
 probe:
   type: http-text
   url: https://developers.stellar.org/docs/learn/fundamentals/contract-development/storage/state-archival
