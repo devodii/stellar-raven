@@ -187,24 +187,24 @@ pre.code .k{color:#93d6a6}
 .copied{color:var(--orange)!important;border-color:var(--orange)!important}
 
 /* ---- below-the-fold sections: frosted-glass field over the globe ---- */
-/* Two layers ramping in together over ~460px: a light dark wash (never fully
+/* Two layers ramping in together over ~155px: a light dark wash (never fully
    opaque, so the dither keeps glowing through) and a masked backdrop blur that
    melts the dots into soft fog before any content appears. */
 .below{position:relative;z-index:2;
   background:linear-gradient(180deg,transparent,
-    rgba(14,21,13,.2) 90px,rgba(14,21,13,.42) 180px,rgba(14,21,13,.58) 270px,
-    rgba(14,21,13,.68) 360px,rgba(14,21,13,.72) 460px)}
+    rgba(14,21,13,.2) 30px,rgba(14,21,13,.42) 60px,rgba(14,21,13,.58) 90px,
+    rgba(14,21,13,.68) 120px,rgba(14,21,13,.72) 155px)}
 .below::before{content:"";position:absolute;inset:0;pointer-events:none;
   backdrop-filter:blur(10px) saturate(.9);-webkit-backdrop-filter:blur(10px) saturate(.9);
-  mask-image:linear-gradient(180deg,transparent,#000 440px);
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 440px)}
+  mask-image:linear-gradient(180deg,transparent,#000 150px);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 150px)}
 .below>*{position:relative;z-index:1}
 /* no backdrop-filter support -> the sharp dither would sit right behind copy;
    fall back to the near-opaque field */
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .below{background:linear-gradient(180deg,transparent,
-    rgba(14,21,13,.32) 90px,rgba(14,21,13,.6) 180px,rgba(14,21,13,.8) 270px,
-    rgba(14,21,13,.92) 360px,rgba(14,21,13,.96) 460px)}
+    rgba(14,21,13,.32) 30px,rgba(14,21,13,.6) 60px,rgba(14,21,13,.8) 90px,
+    rgba(14,21,13,.92) 120px,rgba(14,21,13,.96) 155px)}
   footer{background:rgba(14,21,13,.96)}
 }
 .sec{max-width:980px;margin:0 auto;padding:72px 32px 8px}
@@ -216,7 +216,7 @@ pre.code .k{color:#93d6a6}
 
 /* stat strip — the numbers ARE the social proof */
 .stats{display:flex;flex-wrap:wrap;gap:10px 0;justify-content:center;max-width:980px;margin:0 auto;
-  padding:360px 32px 0;font-family:var(--mono);font-size:13px;color:var(--dim)}
+  padding:120px 32px 0;font-family:var(--mono);font-size:13px;color:var(--dim)}
 .stats .st{display:flex;align-items:baseline;gap:8px;padding:0 22px;border-left:1px solid var(--line)}
 .stats .st:first-child{border-left:0}
 .stats b{color:var(--orange);font-weight:500;font-size:17px}
@@ -300,10 +300,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:26px
   .connect-head .end{display:none}
   .sec{padding:52px 22px 6px}
   .below{background:linear-gradient(180deg,transparent,
-    rgba(14,21,13,.26) 70px,rgba(14,21,13,.48) 140px,rgba(14,21,13,.64) 210px,rgba(14,21,13,.72) 280px)}
-  .below::before{mask-image:linear-gradient(180deg,transparent,#000 260px);
-    -webkit-mask-image:linear-gradient(180deg,transparent,#000 260px)}
-  .stats{padding:220px 22px 0}
+    rgba(14,21,13,.26) 35px,rgba(14,21,13,.48) 70px,rgba(14,21,13,.64) 105px,rgba(14,21,13,.72) 140px)}
+  .below::before{mask-image:linear-gradient(180deg,transparent,#000 130px);
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 130px)}
+  .stats{padding:110px 22px 0}
   .stats .st{padding:0 14px}
   .bento,.vs{grid-template-columns:1fr}
   .cta-row{padding:44px 22px 58px}
