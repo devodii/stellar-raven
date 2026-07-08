@@ -19,7 +19,7 @@
  * Expand/collapse is native <details>/<summary> in both states, so the locked
  * page needs zero JavaScript and the live client gets toggling for free.
  */
-import { BASE, FAVICON, FONT_FACE, TOKENS, ravenSvg } from "../site.ts";
+import { BASE, FAVICON, FONT_FACE, HOST, OG_ALT, OG_IMAGE, TOKENS, ravenSvg } from "../site.ts";
 import { DEMO_CAPS } from "./budget.ts";
 
 // ---------------------------------------------------------------------------
@@ -709,17 +709,38 @@ const EXPLAINER =
   "and bundled playbooks, run a focused lookup, then answer from what it found. " +
   "The playground shows the live trace, so you can see the sources behind each " +
   "answer before connecting your own agent.";
+const DEMO_TITLE = "Playground · Stellar Raven";
+const DEMO_DESCRIPTION = "Try Stellar Raven's live agent playground for Stellar ecosystem questions.";
+const DEMO_URL = `https://${HOST}/demo`;
 
 function demoHead(): string {
   return `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Playground &middot; Stellar Raven</title>
-<meta name="description" content="Try Stellar Raven's live agent playground for Stellar ecosystem questions."/>
+<title>${DEMO_TITLE}</title>
+<meta name="description" content="${DEMO_DESCRIPTION}"/>
 <meta name="robots" content="noindex"/>
 <meta name="theme-color" content="#0e150d"/>
 <meta name="color-scheme" content="dark"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="${DEMO_TITLE}"/>
+<meta property="og:description" content="${DEMO_DESCRIPTION}"/>
+<meta property="og:image" content="${OG_IMAGE}"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:type" content="image/png"/>
+<meta property="og:image:alt" content="${OG_ALT}"/>
+<meta property="og:url" content="${DEMO_URL}"/>
+<meta property="og:site_name" content="Stellar Raven"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="${DEMO_TITLE}"/>
+<meta name="twitter:description" content="${DEMO_DESCRIPTION}"/>
+<meta name="twitter:image" content="${OG_IMAGE}"/>
+<meta name="twitter:image:alt" content="${OG_ALT}"/>
 <link rel="icon" href="${FAVICON}"/>
+<link rel="apple-touch-icon" href="${FAVICON}"/>
+<link rel="canonical" href="${DEMO_URL}"/>
 <style>${FONT_FACE}${TOKENS}${BASE}${DEMO_CSS}</style>
 </head><body>`;
 }

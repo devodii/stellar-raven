@@ -130,6 +130,7 @@ describe("/demo routes", () => {
     const head = await SELF.fetch(`${PUBLIC}/demo`, { method: "HEAD" });
     expect(head.status).toBe(200);
     expect(head.headers.get("content-type")).toContain("text/html");
+    expect(await head.text()).toBe("");
   });
 
   it("GET /demo on localhost takes the dev bypass → authenticated chat UI", async () => {
@@ -142,6 +143,9 @@ describe("/demo routes", () => {
     const page = await SELF.fetch(`${PUBLIC}/demo`, { method: "DELETE" });
     expect(page.status).toBe(405);
     expect(page.headers.get("allow")).toBe("GET, HEAD");
+    const options = await SELF.fetch(`${PUBLIC}/demo`, { method: "OPTIONS" });
+    expect(options.status).toBe(405);
+    expect(options.headers.get("allow")).toBe("GET, HEAD");
     const login = await SELF.fetch(`${PUBLIC}/demo/login`, { method: "POST" });
     expect(login.status).toBe(405);
     const chat = await SELF.fetch(`${PUBLIC}/demo/chat`);

@@ -31,8 +31,8 @@ import {
 } from "./fonts";
 
 const MCP_ENDPOINT = "https://raven.stellar.buzz/mcp";
-const HOST = "raven.stellar.buzz";
-const OG_IMAGE = "https://raven.stellar.buzz/og.png";
+export const HOST = "raven.stellar.buzz";
+export const OG_IMAGE = "https://raven.stellar.buzz/og.png";
 
 // Orange raven/star mark — reads as both a bird in flight and a four-point
 // stellar spark. Inline SVG data URI (favicon) + raw path (in-page marks).
@@ -457,7 +457,7 @@ const SCRIPT = `
 // Page shells
 // ---------------------------------------------------------------------------
 
-const OG_ALT =
+export const OG_ALT =
   "Stellar Raven — Stellar docs and ecosystem context, one connection. A Bayer-dithered orange globe " +
   "beside the endpoint raven.stellar.buzz/mcp.";
 

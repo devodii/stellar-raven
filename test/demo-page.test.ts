@@ -45,6 +45,24 @@ describe("demo page CSP", () => {
 });
 
 describe("demo page states", () => {
+  it("sets complete noindex social metadata for the demo URL", () => {
+    expect(lockedHtml).toContain("<title>Playground · Stellar Raven</title>");
+    expect(lockedHtml).toContain(
+      '<meta name="description" content="Try Stellar Raven\'s live agent playground for Stellar ecosystem questions."/>'
+    );
+    expect(lockedHtml).toContain('<meta name="robots" content="noindex"/>');
+    expect(lockedHtml).toContain('<meta property="og:type" content="website"/>');
+    expect(lockedHtml).toContain('<meta property="og:title" content="Playground · Stellar Raven"/>');
+    expect(lockedHtml).toContain('<meta property="og:image" content="https://raven.stellar.buzz/og.png"/>');
+    expect(lockedHtml).toContain('<meta property="og:image:width" content="1200"/>');
+    expect(lockedHtml).toContain('<meta property="og:image:height" content="630"/>');
+    expect(lockedHtml).toContain('<meta property="og:url" content="https://raven.stellar.buzz/demo"/>');
+    expect(lockedHtml).toContain('<meta name="twitter:card" content="summary_large_image"/>');
+    expect(lockedHtml).toContain('<meta name="twitter:image" content="https://raven.stellar.buzz/og.png"/>');
+    expect(lockedHtml).toContain('<link rel="apple-touch-icon"');
+    expect(lockedHtml).toContain('<link rel="canonical" href="https://raven.stellar.buzz/demo"/>');
+  });
+
   it("locked: sign-in link, static example trace, zero script", () => {
     expect(lockedHtml).toContain('href="/demo/login"');
     expect(lockedHtml).toContain("Test drive <span class=\"r\">Raven</span>");
