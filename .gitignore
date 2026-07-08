@@ -36,3 +36,6 @@ eval/.build/
 research/gauntlets/*.json
 # real-user lane inputs/labels — PII-bearing source, never committed
 /eval/local-lanes/
+
+# scratch/working dirs for local UI screenshot cycles (site/OG globe tuning) — never committed
+scratch-*/
