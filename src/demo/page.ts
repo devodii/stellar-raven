@@ -166,6 +166,13 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
 .gate h1 .r{color:var(--orange);text-shadow:0 0 36px rgba(255,85,0,.35)}
 .gate .cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px}
 .gate .cta .hint{font-family:var(--mono);font-size:11.5px;color:var(--ash)}
+.gate .consent{margin-top:18px}
+.gate .consent-row{display:inline-flex;align-items:flex-start;gap:10px;cursor:pointer;
+  font-family:var(--sans);font-size:11.5px;color:var(--ash);line-height:1.6}
+.gate .consent-row input{flex:none;margin-top:1px;width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
+.gate .consent-row a{color:var(--dim);text-decoration:underline;text-underline-offset:2px}
+.gate .consent-row a:hover{color:var(--orange)}
+.gate .cta .btn.is-disabled{opacity:.45;cursor:not-allowed;pointer-events:none;box-shadow:none;transform:none}
 .example{margin-top:54px}
 .example .exhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
 .example .exnote{font-family:var(--mono);font-size:11.5px;color:var(--ash)}
@@ -761,9 +768,23 @@ function lockedBody(): string {
     `<p class="eyebrow">Agent playground <span class="live"><span class="dot"></span>live tools</span></p>` +
     `<h1>Test drive <span class="r">Raven</span></h1>` +
     `<p class="lede">${esc(EXPLAINER)}</p>` +
-    `<div class="cta"><a class="btn btn-primary" href="/playground/login">Sign in to try it</a>` +
+    `<div class="cta"><a id="signin" class="btn btn-primary is-disabled" aria-disabled="true" ` +
+    `href="/playground/login">Sign in to try it</a>` +
     `<span class="hint">WorkOS sign-in &middot; no service API keys &middot; rate-limited</span></div>` +
+    `<div class="consent"><label class="consent-row">` +
+    `<input type="checkbox" id="tos-agree"/>` +
+    `<span>By using Stellar Raven you acknowledge you have read and<br/>agreed to the ` +
+    `<a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of Service</a> ` +
+    `and <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.` +
+    `</span></label></div>` +
     `</section>` +
+    `<script>(function(){var c=document.getElementById("tos-agree"),` +
+    `b=document.getElementById("signin");if(!c||!b)return;` +
+    `function sync(){var off=!c.checked;b.classList.toggle("is-disabled",off);` +
+    `b.setAttribute("aria-disabled",String(off));}` +
+    `c.addEventListener("change",sync);` +
+    `b.addEventListener("click",function(e){if(!c.checked)e.preventDefault();});` +
+    `sync();})();</script>` +
     `<section class="example"><div class="exhead"><p class="eyebrow">Example session</p>` +
     `<span class="exnote">static sample &mdash; sign in to run your own</span></div>` +
     sampleTrace() +
