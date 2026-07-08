@@ -175,7 +175,7 @@
    ],
    "rootCause": [
     "solo://proj/49/todo/judge-rubric-corpus--826 — judge-blind avoid phrasing (eval-side authoring)",
-    "improvements/stellar-light-scout/sls-012 — no structured corridor/coverage fields anywhere (free-text prose only); the upstream fix that would make corridor claims groundable with dated structured evidence",
+    "improvements/stellar-light-scout/sls-012 — original root cause was no structured corridor/coverage fields anywhere (free-text prose only); fixed upstream in 2026-07-08 drift with Project.coverage.{countries,currencies,seps,asOf}; remaining retrieval/ranking gap tracked separately as sls-018",
     "improvements/lumenloop/ll-008 — the moneygram record presents the corporate 200+-country footprint undistinguished from the Stellar off-ramp; the in-corpus source of the conflation this trap catches"
    ],
    "golden": {

@@ -125,7 +125,7 @@ describe("build-catalog.mjs", () => {
     expect(count((e) => e.id.includes("lumenloop-mcp-connect"))).toBe(0);
 
     // Grand total: everything in the manifest is exposed (ADR-0003).
-    expect(catalog.entries).toHaveLength(271);
+    expect(catalog.entries).toHaveLength(272);
   });
 
   it("carries exactly version/generatedAt/entries at the top level", () => {

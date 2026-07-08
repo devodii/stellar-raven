@@ -692,20 +692,24 @@
       "id": "q-soroban-deploy-cli",
       "question": "How do I deploy a Soroban smart contract to Stellar testnet using the Stellar CLI?",
       "golden": {
-        "answer": "Soroban contracts are written in **Rust** (the `soroban-sdk`) and compiled to a **Wasm** artifact,\nthen deployed with the **Stellar CLI** (`stellar`, formerly `soroban-cli`). Canonical testnet flow:\n\n1. `stellar contract build` — compiles the contract to `target/wasm32-...` `.wasm`.\n2. Have a funded testnet identity (`stellar keys generate ...` then fund via **Friendbot**) and/or\n   `stellar network` configured for testnet.\n3. `stellar contract deploy --wasm <path>.wasm --source <identity> --network testnet` — uploads the\n   Wasm and instantiates the contract, returning a **contract ID** (`C…`).\n4. Invoke with `stellar contract invoke --id <C…> --source <identity> --network testnet -- <fn> ...`.\n\nSource of truth: developers.stellar.org \"Deploy to Testnet\" getting-started guide + the CLI reference.",
+        "answer": "Soroban/Stellar smart contracts are written in **Rust** with `soroban-sdk`, built to a **Wasm** artifact, and deployed with the unified **Stellar CLI** (`stellar`, formerly `soroban-cli`). Canonical testnet flow:\n\n1. Build the contract: `stellar contract build`. Current output is under `target/wasm32v1-none/release/<contract>.wasm`.\n2. Create and fund a testnet identity: `stellar keys generate alice --network testnet --fund` (or create/fund by another Friendbot/Lab flow).\n3. Deploy with the canonical source-account flag: `stellar contract deploy --wasm target/wasm32v1-none/release/<contract>.wasm --source-account alice --network testnet` plus `--alias <name>` if desired. Constructor arguments go after the separator, e.g. `-- --admin alice`.\n4. Invoke with the returned `C...` contract ID: `stellar contract invoke --id <C...> --source-account alice --network testnet -- <fn> ...`.\n\n`--source` is still accepted by the CLI as an alias for `--source-account`, but canonical docs/help should show `--source-account`. Source of truth: current developers.stellar.org contract/CLI docs and `stellar contract deploy --help`.",
         "keyFacts": [
-          "Contracts are built to a Wasm artifact first (`stellar contract build`, a `cargo`/Rust build).",
-          "Deployment uses the Stellar CLI `stellar contract deploy` command (with the built .wasm).",
-          "A network must be specified/targeted as testnet (e.g. `--network testnet`) and a funded source identity/account used."
+          "Contracts are built to a Wasm artifact first with `stellar contract build`; current output is under `target/wasm32v1-none/release/`.",
+          "Deployment uses the Stellar CLI `stellar contract deploy` command with the built `.wasm` and the canonical `--source-account <identity>` flag.",
+          "A network must be specified/targeted as testnet (e.g. `--network testnet`) and a funded source identity/account used; current key generation is `stellar keys generate <name> --network testnet --fund`.",
+          "Deploy returns a `C...` contract ID used for subsequent `stellar contract invoke --id <C...> --source-account <identity> --network testnet -- <fn> ...` calls."
         ],
         "avoid": [
           "Do NOT say Soroban contracts are written in Solidity or compiled to EVM bytecode.",
           "Do NOT present `soroban deploy` as the current canonical command without noting the CLI is now `stellar` (the soroban-cli was renamed/merged into stellar-cli).",
+          "Do NOT present `wasm32-unknown-unknown`, `--global`, or `--source` as the current canonical happy-path deploy flow. `--source` may be mentioned only as an alias for `--source-account`.",
           "Do NOT invent flags/commands that are not in the Stellar CLI."
         ],
         "sources": [
-          "https://developers.stellar.org/docs/build/smart-contracts/getting-started/deploy-to-testnet",
-          "https://developers.stellar.org/docs/tools/cli"
+          "https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world",
+          "https://developers.stellar.org/docs/learn/fundamentals/contract-development/rust-dialect",
+          "https://developers.stellar.org/docs/tools/cli/cookbook/deploy-contract",
+          "https://developers.stellar.org/docs/tools/cli/cookbook/stellar-keys"
         ]
       },
       "tags": {
@@ -715,7 +719,7 @@
         "confidence": "high",
         "freshness": false
       },
-      "graderNotes": "Exemplar (Phase-1 hand-authored). VERIFIED against the live 'Deploy to Testnet' docs (2026-06): binary is `stellar`; canonical command is `stellar contract deploy --wasm target/wasm32v1-none/release/<name>.wasm --source-account <id> --network testnet --alias <name>`; returns a C... contract id. Build target is wasm32v1-none.\nAlso good if the answer: Deploy returns a contract ID (C... address) used for subsequent `stellar contract invoke`. | A testnet account can be funded via Friendbot before deploying.\nGolden cites: At least one primary developers.stellar.org docs page (getting-started / deploy guide)."
+      "graderNotes": "Exemplar (Phase-1 hand-authored). VERIFIED against the live 'Deploy to Testnet' docs (2026-06): binary is `stellar`; canonical command is `stellar contract deploy --wasm target/wasm32v1-none/release/<name>.wasm --source-account <id> --network testnet --alias <name>`; returns a C... contract id. Build target is wasm32v1-none.\nAlso good if the answer: Deploy returns a contract ID (C... address) used for subsequent `stellar contract invoke`. | A testnet account can be funded via Friendbot before deploying.\nGolden cites: At least one primary developers.stellar.org docs page (getting-started / deploy guide).\nCorrected 2026-07-07 via golden-truth workflow after Discord feedback on the demo: active golden answer now uses `wasm32v1-none`, omits obsolete `--global`, and shows canonical `--source-account`. Grading nuance: do not mark an answer wrong solely for using `--source`, because CLI 27.0.0 confirms it is an alias; do mark it stale/noncanonical if it presents `--source` as the preferred docs-form while omitting `--source-account`, or if it also uses the old target/`--global` path."
     },
     {
       "id": "q-soroban-reentrancy",
@@ -748,18 +752,24 @@
       "id": "q-soroban-storage-types",
       "question": "What are the three Soroban storage types and when should I use each?",
       "golden": {
-        "answer": "Soroban exposes **three storage types** via `env.storage()`:\n\n- **Persistent** — long-lived data (balances, allowances, ownership). On TTL expiry it is **archived,\n  not deleted, and can be restored**.\n- **Temporary** — cheap, short-lived data (ephemeral allowances, pricing snapshots). It is the\n  **cheapest** tier, and on TTL expiry it is **permanently deleted** (not restorable).\n- **Instance** — small per-contract config/admin data tied to the contract instance entry. It is\n  **loaded on every contract invocation** (so keep it small) and shares its **TTL with the contract\n  instance**.\n\nRule of thumb: balances/ownership → Persistent; ephemeral/derivable data → Temporary; admin/config\nflags → Instance.\n\n(These are Soroban's tiers — not Solidity's `storage`/`memory`/`calldata`. And don't swap the\nsemantics: Temporary is **not** restorable; Persistent is **not** permanently deleted on expiry.)",
+        "answer": "Soroban exposes **three storage types** via `env.storage()`:\n\n- **Persistent** — long-lived, per-key data such as balances, allowances, ownership, and other state that must survive. On TTL expiry it is **archived, not deleted**, and can be restored.\n- **Temporary** — cheaper, short-lived data such as caches, ephemeral allowances, pricing snapshots, and other recreatable values. On TTL expiry it is **permanently deleted** and **cannot be restored**.\n- **Instance** — small per-contract config/admin/metadata tied to the contract instance entry. It is loaded with the contract instance on invocation, shares the contract instance's TTL, and should stay small.\n\nCurrent restoration semantics (Protocol 23 / CAP-0066+): archived **Persistent** and **Instance** entries can be automatically restored by `InvokeHostFunctionOp` when the archived keys are included in the transaction restore metadata / restore footprint, normally populated by RPC simulation. A manually built transaction that omits the needed restore list can still fail, and `RestoreFootprintOp` remains the manual/rare fallback for resource-limit or fee-management cases. **Temporary** entries are different: once expired, they are gone.\n\nRule of thumb: balances/ownership -> Persistent; ephemeral/derivable data -> Temporary; admin/config flags -> Instance. These are Soroban's storage durabilities, not Solidity's `storage`/`memory`/`calldata`.",
         "keyFacts": [
           "The three storage types are Instance, Persistent, and Temporary (accessed via `env.storage()`).",
-          "Persistent is for long-lived data like balances/ownership; Temporary is for cheap short-lived data; Instance is for per-contract config/admin data tied to the contract instance."
+          "Persistent is for long-lived per-key data like balances/ownership; Temporary is for cheap short-lived/recreatable data; Instance is for small per-contract config/admin/metadata tied to the contract instance and loaded with it.",
+          "TTL expiry differs by type: Persistent and Instance entries are archived and restorable; Temporary entries are permanently deleted and cannot be restored.",
+          "States current Protocol 23+ restoration semantics: archived Persistent/Instance entries can auto-restore during `InvokeHostFunctionOp` when the archived keys are included in the transaction restore metadata/restore footprint (usually via RPC simulation); `RestoreFootprintOp` is still valid but mostly a manual/rare fallback, not the always-required path."
         ],
         "avoid": [
           "Do NOT invent storage types not in Soroban (e.g., only 'storage'/'memory'/'calldata' as in Solidity).",
-          "Do NOT say Temporary data is restorable after expiry, or that Persistent data is permanently deleted on expiry (those are swapped)."
+          "Do NOT say Temporary data is restorable after expiry, or that Persistent/Instance data is permanently deleted on expiry.",
+          "Do NOT claim archived Persistent/Instance entries always require a separate `RestoreFootprintOp` or that auto-restore is impossible under Protocol 23+.",
+          "Do NOT imply auto-restore works magically without the archived entries being included in the restore metadata/restore footprint, normally via RPC simulation."
         ],
         "sources": [
+          "https://developers.stellar.org/docs/learn/fundamentals/contract-development/storage/state-archival",
           "https://developers.stellar.org/docs/build/guides/storage/choosing-the-right-storage",
-          "https://developers.stellar.org/docs/learn/fundamentals/contract-development/storage/state-archival"
+          "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0066.md",
+          "https://github.com/stellar/stellar-core/blob/master/src/transactions/InvokeHostFunctionOpFrame.cpp"
         ]
       },
       "tags": {
@@ -769,7 +779,7 @@
         "confidence": "high",
         "freshness": false
       },
-      "graderNotes": "2026-06-29: removed duplicated Why-these-cards/Edge sections (verified 2026-06-29). Storage-semantics swap is the headline trap; Solidity storage/memory/calldata is the cross-chain trap. Verified against 'choosing the right storage' + state-archival docs.\nAlso good if the answer: Instance storage is loaded on every contract invocation (so keep it small). | Temporary is the cheapest tier.\nGolden cites: The developers.stellar.org 'choosing the right storage' or state-archival guide."
+      "graderNotes": "2026-06-29: removed duplicated Why-these-cards/Edge sections (verified 2026-06-29). Storage-semantics swap is the headline trap; Solidity storage/memory/calldata is the cross-chain trap. Verified against 'choosing the right storage' + state-archival docs.\nAlso good if the answer: Instance storage is loaded on every contract invocation (so keep it small). | Temporary is the cheapest tier.\nGolden cites: The developers.stellar.org 'choosing the right storage' or state-archival guide.\nCorrected 2026-07-07 via golden-truth workflow (todo 870): the prior generic storage-types golden was too stale/underspecified for Protocol 23 restoration and allowed a RestoreFootprintOp-only judge rationale. Ground truth triangulated across A official docs, B CAP-0066 + stellar-core source/tests, E live Stellar Docs index, and an independent verifier. Grading nuance: an answer that says Instance/Persistent are auto-restored by Invoke is correct only with the restore-list/footprint caveat; an answer that says RestoreFootprintOp is available as a manual fallback is also correct; an answer that says RestoreFootprintOp is always required, or that auto-restore requires no restore metadata/simulation, is wrong. Sibling sweep checked state-archival/TTL/storage cases; no other keyFact needed an override in this pass."
     },
     {
       "id": "q-ti-cli-rust-windows-troubleshooting",
