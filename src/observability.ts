@@ -9,8 +9,9 @@
  *  - `evt` names the event; keep the rest FLAT and SMALL (previews, counts,
  *    durations — never whole payloads).
  *  - Never log secret values. Model-authored text (queries, execute code) is
- *    fine and is the point: it's what future eval/debugging needs. Adapter
- *    results are already secret-redacted before they reach any logging site.
+ *    logged only as bounded eval/debugging previews and must be treated as
+ *    potentially sensitive. Adapter results are already secret-redacted before
+ *    they reach any logging site.
  *
  * Second channel: trace spans (observability.traces in wrangler.jsonc).
  * Handler + host-side fetches are auto-instrumented; the sandbox boundary has

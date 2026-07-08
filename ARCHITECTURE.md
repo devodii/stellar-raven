@@ -105,7 +105,7 @@ untouched.
 1. *Stopword gate-rescue* — an entry that fails the coverage gate on the full query is
    rescored with closed-class English stopwords removed. Entries that already passed keep
    their exact vendor score (filtering stopwords for all scoring was tried and regressed).
-2. *Kind weighting* — `skill-section` entries are scaled ×0.75 so 203 near-duplicate
+2. *Kind weighting* — `skill-section` entries are scaled ×0.75 so 204 near-duplicate
    fragments don't blanket-outrank the operations on shared topical vocabulary.
 3. *Service diversity* — the returned set is selected with a per-service quota
    (`max(2, ceil(0.4 × limit))`, score order preserved, top hit never displaced,
@@ -443,7 +443,7 @@ emitted — no skill entry, no sections, no bundle bytes (ADR-0003; the retireme
 `RETIRED_ONBOARDING_SKILLS` in `scripts/exposure.mjs` plus the ADR). Lumenloop-API-served
 skill metadata (14 skills as zips) is likewise never emitted: public skills duplicate
 canonical `skills.*` mirror entries, and partner skills are deliberately non-mirrored.
-Currently 18 exposed skills + 203 sections; there is no `lumenloop.skill.*` namespace and no read alias —
+Currently 18 exposed skills + 204 sections; there is no `lumenloop.skill.*` namespace and no read alias —
 unknown ids fail exact-match with a nearest-id suggestion.
 
 **The read path** (`readSkill`, `src/skills/store.ts`) resolves through the **catalog**,
@@ -470,7 +470,85 @@ Skills also appear in the super spec as a synthetic core service (read via the s
 `codemode.skill.read`; section keys under `x-skill-index`), so spec-grepping code discovers
 them too.
 
-## 7. Build & refresh chain — keeping the catalog honest
+## 7. Operating limits and caps
+
+This section is the operator-facing limit matrix. Code remains the source of truth; refresh this
+section whenever one of the referenced constants changes. Cloudflare-side deployment settings
+(for example AI Gateway rate/spend rules) are intentionally not repeated here because they can
+change outside the repo; verify them live in Cloudflare when reviewing spend posture.
+
+### Shared by demo and MCP
+
+These limits apply to the shared execute path unless a lane-specific wrapper refuses earlier.
+
+| Area | Limit / behavior | Code |
+| --- | --- | --- |
+| Execute sandbox | Fresh Dynamic Worker isolate per `execute`; `globalOutbound: null`, so model code cannot `fetch()`/connect; 60s wall-clock timeout. | `src/executor/run.ts` |
+| Service operation args | Every operation call is validated against the generated manifest entry's JSON schema before adapter dispatch. Build-excluded surfaces have no callable function. | `src/policy/guard.ts`, `src/policy/validate.ts`, `src/executor/providers.ts` |
+| Result boundary | Default ~6,000 tokens at 4 chars/token. `EXECUTE_MODEL_BOUNDARY_MAX_TOKENS` may override only within 1,000-32,000 tokens. | `src/policy/truncate.ts` |
+| Logs | First 100 console lines, each redacted then clipped to 2,000 chars, then the same model-boundary token cap. | `src/executor/shape-logs.ts`, `src/policy/truncate.ts` |
+| Error text | Same model-boundary cap as results/logs. | `src/policy/truncate.ts`, `src/mcp/tools.ts` |
+| Runnable skill runner | `codemode.skill.run(...)` executes first-party host-side runner code, not model JS, behind a 30s host deadline. Timeout returns an error envelope; the outer sandbox's 60s wall clock remains the hard stop. | `src/skills/run.ts` |
+| Login parked state | WorkOS login state parked in KV expires after 10 minutes for both MCP OAuth and demo login flows. | `src/auth/workos.ts` |
+
+Observability to query: `execute`, `op`, `skill_run`, `execute_logs_shaped`, and the
+`codemode.execute` span. A timeout generally appears as `execute`/`demo-execute` error
+`Execution timed out` with `ms` around 60,000.
+
+### Demo-only `/demo/chat`
+
+The demo subject is the peppered WorkOS user id stored in the signed `__Host-RAVEN_DEMO` cookie;
+loopback dev uses the fixed subject `dev-loopback`. A "chat" is one valid `POST /demo/chat` turn
+after method, same-origin, auth, body-size, and body-shape validation. The throttle is consumed
+before model/tool execution, so later model or tool failure still counts.
+
+| Area | Limit / behavior | Code |
+| --- | --- | --- |
+| Demo session cookie | 2 hours. The browser never receives a WorkOS/OAuth token. | `src/demo/auth.ts` |
+| Chat rate limit | 30 chats per subject per fixed UTC hour bucket, best-effort KV read/write with 2h TTL. It is not atomic, so concurrent requests can overrun slightly. | `src/demo/budget.ts` |
+| Rate-limit response | `429` with `Retry-After: 3600`. | `src/demo/chat.ts` |
+| Request body | 384 KiB max before JSON parse. Malformed/oversized requests do not burn throttle. | `src/demo/chat.ts` |
+| Replayed history | Newest 20 messages, then oldest messages dropped until total content is at most 24,000 chars when possible. | `src/demo/budget.ts` |
+| User-role message | 4,000 chars max per user-role message; overlong user content is truncated rather than rejected by the validation path. | `src/demo/budget.ts`, `src/demo/chat.ts` |
+| Whole turn | 120s abort signal covering model stream plus tool calls. | `src/demo/chat.ts` |
+| Model steps | 5 total steps. | `src/demo/budget.ts`, `src/demo/chat.ts` |
+| Model output | 4,096 output tokens. | `src/demo/budget.ts`, `src/demo/chat.ts` |
+| Search calls | 2 per turn. | `src/demo/budget.ts`, `src/demo/tools.ts` |
+| Demo search page | Default 5 hits, caller `limit` clamped to 6. | `src/demo/budget.ts`, `src/demo/tools.ts` |
+| Demo search hit text | Description clipped to 220 chars; signature clipped to 400 chars while preserving the callable line. | `src/demo/tools.ts` |
+| Execute calls | 2 per turn. | `src/demo/budget.ts`, `src/demo/tools.ts` |
+| Execute code length | 8,000 chars. | `src/demo/budget.ts`, `src/demo/tools.ts` |
+| Execute preflight | Known-bad `Promise.all({ ... })` fanout is refused before sandbox execution. | `src/demo/tools.ts` |
+| In-script discovery | `codemode.describe("<visible id>")` is available; `codemode.search`, `codemode.catalog`, and `codemode.spec` are disabled in demo. | `src/demo/tools.ts`, `src/demo/prompt.ts` |
+| Artifacts | Demo execute uses the shared runner without an artifact owner, so truncated demo results do not get readable R2 artifacts. | `src/demo/tools.ts`, `src/server.ts` |
+
+Observability to query: `demo-chat`, `demo-search`, `demo-execute`, `demo-search-refused`,
+`demo-execute-refused`, and `demo-chat-rejected`.
+
+### MCP-only `/mcp`
+
+The non-demo MCP lane deliberately leaves clients mostly unconstrained at the application layer:
+auth gates, schemas, the shared sandbox, and artifact caps are the main limits.
+
+| Area | Limit / behavior | Code |
+| --- | --- | --- |
+| Top-level `search` | Default 10, max 50. | `src/mcp/tools.ts`, `src/catalog/search.ts` |
+| `execute.code` length | No app-level max; schema requires only a non-empty string. | `src/mcp/tools.ts` |
+| Execute/search call count | No app-level per-session count cap. | `src/mcp/tools.ts`, `src/server.ts` |
+| OAuth access token TTL | 90 days. | `src/auth/gate.ts` |
+| Dynamic client registration TTL | 365 days. | `src/auth/gate.ts` |
+| Artifact availability | Truncated result artifacts are available for OAuth subjects and loopback local dev (`dev-local`), not admin bypasses and not demo. | `src/server.ts`, `src/artifacts/store.ts` |
+| Artifact logical retention | 7 days; bucket lifecycle also expires objects after 7 days. | `src/artifacts/store.ts` |
+| Artifact stored body | Max 2 MiB. Larger truncated results still return source-basis advice, but no artifact is written. | `src/artifacts/store.ts` |
+| Artifact custom metadata | Max 8,192 bytes. | `src/artifacts/store.ts` |
+| Artifact op ledger metadata | First 12 calls plus totals; op names clipped to 180 chars. | `src/artifacts/store.ts` |
+| Artifact reads inside execute | 8 `codemode.artifact.info(...)` calls and 4 `codemode.artifact.read(...)` calls per execute when an artifact owner exists. | `src/executor/providers.ts` |
+| In-script discovery | `codemode.spec`, `codemode.search`, `codemode.catalog`, `codemode.describe`, `codemode.skill.read`, `codemode.skill.run`, and artifact helpers are enabled. | `src/executor/providers.ts`, `src/mcp/tools.ts` |
+
+Observability to query: `mcp_request`, `search`, `execute`, `artifact_write`, `artifact_read`,
+`op`, `skill_run`, and `codemode.execute` spans.
+
+## 8. Build & refresh chain — keeping the catalog honest
 
 Generated artifacts are rebuilt by scripts, never hand-edited (CLAUDE.md rule). The chain:
 
@@ -514,7 +592,7 @@ the plan op-classes, then fails on any diff. The daily drift job
 any diff opens/updates an issue and fails the run — op-id sets are the drift signal, not
 `info.version` (Scout has shipped ops without bumping it).
 
-## 8. Evals
+## 9. Evals
 
 Everything measurable about the two tools is instrumented in `eval/` — routing accuracy
 (offline, gated in CI), the end-to-end golden Q→A battery, the agentic and plan lanes. The

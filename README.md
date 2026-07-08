@@ -9,7 +9,8 @@ unified catalog of Stellar ecosystem services and skills. Agents use `search` to
 capabilities, then call `execute` with JavaScript that runs in a Dynamic Worker isolate with no
 network access; service calls go through host-side adapters.
 
-Design: [PLAN.md](./PLAN.md). Code-verified mechanics: [ARCHITECTURE.md](./ARCHITECTURE.md).
+Design: [PLAN.md](./PLAN.md). Code-verified mechanics and operating limits:
+[ARCHITECTURE.md](./ARCHITECTURE.md).
 
 Deployed as the Cloudflare worker `stellar-raven-codemode` at https://raven.stellar.buzz — the
 worker/service name deliberately keeps the `codemode` suffix even though the repo is `stellar-raven`.
@@ -22,7 +23,7 @@ MCP endpoint: POST https://raven.stellar.buzz/mcp   (streamable HTTP)  # or http
 Health:       GET  /health
 ```
 
-Local dev: `npm ci`, populate `.dev.vars`, then `npm run dev` and point a client at
+Local dev: use Node 24, run `npm ci`, populate `.dev.vars`, then `npm run dev` and point a client at
 `http://localhost:8787/mcp`. Note: `wrangler dev` does NOT hot-reload `.dev.vars` edits —
 restart it after changing them.
 
@@ -39,6 +40,7 @@ scope live in [SECURITY.md](./SECURITY.md).
 ## Development
 
 ```
+# use Node 24, matching CI
 npm ci
 npm run typecheck  # tsc
 npm test           # vitest (offline; auth suite in test/auth.test.ts)
@@ -55,6 +57,10 @@ custom `codemode.execute` span around each sandbox run (the Worker Loader isolat
 auto-instrumented). Both are queryable in the dash (Workers & Pages → Observability) or via the
 telemetry query API. Survey of the whole surface — pricing, query API, OTel export, GraphQL
 metrics: `research/observability-cloudflare.md`.
+
+For cap/rate-limit reviews, start with [ARCHITECTURE.md §7](./ARCHITECTURE.md#7-operating-limits-and-caps):
+it lists the shared execute sandbox limits, demo-only chat limits, MCP-only artifact/auth limits,
+and the log event names to query.
 
 ## License
 

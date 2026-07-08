@@ -257,8 +257,8 @@ written for LLM routing — the search side of a search+execute codemode server 
 `/v1/tools` output nearly verbatim.
 
 Wrapper guidance:
-1. **Uniform invoke shape**: every tool is `POST /v1/tools/{name}` + JSON body + Bearer —
-   one generic executor covers all 21 tools. Validate args client-side from
+1. **Uniform invoke shape**: exposed tools are `POST /v1/tools/{name}` + JSON body + Bearer —
+   one generic executor covers the 18 public catalog tools today. Validate args client-side from
    `input_schema`; the server 400s cleanly with field-level `details[]` if you don't.
 2. **Normalize per-tool, never assume `data.results`** — branch on `meta.format` first
    (`json`/`text`/`blocks`), and treat `data.text` under `success:true` as
@@ -269,7 +269,9 @@ Wrapper guidance:
    persist partner schemas/descriptions unless the paid research lane is deliberately enabled.
 4. **Cost gating**: only `request_research` is metered (`metered:true` + `cost` string in
    its detail). Gate it (dedup via `list_my_research` first, default `output_format:"answer"`,
-   respect `research_quota_usd` − `month_spend_usd` from `/v1/me`). All 20 other tools are free.
+   respect `research_quota_usd` − `month_spend_usd` from `/v1/me`). The paid research trio
+   remains excluded/name-only in this public repo; expose all 21 tools only after deliberate
+   paid-lane enablement and a live schema re-fetch.
 5. **Exclude account endpoints** (`/me/keys`, `/me/webhook`, `/billing/topup`, …) from any
    executable surface.
 6. **Slug-first discipline**: expose the `search_directory → slug → get_project /

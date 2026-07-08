@@ -101,7 +101,9 @@ in the model-facing world.
   data is consolidated in `scripts/exposure.mjs` shared by every emitter, and
   `assertNoNonExposedRefs` fails the build on any emitted reference to a non-exposed surface.
   Counts moved 274→**271** entries, 53→**50** service ops (lumenloop 18, scout 20,
-  stellarDocs 12), 56→**53** super-spec paths.
+  stellarDocs 12), 56→**53** super-spec paths. A later skill mirror refresh moved the
+  live catalog to **272** entries and the super-spec to **54** paths without changing the
+  service-op count.
 - Enabling `lumenloop.request_research` later is a deliberate feature: remove the exclusion at
   build time (all three research ops — the trigger and its read half `research_result` /
   `list_my_research` — travel together) AND build the budget-gate + dedup runtime (PLAN §8) in

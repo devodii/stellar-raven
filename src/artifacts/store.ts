@@ -2,8 +2,8 @@
  * Auth-bound R2 artifact store for oversized execute result payloads.
  *
  * Pure host module: no executor/server imports, no listing surface, no public
- * URLs. Callers pass the OAuth peppered subject as `owner`; admin/dev bypasses
- * should pass no owner and therefore get no artifact.
+ * URLs. Callers pass an auth-bound owner (OAuth subject or fixed loopback-dev
+ * owner); admin/no-owner calls get no artifact.
  */
 
 export const ARTIFACT_TTL_MS = 7 * 24 * 60 * 60 * 1000;

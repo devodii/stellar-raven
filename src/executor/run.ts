@@ -66,7 +66,7 @@ export type ExecuteOutcome =
   | { ok: false; error: string; logs: string[]; artifactReadCount?: number; artifactReadBytes?: number };
 
 export type ExecuteCallContext = {
-  /** Pepper-hashed WorkOS OAuth subject. Undefined means artifacts unavailable. */
+  /** Auth-bound artifact owner: OAuth subject or fixed loopback-dev owner. Undefined disables artifacts. */
   artifactOwner?: string;
   requestId?: string;
   rayId?: string;

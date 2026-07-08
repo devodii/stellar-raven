@@ -201,7 +201,7 @@ export const QUERY_TOKEN_ALIASES: ReadonlyMap<string, string> = new Map([
  * contains no alias token (the common case — zero extra scoring work).
  * Memoized on the raw query string: searchCatalogPage scores every catalog
  * entry with the same query, so the canonicalization must not re-tokenize
- * 271 times per search.
+ * once per catalog entry.
  */
 const canonicalizeCache = new Map<string, string | null>();
 

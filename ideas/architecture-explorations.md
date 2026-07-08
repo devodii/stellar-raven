@@ -25,7 +25,7 @@ conviction or a winning A/B on golden Q→A accuracy.
    search is a measured treadmill: five structural scorer levers, tokenizer-aware hand-written
    description notes, strict top-1 ~63–67% across instruments, and fresh live exhibits
    ("blend lending pools" → scout.compareHackathons top-1 in production, 2026-07-07).
-   Build-time embeddings for the ~271 catalog entries committed as a generated artifact
+   Build-time embeddings for the ~272 catalog entries committed as a generated artifact
    (pinned model, determinism preserved), blended or reranked against the vendored scorer;
    referee with the routing gate + extended lane (strict top-1 77/122 is the target) + a QA
    sample. The win is counted as much in *removed mechanism* as in points.

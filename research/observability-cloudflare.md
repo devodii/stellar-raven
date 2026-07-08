@@ -106,7 +106,8 @@ What this project has enabled is at the bottom.
   per upstream without code changes.
 - **Done (2026-07-02)**: the DynamicWorkerExecutor runs are wrapped in custom spans
   (`codemode.execute` / `codemode.spec_search` in `src/executor/run.ts`) with flat attributes
-  (`code.chars`, `sandbox.ok`, `sandbox.logLines`, `sandbox.skillRead`) — never payloads, same
+  (`code.chars`, `sandbox.ok`, `sandbox.logLines`, `sandbox.skillRead`,
+  `sandbox.skillRun`, `sandbox.artifactReadCount`, `sandbox.artifactReadBytes`) — never payloads, same
   discipline as `logEvent`. The span wraps `executor.execute()` tightly so its duration = isolate
   wall time; host-side redaction/truncation stays outside (its timing is in the `execute` log
   event). Expect 0 ms readings for pure-CPU eval segments (timer freezing); the adapter I/O

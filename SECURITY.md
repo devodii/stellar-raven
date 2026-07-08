@@ -31,6 +31,7 @@ compromised maintainer machine; volumetric denial of service.
 - Model-authored code runs in a Dynamic Worker isolate with **no network egress**
   (`globalOutbound: null`); all service traffic goes through host-side adapters that hold the
   secrets. Sandbox-escape or egress findings are the most valuable class of report here.
-- Auth design (WorkOS OAuth + admin-token gate) is documented in `README.md` and
-  `ARCHITECTURE.md` — the design does not depend on secrecy, and reports that only restate
-  documented behavior (e.g. that an admin bypass exists) are not vulnerabilities.
+- Auth design (WorkOS OAuth + admin-token gate) is documented in `ARCHITECTURE.md` and
+  `research/auth-workos.md`; `README.md` links to those operational details. The design does not
+  depend on secrecy, and reports that only restate documented behavior (e.g. that an admin bypass
+  exists) are not vulnerabilities.

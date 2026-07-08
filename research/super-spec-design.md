@@ -87,16 +87,16 @@ stellarDocs `backend` block **and measured corpus taxonomy**, skills mirror prov
 ## 3. Skills representation — judicious, not one path per section
 
 The catalog has 19 mirrored public skills (**18 exposed** after the onboarding-skill retirement) +
-203 skill-sections. Emitting a path per skill (or per section) would bloat `paths` with entries
+204 skill-sections. Emitting a path per skill (or per section) would bloat `paths` with entries
 that are not operations (nothing is *called* per skill) and drown the 50 real operations in
 200+ pseudo-paths. Instead the skills service is **4 operations + embedded indexes**, designed
-around "deliver skill context when and as relevant" plus the two vetted runnable skills:
+around "deliver skill context when and as relevant" plus the vetted runnable skill surface:
 
 - `GET /skills/list_skills` — carries **`x-skill-index`**: the 18 exposed skills as
   `{ id, source, description, sections }`, where `description` is the skill's own frontmatter
   description (its "when to use" text) and `sections` is the **heading list only** (every `##`
   heading of SKILL.md plus `file:<relpath>` keys for extra reference files; bodies are NOT in the
-  spec). 203 section keys total — asserted 1:1 against the catalog's exposed skill-section ids
+  spec). 204 section keys total — asserted 1:1 against the catalog's exposed skill-section ids
   (the index is built from the same build-time-filtered manifest), so every listed section is
   guaranteed readable. Its `x-execute` shows the trick: the list is satisfied
   from the spec itself, `(await codemode.spec()).paths["/skills/list_skills"].get["x-skill-index"]`
@@ -122,7 +122,7 @@ not mirrored.
 
 ## 4. Size — measured, not guessed
 
-From `npm run spec:build` (current — 2026-07-06, after runnable skills shipped; sizes drift with
+From `npm run spec:build` (current — 2026-07-08, after runnable skills shipped; sizes drift with
 each daily refresh, so treat exact bytes as as-of values, not invariants):
 
 | Measure | Value |
@@ -206,7 +206,7 @@ Deliberate deltas (each with rationale):
 - `test/super-spec.test.ts` — determinism (double build byte-identical + artifact freshness),
   per-service counts (exposed ops only, ADR-0003), path/operationId invariants, x-execute on
   every op, spec = manifest consistency both directions, skills index ↔ catalog section 1:1
-  (all 203 exposed), read_skill enum = 18 exposed ids, run_skill enum/index = runnable manifest
+  (all 204 exposed), read_skill enum = 18 exposed ids, run_skill enum/index = runnable manifest
   entries, stellarDocs x-algolia, scout $ref resolvability, <300 KB compact budget.
 - `test/spec-sandbox.test.ts` — generated-source shape, `</` escaping, fence normalization, and
   the wrapper EVALUATED under Node: $ref inlining, `$circular`, external-ref pass-through, lazy

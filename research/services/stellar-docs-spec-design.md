@@ -152,9 +152,9 @@ Every clientFilter op was verified live with this exact procedure (counts in eac
 - **A `tags`/`version` facet surface.** Useless — `lang`/`language`/`version` are single-valued
   (en / current) on this corpus.
 
-## 7. How Wave 2 should map ops → catalog entries
+## 7. Implemented Wave 2 mapping: ops → catalog entries
 
-1. **One CatalogEntry per operation** (12 entries replacing today's 1): `id`, `description`
+1. **One CatalogEntry per operation** (12 shipped `stellarDocs` entries): `id`, `description`
    verbatim; `inputSchema` = the op's `params` object as-is (already a valid JSON Schema);
    `outputSchema: null` (the `returns` string can be appended to the description if wanted);
    `kind: "operation"`, `service: "stellarDocs"`, `auth`/`cost` from `catalogHints`.

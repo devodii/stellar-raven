@@ -1,13 +1,14 @@
 # Stellar Light / Stellar Scout — service spec
 
 > Verified live 2026-07-02 (UTC; re-fetched ~13:59Z after the 07-02 partner-pipeline release). OpenAPI `info.version: 1.2.1`, status `apiVersion: 1.2.1` (the `X-API-Version` response header stays `1`), scout-mcp npm `1.1.5`.
-> **Inventory refresh 2026-07-03 (~14:02Z): upstream now 1.3.2** — additive freshness release per `/api/changelog` (explicitly no field removed or renamed; still 23 paths / 24 ops): `/api/repos/explain` gains `repoMeta{lastCommitAt, stars, isArchived, repoScoreLabel}`, `/api/projects/search` rows gain `lastActivityAt` and inline repo refs gain `lastCommitAt` — attach as the as-of date when citing answers. (1.3.1, 07-02: `builtBy` org attribution on project search rows; `status` enum gains `Inactive`.) `inventory/stellar-light.json` carries the current spec verbatim; the body below still details 1.2.1.
+> **Current committed inventory (2026-07-08): upstream OpenAPI/status `1.6.1`, still 23 paths / 24 operations.** `inventory/stellar-light.json` carries the current spec verbatim; the detailed probe log below remains the 2026-07-02/03 measurement record, not a current collection-size snapshot.
+> Earlier refresh notes: 2026-07-03 brought upstream 1.3.2 (`repoMeta`, `lastActivityAt`, inline repo `lastCommitAt`); later 1.6.1 fixes include live SCF round metadata and scoped `searchProjects` description copy. Attach live `generatedAt`/version fields from the current inventory when citing answers.
 > Current OpenAPI lives in [`inventory/stellar-light.json`](../../inventory/stellar-light.json) (refreshed daily by the CI drift job; 23 paths / 24 operations — **`info.version` did NOT bump when the 4 partner-pipeline ops landed; diff paths, not the version string**).
 > Cross-checked against prior art: `stellar-raven-next/research/capability/stellar-light-scout.md` (measured 2026-06-21→07-01) — live behavior today matches that doc.
 
 ## Overview
 
-**Stellar Light** (stellarlight.xyz) is a Stellar ecosystem directory site (projects explorer, blog, market stats) built on Next.js + Payload CMS, hosted on Vercel. **Stellar Scout** is its agent-native product: a read-only public API over curated Stellar-ecosystem data — ~920 projects, ~2,301 graded GitHub repos, 112 builders (Stellar Passport), 24 partners (incl. 5 audit firms), 14 SCF-funded RFPs, hackathons (DoraHacks + curated), an AI-skills catalog (30 entries across 5 sources), ecosystem analytics (Electric Capital), and a ~4,500-chunk vector research corpus (SEPs, audits, papers, dev docs, SCF handbook, incidents, EC reports; voyage-3 embeddings).
+**Stellar Light** (stellarlight.xyz) is a Stellar ecosystem directory site (projects explorer, blog, market stats) built on Next.js + Payload CMS, hosted on Vercel. **Stellar Scout** is its agent-native product: a public API over curated Stellar-ecosystem data — projects, graded GitHub repos, builders, partners, SCF-funded RFPs, hackathons, skills metadata, ecosystem analytics, and a vector research corpus. Collection sizes drift; read `/api/status` or the committed `inventory/stellar-light.json` instead of freezing counts from this document.
 
 Scout ships in three equivalent forms, all backed by the same API:
 1. **HTTP API** — `https://stellarlight.xyz/api/*` (this doc's subject)
@@ -157,7 +158,7 @@ Relationship: **website API = source of truth; SKILL.md and scout-mcp are altern
 - **Auth:** none needed anywhere. Ship it keyless; guard the POST surfaces — `POST /api/feedback` and `POST /api/partners/submit-listing` are writes (human-in-the-loop / deny-by-default for autonomous execution — matches the raven prior-art governance), and `POST /api/partners/assistant` logs surfaced partners as sales leads, so keep it out of the autonomous surface too. `POST /api/partners/match` / `onboard` are stateless AI compute but 503 without AI configured.
 - **Search tool mapping:** the free-text evidence surfaces are `research` (concepts/specs/audits), `projects/search` (products/teams), `repos/search` (code), `builders`, `rfps`, `partners`. Enum/analytics surfaces (`clusters`, `analyze`, `leaderboard`, `hackathons`, `skills`) route by fixed params, not free text.
 - **Execute-tool ergonomics:** all endpoints are plain GET + query string → trivially expressible as `fetch(base + path + qs)`. Rich 400s with `valid*` arrays make retry-with-corrected-enum a safe automatic behavior. 404 on detail slugs means "discover the slug from the list endpoint first".
-- **Drift detection:** poll `GET /api/changelog?since=<last-check>` and diff `GET /api/openapi.json` `info.version` (currently 1.2.1). The changelog covers API + MCP + skill surfaces in one feed.
+- **Drift detection:** poll `GET /api/changelog?since=<last-check>` and diff the `GET /api/openapi.json` path/method/operationId set plus schema/description fields. `info.version` is useful context (currently 1.6.1 in the committed inventory) but is not sufficient by itself. The changelog covers API + MCP + skill surfaces in one feed.
 - **Refresh script — exact commands to re-inventory:**
 
 ```bash

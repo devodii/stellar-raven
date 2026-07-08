@@ -49,7 +49,8 @@ derivation) and the admin token.
    consent + CSRF, modeled on `-next`'s wiring with `raven`'s rationale comments in mind).
 2. KV namespace `OAUTH_KV` — a NEW namespace for this project (the prior-art namespace
    `473fc625531d4687b0e353e069092afa` is shared by both old workers and dies with the teardown).
-3. Admin bypass: `MCP_ADMIN_TOKEN` secret, SHA-256 + timing-safe compare, bearer header.
+3. Admin bypass: `MCP_ADMIN_TOKEN` secret, SHA-256 + timing-safe compare, accepted as
+   `Authorization: Bearer` or `X-MCP-Admin-Token`.
 4. Local bypass: `DEV_ALLOW_UNAUTHENTICATED=true` set ONLY in `.dev.vars` (never a deployed
    secret).
 

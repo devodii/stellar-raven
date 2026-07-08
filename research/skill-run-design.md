@@ -10,6 +10,9 @@ own rule and it stands.
 
 What changed since 2026-07-03, honestly stated:
 
+- **Current status (2026-07-08):** the dossier runner described in the original v1 design was
+  retired after the §10 adoption follow-up. The digest runner is the sole runnable skill today;
+  the dossier material below is kept as the historical design and retirement record.
 - **The 07-03 Q1 finding stands and is kept**: no mirrored skill body is a program. Zero of
   the 43 bundled files contain a parameterized `async (input) => {...}` over the service
   globals. v1 runners are therefore **not** compiled from prose — they are repo-authored
@@ -40,7 +43,7 @@ Decision summary:
 | Question | Decision |
 |---|---|
 | Runner form | Build-time TS modules `src/skills/runners/<name>.ts`, host-executed, adapter-tier trusted code fed only an ops facade narrowed to declared ops (§2, §7) |
-| v1 allowlist | Exactly 2: `skills.lumenloop.stellar-project-dossier`, `skills.lumenloop.stellar-ecosystem-digest` (§4) |
+| v1 allowlist | Historical design: 2 runners. Current surface: `skills.lumenloop.stellar-ecosystem-digest` only (§10 postscript) |
 | Catalog exposure | `runnable: true` flag + real `inputSchema`/`outputSchema` on the EXISTING skill entry — a deliberate contract broadening, not a new kind (§5) |
 | Dispatch | `codemode.skill.run(name, input)` → provider `skill_run` fn → host `runSkill` (§6) |
 | Envelope | The service-call envelope `{ ok, data } \| { ok, error }`; the `calls` audit trail is host-recorded, never runner-authored (§6) |
@@ -54,8 +57,8 @@ Decision summary:
 Inside `execute`, next to `codemode.skill.read`:
 
 ```js
-const r = await codemode.skill.run("skills.lumenloop.stellar-project-dossier", { project: "blend" });
-// r = { ok: true, data: StellarProjectDossierOutput } | { ok: false, error: { kind, message, hint? } }
+const r = await codemode.skill.run("skills.lumenloop.stellar-ecosystem-digest", { since: "2026-07-01" });
+// r = { ok: true, data: StellarEcosystemDigestOutput } | { ok: false, error: { kind, message, hint? } }
 ```
 
 - `name` is an exact catalog id of a skill entry carrying `runnable: true`. Exact-match
