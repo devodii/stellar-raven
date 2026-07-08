@@ -24,9 +24,11 @@
  */
 import { stepCountIs, streamText, type ToolSet } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createWorkersAI } from "workers-ai-provider";
+import type { ProviderPlugin } from "workers-ai-provider";
 import { google } from "workers-ai-provider/google";
-import { openai } from "workers-ai-provider/openai";
+import { openai as openaiChat } from "workers-ai-provider/openai";
 import { allowDevUnauthenticated } from "../auth/gate.ts";
 import { logEvent } from "../observability.ts";
 import { verifyDemoCookie } from "./auth.ts";
@@ -36,10 +38,18 @@ import {
   DEMO_GATEWAY_ID_FALLBACK,
   DEMO_MODELS,
   DEMO_MODEL_OVERRIDE_VAR,
-  DEMO_REASONING_EFFORT,
+  DEMO_OPENAI_API_MODE_VAR,
+  DEMO_REASONING_EFFORT_OVERRIDE_VAR,
   DEMO_TEMPERATURE,
+  demoOpenAiApiModeFromOverride,
+  demoOpenAiProviderOptions,
+  demoReasoningEffortFromOverride,
+  demoReasoningEffortOverride,
   demoModelsFromOverride,
-  demoSessionAffinity
+  demoSessionAffinity,
+  demoWorkersAiReasoningEffort,
+  type DemoOpenAiApiMode,
+  type DemoReasoningEffort
 } from "./model-config.ts";
 import {
   demoFinalTextTelemetry,
@@ -55,6 +65,8 @@ declare global {
     AI: Ai;
     DEMO_AI_GATEWAY_ID?: string;
     DEMO_MODEL_OVERRIDE?: string;
+    DEMO_OPENAI_API_MODE?: string;
+    DEMO_REASONING_EFFORT_OVERRIDE?: string;
   }
 }
 
@@ -70,6 +82,11 @@ declare global {
 const DEV_SUBJECT = "dev-loopback";
 const TOOL_BUDGET_MESSAGE =
   "The demo hit its tool/step budget before the model produced a final answer. The trace above shows the completed tool work, but the answer may be incomplete; ask a narrower follow-up.";
+const openAiResponses: ProviderPlugin = {
+  wireFormat: "openai",
+  create: ({ modelId, fetch, baseURL }) =>
+    createOpenAI({ apiKey: "unused", fetch, ...(baseURL ? { baseURL } : {}) }).responses(modelId)
+};
 /**
  * Whole-turn ceiling (design Decision 5: "abort/timeout on the whole turn").
  * Worst legitimate turn: 3 model steps + 1 sandbox execute; generous so it
@@ -202,6 +219,11 @@ async function runTurn(
   let steps = 0;
   let finishReason = "none";
   const demoModels = demoModelsFromOverride(env.DEMO_MODEL_OVERRIDE);
+  const requestedOpenAiApiMode = demoOpenAiApiModeFromOverride(env.DEMO_OPENAI_API_MODE);
+  const openAiApiMode = openAiApiModeForModels(demoModels, requestedOpenAiApiMode);
+  const reasoningEffort = demoReasoningEffortFromOverride(env.DEMO_REASONING_EFFORT_OVERRIDE);
+  const reasoningEffortOverride = demoReasoningEffortOverride(env.DEMO_REASONING_EFFORT_OVERRIDE);
+  const openAiReasoningEffort = openAiApiMode === "responses" ? reasoningEffort : reasoningEffortOverride;
   let selectedModel = demoModels[0]?.model ?? "unknown";
   const attemptedModels: string[] = [];
   try {
@@ -211,7 +233,7 @@ async function runTurn(
       // calls. Spend/rate rules are account-side posture tracked in Solo todo
       // 848, not something this binding can enforce by itself.
       gateway: { id: env.DEMO_AI_GATEWAY_ID ?? DEMO_GATEWAY_ID_FALLBACK },
-      providers: [openai, cloudflareAnthropic, google],
+      providers: [openAiApiMode === "responses" ? openAiResponses : openaiChat, cloudflareAnthropic, google],
       resume: false
     });
     const sessionAffinity = await demoSessionAffinity(subject);
@@ -242,13 +264,14 @@ async function runTurn(
       };
       try {
         const result = streamText({
-          model: workersai(config.model, modelSettings(config.model, sessionAffinity)),
+          model: workersai(config.model, modelSettings(config.model, sessionAffinity, reasoningEffort)),
           system: DEMO_SYSTEM_PROMPT,
           messages,
           tools: tools as ToolSet,
           stopWhen: stepCountIs(DEMO_CAPS.maxSteps),
           maxOutputTokens: DEMO_CAPS.maxOutputTokens,
           temperature: DEMO_TEMPERATURE,
+          ...demoOpenAiProviderOptions(config.model, openAiReasoningEffort),
           abortSignal
         });
         for await (const part of result.fullStream) {
@@ -338,7 +361,12 @@ async function runTurn(
       attemptedModels,
       modelOverride: env.DEMO_MODEL_OVERRIDE ? DEMO_MODEL_OVERRIDE_VAR : undefined,
       temperature: DEMO_TEMPERATURE,
-      reasoningEffort: DEMO_REASONING_EFFORT,
+      openAiApiMode,
+      openAiApiModeRequested: env.DEMO_OPENAI_API_MODE ? DEMO_OPENAI_API_MODE_VAR : undefined,
+      reasoningEffort,
+      reasoningEffortSource: reasoningEffortOverride ? "override" : "default",
+      reasoningEffortOverride: reasoningEffortOverride ? DEMO_REASONING_EFFORT_OVERRIDE_VAR : undefined,
+      openAiReasoningEffortSent: selectedModel.startsWith("openai/") ? (openAiReasoningEffort ?? null) : undefined,
       sessionAffinity: true,
       inputTokens: usage?.inputTokens,
       cacheReadTokens: usage?.cacheReadTokens,
@@ -364,7 +392,7 @@ async function runTurn(
   }
 }
 
-function modelSettings(model: string, sessionAffinity: string) {
+function modelSettings(model: string, sessionAffinity: string, reasoningEffort: DemoReasoningEffort) {
   // Cloudflare prompt caching is automatic; session affinity routes a demo
   // subject's turns to the same backend to improve prefix cache hit rate. Keep
   // the raw auth subject out of the model header. Third-party catalog models
@@ -373,13 +401,21 @@ function modelSettings(model: string, sessionAffinity: string) {
   if (model.startsWith("@")) {
     return {
       sessionAffinity,
-      reasoning_effort: DEMO_REASONING_EFFORT
+      reasoning_effort: demoWorkersAiReasoningEffort(reasoningEffort)
     } as const;
   }
   return {
     extraHeaders: { "x-session-affinity": sessionAffinity },
     resume: false
   } as const;
+}
+
+function openAiApiModeForModels(
+  models: readonly { model: string }[],
+  requestedMode: DemoOpenAiApiMode
+): DemoOpenAiApiMode {
+  if (requestedMode !== "responses") return "chat";
+  return models.every(({ model }) => model.startsWith("openai/")) ? "responses" : "chat";
 }
 
 const cloudflareAnthropic = {

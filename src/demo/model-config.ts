@@ -3,6 +3,9 @@ export type DemoModelConfig = {
   role: "primary" | "fallback";
 };
 
+export type DemoReasoningEffort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh";
+export type DemoOpenAiApiMode = "chat" | "responses";
+
 export const DEMO_PRIMARY_MODEL = "openai/gpt-5.4";
 export const DEMO_FALLBACK_MODEL = "openai/gpt-5.4-mini";
 export const DEMO_GROK_CONTROL_MODEL = "xai/grok-4.3";
@@ -12,8 +15,14 @@ export const DEMO_MODELS: readonly DemoModelConfig[] = [
   { model: DEMO_FALLBACK_MODEL, role: "fallback" }
 ] as const;
 export const DEMO_MODEL_OVERRIDE_VAR = "DEMO_MODEL_OVERRIDE";
+export const DEMO_REASONING_EFFORT_OVERRIDE_VAR = "DEMO_REASONING_EFFORT_OVERRIDE";
+export const DEMO_OPENAI_API_MODE_VAR = "DEMO_OPENAI_API_MODE";
 export const DEMO_MODEL = DEMO_PRIMARY_MODEL;
-export const DEMO_REASONING_EFFORT = "medium" as const;
+export const DEMO_OPENAI_API_MODE: DemoOpenAiApiMode = "responses";
+// The 2026-07-08 Responses-mode smoke picked `none` for demo speed and fallback
+// reliability. Non-OpenAI Workers AI catalog models receive the mapped setting
+// below.
+export const DEMO_REASONING_EFFORT: DemoReasoningEffort = "none";
 export const DEMO_TEMPERATURE = 0.1;
 export const DEMO_GATEWAY_ID_FALLBACK = "stellar-raven-demo";
 
@@ -25,6 +34,51 @@ export function demoModelsFromOverride(override: string | undefined): readonly D
     .slice(0, 4);
   if (models.length === 0) return DEMO_MODELS;
   return models.map((model, index) => ({ model, role: index === 0 ? "primary" : "fallback" }));
+}
+
+export function demoReasoningEffortFromOverride(override: string | undefined): DemoReasoningEffort {
+  return demoReasoningEffortOverride(override) ?? DEMO_REASONING_EFFORT;
+}
+
+export function demoReasoningEffortOverride(override: string | undefined): DemoReasoningEffort | undefined {
+  const value = override?.trim();
+  if (
+    value === "none" ||
+    value === "minimal" ||
+    value === "low" ||
+    value === "medium" ||
+    value === "high" ||
+    value === "xhigh"
+  ) {
+    return value;
+  }
+  return undefined;
+}
+
+export function demoOpenAiApiModeFromOverride(override: string | undefined): DemoOpenAiApiMode {
+  const value = override?.trim();
+  if (value === "chat" || value === "responses") return value;
+  return DEMO_OPENAI_API_MODE;
+}
+
+export function demoOpenAiProviderOptions(model: string, reasoningEffort: DemoReasoningEffort | undefined) {
+  if (!reasoningEffort || !model.startsWith("openai/")) return {};
+  return {
+    providerOptions: {
+      openai: {
+        reasoningEffort
+      }
+    }
+  } as const;
+}
+
+export function demoWorkersAiReasoningEffort(
+  reasoningEffort: DemoReasoningEffort
+): "low" | "medium" | "high" | null {
+  if (reasoningEffort === "none") return null;
+  if (reasoningEffort === "minimal") return "low";
+  if (reasoningEffort === "xhigh") return "high";
+  return reasoningEffort;
 }
 
 export async function demoSessionAffinity(subject: string): Promise<string> {

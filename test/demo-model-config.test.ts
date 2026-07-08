@@ -9,15 +9,23 @@ import {
   DEMO_MODEL,
   DEMO_MODEL_OVERRIDE_VAR,
   DEMO_MODELS,
+  DEMO_OPENAI_API_MODE,
+  DEMO_OPENAI_API_MODE_VAR,
   DEMO_PRIMARY_MODEL,
   DEMO_REASONING_EFFORT,
+  DEMO_REASONING_EFFORT_OVERRIDE_VAR,
   DEMO_TEMPERATURE,
+  demoOpenAiApiModeFromOverride,
+  demoOpenAiProviderOptions,
+  demoReasoningEffortFromOverride,
+  demoReasoningEffortOverride,
   demoModelsFromOverride,
-  demoSessionAffinity
+  demoSessionAffinity,
+  demoWorkersAiReasoningEffort
 } from "../src/demo/model-config";
 
 describe("demo model config", () => {
-  it("uses the gauntlet winner with a fast fallback, conservative sampling, and medium reasoning", () => {
+  it("uses the gauntlet winner with a fast fallback, conservative sampling, and configured default reasoning", () => {
     expect(DEMO_PRIMARY_MODEL).toBe("openai/gpt-5.4");
     expect(DEMO_FALLBACK_MODEL).toBe("openai/gpt-5.4-mini");
     expect(DEMO_GROK_CONTROL_MODEL).toBe("xai/grok-4.3");
@@ -28,7 +36,10 @@ describe("demo model config", () => {
       { model: DEMO_FALLBACK_MODEL, role: "fallback" }
     ]);
     expect(DEMO_TEMPERATURE).toBe(0.1);
-    expect(DEMO_REASONING_EFFORT).toBe("medium");
+    expect(DEMO_OPENAI_API_MODE).toBe("responses");
+    expect(DEMO_REASONING_EFFORT).toBe("none");
+    expect(DEMO_REASONING_EFFORT_OVERRIDE_VAR).toBe("DEMO_REASONING_EFFORT_OVERRIDE");
+    expect(DEMO_OPENAI_API_MODE_VAR).toBe("DEMO_OPENAI_API_MODE");
     expect(DEMO_GATEWAY_ID_FALLBACK).toBe("stellar-raven-demo");
     expect(DEMO_MODEL_OVERRIDE_VAR).toBe("DEMO_MODEL_OVERRIDE");
   });
@@ -43,6 +54,49 @@ describe("demo model config", () => {
       { model: "openai/gpt-5.4-mini", role: "primary" },
       { model: "anthropic/claude-haiku-4.5", role: "fallback" }
     ]);
+  });
+
+  it("records none as the configured default unless the server env supplies a valid gauntlet override", () => {
+    expect(demoReasoningEffortFromOverride(undefined)).toBe("none");
+    expect(demoReasoningEffortFromOverride("")).toBe("none");
+    expect(demoReasoningEffortFromOverride("nope")).toBe("none");
+    expect(demoReasoningEffortFromOverride(" low ")).toBe("low");
+    expect(demoReasoningEffortFromOverride("none")).toBe("none");
+    expect(demoReasoningEffortFromOverride("minimal")).toBe("minimal");
+    expect(demoReasoningEffortFromOverride("xhigh")).toBe("xhigh");
+    expect(demoReasoningEffortOverride(undefined)).toBeUndefined();
+    expect(demoReasoningEffortOverride("nope")).toBeUndefined();
+    expect(demoReasoningEffortOverride(" low ")).toBe("low");
+  });
+
+  it("builds OpenAI provider options only for OpenAI gateway slugs", () => {
+    expect(demoOpenAiProviderOptions("openai/gpt-5.4", "low")).toEqual({
+      providerOptions: {
+        openai: {
+          reasoningEffort: "low"
+        }
+      }
+    });
+    expect(demoOpenAiProviderOptions("openai/gpt-5.4", undefined)).toEqual({});
+    expect(demoOpenAiProviderOptions("xai/grok-4.3", "low")).toEqual({});
+    expect(demoOpenAiProviderOptions("@cf/openai/gpt-oss-120b", "low")).toEqual({});
+  });
+
+  it("defaults OpenAI API mode to responses unless chat is explicitly requested", () => {
+    expect(demoOpenAiApiModeFromOverride(undefined)).toBe("responses");
+    expect(demoOpenAiApiModeFromOverride("")).toBe("responses");
+    expect(demoOpenAiApiModeFromOverride("nope")).toBe("responses");
+    expect(demoOpenAiApiModeFromOverride("chat")).toBe("chat");
+    expect(demoOpenAiApiModeFromOverride(" responses ")).toBe("responses");
+  });
+
+  it("maps demo reasoning values onto the narrower Workers AI catalog setting", () => {
+    expect(demoWorkersAiReasoningEffort("none")).toBeNull();
+    expect(demoWorkersAiReasoningEffort("minimal")).toBe("low");
+    expect(demoWorkersAiReasoningEffort("low")).toBe("low");
+    expect(demoWorkersAiReasoningEffort("medium")).toBe("medium");
+    expect(demoWorkersAiReasoningEffort("high")).toBe("high");
+    expect(demoWorkersAiReasoningEffort("xhigh")).toBe("high");
   });
 
   it("derives stable non-raw session affinity keys", async () => {

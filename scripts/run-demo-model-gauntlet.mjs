@@ -65,6 +65,9 @@ const PROMPTS = [
 const args = parseArgs(process.argv.slice(2));
 const runId = args.runId ?? new Date().toISOString().replaceAll(":", "").replaceAll(".", "");
 const models = args.models?.length ? args.models : DEFAULT_MODELS;
+const reasoningEfforts = args.reasoningEfforts?.length ? args.reasoningEfforts : [null];
+const prompts = args.prompts?.length ? PROMPTS.filter((prompt) => args.prompts.includes(prompt.id)) : PROMPTS;
+const openAiApiMode = args.openAiApiMode ?? null;
 const repeats = Number(args.repeats ?? 1);
 const portBase = Number(args.portBase ?? 8890);
 const outDir = args.outDir ?? path.join("research", "gauntlets");
@@ -83,40 +86,50 @@ if (!demoSecret) {
 const results = [];
 for (let modelIndex = 0; modelIndex < models.length; modelIndex += 1) {
   const model = models[modelIndex];
-  const port = portBase + modelIndex;
-  const server = await startWrangler({ model, port });
-  try {
-    const subject = `gauntlet:${runId}:${model}`;
-    const cookie = demoSecret ? await mintDemoCookie(demoSecret, subject) : "";
-    for (let repeat = 1; repeat <= repeats; repeat += 1) {
-      for (const prompt of PROMPTS) {
-        const label = `${model} :: ${prompt.id} :: ${repeat}/${repeats}`;
-        console.log(`[gauntlet] ${label}`);
-        const result = await runPrompt({
-          url: `http://localhost:${port}/demo/chat`,
-          cookie,
-          model,
-          prompt,
-          repeat,
-          timeoutMs
-        });
-        results.push(result);
-        await writeArtifacts({ runId, outDir, results });
-        console.log(
-          `[gauntlet] ${label} -> ${result.terminal} ${result.durationMs}ms tools=${result.searchCalls}/${result.executeCalls} pass=${result.pass.overall}`
-        );
+  for (let reasoningIndex = 0; reasoningIndex < reasoningEfforts.length; reasoningIndex += 1) {
+    const reasoningEffort = reasoningEfforts[reasoningIndex];
+    const port = portBase + modelIndex * reasoningEfforts.length + reasoningIndex;
+    const server = await startWrangler({ model, reasoningEffort, openAiApiMode, port });
+    try {
+      const subject = `gauntlet:${runId}:${model}:${reasoningEffortLabel(reasoningEffort)}`;
+      const cookie = demoSecret ? await mintDemoCookie(demoSecret, subject) : "";
+      for (let repeat = 1; repeat <= repeats; repeat += 1) {
+        for (const prompt of prompts) {
+          const label = `${model} :: reasoning=${reasoningEffortLabel(reasoningEffort)} :: ${prompt.id} :: ${repeat}/${repeats}`;
+          console.log(`[gauntlet] ${label}`);
+          const result = await runPrompt({
+            url: `http://localhost:${port}/demo/chat`,
+            cookie,
+            model,
+            reasoningEffort,
+            prompt,
+            repeat,
+            timeoutMs
+          });
+          results.push(result);
+          await writeArtifacts({ runId, outDir, prompts, results });
+          console.log(
+            `[gauntlet] ${label} -> ${result.terminal} ${result.durationMs}ms tools=${result.searchCalls}/${result.executeCalls} pass=${result.pass.overall}`
+          );
+        }
       }
+    } finally {
+      await stopWrangler(server);
     }
-  } finally {
-    await stopWrangler(server);
   }
 }
 
-await writeArtifacts({ runId, outDir, results });
+await writeArtifacts({ runId, outDir, prompts, results });
 console.log(`[gauntlet] wrote ${path.join(outDir, `${runId}.json`)}`);
 console.log(`[gauntlet] wrote ${path.join(outDir, `${runId}-summary.md`)}`);
 
-async function startWrangler({ model, port }) {
+async function startWrangler({ model, reasoningEffort, openAiApiMode, port }) {
+  const vars = [
+    "DEMO_AI_GATEWAY_ID:stellar-raven-demo",
+    `DEMO_MODEL_OVERRIDE:${model}`,
+    ...(openAiApiMode ? [`DEMO_OPENAI_API_MODE:${openAiApiMode}`] : []),
+    ...(reasoningEffort ? [`DEMO_REASONING_EFFORT_OVERRIDE:${reasoningEffort}`] : [])
+  ];
   const child = spawn(
     "npx",
     [
@@ -130,10 +143,7 @@ async function startWrangler({ model, port }) {
       String(port + 1000),
       "--show-interactive-dev-session",
       "false",
-      "--var",
-      "DEMO_AI_GATEWAY_ID:stellar-raven-demo",
-      "--var",
-      `DEMO_MODEL_OVERRIDE:${model}`
+      ...vars.flatMap((v) => ["--var", v])
     ],
     {
       cwd: process.cwd(),
@@ -147,13 +157,17 @@ async function startWrangler({ model, port }) {
   const deadline = Date.now() + 45_000;
   while (Date.now() < deadline) {
     if (child.exitCode !== null) {
-      throw new Error(`wrangler exited before ready for ${model}:\n${output.join("").slice(-4000)}`);
+      throw new Error(
+        `wrangler exited before ready for ${model} reasoning=${reasoningEffortLabel(reasoningEffort)}:\n${output.join("").slice(-4000)}`
+      );
     }
     if (await canGet(`http://localhost:${port}/demo`)) return { child, output, model, port };
     await sleep(500);
   }
   await stopWrangler({ child, output, model, port });
-  throw new Error(`wrangler did not become ready for ${model}:\n${output.join("").slice(-4000)}`);
+  throw new Error(
+    `wrangler did not become ready for ${model} reasoning=${reasoningEffortLabel(reasoningEffort)}:\n${output.join("").slice(-4000)}`
+  );
 }
 
 async function stopWrangler(server) {
@@ -167,7 +181,7 @@ async function stopWrangler(server) {
   }
 }
 
-async function runPrompt({ url, cookie, model, prompt, repeat, timeoutMs }) {
+async function runPrompt({ url, cookie, model, reasoningEffort, prompt, repeat, timeoutMs }) {
   const startedAt = Date.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -211,9 +225,10 @@ async function runPrompt({ url, cookie, model, prompt, repeat, timeoutMs }) {
   const firstMeaningful = frames.find((f) => f.type !== "ready");
   const pass = {
     http: responseStatus === 200,
-    terminal: Boolean(done) && errors.length === 0 && !parseError,
+    terminal: Boolean(done) && done.reason === "stop" && errors.length === 0 && !parseError,
     firstFrame: (frames[0]?.atMs ?? Infinity) < 2_000,
     latency: Date.now() - startedAt < 120_000,
+    finalAnswer: tokenText.trim().length > 0,
     expectedTools: prompt.expectTools ? searchStarts.length >= 1 : true,
     noToolFailures: toolFailures.length === 0,
     noMarketNumber:
@@ -225,6 +240,7 @@ async function runPrompt({ url, cookie, model, prompt, repeat, timeoutMs }) {
   return {
     runId,
     model,
+    reasoningEffort: reasoningEffortLabel(reasoningEffort),
     promptId: prompt.id,
     prompt: prompt.text,
     repeat,
@@ -269,18 +285,20 @@ async function readSse(body, onFrame) {
   }
 }
 
-async function writeArtifacts({ runId, outDir, results }) {
+async function writeArtifacts({ runId, outDir, prompts, results }) {
   const jsonPath = path.join(outDir, `${runId}.json`);
-  await writeFile(jsonPath, `${JSON.stringify({ runId, prompts: PROMPTS, results }, null, 2)}\n`);
+  await writeFile(jsonPath, `${JSON.stringify({ runId, prompts, results }, null, 2)}\n`);
   const summaryPath = path.join(outDir, `${runId}-summary.md`);
   await writeFile(summaryPath, renderSummary({ runId, results }));
 }
 
 function renderSummary({ runId, results }) {
-  const byModel = new Map();
+  const byCell = new Map();
   for (const result of results) {
-    const entry = byModel.get(result.model) ?? {
+    const key = `${result.model}@@${result.reasoningEffort ?? "default"}`;
+    const entry = byCell.get(key) ?? {
       model: result.model,
+      reasoningEffort: result.reasoningEffort ?? "default",
       runs: 0,
       pass: 0,
       terminal: 0,
@@ -298,19 +316,19 @@ function renderSummary({ runId, results }) {
     if (result.firstMeaningfulMs !== null) entry.firstMeaningful.push(result.firstMeaningfulMs);
     entry.toolFailures += result.toolFailures;
     entry.errors.push(...result.errors, ...(result.parseError ? [result.parseError] : []));
-    byModel.set(result.model, entry);
+    byCell.set(key, entry);
   }
-  const rows = [...byModel.values()].map((entry) => {
+  const rows = [...byCell.values()].map((entry) => {
     const p50 = percentile(entry.durations, 0.5);
     const p95 = percentile(entry.durations, 0.95);
     const firstP50 = percentile(entry.firstMeaningful, 0.5);
-    return `| \`${entry.model}\` | ${entry.pass}/${entry.runs} | ${entry.terminal}/${entry.runs} | ${p50} | ${p95} | ${firstP50} | ${entry.toolFailures} |`;
+    return `| \`${entry.model}\` | \`${entry.reasoningEffort}\` | ${entry.pass}/${entry.runs} | ${entry.terminal}/${entry.runs} | ${p50} | ${p95} | ${firstP50} | ${entry.toolFailures} |`;
   });
   const failures = results
     .filter((result) => !result.pass.overall)
     .map(
       (result) =>
-        `- \`${result.model}\` / \`${result.promptId}\` / repeat ${result.repeat}: ${result.terminal}, ${result.durationMs}ms, tools ${result.searchCalls}/${result.executeCalls}, errors=${JSON.stringify(result.errors.concat(result.parseError ? [result.parseError] : []))}`
+        `- \`${result.model}\` / reasoning=\`${result.reasoningEffort ?? "default"}\` / \`${result.promptId}\` / repeat ${result.repeat}: ${result.terminal}, ${result.durationMs}ms, tools ${result.searchCalls}/${result.executeCalls}, errors=${JSON.stringify(result.errors.concat(result.parseError ? [result.parseError] : []))}`
     );
   return `# Demo Model Gauntlet ${runId}
 
@@ -318,14 +336,18 @@ Generated by \`scripts/run-demo-model-gauntlet.mjs\`.
 
 ## Summary
 
-| Model | Overall Pass | Clean Terminal | p50 ms | p95 ms | p50 first meaningful ms | Tool Failures |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Model | Reasoning | Overall Pass | Clean Terminal | p50 ms | p95 ms | p50 first meaningful ms | Tool Failures |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 ${rows.join("\n")}
 
 ## Failures
 
 ${failures.length ? failures.join("\n") : "- None"}
 `;
+}
+
+function reasoningEffortLabel(reasoningEffort) {
+  return reasoningEffort ?? "default";
 }
 
 function percentile(values, p) {
@@ -380,6 +402,26 @@ function parseArgs(argv) {
       out.models.push(argv[++i]);
     } else if (arg === "--models") {
       out.models = argv[++i].split(",").map((model) => model.trim()).filter(Boolean);
+    } else if (arg === "--reasoning-efforts") {
+      out.reasoningEfforts = argv[++i]
+        .split(",")
+        .map((effort) => effort.trim())
+        .filter(Boolean)
+        .map((effort) => (effort === "default" ? null : effort));
+    } else if (arg === "--reasoning-effort") {
+      const effort = argv[++i].trim();
+      out.reasoningEfforts ??= [];
+      out.reasoningEfforts.push(effort === "default" ? null : effort);
+    } else if (arg === "--openai-api-mode") {
+      out.openAiApiMode = argv[++i].trim();
+    } else if (arg === "--prompt") {
+      out.prompts ??= [];
+      out.prompts.push(argv[++i].trim());
+    } else if (arg === "--prompts") {
+      out.prompts = argv[++i]
+        .split(",")
+        .map((prompt) => prompt.trim())
+        .filter(Boolean);
     } else if (arg.startsWith("--")) {
       const key = arg.slice(2).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
       out[key] = argv[++i];
