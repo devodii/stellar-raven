@@ -230,7 +230,7 @@ specs/                   # super-spec.json (+ authored stellar-docs.json) — fe
 inventory/               # regenerated service inventory JSONs (drift source for build-catalog)
 ecosystem-skills/        # pinned mirror (lifted)
 catalog/manifest.json    # generated — the unified index
-public/                  # GitHub-only assets (README hero banner) — NOT served by the Worker (public/README.md)
+assets/repo/             # GitHub-only assets (README hero banner) — NOT served by the Worker
 research/                # this research + ADRs (research/decisions/) as decisions accrue
 test/                    # vitest offline suites (adapters, server, super-spec, auth, …)
 eval/                    # routing eval + qa/ (execute Q→A battery) + agentic/ + plan/
@@ -256,7 +256,7 @@ wrangler `^4.107.0`, compat ≥ 2026-06-11 + `nodejs_compat`, `worker_loaders` b
 >   consent page, `robots.txt`, `sitemap.xml`, JSON-LD, and `/og.png` — routed via the OAuth
 >   provider's `defaultHandler` (`src/auth/workos.ts`). The OG image and site fonts are generated
 >   code (`src/og.ts`, `src/fonts.ts` via `npm run site:og` / `npm run site:fonts`), not served
->   from `public/`.
+>   from static asset files.
 >
 > Follow-ups and former deferrals (tracked as Solo backlog todos; project binding in CLAUDE.md):
 > - `codemode.skill.run` (executable skills) — **BUILT 2026-07-06, ship-approved** (todo 806;

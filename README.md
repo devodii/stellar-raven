@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/Gemini_Generated_Image_v5uajdv5uajdv5ua.png" alt="stellar-raven — thermal neural interface" width="100%">
+  <img src="./assets/repo/Gemini_Generated_Image_v5uajdv5uajdv5ua.png" alt="stellar-raven — thermal neural interface" width="100%">
 </p>
 
 # Stellar Raven

@@ -38,8 +38,8 @@ through to its `defaultHandler` (`src/auth/workos.ts`), which — besides `/auth
 `/callback` / the consent page — serves the public site from `src/site.ts`: the landing page,
 `robots.txt`, `sitemap.xml`, JSON-LD, and `/og.png`. The OG image and the site/OG fonts are
 **generated code** (`src/og.ts`, `src/fonts.ts`, rebuilt via `npm run site:og` /
-`npm run site:fonts`), embedded in the Worker bundle — nothing is served from `public/`, which
-holds GitHub-only assets (`public/README.md`).
+`npm run site:fonts`), embedded in the Worker bundle. Repository presentation images live under
+`assets/repo/`; there is no Wrangler static-assets directory.
 
 `/demo` is the browser playground surface, intercepted before the OAuth provider's default
 handler in `src/server.ts`. The page (`src/demo/page.ts`) is cookie-gated through WorkOS:
