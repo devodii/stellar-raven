@@ -139,6 +139,13 @@ export const WorkOSAuthHandler = {
         return text("CSRF token mismatch", 400, { "set-cookie": clearCookie(CONSENT_CSRF_COOKIE) });
       }
 
+      // Explicit Terms/Privacy acknowledgement: the consent form's checkbox
+      // (name="tos_agree") only submits when ticked. The CSS-only gate is UX;
+      // this is the enforcement boundary — no ack, no grant.
+      if (!form.get("tos_agree")) {
+        return text("Terms acknowledgement required", 400, { "set-cookie": clearCookie(CONSENT_CSRF_COOKIE) });
+      }
+
       // Park the parsed request for /callback; the binding secret ties the
       // WorkOS round trip to this browser.
       const state = crypto.randomUUID();

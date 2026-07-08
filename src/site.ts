@@ -830,11 +830,21 @@ main.auth{flex:1;display:flex;align-items:center;justify-content:center;padding:
 .scope-desc{font-size:13.5px;color:var(--dim);margin-top:6px;line-height:1.5}
 .act{padding:24px 34px 32px}
 .act .btn-primary{width:100%;justify-content:center;padding:15px}
+.consent-row{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12.5px;
+  color:var(--dim);line-height:1.5;margin:0 0 16px}
+.consent-row input{flex:none;margin-top:1px;width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
+.consent-row a{color:var(--fog);text-decoration:underline;text-underline-offset:2px}
+.consent-row a:hover{color:var(--orange)}
+/* CSS-only gate (script-free page): the submit button is inert until #tos-agree
+   is checked. Server-side POST /authorize also requires tos_agree — this is UX,
+   not the enforcement boundary. */
+.act:not(:has(#tos-agree:checked)) .btn-primary{opacity:.45;pointer-events:none;
+  cursor:not-allowed;box-shadow:none;transform:none}
 .note{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--dim);margin:16px 0 0;line-height:1.5}
 .note svg{flex:none;margin-top:1px}
-.auth-brand{display:flex;align-items:center;justify-content:center;gap:11px;padding:30px 0 4px;
+.auth-brand{display:flex;align-items:baseline;justify-content:center;gap:11px;padding:30px 0 4px;
   position:relative;z-index:2}
-.auth-brand .rv{width:22px;height:22px;fill:var(--orange);filter:drop-shadow(0 0 12px rgba(255,85,0,.5))}
+.auth-brand .rv{width:22px;height:22px;fill:var(--orange);filter:drop-shadow(0 0 12px rgba(255,85,0,.5));align-self:center}
 .auth-brand b{font-family:var(--display);font-weight:600;font-size:17px;color:var(--fog)}
 .auth-brand i{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)}
 `;
@@ -888,13 +898,17 @@ export function consentPage(args: {
     <div class="conn"><div class="node client">${initial}</div><div class="wire"></div>
       <div class="node raven">${ravenSvg("rv")}</div></div>
     <h1>${clientName} wants to connect</h1>
-    <p class="sub">It will access <b>Stellar Raven</b> as you, once you sign in with WorkOS.</p>
+    <p class="sub">It will access <b>Stellar Raven</b> for you<br>once you sign in with WorkOS.</p>
   </div>
   <div class="panel-h">This connection grants</div>
   <ul class="scopes">${scopeItems}</ul>
   <div class="act">
     <form method="post" action="${escapeHtml(args.formAction)}">
       <input type="hidden" name="csrf_token" value="${escapeHtml(args.csrfToken)}"/>
+      <label class="consent-row"><input type="checkbox" name="tos_agree" id="tos-agree"/>
+        <span>I have read and agree to the
+        <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of Service</a><br>
+        and <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
       <button class="btn btn-primary" type="submit">Approve and continue ${ARROW}</button>
     </form>
     <p class="note">${SHIELD}<span>Only continue if you started this connection. Approving redirects

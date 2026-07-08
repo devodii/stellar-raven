@@ -353,6 +353,8 @@ describe("WorkOSAuthHandler", () => {
     expect(response.headers.get("content-security-policy")).not.toContain("form-action");
     // Double-submit: the hidden form field carries the same token as the cookie.
     expect(page).toContain(`name="csrf_token" value="${csrf}"`);
+    // Explicit Terms/Privacy acknowledgement checkbox gates the grant.
+    expect(page).toContain(`type="checkbox" name="tos_agree"`);
   });
 
   it("POST /authorize rejects a missing/mismatched CSRF token", async () => {
@@ -372,9 +374,30 @@ describe("WorkOSAuthHandler", () => {
     expect(response.status).toBe(400);
   });
 
+  it("POST /authorize rejects a missing Terms/Privacy acknowledgement", async () => {
+    const env = testEnv({ OAUTH_PROVIDER: stubHelpers() });
+    // Valid CSRF, but the tos_agree checkbox was never ticked (field absent).
+    const form = new URLSearchParams({ csrf_token: "token-1" });
+    const response = await WorkOSAuthHandler.fetch(
+      new Request("https://mcp.test/authorize?client_id=client-abc", {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          cookie: "__Host-MCP_CONSENT_CSRF=token-1"
+        },
+        body: form
+      }),
+      env
+    );
+    expect(response.status).toBe(400);
+    // No state parked when the acknowledgement is missing.
+    const kv = env.OAUTH_KV as unknown as { store: Map<string, string> };
+    expect(kv.store.size).toBe(0);
+  });
+
   it("POST /authorize with a valid CSRF parks state in KV and 302s to WorkOS AuthKit", async () => {
     const env = testEnv({ OAUTH_PROVIDER: stubHelpers() });
-    const form = new URLSearchParams({ csrf_token: "token-1" });
+    const form = new URLSearchParams({ csrf_token: "token-1", tos_agree: "on" });
     const response = await WorkOSAuthHandler.fetch(
       new Request("https://mcp.test/authorize?client_id=client-abc", {
         method: "POST",
