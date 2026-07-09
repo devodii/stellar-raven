@@ -46,19 +46,19 @@ export const SERVICE_FAMILY_PURPOSES = [
 ];
 
 export const FAMILY_LINE =
-  "Families: lumenloop=community/editorial projects, research, content, SCF/funding; scout=live ecosystem graph: projects, repos, builders, hackathons, partners; stellarDocs=official protocol/SDK/CLI/contracts/RPC/anchor/wallet docs; skills=tested build/integration/security playbooks.";
+  "Families: lumenloop=community/editorial projects, research, content, SCF/funding; use for what's-been-said/editorial/freshness skims; scout=live ecosystem graph: projects, repos, builders, hackathons, partners; stellarDocs=official protocol/SDK/CLI/contracts/RPC/anchor/wallet docs; skills=tested build/integration/security playbooks.";
 
 export const AUTHORITY_RULES = [
   "Use the family that can actually ground the claim, then add a corroborating family when the question crosses source boundaries.",
   "Treat Scout research items and Lumenloop articles/content as community-aggregated sources; protocol-governance, standards-authorship, incident, and audit claims stay unverified until corroborated by Stellar Docs or skills content.",
-  "For build or integration questions, read matching skill sections and search Stellar Docs. For purely factual protocol/API questions, start with Stellar Docs."
+  "Official docs are authority for protocol, standards, API, and implementation claims; for ecosystem facts (funding/awards/amounts, program names, coverage/directories, who-builds-what, adoption), start Scout/Lumenloop even when docs mention the topic, then use docs only to corroborate standards mechanics."
 ];
 
 export const WORKFLOW_ARCHETYPES = [
   {
     id: "project-funding-lookup",
     title: "Project/funding lookup",
-    questionShape: "Who builds/funds project X, and what is its SCF or ecosystem context?",
+    questionShape: "Who builds/funds project X, and which named SCF Build/Liquidity/Public-Goods award or grant program, award amount, or ecosystem context applies?",
     families: ["lumenloop", "scout"],
     steps: [
       { id: "lumenloop.search_directory", why: "find the canonical Lumenloop project row" },
@@ -131,13 +131,15 @@ export const WORKFLOW_ARCHETYPES = [
   {
     id: "asset-anchor-coverage",
     title: "Asset/anchor coverage",
-    questionShape: "Which assets, anchors, rails, or partners support a payment or tokenization flow?",
-    families: ["stellarDocs", "skills", "scout"],
+    questionShape: "Which/how many assets, anchors, rails, or partners cover a payment/tokenization flow, including exhaustive directory or coverage listings?",
+    families: ["scout", "lumenloop", "stellarDocs", "skills"],
     steps: [
+      { id: "scout.getPartners", why: "start with ecosystem partner and anchor directory coverage" },
+      { id: "lumenloop.search_directory", why: "cross-check directory listings and project identity" },
+      { id: "lumenloop.search_content_semantic", why: "pull editorial coverage and freshness context when listings are current or exhaustive" },
       { id: "stellarDocs.search_anchor_sep_docs", why: "ground anchor and SEP behavior in official docs" },
       { id: "stellarDocs.search_asset_token_docs", why: "ground asset/SAC token behavior in official docs" },
-      { id: "skills.stellar-dev.assets", why: "apply the asset/trustline/SAC operational playbook" },
-      { id: "scout.getPartners", why: "find ecosystem partners that may cover the rail" }
+      { id: "skills.stellar-dev.assets", why: "apply the asset/trustline/SAC operational playbook" }
     ]
   },
   {
