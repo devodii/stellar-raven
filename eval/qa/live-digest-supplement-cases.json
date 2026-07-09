@@ -1,6 +1,10 @@
 {
-  "$comment": "Opt-in live digest supplement (todo 806; separated from the canonical lane by todo 913) — exactly 2 Lumenloop recency-digest cases. NOT compiled and NEVER part of the frozen live-data-canonical-v1 denominator. Run and report this named contract separately: node eval/qa/run-qa.mjs --cases eval/qa/live-digest-supplement-cases.json --port 8788.",
+  "$comment": "Opt-in live digest supplement (todo 806; separated and content-pinned by todo 913) — exactly 2 Lumenloop recency-digest cases. NOT compiled and NEVER part of the membership-frozen live-data-canonical-v1 denominator. Run and report this named contract separately: node eval/qa/run-qa.mjs --cases eval/qa/live-digest-supplement-cases.json --port 8788. Any case-content change requires an explicit contract-version bump, provenance note, and digest update.",
   "contract": "live-digest-supplement-v1",
+  "contractProvenance": {
+    "origin": "The two case objects added by eb412bd, moved unchanged into this opt-in contract by todo 913.",
+    "caseContentDigest": "sha256(JSON.stringify(cases))=0997e6ffa22a9ca164898dda3895af1c1777ea031de4601696ef741db246a664"
+  },
   "authoredAt": "2026-07-06",
   "cases": [
     {

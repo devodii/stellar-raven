@@ -116,8 +116,10 @@ npm run eval:qa:selftest        # only if judging — 4 candidates vs 1 case
 Compiles are deterministic and never touch the hand-authored supplements
 (`eval/skills-cases.json`, `eval/build-question-overlay.json`, `eval/qa/live-cases.json`,
 `eval/qa/live-digest-supplement-cases.json`) — those are load-time files, committed, and safe
-from recompiles. `live-cases.json` is the frozen 10-case `live-data-canonical-v1` contract;
-the two digest cases are the separate opt-in `live-digest-supplement-v1` contract. Generated files
+from recompiles. `live-cases.json` is the membership-frozen 10-case
+`live-data-canonical-v1` contract; its full vetted case array and the separate two-case opt-in
+`live-digest-supplement-v1` array are digest-pinned. Change either contract's case content only
+with a recorded provenance note, contract-version bump, and digest update. Generated files
 (`routing-cases.json`, `qa/cases.json`, `plan/op-classes.json`) are never hand-edited.
 
 ## Step 2 — live server (only for QA / agentic / live-data lanes)

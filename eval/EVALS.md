@@ -21,7 +21,7 @@ the headline wins.
 | `eval/discovery/` | one-search source-family / usable-route discovery over the live MCP HTTP surface | free aside from the local server; after discovery guidance or retrieval-shape work | Diagnostic: 43 adjudicated cases; `familyHit@3` + `usableOp@5`; known limit is verbatim single-query input |
 | `eval/agentic/` | agent-driven `search`, live server | ~$, minutes — after major search-behavior changes | Diagnostic (label-ambiguity analysis) |
 | `eval/qa/run-qa.mjs` — main battery (469) | **end-to-end search → execute → answer** | ~$0.2–0.7/case, ~30 min per 30-case sample — before/after big changes, A/Bs | **HEADLINE** (correct / partial / wrong) |
-| — canonical live-data contract `live-data-canonical-v1` (`--cases eval/qa/live-cases.json`, 10 = 7 Scout / 2 Lumenloop / 1 cant-do) | `execute` **grounding** where priors fail | ~$2.20–6.70 full at the documented ~$0.22–0.67/case — after executor/adapter changes | Diagnostic for the execute path; frozen denominator, graded on behavior (live-derived facts, as-of framing, honest refusal), never exact values |
+| — canonical live-data contract `live-data-canonical-v1` (`--cases eval/qa/live-cases.json`, 10 = 7 Scout / 2 Lumenloop / 1 cant-do) | `execute` **grounding** where priors fail | ~$2.20–6.70 full at the documented ~$0.22–0.67/case — after executor/adapter changes | Diagnostic for the execute path; membership/order is the pre-drift 10 while full case content is pinned to the current vetted v1 digest (including 6fed730's hackathon-grounding correction); graded on behavior, never exact values |
 | — opt-in digest contract `live-digest-supplement-v1` (`--cases eval/qa/live-digest-supplement-cases.json`, 2 Lumenloop) | `execute` recency-digest grounding | ~$0.44–1.34 full at the same per-case estimate — only for digest/skill-run questions | Diagnostic supplement; report separately from the canonical live-data lane and main battery |
 | `eval/plan/grade-plan.mjs` | which services `execute` actually touched | free (regrades stored QA transcripts) | Diagnostic (coverage; progression informational only) |
 
@@ -42,7 +42,7 @@ the raven sibling repos are retired; growth happens in this repo's own formats.
    belongs in `expected_any`, not in the strict headline.
 2. **Lanes never merge.** The legacy 338, skills 23 (active; +8 documented-inert
    `retiredCases` in `eval/skills-cases.json` after the 2026-07-03 onboarding-skills
-   retirement, ADR-0002), extended 122, canonical live-data 10, and opt-in live-digest
+   retirement, ADR-0002), extended 122, membership-frozen canonical live-data 10, and opt-in live-digest
    supplement 2 are separate scopes with separate denominators, forever. A historical
    12-case run means canonical + supplement were run together; it is not a canonical-lane
    result. Comparability > bigger n.
@@ -62,8 +62,11 @@ the raven sibling repos are retired; growth happens in this repo's own formats.
 6. **Hand-authored files are load-time supplements** (`skills-cases.json`,
    `build-question-overlay.json`, `live-cases.json`,
    `qa/live-digest-supplement-cases.json`) — compiles can't wipe them, and they are
-   committed. `eval:selftest` pins the two named QA contracts' membership, counts, and
-   disjointness. Generated files (`routing-cases.json`, `qa/cases.json`) are never hand-edited.
+   committed. `eval:selftest` pins both named QA contracts' names, complete case arrays
+   (SHA-256 over `JSON.stringify(cases)`), membership/order, service counts, trap control, and
+   disjointness. Any question/golden/tag/note change requires an explicit contract-version bump,
+   provenance note, and digest update. Generated files (`routing-cases.json`, `qa/cases.json`)
+   are never hand-edited.
 7. **Results are local-only evidence** (`eval/**/results/`, gitignored); READMEs carry the
    committed record with the exact results-file stamp they cite. The results dirs are unbounded
    — prune them periodically (e.g. drop results older than 30 days), keeping any stamp still

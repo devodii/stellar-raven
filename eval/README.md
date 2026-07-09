@@ -689,13 +689,13 @@ claim). `eval:routing -- --gate` **PASS** against the unchanged 2026-07-04 basel
 | lane | BEFORE | AFTER |
 |---|---|---|
 | targeted `--ids` battery (6 cases: 5 dossier-shaped incl. the fabrication trap + 1 digest-shaped) | 4 correct / 1 partial / 1 wrong (`2026-07-06T20-41-52-variantA`) | **6 / 0 / 0** (`2026-07-07T00-38-53-variantA`) |
-| canonical + digest supplement (12 cases = frozen 10 + opt-in 2, historically run from one then-combined file; not a canonical-lane denominator) | 11 / 0 / 1 (`2026-07-06T20-51-40-variantA`) | 11 / 0 / 1 (`2026-07-07T00-47-30-variantA`) — the **same pre-existing wrong** (`q-live-hackathon-recent-winners`), unrelated to the feature |
+| canonical + digest supplement (12 cases = membership-frozen 10 + opt-in 2, historically run from one then-combined file; not a canonical-lane denominator) | 11 / 0 / 1 (`2026-07-06T20-51-40-variantA`) | 11 / 0 / 1 (`2026-07-07T00-47-30-variantA`) — the **same pre-existing wrong** (`q-live-hackathon-recent-winners`), unrelated to the feature |
 
 **Composition** (`analyze-composition.mjs`, ids battery): mean turns 4.83 → 4.5, execute
 scripts 8 → 7, constituent op calls 24 → 21 (skill.run calls expanded through declared ops for
-comparability), truncated-input cases 1 → 0. Live lane: mean turns 5.83 → 5.0, op calls
+comparability), truncated-input cases 1 → 0. Canonical + digest supplement: mean turns 5.83 → 5.0, op calls
 60 → 53, execution failures 2 → 0 — but execute scripts went **up** 22 → 25, so read the
-live-lane composition delta as mixed, not a win.
+combined-lane composition delta as mixed, not a win.
 
 **Adoption, per runner — the honest split:**
 

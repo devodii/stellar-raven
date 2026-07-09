@@ -170,15 +170,20 @@ default**; re-running B requires a build that exposes a code-shaped tool plus an
 
 ### Canonical live-data lane and opt-in digest supplement (todos 818, 806, 913)
 
-`live-data-canonical-v1` is `eval/qa/live-cases.json`: the frozen **10-case** execute-grounding
+`live-data-canonical-v1` is `eval/qa/live-cases.json`: the membership-frozen **10-case** execute-grounding
 lane (7 Scout / 2 Lumenloop / 1 cant-do trap). It covers currently-open RFPs, recent hackathon
 winners, activity leaderboards, latest SCF round, Lumenloop's free-text region vocabulary, and
-the honest out-of-scope control. Its denominator and membership are pinned by `eval:selftest`.
+the honest out-of-scope control. Membership/order comes from `eb412bd^`, before the denominator
+drift. Content is the current vetted state: specifically, `6fed730` deliberately updated
+`q-live-hackathon-recent-winners` for Scout's self-describing `winnersRanked` and
+`placementRank` fields alongside rubric v2.2; reverting to the older bytes would restore stale
+truth. `eval:selftest` pins the complete chosen case array, not only its ids.
 
 `live-digest-supplement-v1` is `eval/qa/live-digest-supplement-cases.json`: an opt-in **2-case**
 Lumenloop recency-digest supplement (`q-live-digest-rwa-recent` and
 `q-live-digest-blend-coverage`). It was authored for the skill.run experiment and is not part of
-the canonical live-data denominator. Run, stamp, cost, and report it separately.
+the canonical live-data denominator. Its complete two-case array is independently digest-pinned.
+Run, stamp, cost, and report it separately.
 
 Both contracts use **behavioral** goldens — live-derived facts + as-of framing + honest refusal
 or quiet-window handling — never snapshot values, so they do not rot the way freshness-pinned
@@ -197,7 +202,9 @@ node eval/plan/grade-plan.mjs eval/qa/results/<supplement-stamp>-variantA.json
 ```
 
 Zero contract-specific runner/judge code — both ride `--cases`, `run-qa.mjs` records the JSON
-`contract` as `meta.caseContract`, and `graderNotes`/`tags` carry the grounding rubric. Report
+`contract` as `meta.caseContract`, and `graderNotes`/`tags` carry the grounding rubric. The
+contract files record provenance plus the expected `sha256(JSON.stringify(cases))`; changing a
+question, golden, tag, or grader note requires an explicit version bump and digest update. Report
 each as its own lane; **never merge either into the main battery or each other**. Historical
 12-case runs are explicitly “canonical + supplement”, not canonical-lane results (see
 `eval/EVALS.md`).
@@ -210,7 +217,7 @@ Both the answering agent and the judge are headless `claude -p --model claude-so
 --output-format json|stream-json` calls (verified live 2026-07-02, including `--mcp-config` with a
 generated temp `{type: "http", url: "http://localhost:PORT/mcp"}` config and `--allowedTools`
 scoping the agent to the variant's search tool + execute). Rough cost: ~$0.15–0.60 per case
-(agent) + ~$0.07 per judge call, so the frozen canonical 10 costs about **$2.20–6.70** and the
+(agent) + ~$0.07 per judge call, so the membership-frozen canonical 10 costs about **$2.20–6.70** and the
 two-case digest supplement about **$0.44–1.34**. These are separate budgets and result stamps.
 
 ## Judging rubric
