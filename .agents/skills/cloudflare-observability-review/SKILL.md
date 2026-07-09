@@ -1,6 +1,6 @@
 ---
 name: cloudflare-observability-review
-description: Investigate live Cloudflare Workers observability for stellar-raven-codemode. Use when reviewing production MCP request logs, traces, Ray IDs, request headers, telemetry query results, eval observability, agent-run forensics, or whether Cloudflare metadata is enough without app-level correlation IDs.
+description: Investigate live Cloudflare Workers observability for stellar-raven-codemode. Use when reviewing production MCP request logs, playground/demo telemetry, traces, Ray IDs, request headers, telemetry query results, eval observability, agent-run forensics, or whether Cloudflare metadata is enough without app-level correlation IDs.
 ---
 
 # Cloudflare Observability Review
@@ -113,14 +113,15 @@ Wait 30-90 seconds for ingestion before querying.
 
 ## Demo Playground Failures
 
-For `/demo/chat` screenshots or user-visible tool cards, do not start only from
-the screenshot timestamp. The screenshot may be captured after the failing turn,
-or from a local browser that is replaying retained UI state. First search a wide
-recent window (usually 10 hours, or the user's stated window) for app events:
+For `/playground/chat` screenshots or user-visible tool cards, do not start only
+from the screenshot timestamp. The screenshot may be captured after the failing
+turn, or from a local browser that is replaying retained UI state. First search
+a wide recent window (usually 10 hours, or the user's stated window) for app
+events:
 
-- `source.evt = "demo-execute"` grouped by `source.ok` and `source.error`.
-- `source.evt = "demo-chat"` with `source.executeFailures > 0`, grouped by
-  `source.executeFailures`, `source.finishReason`, and Ray/request ID.
+- `evt = "demo-execute"` grouped by `ok` and `error`.
+- `evt = "demo-chat"` with `executeFailures > 0`, grouped by
+  `executeFailures`, `finishReason`, and Ray/request ID.
 - Needle searches for the visible user query terms, e.g. `ecosystem gaps
   builders` or `yield rwa bond asset`.
 - Span view for `codemode.execute`, grouped by `$metadata.message` and
@@ -135,6 +136,25 @@ Then join each failing request by `$metadata.requestId`:
   `finishReason`, `budgetExhausted`, `finalNeededButMissing`, answer preview.
 - `cf-worker-event`: path/method/status/user-agent and, when needed, the
   Cloudflare private/platform fields used to disambiguate same-user traffic.
+
+When the question text matters, start with `demo-chat-start`. It records the
+inbound browser message surface without storing the full transcript:
+
+- `evt = "demo-chat-start"` grouped by `$metadata.requestId`, `model`,
+  `openAiApiMode`, `reasoningEffort`, `auth`, `historyMessages`, and
+  `userMessages`.
+- `latestUserPreview`: short sanitized preview of the latest user message.
+  Search this for visible screenshot terms.
+- `latestUserHash`: stable hash prefix for exact matching repeated prompts
+  without exposing the raw text.
+- `latestUserChars`, `historyChars`: sizing clues for truncation/body issues.
+- `subjectHash`: privacy-safe per-demo-session join key; do not infer real
+  identity from it.
+
+Full chat transcripts are intentionally not logged. If `demo-chat-start` is
+absent in older logs or a nonstandard environment, reconstruct the user ask from
+`demo-search.query`, `demo-execute.code`, answer preview, timestamp, Ray ID, and
+screenshot text; mark that reconstruction as best-effort.
 
 Common diagnosis patterns:
 
@@ -151,8 +171,19 @@ Common diagnosis patterns:
 
 ## Field Map
 
+Cloudflare's query/filter keyspace flattens app JSON log fields. If a returned
+event object displays app data under `source.evt` / `source.query`, filter and
+group by `evt` / `query` unless the keys endpoint shows the `source.*` variant
+for that dataset. A query using `source.evt = "demo-search"` can miss events
+that `evt = "demo-search"` finds.
+
 High-value fields:
 
+- App JSON logs: `evt`, `query`, `kind`, `service`, `hits`, `total`, `top`,
+  `ok`, `error`, `code`, `resultPreview`, `answerPreview`, `finalPreview`,
+  `latestUserPreview`, `latestUserHash`, `latestUserChars`, `historyChars`,
+  `historyMessages`, `userMessages`, `subjectHash`, `auth`, `model`,
+  `openAiApiMode`, `reasoningEffort`
 - `$metadata.service`, `$metadata.requestId`, `$metadata.type`,
   `$metadata.trigger`, `$metadata.message`
 - `$workers.event.rayId`, `$workers.requestId`,

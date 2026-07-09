@@ -3,7 +3,7 @@
  * unit tests can cover semantics without importing worker-only modules.
  */
 import type { DemoFrame } from "./frames.ts";
-import { preview } from "../observability.ts";
+import { hashPrefix, preview } from "../observability.ts";
 
 export type DemoUsage = {
   cacheReadTokens: number | undefined;
@@ -34,8 +34,18 @@ export type DemoFinalTextTelemetry = {
   budgetExhausted: boolean;
   stopReasonClass: DemoStopReasonClass;
 };
+export type DemoInputTelemetry = {
+  latestUserHash: string | null;
+  latestUserChars: number;
+  latestUserPreview: string | null;
+  historyMessages: number;
+  historyChars: number;
+  userMessages: number;
+  subjectHash: string;
+};
 
 const DEMO_FINAL_PREVIEW_CHARS = 180;
+const DEMO_INPUT_PREVIEW_CHARS = 180;
 
 export function isMeaningfulDemoOutput(frame: DemoFrame): boolean {
   switch (frame.type) {
@@ -94,6 +104,23 @@ export function demoFinalTextTelemetry(finalText: string, finishReason: string):
     finalNeededButMissing: missingFinalText && finishReason !== "empty-fallback",
     budgetExhausted,
     stopReasonClass: classifyDemoStopReason(finishReason, hadFinalText)
+  };
+}
+
+export async function demoInputTelemetry(
+  messages: { role: "user" | "assistant"; content: string }[],
+  subject: string
+): Promise<DemoInputTelemetry> {
+  const latestUser = [...messages].reverse().find((message) => message.role === "user")?.content ?? null;
+  return {
+    latestUserHash: latestUser === null ? null : await hashPrefix(latestUser),
+    latestUserChars: latestUser?.length ?? 0,
+    latestUserPreview:
+      latestUser === null ? null : preview(sanitizeDemoPreviewText(latestUser), DEMO_INPUT_PREVIEW_CHARS),
+    historyMessages: messages.length,
+    historyChars: messages.reduce((sum, message) => sum + message.content.length, 0),
+    userMessages: messages.filter((message) => message.role === "user").length,
+    subjectHash: await hashPrefix(subject)
   };
 }
 

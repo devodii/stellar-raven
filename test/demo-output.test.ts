@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  demoInputTelemetry,
   demoFinalTextTelemetry,
   isMeaningfulDemoOutput,
   sumDemoUsage
@@ -126,5 +127,33 @@ describe("demoFinalTextTelemetry", () => {
       budgetExhausted: true,
       stopReasonClass: "budget-exhausted"
     });
+  });
+});
+
+describe("demoInputTelemetry", () => {
+  it("records a compact sanitized latest-user preview plus hashes and counts", async () => {
+    const fakeStellarSeed = "SA" + "A".repeat(54);
+    const latest = `Can you check ada@example.com and this Stellar secret ${fakeStellarSeed}?`;
+    const telemetry = await demoInputTelemetry(
+      [
+        { role: "user", content: "earlier" },
+        { role: "assistant", content: "reply" },
+        { role: "user", content: latest }
+      ],
+      "subject-123"
+    );
+
+    expect(telemetry).toMatchObject({
+      latestUserChars: latest.length,
+      historyMessages: 3,
+      historyChars: "earlier".length + "reply".length + latest.length,
+      userMessages: 2
+    });
+    expect(telemetry.latestUserHash).toMatch(/^[a-f0-9]{16}$/);
+    expect(telemetry.subjectHash).toMatch(/^[a-f0-9]{16}$/);
+    expect(telemetry.latestUserPreview).toContain("[redacted-email]");
+    expect(telemetry.latestUserPreview).toContain("[redacted-stellar-secret]");
+    expect(telemetry.latestUserPreview).not.toContain("ada@example.com");
+    expect(telemetry.latestUserPreview).not.toContain(fakeStellarSeed);
   });
 });

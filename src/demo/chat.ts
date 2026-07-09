@@ -52,6 +52,7 @@ import {
   type DemoReasoningEffort
 } from "./model-config.ts";
 import {
+  demoInputTelemetry,
   demoFinalTextTelemetry,
   isMeaningfulDemoOutput,
   sumDemoUsage,
@@ -224,8 +225,20 @@ async function runTurn(
   const reasoningEffort = demoReasoningEffortFromOverride(env.DEMO_REASONING_EFFORT_OVERRIDE);
   const reasoningEffortOverride = demoReasoningEffortOverride(env.DEMO_REASONING_EFFORT_OVERRIDE);
   const openAiReasoningEffort = openAiApiMode === "responses" ? reasoningEffort : reasoningEffortOverride;
+  const inputTelemetry = await demoInputTelemetry(messages, subject);
   let selectedModel = demoModels[0]?.model ?? "unknown";
   const attemptedModels: string[] = [];
+  logEvent("demo-chat-start", {
+    auth: subject === DEV_SUBJECT ? "dev-bypass" : "cookie",
+    model: selectedModel,
+    modelOverride: env.DEMO_MODEL_OVERRIDE ? DEMO_MODEL_OVERRIDE_VAR : undefined,
+    openAiApiMode,
+    openAiApiModeRequested: env.DEMO_OPENAI_API_MODE ? DEMO_OPENAI_API_MODE_VAR : undefined,
+    reasoningEffort,
+    reasoningEffortSource: reasoningEffortOverride ? "override" : "default",
+    reasoningEffortOverride: reasoningEffortOverride ? DEMO_REASONING_EFFORT_OVERRIDE_VAR : undefined,
+    ...inputTelemetry
+  });
   try {
     const workersai = createWorkersAI({
       binding: env.AI,

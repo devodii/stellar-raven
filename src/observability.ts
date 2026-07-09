@@ -33,7 +33,7 @@ export function logEvent(evt: string, fields: Record<string, unknown>): void {
   }
 }
 
-async function sha256Prefix(value: string, chars = 16): Promise<string> {
+export async function hashPrefix(value: string, chars = 16): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return [...new Uint8Array(digest)]
     .map((b) => b.toString(16).padStart(2, "0"))
@@ -42,7 +42,7 @@ async function sha256Prefix(value: string, chars = 16): Promise<string> {
 }
 
 export async function artifactOwnerHashPrefix(owner: string | undefined): Promise<string | null> {
-  return owner ? sha256Prefix(owner) : null;
+  return owner ? hashPrefix(owner) : null;
 }
 
 export async function logArtifactWrite(fields: {
