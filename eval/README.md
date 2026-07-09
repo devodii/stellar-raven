@@ -730,3 +730,31 @@ That run's headline 4C/1P/1W calibrates to ~5–6C: the wrong is a live-proven j
 every "fabricated" award label and the "invented" fourth submission are verbatim
 `get_scf_submissions` rows (todo 853; transcript-blindness class) — and the partial dinged the
 adopting case only for a missing honesty-caveat phrase with both keyFacts satisfied.
+
+## Discovery-redesign round (2026-07-09, todos 892–894; issues #9/#10): P1 shipped, P2 measured-and-reverted
+
+Full record: `research/discovery-redesign.md` (plan+evidence), `research/p1-guidance-spec.md`,
+`research/p2-lanes-spec.md`, `research/p2-outcome-addendum.md`. Merged to main at f711603.
+
+- **New instrument:** `eval/discovery/` — live-HTTP Phase-0 lane over the real MCP server,
+  43 adjudicated cases (opus ground-truth review re-seeded the lumenloop pool from real
+  agentic drift rows; 3 cases folded from PR #17). Post-fold baseline: familyHit@3 32/43
+  (74.4%), usableOp@5 25/43 (58.1%). Known scope limit: naive-verbatim queries
+  under-represent the mixed register real agents use (see below).
+- **P1 (shipped):** multi-query source-family guidance + generated micro-map
+  (`scripts/catalog-data/workflow-archetypes.mjs` → `src/mcp/micro-map.ts`). Gated on live
+  distributions, 3 agentic runs/arm: docs 100% all cells, scout medium 90×3, lumenloop at
+  baseline 37.5×3, QA 23/6/1 best-of-three. One mechanism-attributed regression
+  (docs-verify nudge over-routing ecosystem-data questions) was found by dual review and
+  fixed (52cdb23) before ship.
+- **Method finding:** single agentic runs cannot gate ±2-case family movements — lumenloop
+  medium sampled 75/50/50 on one build arm. All future lane A/Bs: ≥3 runs/arm + per-case
+  family matrices, not aggregate rates.
+- **P2 (measured, then reverted):** `kind:"service"`/`kind:"workflow"` cards built with
+  full guards; routing stayed byte-identical; but live probes + mining of 160 real agent
+  queries showed 66% mixed-register traffic and card interception ≤6.9% upper bound — the
+  three-arm A/B was skipped as provably null and the card code reverted (keep-nothing-unused).
+  Net: **entity→family capture is beyond lexical reach** (prose ceiling + card ceiling +
+  op-layer evidence). Successor: the greenlit Vectorize frontier-embedding spike
+  (`ideas/architecture-explorations.md` item 2) — round 5f above tested only offline
+  bge-base, never Vectorize with a frontier model.
