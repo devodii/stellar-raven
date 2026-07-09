@@ -252,7 +252,12 @@ For each miss/wrong/partial (and each surprising pass), classify and route:
 
 Anti-overfitting rules bind here: zero-hit routing cases stay failing until a *general*
 mechanism fixes them; no query→service maps, no per-question vocabulary. If the only fix
-you can imagine is case-specific, the case stays red and the note says why.
+you can imagine is case-specific, the case stays red and the note says why. **This binds harder
+now that operator Algolia write/crawler access exists** (`.env`; see
+`research/services/stellar-docs-algolia.md`): a docs-search rule/synonym you *can* now add still
+must be a general mechanism with a measured win on the A/B harness (`npm run eval:algolia-raven`)
+before it lands, and content-shaped gaps still go upstream — the `improvements-pipeline` skill's
+"Direct Algolia remediation" section is the gate.
 
 **"Do not act yet" bucket.** A finding backed by a single case goes into a named
 monitor-only list in the round record, not into a fix. The bar for acting: the same

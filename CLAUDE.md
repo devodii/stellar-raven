@@ -107,7 +107,11 @@ Coordination bullet above):
 - `research/services/stellar-docs-algolia.md` — docs search is **direct Algolia REST** (app
   `VNSJF5AWIZ`, index `crawler_Stellar Docs - Docusaurus`; dedicated search key in `.env` as
   `ALGOLIA_APPLICATION_ID`/`ALGOLIA_API_KEY`, mirrored to Worker secrets). The MCP endpoint
-  (`stellar-docs-mcp.md`) is fallback only.
+  (`stellar-docs-mcp.md`) is fallback only. As of 2026-07-09 `.env` also carries **operator**
+  Algolia credentials — write (`ALGOLIA_WRITE_API_KEY`), crawler
+  (`ALGOLIA_CRAWLER_USER_ID`/`ALGOLIA_CRAWLER_API_KEY`), and analytics/usage/monitoring keys —
+  for the improvements/maintenance loop (host/script-side, NOT the sandbox). See the "Algolia
+  operator access" rule below; **never print or commit any Algolia key**.
 - `research/codemode.md` — `@cloudflare/codemode` internals, DynamicWorkerExecutor, Worker Loader
   binding, McpAgent vs `createMcpHandler`, security/egress model.
 - `research/observability-cloudflare.md` — CF observability survey: Workers Logs, Traces (beta;
@@ -153,6 +157,18 @@ Coordination bullet above):
   host function; the host adapter receives the outer MCP request context and owns
   approval/elicitation/budget there. Approval state never lives in sandbox code. (Todo 845
   item 3; design reference: `@cloudflare/codemode` OpenApiMcpServerOptions.request.)
+- **Algolia operator access is a cautious maintenance lever, not a runtime surface.** Since
+  2026-07-09 `.env` carries write/crawler/analytics/usage/monitoring Algolia keys on top of the
+  read/search key. Use them host/script-side for the `improvements/` and discovery loop only —
+  **never wire them into the `execute` sandbox** (a model-invokable Algolia write is a
+  side-effecting op gated by the request-context rule above). The corpus is shared with the real
+  DocSearch frontend, so prefer the lowest-risk rung (analytics read < rule/settings write <
+  crawler/index write); any write needs a measured win on the read-only A/B harness
+  (`npm run eval:algolia-raven`) and stays a **general mechanism** (no per-page/per-query
+  rules/synonyms — the load-bearing `raven-promote-stellar-cli-install` rule is the ceiling).
+  Content-shaped docs gaps still go upstream. Full risk ladder + guardrails in
+  `research/services/stellar-docs-algolia.md`; pipeline mechanics in `improvements/README.md` and
+  the `improvements-pipeline` skill. Never print or commit any Algolia key.
 - Secrets host-side only; sandbox keeps `globalOutbound: null`.
 - Generated artifacts (`catalog/manifest.json`, inventory JSONs, `src/fonts.ts`, `src/og.ts`)
   are rebuilt by `scripts/` (`npm run` targets), never hand-edited.
