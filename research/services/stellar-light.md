@@ -1,9 +1,9 @@
 # Stellar Light / Stellar Scout — service spec
 
 > Verified live 2026-07-02 (UTC; re-fetched ~13:59Z after the 07-02 partner-pipeline release). OpenAPI `info.version: 1.2.1`, status `apiVersion: 1.2.1` (the `X-API-Version` response header stays `1`), scout-mcp npm `1.1.5`.
-> **Current committed inventory (2026-07-08): upstream OpenAPI/status `1.6.1`, still 23 paths / 24 operations.** `inventory/stellar-light.json` carries the current spec verbatim; the detailed probe log below remains the 2026-07-02/03 measurement record, not a current collection-size snapshot.
-> Earlier refresh notes: 2026-07-03 brought upstream 1.3.2 (`repoMeta`, `lastActivityAt`, inline repo `lastCommitAt`); later 1.6.1 fixes include live SCF round metadata and scoped `searchProjects` description copy. Attach live `generatedAt`/version fields from the current inventory when citing answers.
-> Current OpenAPI lives in [`inventory/stellar-light.json`](../../inventory/stellar-light.json) (refreshed daily by the CI drift job; 23 paths / 24 operations — **`info.version` did NOT bump when the 4 partner-pipeline ops landed; diff paths, not the version string**).
+> **Current committed inventory (2026-07-09): upstream OpenAPI/status `1.7.0`, still 23 paths / 24 operations.** `inventory/stellar-light.json` carries the current spec verbatim; the detailed probe log below remains the 2026-07-02/03 measurement record, not a current collection-size snapshot.
+> Earlier refresh notes: 2026-07-03 brought upstream 1.3.2 (`repoMeta`, `lastActivityAt`, inline repo `lastCommitAt`); later 1.6.1 fixes include live SCF round metadata and scoped `searchProjects` description copy; 1.7.0 typed the partner response, added `ramps` filtering, and surfaced richer code verification fields. Attach live `generatedAt`/version fields from the current inventory when citing answers.
+> Current OpenAPI lives in [`inventory/stellar-light.json`](../../inventory/stellar-light.json) (refreshed daily by the CI drift job; 23 paths / 24 operations). `info.version` is now intended to bump on observable contract changes, but drift checks still diff path/method, operation text, and schemas rather than trusting the version string alone.
 > Cross-checked against prior art: `stellar-raven-next/research/capability/stellar-light-scout.md` (measured 2026-06-21→07-01) — live behavior today matches that doc.
 
 ## Overview
@@ -43,12 +43,12 @@ Keyless throughout; GET except where marked POST. `*` = required param. Paginati
 | `GET /api/changelog` | API/MCP/skill contract-change feed | `since` (YYYY-MM-DD), `limit` (1–100) | `entries[]` |
 | `GET /api/projects/search` | Prior-art / competitor search over curated project directory | `q` (aliases query/keyword/search), `category` (Infrastructure\|Tooling\|User-Facing App\|Asset\|Protocol/Contract\|Anchor\|Partner Integration), `scfAwarded` (bool), `limit`, `offset` — **requires q or a filter**; bare call → 0 rows + `meta.error:"no_query"` + advisory | `projects[]` |
 | `GET /api/repos/search` | Graded Stellar repo/code index (~2,301; ranked by `repoScore` 0–100) | `q`, `language` (substring), `minScore` (0–100), `limit`, `offset` — browsable bare (top 200) | `repos[]` |
-| `GET /api/repos/explain` | Deep code answer: canonical-repo routing × DeepWiki grounding | `q*`, `repo` (owner/name pin) | `{answer, answered, repo, routedVia, alternateRepos[], sources{}}` |
+| `GET /api/repos/explain` | Deep code answer: canonical-repo routing × DeepWiki grounding | `q*`, `repo` (owner/name pin) | `{answer, answered, repo, routedVia, alternateRepos[], sources{}, codeVerified?}` |
 | `GET /api/hackathons` | Hackathon feed (curated Payload + DoraHacks) | `status` (upcoming\|active\|completed), `organizer`, `source` (curated\|dorahacks), `limit` — **no `q`** | `hackathons[]` |
 | `GET /api/hackathons/{slug}` | One event: winners (placement-sorted, numeric `placementRank`), submissions, tracks | `slug*` | `{hackathon, winners[], submissions[], tracks[]}` |
 | `GET /api/hackathons/compare` | Side-by-side 2–5 events with computed deltas | `slugs*` (comma-sep, 2–5; also accepts POST `{slugs:[...]}`) | `hackathons[]` + `deltas{}` |
 | `GET /api/builders` | Builder directory (Stellar Passport, 112 profiles) | `q`, `location`, `skill` (all map to same filter lane), `limit`, `offset` — browsable bare; strict term matching (verbose NL phrases → 0 rows) | `builders[]` |
-| `GET /api/partners` | Partner directory (24 curated: anchors, ramps, audit firms…) | `type` (anchor\|on-off-ramp\|infrastructure\|tooling\|protocol\|wallet\|audit-firm\|legal\|agency\|other), `sector`, `region`, `accepting` (=1), `q`, `limit` | `partners[]` |
+| `GET /api/partners` | Partner directory (anchors, ramps, audit firms, infra, tooling, wallets) | `type` (anchor\|on-off-ramp\|infrastructure\|tooling\|protocol\|wallet\|audit-firm\|legal\|agency\|other), `sector`, `region`, `ramps` (`on-ramp`, `off-ramp`, or comma-separated both), `accepting` (=1), `all` (=1), `q`, `limit`, `offset` | typed `partners[]` (`Partner`) + `meta` |
 | `GET /api/partners/{slug}` | One partner profile w/ `verified{}` signal object | `slug*` | `{partner…}` |
 | `POST /api/partners/match` (new 2026-07-02) | AI-rank published partners against a plain-language need (grounded — only real partners, one-line reason each) | JSON body `{need*}` → 200/429/**503** `unavailable:true` when AI isn't configured (fall back to `GET /api/partners` filters) | ranked partners |
 | `POST /api/partners/assistant` (new 2026-07-02) | Conversational partner concierge (backend of /partners/chat); routes intent: builder-need → `matches[]` (deterministic, never hallucinated; surfaced partners logged as leads), company-self-description → interview + `canList:true` | JSON body `{messages*:[{role: user\|assistant, content}]}` → 200/429/503 | `{reply, matches?, intent, canList}` |
@@ -146,7 +146,7 @@ Relationship: **website API = source of truth; SKILL.md and scout-mcp are altern
 ## Known drift / gotchas
 
 - Marketing copy lags the API: scout page says "14 endpoints", api-reference page says DoraHacks hackathon slugs 404 on detail — live, OpenAPI has 23 paths and DoraHacks detail slugs return populated rosters (e.g. `stellar-agents-x402-stripe-mpp`: 5 winners, 262 submissions). Trust `/api/openapi.json` + `/api/status` + live probes, not page copy.
-- `analyze?dimension=categories` `totalProjects` (889) is active-only and differs from `/api/status` projects (918, full collection) **by design** — the response carries an explicit `scope` string.
+- `analyze?dimension=categories` `totalProjects` is active-only and differs from `/api/status` projects (full collection) **by design** — the response carries an explicit `scope` string.
 - `research.meta.mode` is per-query (vector-first, keyword fallback), deterministic per query string — never promise a mode.
 - `builders`/`rfps` `q` is strict term matching: send terms ("Rust"), not phrases ("Rust builders on Stellar" → 0 rows).
 - Removed params (`projects/search?hackathon`, `builders?scfTier/featured`, `leaderboard?include`) are silently ignored, not 400s.
@@ -158,7 +158,7 @@ Relationship: **website API = source of truth; SKILL.md and scout-mcp are altern
 - **Auth:** none needed anywhere. Ship it keyless; guard the POST surfaces — `POST /api/feedback` and `POST /api/partners/submit-listing` are writes (human-in-the-loop / deny-by-default for autonomous execution — matches the raven prior-art governance), and `POST /api/partners/assistant` logs surfaced partners as sales leads, so keep it out of the autonomous surface too. `POST /api/partners/match` / `onboard` are stateless AI compute but 503 without AI configured.
 - **Search tool mapping:** the free-text evidence surfaces are `research` (concepts/specs/audits), `projects/search` (products/teams), `repos/search` (code), `builders`, `rfps`, `partners`. Enum/analytics surfaces (`clusters`, `analyze`, `leaderboard`, `hackathons`, `skills`) route by fixed params, not free text.
 - **Execute-tool ergonomics:** all endpoints are plain GET + query string → trivially expressible as `fetch(base + path + qs)`. Rich 400s with `valid*` arrays make retry-with-corrected-enum a safe automatic behavior. 404 on detail slugs means "discover the slug from the list endpoint first".
-- **Drift detection:** poll `GET /api/changelog?since=<last-check>` and diff the `GET /api/openapi.json` path/method/operationId set plus schema/description fields. `info.version` is useful context (currently 1.6.1 in the committed inventory) but is not sufficient by itself. The changelog covers API + MCP + skill surfaces in one feed.
+- **Drift detection:** poll `GET /api/changelog?since=<last-check>` and diff the `GET /api/openapi.json` path/method/operationId set plus schema/description fields. `info.version` is useful context (currently 1.7.0 in the committed inventory) but is not sufficient by itself. The changelog covers API + MCP + skill surfaces in one feed.
 - **Refresh script — exact commands to re-inventory:**
 
 ```bash

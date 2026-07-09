@@ -223,8 +223,291 @@
         },
         "type": "object"
       },
+      "scout.Partner": {
+        "description": "An ecosystem partner (anchor, ramp, infrastructure, tooling, protocol, wallet, audit firm…). Partner-claimed facts and system-verified signals are SEPARATE fields — `verified` and `trust` are system-computed and cannot be self-reported; everything else is partner/curator-maintained.",
+        "properties": {
+          "acceptingClients": {
+            "type": "boolean"
+          },
+          "assets": {
+            "description": "Asset codes this partner issues/supports (from stellar.toml or curated).",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "caseStudies": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "contactChannel": {
+            "nullable": true,
+            "type": "string"
+          },
+          "contactEmail": {
+            "nullable": true,
+            "type": "string"
+          },
+          "country": {
+            "nullable": true,
+            "type": "string"
+          },
+          "description": {
+            "nullable": true,
+            "type": "string"
+          },
+          "docsUrl": {
+            "nullable": true,
+            "type": "string"
+          },
+          "foundedYear": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "freshness": {
+            "description": "Profile freshness state machine (fresh → aging → stale → archived). Consumers should down-rank or skip partners with excludeFromMatching: true.",
+            "properties": {
+              "excludeFromMatching": {
+                "type": "boolean"
+              },
+              "isCurrent": {
+                "type": "boolean"
+              },
+              "lastPartnerUpdateAt": {
+                "nullable": true,
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "fresh",
+                  "aging",
+                  "stale",
+                  "archived"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "githubOrg": {
+            "nullable": true,
+            "type": "string"
+          },
+          "leadTime": {
+            "nullable": true,
+            "type": "string"
+          },
+          "logoUrl": {
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "partnerType": {
+            "enum": [
+              "anchor",
+              "on-off-ramp",
+              "infrastructure",
+              "tooling",
+              "protocol",
+              "wallet",
+              "audit-firm",
+              "legal",
+              "agency",
+              "other"
+            ],
+            "type": "string"
+          },
+          "pilot": {
+            "description": "Founding pilot-cohort partner (sorts first in unqueried lists).",
+            "type": "boolean"
+          },
+          "pricingModel": {
+            "nullable": true,
+            "type": "string"
+          },
+          "pricingNotes": {
+            "nullable": true,
+            "type": "string"
+          },
+          "rampTypes": {
+            "description": "Fiat ramps offered.",
+            "items": {
+              "enum": [
+                "on-ramp",
+                "off-ramp"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "responseSla": {
+            "nullable": true,
+            "type": "string"
+          },
+          "sectors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "seps": {
+            "description": "SEP standards implemented (sep-6, sep-24, sep-31). Empty with non-empty rampTypes = the ramp is a proprietary API, not SEP-based.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "services": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "tagline": {
+            "nullable": true,
+            "type": "string"
+          },
+          "trust": {
+            "description": "System-computed composite trust (0-1 score + label), decomposed into freshness and verification sub-signals.",
+            "properties": {
+              "freshness": {
+                "type": "number"
+              },
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              },
+              "verification": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          },
+          "typicalEngagement": {
+            "nullable": true,
+            "type": "string"
+          },
+          "url": {
+            "description": "Canonical partner profile page on stellarlight.xyz.",
+            "type": "string"
+          },
+          "verified": {
+            "description": "SYSTEM-computed activity signals (never self-reported). All-null = not yet auto-verified, NOT a negative signal.",
+            "properties": {
+              "githubCommits90d": {
+                "nullable": true,
+                "type": "integer"
+              },
+              "githubLastCommitAt": {
+                "nullable": true,
+                "type": "string"
+              },
+              "lastAutoVerifyAt": {
+                "nullable": true,
+                "type": "string"
+              },
+              "onchainActive": {
+                "nullable": true,
+                "type": "boolean"
+              },
+              "onchainNote": {
+                "nullable": true,
+                "type": "string"
+              },
+              "scfInvolvement": {
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "websiteUrl": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "scout.PartnersResponse": {
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/scout.Meta"
+          },
+          "partners": {
+            "items": {
+              "$ref": "#/components/schemas/scout.Partner"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
       "scout.Project": {
         "properties": {
+          "anchorProfile": {
+            "description": "Integration-oriented ramp/anchor profile joined from the partner directory (Anchor-typed rows only; null otherwise). Complements `coverage`: rampTypes says WHAT ramps exist, seps says over WHICH interop surface — `seps: []` with non-empty rampTypes means a proprietary ramp API rather than SEP-6/24. `url` links the full partner profile.",
+            "nullable": true,
+            "properties": {
+              "asOf": {
+                "nullable": true,
+                "type": "string"
+              },
+              "assets": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "country": {
+                "nullable": true,
+                "type": "string"
+              },
+              "rampTypes": {
+                "items": {
+                  "enum": [
+                    "on-ramp",
+                    "off-ramp"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "regions": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "seps": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
           "builtBy": {
             "description": "The organization/entity behind this project ('who built X') — e.g. LOBSTR → Ultra Stellar, Soroswap → Paltalabs. Null when no org is linked. Browse the org's portfolio at https://stellarlight.xyz/entities/{slug}.",
             "nullable": true,
@@ -237,6 +520,11 @@
               }
             },
             "type": "object"
+          },
+          "canonicalSlug": {
+            "description": "When this record is a known duplicate/rename, the slug of the CANONICAL record to prefer; null for canonical records themselves. Follow it before citing counts or funding.",
+            "nullable": true,
+            "type": "string"
           },
           "category": {
             "enum": [
@@ -334,6 +622,20 @@
             "nullable": true,
             "type": "string"
           },
+          "lifecycle": {
+            "description": "Historical-archive context, present only when a record carries real history (e.g. a defunct project that used to be live) — narrate as 'used to be live', not as a current offering. Null for ordinary live records.",
+            "nullable": true,
+            "properties": {
+              "note": {
+                "nullable": true,
+                "type": "string"
+              },
+              "wasLive": {
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
           "links": {
             "description": "The project OWN canonical homes - cite these as the primary source, not StellarLight or any directory. Only present, non-empty fields are included.",
             "properties": {
@@ -382,8 +684,7 @@
             "description": "Disambiguates a null award amount: 'undisclosed' = the SCF award is confirmed but no amount is published in the source data (NOT a data gap — do not guess); 'disclosed' = scfTotalAwardedUSD carries the number; null = not awarded.",
             "enum": [
               "disclosed",
-              "undisclosed",
-              null
+              "undisclosed"
             ],
             "nullable": true,
             "type": "string"
@@ -531,11 +832,23 @@
                 "description": "Cargo cdylib — a real deployable Soroban contract (vs a CLI/indexer/frontend that only uses Stellar).",
                 "type": "boolean"
               },
+              "mainnetContractId": {
+                "description": "README-claimed contract id VERIFIED to exist on Stellar mainnet at scan time (stellar.expert echo-check) — unfakeable deployment evidence. Null when no verified address.",
+                "nullable": true,
+                "type": "string"
+              },
               "scannedAt": {
                 "description": "When the code was last scanned.",
                 "format": "date-time",
                 "nullable": true,
                 "type": "string"
+              },
+              "sdkCapabilities": {
+                "description": "Stellar SDK capability tags detected in the repo's JS/TS sources — what a dapp actually DOES with the SDK: tx-building, signing, soroban-rpc, contract-invoke, horizon, sep10-auth, sep24-ramp, wallet-kit, passkey, fee-bump. Closed tag set; [] = no JS sources analyzed yet or none detected (scan-dated, not a negative).",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
               },
               "sorobanSdkVersion": {
                 "description": "Raw soroban-sdk version requirement (a sourced fact — never a bare protocol integer).",
@@ -552,6 +865,13 @@
                   "stellar-toml"
                 ],
                 "type": "string"
+              },
+              "symbols": {
+                "description": "Public code-symbol surface (pub fn/struct/enum/trait names) extracted from the scanned Rust sources — what the repo IMPLEMENTS (e.g. release_escrow, swap_exact_tokens). Also a search signal: queries match these. Empty for repos scanned before 2026-07-08 or non-Rust proofs.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
               },
               "versionStatus": {
                 "description": "soroban-sdk status vs the latest protocol at scan time. 'unknown' (rc/git/unpinned) never implies staleness.",
@@ -809,7 +1129,7 @@
     "description": "One spec covering every operation this MCP server can execute, across four services: lumenloop, scout (Stellar Light), stellarDocs (Algolia-backed docs search), and skills (bundled agent playbooks). Paths are keyed '/{service}/{operation}' and each operationId is the exact callable name: an operation with operationId 'lumenloop.search_directory' is invoked inside the execute tool's sandbox as `await lumenloop.search_directory(args)` — args is ONE object matching the operation's requestBody schema (POST ops) or its parameter names (GET ops). The exact call line is on each operation as x-execute. Every call resolves (never throws) to { ok: true, data } or { ok: false, error: { service, kind, message } }; the 200 response schema documents `data`. Every path in this spec is callable — exposure is filtered at build time, so nothing uncallable is described. Auth is handled host-side — code never sees keys.",
     "title": "stellar-raven-codemode — unified super spec",
     "version": "1.0.0",
-    "x-generatedAt": "2026-07-08T14:41:32Z"
+    "x-generatedAt": "2026-07-09T11:50:42.414Z"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -2491,10 +2811,20 @@
                         "isDeployableContract": {
                           "type": "boolean"
                         },
+                        "mainnetContractId": {
+                          "nullable": true,
+                          "type": "string"
+                        },
                         "scannedAt": {
                           "format": "date-time",
                           "nullable": true,
                           "type": "string"
+                        },
+                        "sdkCapabilities": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
                         },
                         "sorobanSdkVersion": {
                           "nullable": true,
@@ -2502,6 +2832,12 @@
                         },
                         "stellarProof": {
                           "type": "string"
+                        },
+                        "symbols": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
                         },
                         "versionStatus": {
                           "nullable": true,
@@ -3136,6 +3472,15 @@
             }
           },
           {
+            "description": "Filter by fiat-ramp capability: `on-ramp` (fiat → Stellar), `off-ramp` (Stellar → fiat), or `on-ramp,off-ramp` to require both. Unknown values return 400 with `validRamps`. Combine with `region`/`q` for corridor lookups (e.g. ramps=on-ramp&q=mexico).",
+            "in": "query",
+            "name": "ramps",
+            "schema": {
+              "example": "on-ramp",
+              "type": "string"
+            }
+          },
+          {
             "description": "Set to 1 to return only partners currently accepting new clients",
             "in": "query",
             "name": "accepting",
@@ -3169,7 +3514,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/scout.PartnersResponse"
                 }
               }
             },
@@ -5450,7 +5795,7 @@
   "x-generated": {
     "builder": "scripts/build-super-spec.mjs",
     "catalogEntries": 272,
-    "generatedAt": "2026-07-08T14:41:32Z"
+    "generatedAt": "2026-07-09T11:50:42.414Z"
   },
   "x-services": {
     "lumenloop": {
@@ -5462,7 +5807,7 @@
     },
     "scout": {
       "base": "https://stellarlight.xyz",
-      "fetchedAt": "2026-07-08T14:41:26.228Z",
+      "fetchedAt": "2026-07-09T11:50:42.414Z",
       "note": "Read-only keyless API, carried near-verbatim from the upstream OpenAPI (components namespaced 'scout.*').",
       "source": "https://stellarlight.xyz/api/openapi.json"
     },

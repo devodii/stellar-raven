@@ -59,6 +59,7 @@
     "sk-005": { "repo": "lumenloop/lumenloop-skills" },
     "sk-006": { "repo": "stellar/stellar-dev-skill" },
     "sk-007": { "repo": "lumenloop/lumenloop-skills" },
+    "sk-008": { "repo": "Stellar-Light/stellar-scout" },
     "sd-001": { "intake": "unclear", "reason": "Algolia ranking/tokenization behavior; not clearly owned by stellar/stellar-docs issue intake." },
     "sd-002": { "intake": "unclear", "reason": "Ranking-only finding and currently proposed/possibly fixed." },
     "sd-003": { "repo": "stellar/stellar-docs", "reason": "API reference content/indexability." },
