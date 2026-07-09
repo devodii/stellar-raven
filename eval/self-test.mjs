@@ -8,6 +8,7 @@
  * proving top-1/3/5 semantics, card@5 tolerant matching, skip handling, aggregation.
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { aggregate, cardMatches, canonToken, gradeCase, tableRows } from "./lib/grade.mjs";
 import { deriveExpectedAny, frontmatterRouting, parseFrontmatterList } from "./lib/labels.mjs";
 
@@ -226,6 +227,48 @@ check("frontmatterRouting: extracts service, fire flag, and both card lists", ()
     expected_cards: ["stellar_docs_mcp"],
     acceptable_cards: ["scout_research"],
   });
+});
+
+// --- frozen hand-authored QA lane contracts (todo 913) ----------------------------
+check("live-data-canonical-v1 stays frozen at 7 Scout / 2 Lumenloop / 1 cant-do", () => {
+  const canonical = JSON.parse(readFileSync(new URL("./qa/live-cases.json", import.meta.url), "utf8"));
+  assert.equal(canonical.contract, "live-data-canonical-v1");
+  assert.deepEqual(
+    canonical.cases.map((c) => c.id),
+    [
+      "q-live-rfps-open-now",
+      "q-live-rfps-passkey-smart-account",
+      "q-live-hackathon-recent-winners",
+      "q-live-zk-repos-current",
+      "q-live-oracle-repo-triage",
+      "q-live-leaderboard-active-projects",
+      "q-live-ecosystem-crowded-underbuilt",
+      "q-live-ll-scf-latest-round",
+      "q-live-ll-regions-vocab",
+      "q-live-trap-market-price"
+    ]
+  );
+  const services = canonical.cases.map((c) => c.tags.service);
+  assert.deepEqual(
+    Object.fromEntries([...new Set(services)].sort().map((service) => [service, services.filter((x) => x === service).length])),
+    { lumenloop: 2, none: 1, scout: 7 }
+  );
+  assert.equal(canonical.cases.find((c) => c.tags.service === "none")?.tags.trap, "cant-do");
+});
+
+check("live-digest-supplement-v1 stays two-case and disjoint from canonical", () => {
+  const canonical = JSON.parse(readFileSync(new URL("./qa/live-cases.json", import.meta.url), "utf8"));
+  const supplement = JSON.parse(
+    readFileSync(new URL("./qa/live-digest-supplement-cases.json", import.meta.url), "utf8")
+  );
+  assert.equal(supplement.contract, "live-digest-supplement-v1");
+  assert.deepEqual(
+    supplement.cases.map((c) => c.id),
+    ["q-live-digest-rwa-recent", "q-live-digest-blend-coverage"]
+  );
+  assert.ok(supplement.cases.every((c) => c.tags.service === "lumenloop"));
+  const canonicalIds = new Set(canonical.cases.map((c) => c.id));
+  assert.ok(supplement.cases.every((c) => !canonicalIds.has(c.id)));
 });
 
 if (failures > 0) {

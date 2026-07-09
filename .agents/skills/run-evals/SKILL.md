@@ -114,8 +114,10 @@ npm run eval:qa:selftest        # only if judging — 4 candidates vs 1 case
 ```
 
 Compiles are deterministic and never touch the hand-authored supplements
-(`eval/skills-cases.json`, `eval/build-question-overlay.json`, `eval/qa/live-cases.json`) —
-those are load-time files, committed, and safe from recompiles. Generated files
+(`eval/skills-cases.json`, `eval/build-question-overlay.json`, `eval/qa/live-cases.json`,
+`eval/qa/live-digest-supplement-cases.json`) — those are load-time files, committed, and safe
+from recompiles. `live-cases.json` is the frozen 10-case `live-data-canonical-v1` contract;
+the two digest cases are the separate opt-in `live-digest-supplement-v1` contract. Generated files
 (`routing-cases.json`, `qa/cases.json`, `plan/op-classes.json`) are never hand-edited.
 
 ## Step 2 — live server (only for QA / agentic / live-data lanes)
@@ -167,6 +169,9 @@ node eval/qa/run-qa.mjs --variant A --sample 30 --port "$PORT"
 
 # QA live-data lane (grounding behavior; graded behaviorally, never on snapshot values)
 node eval/qa/run-qa.mjs --cases eval/qa/live-cases.json --port "$PORT"
+
+# Opt-in digest supplement — run and report separately from the canonical lane
+node eval/qa/run-qa.mjs --cases eval/qa/live-digest-supplement-cases.json --port "$PORT"
 
 # Plan regrade (offline, reads stored transcripts)
 npm run eval:plan -- eval/qa/results/<stamp>-variantA.json

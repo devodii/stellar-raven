@@ -168,25 +168,39 @@ default**; re-running B requires a build that exposes a code-shaped tool plus an
 `--ids a,b,c` (targeted smoke), `--no-judge` (collect answers only), `--model`, `--judge-model`,
 `--cases`.
 
-### Live-data lane (todo 818)
+### Canonical live-data lane and opt-in digest supplement (todos 818, 806, 913)
 
-`eval/qa/live-cases.json` — 10 hand-authored cases (7 scout / 2 lumenloop / 1 cant-do trap)
-that grade the **execute path's grounding behavior** on data where priors fail: currently-open
-RFPs, recent hackathon winners, activity leaderboards, latest SCF round, Lumenloop's free-text
-region vocabulary. Goldens are **behavioral** — live-derived facts + as-of framing + honest
-refusal when live grounding is impossible — never snapshot values, so the lane doesn't rot the
-way freshness-pinned goldens do. Provenance: viable DEFER_FRESHNESS candidates from the
-upstream theboycoder/boxy review (reframed per that review's own guidance; its REJECTed cases'
-failure modes became `avoid` items) plus codemode-authored lumenloop drift cases.
+`live-data-canonical-v1` is `eval/qa/live-cases.json`: the frozen **10-case** execute-grounding
+lane (7 Scout / 2 Lumenloop / 1 cant-do trap). It covers currently-open RFPs, recent hackathon
+winners, activity leaderboards, latest SCF round, Lumenloop's free-text region vocabulary, and
+the honest out-of-scope control. Its denominator and membership are pinned by `eval:selftest`.
+
+`live-digest-supplement-v1` is `eval/qa/live-digest-supplement-cases.json`: an opt-in **2-case**
+Lumenloop recency-digest supplement (`q-live-digest-rwa-recent` and
+`q-live-digest-blend-coverage`). It was authored for the skill.run experiment and is not part of
+the canonical live-data denominator. Run, stamp, cost, and report it separately.
+
+Both contracts use **behavioral** goldens — live-derived facts + as-of framing + honest refusal
+or quiet-window handling — never snapshot values, so they do not rot the way freshness-pinned
+goldens do. Canonical provenance: viable DEFER_FRESHNESS candidates from the upstream
+theboycoder/boxy review (reframed per that review's own guidance; its REJECTed cases' failure
+modes became `avoid` items) plus codemode-authored Lumenloop drift cases. Digest-supplement
+provenance is recorded in `research/skill-run-design.md` §10 and each case's grader notes.
 
 ```sh
 node eval/qa/run-qa.mjs --cases eval/qa/live-cases.json --port 8788
-node eval/plan/grade-plan.mjs eval/qa/results/<stamp>-variantA.json   # execute-grounding coverage
+node eval/plan/grade-plan.mjs eval/qa/results/<canonical-stamp>-variantA.json
+
+# Opt-in; a different named contract and result stamp:
+node eval/qa/run-qa.mjs --cases eval/qa/live-digest-supplement-cases.json --port 8788
+node eval/plan/grade-plan.mjs eval/qa/results/<supplement-stamp>-variantA.json
 ```
 
-Zero runner/judge code — the lane rides `--cases`, and `graderNotes`/`tags` carry the
-grounding rubric. Report it as its own lane; **never merge it into the main battery's
-numbers** (see `eval/EVALS.md`).
+Zero contract-specific runner/judge code — both ride `--cases`, `run-qa.mjs` records the JSON
+`contract` as `meta.caseContract`, and `graderNotes`/`tags` carry the grounding rubric. Report
+each as its own lane; **never merge either into the main battery or each other**. Historical
+12-case runs are explicitly “canonical + supplement”, not canonical-lane results (see
+`eval/EVALS.md`).
 
 Results land in `eval/qa/results/<stamp>-variant<X>.json` (git-ignored/local-only):
 `{ meta, summary, rows: [{ id, question, tags, answer, transcript, agent, verdict, durationMs }] }`
@@ -196,7 +210,8 @@ Both the answering agent and the judge are headless `claude -p --model claude-so
 --output-format json|stream-json` calls (verified live 2026-07-02, including `--mcp-config` with a
 generated temp `{type: "http", url: "http://localhost:PORT/mcp"}` config and `--allowedTools`
 scoping the agent to the variant's search tool + execute). Rough cost: ~$0.15–0.60 per case
-(agent) + ~$0.07 per judge call.
+(agent) + ~$0.07 per judge call, so the frozen canonical 10 costs about **$2.20–6.70** and the
+two-case digest supplement about **$0.44–1.34**. These are separate budgets and result stamps.
 
 ## Judging rubric
 
@@ -263,7 +278,8 @@ absent), sd-006 (Algolia strips code blocks — CLI install commands unanswerabl
 ll-010 (unscoped roundup RWA milestones), sk-001 recurrence.
 
 **Results — 2026-07-07 truncation cap A/B and artifact-lane checkpoint** (focused truncation-prone
-set: 5 live-data cases + 2 main-battery cases, all `variantA`, answering/judge model
+set: 5 cases selected from the then-combined canonical + digest-supplement file, plus 2
+main-battery cases, all `variantA`, answering/judge model
 `claude-sonnet-5`, judge rubric v2.2). Baseline used the committed/default
 `EXECUTE_MODEL_BOUNDARY_MAX_TOKENS=6000`; experiment used a local `.dev.vars` override
 `EXECUTE_MODEL_BOUNDARY_MAX_TOKENS=12000` with Solo `dev` restart before each condition. Stamps:
@@ -298,7 +314,8 @@ result-only artifact/source-basis lane.
 `q-live-hackathon-recent-winners` golden notes were stale after Scout fixed hackathon placement
 fields: live detail now carries `winnersRanked:true`, `hackathonPlacement`, and numeric
 `placementRank`, so exact placements are allowed only when those fields are present; the durable
-behavioral rule is encoded in `live-cases.json`. Second, `q-live-digest-blend-coverage` exposed
+behavioral rule is encoded in `live-cases.json`. Second, the digest-supplement case
+`q-live-digest-blend-coverage` exposed
 long/truncated transcript evidence dilution: the saved execute result already contained the source
 summaries the v2.2 judge called invented (`Templar`, `backstop LP market migration`,
 `February Blend hack`, `GAMI Capital`, `State Capital`, `Untangled Vault`, `OctoLend`,
@@ -425,7 +442,7 @@ as with v2/v2.1, re-judge saved answers before comparing wrong counts across thi
 
 **Rubric v2.3 (2026-07-07, todo 871) — source-basis packs for long/truncated live-data transcripts.**
 The v2.2 excerpt mechanism could still miss evidence when an execute result was long or truncated:
-one focused live-data row (`q-live-digest-blend-coverage`,
+one focused digest-supplement row (`q-live-digest-blend-coverage`,
 `results/2026-07-07T17-41-13-variantA.json`) was judged wrong even though the saved execute result
 contained the disputed source summaries. v2.3 replaces ad hoc snippets with a deterministic
 source-basis evidence pack for explicitly tagged live/freshness cases only. The pack mirrors the
