@@ -171,10 +171,23 @@ items 1, 2, and 4. No production code changes.
    cards, NO schemas. Generated at build time from build-script data (new
    `scripts/` emitter or a build-catalog byproduct) so drift guards apply; the existing
    authority sentences in SERVER_INSTRUCTIONS fold into it rather than duplicating.
-3. Check the MCP 2026-07-28 RC (`ideas/` item 3) before committing to the instructions
-   channel: the RC removes `initialize`. If instructions delivery changes, the micro-map
-   must ride whatever replaces it (or fall back to SEARCH_DESCRIPTION) — resolve this
-   during Phase 1, not after.
+3. **RC check RESOLVED (2026-07-09, primary-source web research).** The 2026-07-28 RC
+   removes `initialize` entirely (SEP-2575: stateless MCP, per-request `_meta` + required
+   HTTP headers per SEP-2243); `instructions` survives, moved to the new `server/discover`
+   RPC's `DiscoverResult` — but calling `server/discover` is **optional for clients**, so
+   instructions delivery is no longer structurally guaranteed. Client reality today:
+   Claude Code injects instructions; claude.ai silently ignores them (open issue
+   anthropics/claude-ai-mcp#93); Cursor/ChatGPT consumption undocumented. Tool
+   descriptions are the only channel every major client demonstrably puts in front of the
+   model, in both revisions — and the RC strengthens them (deterministic `tools/list`
+   ordering + `ttlMs` caching for prompt-cache hits). **Channel decision — split by
+   function, don't duplicate:** a compact orientation layer (~300–500 tokens: catalog
+   coverage, search→describe→execute workflow, source-category planning) rides in
+   `SEARCH_DESCRIPTION` as the primary carrier (with two tools total, per-tool overhead
+   multiplication doesn't apply; first line must be a strong standalone summary for
+   deferred-tool-loading clients); the full micro-map (800–1,500 tokens) rides in
+   `SERVER_INSTRUCTIONS`, served dual-era (legacy `initialize` result now, `server/discover`
+   when the SDK stack adopts the final spec). Re-check client adoption after July 28.
 4. Demo: decide explicitly whether the micro-map enters the demo preamble (it competes with
    the demo's tight token caps) — default NO for v1.
 
