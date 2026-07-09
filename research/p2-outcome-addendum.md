@@ -67,3 +67,11 @@ The cards are harmless but unproven: ship them anyway (orientation value via del
 `kind:"workflow"` searches + describe), or revert the card emission and keep only the
 grading/guard/test improvements? The plan's gate said the A/B decides ship-or-revert; with
 the A/B provably null, this is a judgment call, not a measurement.
+
+## Reverted (2026-07-09)
+
+Tyler decided to remove the P2 catalog-card code under the keep-nothing-unused rule: unused live
+code goes away, while this research record stays as the decision history. The reverted commits are
+10a26f8, 741962c, and 0ff25c1. The P1 `scripts/catalog-data/workflow-archetypes.mjs` data file is
+retained because it remains the source for the shipped micro-map used by
+`SERVER_INSTRUCTIONS`/`SEARCH_DESCRIPTION`.
