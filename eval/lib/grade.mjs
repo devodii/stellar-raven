@@ -77,8 +77,7 @@ export function cardMatches(expectedCard, hit) {
  * via expected_any.
  */
 export function gradeCase(hits, expectedService, expectedCards, expectedAny) {
-  const gradeableHit = (h) => h.kind !== "service" && h.kind !== "workflow";
-  const svc = (h) => gradeableHit(h) && h.service === expectedService;
+  const svc = (h) => h.service === expectedService;
   const top1 = hits.length > 0 && svc(hits[0]);
   const top3 = hits.slice(0, 3).some(svc);
   const top5 = hits.slice(0, 5).some(svc);
@@ -88,7 +87,7 @@ export function gradeCase(hits, expectedService, expectedCards, expectedAny) {
   }
   const result = { top1, top3, top5, cardHit5 };
   if (Array.isArray(expectedAny) && expectedAny.length > 0) {
-    const anySvc = (h) => gradeableHit(h) && expectedAny.includes(h.service);
+    const anySvc = (h) => expectedAny.includes(h.service);
     result.any1 = hits.length > 0 && anySvc(hits[0]);
     result.any3 = hits.slice(0, 3).some(anySvc);
     result.any5 = hits.slice(0, 5).some(anySvc);

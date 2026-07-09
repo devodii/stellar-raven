@@ -94,16 +94,8 @@ function validateManifestIds(cases) {
 
 function compactHit(hit, rank) {
   const out = { rank, id: hit.id, service: hit.service, kind: hit.kind };
-  if (Array.isArray(hit.families)) out.families = hit.families;
   for (const k of ["tier", "score", "normalizedScore", "keywordScore", "semanticScore"]) if (hit[k] !== undefined) out[k] = hit[k];
   return out;
-}
-
-function hitFamilies(hit) {
-  if ((hit.kind === "service" || hit.kind === "workflow") && Array.isArray(hit.families)) {
-    return hit.families;
-  }
-  return [hit.service];
 }
 
 async function runCase(url, c, index) {
@@ -111,7 +103,7 @@ async function runCase(url, c, index) {
   const hits = (parseSearchPayload(msg).hits ?? []).slice(0, 8).map((h, i) => compactHit(h, i + 1));
   const expectedFamily = new Set(c.expectedFamilies);
   const acceptableOps = new Set(c.acceptableOps);
-  return { id: c.id, question: c.question, seed: c.seed, groundTruth: c.groundTruth, ...(c.groundTruthNote ? { groundTruthNote: c.groundTruthNote } : {}), expectedFamilies: c.expectedFamilies, acceptableOps: c.acceptableOps, familyHitAt3: hits.slice(0, 3).some((h) => hitFamilies(h).some((family) => expectedFamily.has(family))), usableOpAt5: hits.slice(0, 5).some((h) => acceptableOps.has(h.id)), topHits: hits, notes: c.notes };
+  return { id: c.id, question: c.question, seed: c.seed, groundTruth: c.groundTruth, ...(c.groundTruthNote ? { groundTruthNote: c.groundTruthNote } : {}), expectedFamilies: c.expectedFamilies, acceptableOps: c.acceptableOps, familyHitAt3: hits.slice(0, 3).some((h) => expectedFamily.has(h.service)), usableOpAt5: hits.slice(0, 5).some((h) => acceptableOps.has(h.id)), topHits: hits, notes: c.notes };
 }
 
 function summarize(rows) {
