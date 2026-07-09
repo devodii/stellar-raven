@@ -62,8 +62,11 @@ small guided demo, not a full agent harness.
 Each authorized request gets a **fresh, stateless `McpServer`** served over streamable HTTP
 by `createMcpHandler` (from `agents/mcp`) — no Durable Objects, no session state. Tool
 registration and all model-facing prose live in `src/mcp/tools.ts`; the initialize-time
-`SERVER_INSTRUCTIONS` (workflow + envelope contract) ride along because clients surface
-them in the system prompt, where they outlive per-tool descriptions.
+`SERVER_INSTRUCTIONS` (workflow + envelope contract + generated source-family micro-map)
+ride along because clients surface them in the system prompt, where they outlive per-tool
+descriptions. The micro-map is generated from `scripts/catalog-data/workflow-archetypes.mjs`
+by `scripts/build-micro-map.mjs`; it orients agents to the Lumenloop, Scout, Stellar Docs,
+and skills families without adding per-operation cards or changing the catalog shape.
 
 The `search` tool handler is a pure function call: `searchCatalogPage(getCatalog(), { query,
 kind?, service?, limit? })`. `getCatalog()` (`src/catalog/load.ts`) imports the generated
@@ -72,7 +75,7 @@ kind?, service?, limit? })`. `getCatalog()` (`src/catalog/load.ts`) imports the 
 response is `{ hits, total, truncated, nextSteps }` (as both `text` and
 `structuredContent`): `total` counts every distinct catalog entry the consulted scorer
 tiers matched (post-filter, pre-paging), `truncated` = `total > hits.length` (retry with a
-higher `limit` or a narrower query — mirrors upstream codemode's search shape), and
+higher `limit`, the other candidate family, or varied vocabulary), and
 `nextSteps` is a server-authored hint that restates the compose-in-one-script workflow and
 the envelope rule on every call. The handler also validates the `service` filter against
 the catalog's real service set (`catalogServices`): an unknown value ("stellardocs",
@@ -557,6 +560,7 @@ scripts/refresh-inventory.mjs   (live; the ONLY network step)
    → inventory/lumenloop.json  inventory/stellar-light.json  inventory/stellar-docs.json
      (+ specs/stellar-docs.json — authored spec-as-data, not fetched)
 scripts/build-catalog.mjs       → catalog/manifest.json        (offline, deterministic)
+scripts/build-micro-map.mjs     → src/mcp/micro-map.ts          (offline, deterministic)
 scripts/build-super-spec.mjs    → specs/super-spec.json        (npm run spec:build)
 scripts/bundle-skills.mjs       → src/skills/bundle.json       (npm run skills:bundle)
 ```
@@ -564,7 +568,8 @@ scripts/bundle-skills.mjs       → src/skills/bundle.json       (npm run skills
 Determinism is a hard property: sorted keys, sorted entries, `generatedAt` derived from the
 newest *input* snapshot (never wall clock) — consecutive runs are byte-identical, and
 `test/catalog.test.ts` additionally asserts the *checked-in* manifest matches a fresh
-rebuild (staleness check). The refresh script is idempotent and asserts no key material
+rebuild (staleness check), and `test/micro-map.test.mjs` does the same for the generated
+orientation layer. The refresh script is idempotent and asserts no key material
 (including the Algolia app id) appears in any output. Exposure filtering is build-time data
 in `scripts/exposure.mjs` (ADR-0003: excluded Lumenloop ops + the account-op regex + the
 metered flag, excluded Scout ops, retired onboarding skills, and the never-emitted

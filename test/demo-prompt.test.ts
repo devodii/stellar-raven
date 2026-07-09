@@ -7,21 +7,25 @@
  */
 import { describe, expect, it } from "vitest";
 import { assertNoNonExposedRefsInText } from "../scripts/emitted-text-guard.mjs";
-import { SERVER_INSTRUCTIONS } from "../src/mcp/tools";
+import { BASE_SERVER_INSTRUCTIONS, SERVER_INSTRUCTIONS } from "../src/mcp/tools";
+import { MICRO_MAP } from "../src/mcp/micro-map";
 import { DEMO_CAPS } from "../src/demo/budget";
 import { DEMO_PREAMBLE, DEMO_SYSTEM_PROMPT } from "../src/demo/prompt";
 
 describe("demo system prompt", () => {
-  it("contains the production SERVER_INSTRUCTIONS verbatim plus the preamble", () => {
-    expect(DEMO_SYSTEM_PROMPT.startsWith(SERVER_INSTRUCTIONS)).toBe(true);
+  it("contains the base production instructions plus the preamble, excluding the generated micro-map", () => {
+    expect(SERVER_INSTRUCTIONS).toContain(MICRO_MAP);
+    expect(DEMO_SYSTEM_PROMPT.startsWith(BASE_SERVER_INSTRUCTIONS)).toBe(true);
+    expect(DEMO_SYSTEM_PROMPT).not.toContain(MICRO_MAP);
     expect(DEMO_SYSTEM_PROMPT.endsWith(DEMO_PREAMBLE)).toBe(true);
     // The demo's turn budget is stated to the model (numbers enforced in
     // src/demo/budget.ts; drift here is a lie to the model, not a crash).
     expect(DEMO_PREAMBLE).toContain(`${DEMO_CAPS.maxSteps} steps`);
     expect(DEMO_PREAMBLE).toContain(`${DEMO_CAPS.maxSearchCallsPerTurn} \`search\` calls`);
     expect(DEMO_PREAMBLE).toContain(`${DEMO_CAPS.maxExecuteCallsPerTurn} \`execute\` calls`);
+    expect(DEMO_PREAMBLE).toContain("one targeted `search` for the primary source family");
     expect(DEMO_PREAMBLE).toContain("optional second `search`");
-    expect(DEMO_PREAMBLE).toContain("truncated, mismatched, or need a better endpoint-discovery query");
+    expect(DEMO_PREAMBLE).toContain("truncated, mismatched, need corroboration, or need varied vocabulary");
     expect(DEMO_PREAMBLE).toContain("optional second `execute`");
     expect(DEMO_PREAMBLE).toContain("do not call `codemode.search`, `codemode.catalog`, or `codemode.spec`");
     expect(DEMO_PREAMBLE).toContain('`codemode.describe("<exact id>")` is allowed');
@@ -37,7 +41,9 @@ describe("demo system prompt", () => {
     expect(DEMO_PREAMBLE).toContain("targeted per-country/per-entity fanout");
     expect(DEMO_PREAMBLE).toContain("counts, top 5-8 named rows, and source/provenance fields");
     expect(DEMO_PREAMBLE).toContain("Aggregate, slice arrays, and project columns inside the sandbox after filtering");
-    expect(SERVER_INSTRUCTIONS).toContain("filter raw rows or nested field variants before projecting compact columns");
+    expect(BASE_SERVER_INSTRUCTIONS).toContain(
+      "filter raw rows or nested field variants before projecting compact columns"
+    );
   });
 
   it("references no non-exposed operations or retired skills (ADR-0003)", () => {

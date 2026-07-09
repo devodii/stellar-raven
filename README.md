@@ -7,7 +7,9 @@
 Remote MCP server on Cloudflare Workers exposing two tools, `search` and `execute`, over a
 unified catalog of Stellar ecosystem services and skills. Agents use `search` to discover
 capabilities, then call `execute` with JavaScript that runs in a Dynamic Worker isolate with no
-network access; service calls go through host-side adapters.
+network access; service calls go through host-side adapters. The server instructions also include
+a generated source-family micro-map so agents can plan which catalog family should ground a
+question before searching.
 
 Design: [PLAN.md](./PLAN.md). Code-verified mechanics and operating limits:
 [ARCHITECTURE.md](./ARCHITECTURE.md).
