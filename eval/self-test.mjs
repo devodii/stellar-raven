@@ -19,6 +19,8 @@ const E = {
   skillContracts: { id: "skills.stellar-dev.smart-contracts", service: "skills", kind: "skill", score: 0, description: "" },
   skillContractsSection: { id: "skills.stellar-dev.smart-contracts#storage", service: "skills", kind: "skill-section", score: 0, description: "" },
   skillDossier: { id: "skills.lumenloop.stellar-project-dossier", service: "skills", kind: "skill", score: 0, description: "" },
+  scoutServiceCard: { id: "service:scout", service: "scout", kind: "service", score: 0, description: "" },
+  scoutWorkflowCard: { id: "workflow:ecosystem-people-events", service: "scout", kind: "workflow", score: 0, description: "" },
 };
 const rank = (...entries) => entries.map((e, i) => ({ ...e, score: 1 - i * 0.1 }));
 
@@ -78,6 +80,10 @@ check("case2: hit at rank 3, no cards", () => {
 check("case3: total miss", () => {
   const g = gradeCase(rank(E.scoutProjects, E.docsSearch), "lumenloop", ["lumenloop_get_project"]);
   assert.deepEqual(g, { top1: false, top3: false, top5: false, cardHit5: false });
+});
+check("service/workflow cards do not satisfy strict routing service metrics", () => {
+  const g = gradeCase(rank(E.scoutServiceCard, E.scoutWorkflowCard, E.docsSearch), "scout", undefined);
+  assert.deepEqual(g, { top1: false, top3: false, top5: false, cardHit5: null });
 });
 check("empty hits -> all false", () => {
   const g = gradeCase([], "scout", undefined);
