@@ -327,8 +327,9 @@ version until a manual deploy. Closing the drift loop requires shipping:
 - `npm run deploy` (`wrangler deploy`) — pushes the new catalog live to the production routes.
   Deploying to production is outward-facing: get the owner's go-ahead unless durably authorized.
 - Verify live: the deploy prints a new Version ID and the updated routes; a quick liveness check
-  (the public landing/`/mcp` endpoints return 200) confirms the roll-out. Note the Version ID in
-  the close-out record.
+  confirms the roll-out. The public landing pages should return `200`; unauthenticated `/mcp`
+  should return the expected auth error (`401` JSON), unless the check includes a valid bearer
+  token. Note the Version ID in the close-out record.
 
 A drift bump that is committed but never deployed is a *silent* stale prod — the catalog carries
 the new upstream version while the gateway still answers as the old one. Treat deploy as part of
