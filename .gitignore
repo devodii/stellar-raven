@@ -28,6 +28,7 @@ env.d.ts
 eval/results/
 eval/qa/results/
 eval/agentic/results/
+eval/discovery/results/
 # run-routing's tsc-transpile fallback output (eval/run-routing.mjs)
 eval/.build/
 
