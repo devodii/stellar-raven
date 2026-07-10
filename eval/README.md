@@ -765,3 +765,20 @@ Full record: `research/discovery-redesign.md` (plan+evidence), `research/p1-guid
   op-layer evidence). Successor: the greenlit Vectorize frontier-embedding spike
   (`ideas/architecture-explorations.md` item 2) — round 5f above tested only offline
   bge-base, never Vectorize with a frontier model.
+
+## Vectorize frontier round (2026-07-10, todo 902): pinned harness landed, retrieval mode not shipped
+
+Full design, stamps, matrices, and decision: `eval/vectorize/README.md`. The round landed the
+previously missing discovery prerequisites (≤3-search agent arm, 91-query replay lane, paired
+miss classification) and a local Qwen3-Embedding-0.6B reference harness pinned by model commit,
+runtime version, card hashes, and committed vectors. Pure lexical calibration reproduced
+213/267/305 legacy, 18/22/22 skills, and 79/104/110 extended exactly.
+
+The fixed semantic rerank failed the ship gate: mined LumenLoop replay family top-1/top-5 moved
+22.0→13.2% and 48.4→46.2%; legacy fell to 95/218/279; extended accept-either top-5 fell
+122→114. Three medium agent runs per arm moved LumenLoop primary from 2/8×3 to 3/8, 5/8,
+3/8, but docs primary was only 11/12, 12/12, 11/12 and scout primary 8/10, 9/10, 8/10 in
+the vector arm. Per-case review found Aquarius wins offset by Blend/Comet churn and broad
+docs/scout ranking cannibalization. **Measured no-ship:** no production scorer, binding, index,
+runtime inference, deploy, or re-baseline. No upstream service defect surfaced, so
+`improvements/` is unchanged.

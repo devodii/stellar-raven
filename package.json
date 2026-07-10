@@ -17,6 +17,11 @@
     "test:smoke": "vitest run --config test/smoke/vitest.config.ts",
     "typegen": "wrangler types --include-runtime=false env.d.ts",
     "eval:compile": "node eval/compile-routing.mjs",
+    "eval:discovery:agent": "node eval/discovery/run-agent-discovery.mjs",
+    "eval:discovery:replay": "node eval/discovery/run-replay.mjs",
+    "eval:vectorize:build": "node eval/vectorize/build-artifact.mjs",
+    "eval:vectorize:run": "node eval/vectorize/run-frontier.mjs",
+    "eval:vectorize:serve": "node eval/vectorize/serve-frontier.mjs",
     "micro-map:build": "node scripts/build-micro-map.mjs",
     "eval:routing": "node eval/run-routing.mjs",
     "eval:plan": "node eval/plan/grade-plan.mjs",
@@ -52,6 +57,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@huggingface/transformers": "4.2.0",
     "@cloudflare/vitest-pool-workers": "^0.18.0",
     "@cloudflare/workers-types": "^4.20260702.1",
     "@types/node": "^26.1.0",

@@ -18,7 +18,7 @@ the headline wins.
 | — skills lane (23, hand-authored) | skills routing | free, same run | **GATE**: must not regress 18/23 top-1 (floor in `eval/gates.json`, same `--gate` enforcement; re-baselined 2026-07-03, todo 825 — 8 cases targeting the retired lumenloop-api/mcp-connect onboarding skills moved to `retiredCases`, prior floor 26/31 with the same 5 misses) |
 | — extended lane (122, real-user phrasing) | `search` on jitsu-mined questions | free, same run | Diagnostic; **target metric for retrieval work**. Current strict top-1/3/5: **79/104/110**; accept-either: 110/121/122; zero-hit 0 (`routing-2026-07-09T21-32-59-931Z.json` and `routing-2026-07-09T21-38-32-482Z.json`, identical counts). Historical milestones: tiered rescue reached strict pass@5 120/122 and top-1 74/122; operation keywords later reached top-1 77/122. Do not quote either as current. |
 | — accept-either views (corpus `acceptable_cards` ∪ overlay) | label-tolerance context | free, same run | Diagnostic only; never the headline |
-| `eval/discovery/` | one-search source-family / usable-route discovery over the live MCP HTTP surface | free aside from the local server; after discovery guidance or retrieval-shape work | Diagnostic: 43 adjudicated cases; `familyHit@3` + `usableOp@5`; known limit is verbatim single-query input |
+| `eval/discovery/` | one-search, agent-allowed-≤3-search, and mined-query replay source-family / usable-route discovery | one-shot/replay free; agent arm paid; after discovery guidance or retrieval-shape work | Diagnostic: 43 adjudicated cases; `familyHit@3` + `usableOp@5`; paired miss classification; 91-query LumenLoop replay lane |
 | `eval/agentic/` | agent-driven `search`, live server | ~$, minutes — after major search-behavior changes | Diagnostic (label-ambiguity analysis) |
 | `eval/qa/run-qa.mjs` — main battery (469) | **end-to-end search → execute → answer** | ~$0.2–0.7/case, ~30 min per 30-case sample — before/after big changes, A/Bs | **HEADLINE** (correct / partial / wrong) |
 | `npm run eval:playground` — actual `/playground/chat` SSE over existing QA cases | public playground model loop → tools → answer | paid; seeded 5-case default, max 30 per run-scoped subject — after playground prompt/model/loop changes | Diagnostic, scored by the same QA judge/evidence pack; never merge its denominator with the main MCP headline |
@@ -72,11 +72,12 @@ the raven sibling repos are retired; growth happens in this repo's own formats.
    committed record with the exact results-file stamp they cite. The results dirs are unbounded
    — prune them periodically (e.g. drop results older than 30 days), keeping any stamp still
    referenced by `eval/gates.json` or a committed README record.
-8. **Discovery is intentionally narrower than QA.** `eval/discovery/` asks whether one verbatim
+8. **Discovery is intentionally narrower than QA.** Its one-shot lane asks whether one verbatim
    `search` surfaces an expected family in the top 3 and a usable operation/skill in the top 5.
-   It does not measure multi-search agent planning or final-answer correctness. The planned
-   extensions are an agent-allowed-≤3-search arm and replay of mined real agent queries; until
-   those land, use the agentic and QA lanes for behavioral conclusions.
+   The agent arm allows a real caller at most three searches and records visible hits plus final
+   selection; the replay lane uses PII-safe queries mined from eval agents, never raw user traffic.
+   Paired classification separates retrieval, agent-behavior, and downstream rows. None of these
+   lanes measures final-answer correctness; use QA for that headline.
 
 ## Primary artifact: service-improvement recommendations
 

@@ -268,8 +268,10 @@ wrangler `^4.107.0`, compat ≥ 2026-06-11 + `nodejs_compat`, `worker_loaders` b
 >   remains unchanged, while generated source-family/workflow guidance teaches multi-query
 >   planning. `eval/discovery/` measures the narrow one-search route-discovery layer. Searchable
 >   service/workflow catalog cards were built and cleanly reverted after real-query interception
->   measured below the run-to-run noise floor; the successor Vectorize frontier spike is tracked
->   separately rather than left as unused production code.
+>   measured below the run-to-run noise floor. The successor Vectorize frontier spike was then
+>   measured no-ship on 2026-07-10 (todo 902): the pinned isolated harness and discovery
+>   measurement extensions remain under `eval/`, while no production binding/index/scorer was
+>   left behind (`eval/vectorize/README.md`).
 >
 > Follow-ups and former deferrals (tracked as Solo backlog todos; project binding in
 > [`AGENTS.md` “Coordination”](./AGENTS.md#coordination)):

@@ -1,0 +1,1658 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-10",
+  "sourcePolicy": "agent-generated search queries from committed eval questions only; no raw user traffic",
+  "targetPool": "lumenloop-agentic-misses",
+  "provenance": [
+    {
+      "file": "agentic-2026-07-02.json",
+      "sha256": "b931947d2b19fa1d988c337227b054362e63070519cdc82acf970f07cd930651",
+      "ranAt": null
+    },
+    {
+      "file": "agentic-2026-07-03.json",
+      "sha256": "d85c1c79d821dec4fbb1d54a553543acd559599a568f311a1c9681a8fc30eaa4",
+      "ranAt": null
+    },
+    {
+      "file": "agentic-2026-07-04.json",
+      "sha256": "45f601c858a0e7f299133e61dc3dacd0c690d8514a39f6fb2f522e322e9f2be4",
+      "ranAt": "2026-07-04"
+    }
+  ],
+  "summary": {
+    "occurrenceCount": 91,
+    "caseCount": 8,
+    "register": {
+      "mixed": 42,
+      "entity-only": 19,
+      "capability": 30
+    },
+    "mixedPct": 46.2,
+    "caseCounts": {
+      "agentic-lumenloop-q-asset-rwa-tokenized-freshness": 15,
+      "agentic-lumenloop-q-defi-aquarius-what-is": 6,
+      "agentic-lumenloop-q-defi-comet-content": 14,
+      "agentic-lumenloop-q-defi-phoenix-scf": 8,
+      "agentic-lumenloop-q-defi-rwa-overview": 8,
+      "agentic-lumenloop-q-defi-soroswap-what-is": 12,
+      "agentic-lumenloop-q-eco-lobstr-wallet": 12,
+      "agentic-lumenloop-q-edge-fresh-latest-blend-tvl": 16
+    }
+  },
+  "occurrences": [
+    {
+      "id": "agentic-2026-07-02:q-asset-rwa-tokenized-freshness:low:1",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "tokenized real world assets RWA value on Stellar",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-asset-rwa-tokenized-freshness:low:2",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "total value locked TVL growth ecosystem stats Stellar",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-asset-rwa-tokenized-freshness:medium:1",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "tokenized real-world asset value on Stellar RWA growth",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-asset-rwa-tokenized-freshness:medium:2",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "total value locked RWA market cap Stellar ecosystem metrics",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-asset-rwa-tokenized-freshness:medium:3",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 3,
+      "query": "commission research report Stellar RWA",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-aquarius-what-is:low:1",
+      "caseId": "agentic-lumenloop-q-defi-aquarius-what-is",
+      "agenticCaseId": "q-defi-aquarius-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "Aquarius AQUA token Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-aquarius-what-is:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-aquarius-what-is",
+      "agenticCaseId": "q-defi-aquarius-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "Aquarius AQUA token Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-comet-content:low:1",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "weighted AMM Balancer-style pools Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-comet-content:low:2",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "weighted pool Balancer AMM Soroban DeFi discussion content",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-comet-content:low:3",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 3,
+      "query": "search research articles posts content directory Stellar",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-comet-content:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "weighted AMM pools Balancer-style Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-comet-content:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "AMM liquidity pool DeFi Soroban discussion research",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-comet-content:medium:3",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 3,
+      "query": "search articles tweets content about a topic Balancer weighted pools",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-phoenix-scf:low:1",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "SCF submission history project",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-phoenix-scf:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "SCF submission history project",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-rwa-overview:low:1",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "real world asset RWA products live on Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-rwa-overview:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "real world asset RWA products live on Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-rwa-overview:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "RWA tokenized asset projects directory",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-soroswap-what-is:low:1",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "Soroswap DEX Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-soroswap-what-is:low:2",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "Soroswap project profile",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-soroswap-what-is:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "Soroswap DEX Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-defi-soroswap-what-is:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "Soroswap project details AMM automated market maker",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-eco-lobstr-wallet:low:1",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "LOBSTR wallet builder scale chain support",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-eco-lobstr-wallet:low:2",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "LOBSTR project profile builder",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-eco-lobstr-wallet:medium:1",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "LOBSTR wallet builder company",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-eco-lobstr-wallet:medium:2",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "LOBSTR",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-eco-lobstr-wallet:medium:3",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 3,
+      "query": "lumenloop get project details directory",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-edge-fresh-latest-blend-tvl:low:1",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "Blend protocol TVL",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-edge-fresh-latest-blend-tvl:low:2",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "TVL protocol / project metrics defi",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-edge-fresh-latest-blend-tvl:low:3",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 3,
+      "query": "project about specific Stellar project",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-edge-fresh-latest-blend-tvl:medium:1",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 1,
+      "query": "Blend protocol TVL trend",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-edge-fresh-latest-blend-tvl:medium:2",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 2,
+      "query": "Blend TVL",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-02:q-edge-fresh-latest-blend-tvl:medium:3",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-02.json",
+      "queryIndex": 3,
+      "query": "DeFi lending protocol total value locked",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-asset-rwa-tokenized-freshness:low:1",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "tokenized real world assets RWA value on Stellar",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-asset-rwa-tokenized-freshness:low:2",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "RWA market cap growth stats metrics network",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-asset-rwa-tokenized-freshness:low:3",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 3,
+      "query": "ecosystem stats network growth",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-asset-rwa-tokenized-freshness:medium:1",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "tokenized real world assets RWA value on Stellar",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-asset-rwa-tokenized-freshness:medium:2",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "RWA growth trend metrics stellar",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-asset-rwa-tokenized-freshness:medium:3",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 3,
+      "query": "commission paid research report on Stellar ecosystem topic",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-aquarius-what-is:low:1",
+      "caseId": "agentic-lumenloop-q-defi-aquarius-what-is",
+      "agenticCaseId": "q-defi-aquarius-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "Aquarius AQUA token Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-aquarius-what-is:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-aquarius-what-is",
+      "agenticCaseId": "q-defi-aquarius-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "Aquarius AQUA token Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-comet-content:low:1",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "weighted pools Balancer-style AMM Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-comet-content:low:2",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "AMM liquidity pool documentation Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-comet-content:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "weighted AMM pools Balancer style Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-comet-content:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "liquidity pool AMM articles research discussion Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-comet-content:medium:3",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 3,
+      "query": "weighted pools feasibility research articles Balancer",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-phoenix-scf:low:1",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "SCF submission history builder Phoenix",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-phoenix-scf:low:2",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "project SCF grants funding history by name",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-phoenix-scf:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "Phoenix SCF submission history",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-phoenix-scf:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "project SCF funding history by project name",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-rwa-overview:low:1",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "real world asset RWA products live on Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-rwa-overview:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "real-world asset RWA products on Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-rwa-overview:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "list projects partners tokenized assets stablecoins directory",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-soroswap-what-is:low:1",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "Soroswap DEX Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-soroswap-what-is:low:2",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "Soroswap project profile automated market maker",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-soroswap-what-is:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "Soroswap DEX Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-defi-soroswap-what-is:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "Soroswap project directory AMM decentralized exchange",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-eco-lobstr-wallet:low:1",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "LOBSTR wallet builder chain support scale",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-eco-lobstr-wallet:low:2",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "search projects find project profile LOBSTR",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-eco-lobstr-wallet:medium:1",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "LOBSTR wallet builder scale chain support",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-eco-lobstr-wallet:medium:2",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "find project profile LOBSTR wallet",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-edge-fresh-latest-blend-tvl:low:1",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "protocol TVL history chart trend",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-edge-fresh-latest-blend-tvl:low:2",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "project analytics metrics Blend defi",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-edge-fresh-latest-blend-tvl:low:3",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 3,
+      "query": "Blend project page lending market stats",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-edge-fresh-latest-blend-tvl:medium:1",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 1,
+      "query": "protocol TVL history chart DeFi",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-edge-fresh-latest-blend-tvl:medium:2",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 2,
+      "query": "Blend protocol project lending market data",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-03:q-edge-fresh-latest-blend-tvl:medium:3",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-03.json",
+      "queryIndex": 3,
+      "query": "Blend TVL trend quarter historical",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-asset-rwa-tokenized-freshness:low:1",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "tokenized real-world assets RWA value on Stellar growth",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-asset-rwa-tokenized-freshness:low:2",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "stellar network stats market cap total value locked",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-asset-rwa-tokenized-freshness:medium:1",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "tokenized real world assets RWA value Stellar",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-asset-rwa-tokenized-freshness:medium:2",
+      "caseId": "agentic-lumenloop-q-asset-rwa-tokenized-freshness",
+      "agenticCaseId": "q-asset-rwa-tokenized-freshness",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "RWA total value locked market data growth trend research report",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.list_research"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-aquarius-what-is:low:1",
+      "caseId": "agentic-lumenloop-q-defi-aquarius-what-is",
+      "agenticCaseId": "q-defi-aquarius-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Aquarius AQUA token Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-aquarius-what-is:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-aquarius-what-is",
+      "agenticCaseId": "q-defi-aquarius-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Aquarius AQUA token Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-comet-content:low:1",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "weighted AMM pools Balancer Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-comet-content:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "weighted AMM pools Balancer-style Soroban",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-comet-content:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-comet-content",
+      "agenticCaseId": "q-defi-comet-content",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "AMM liquidity pool research articles Stellar ecosystem",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.find_content_by_entity"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-phoenix-scf:low:1",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "SCF submission history project",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-phoenix-scf:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-phoenix-scf",
+      "agenticCaseId": "q-defi-phoenix-scf",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Phoenix SCF submission history",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_scf_submissions",
+        "lumenloop.find_similar_scf_submissions"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-rwa-overview:low:1",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "real-world-asset RWA products live on Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-rwa-overview:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-rwa-overview",
+      "agenticCaseId": "q-defi-rwa-overview",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "real world asset RWA products live on Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.search_content_semantic",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-soroswap-what-is:low:1",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Soroswap DEX Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-soroswap-what-is:low:2",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "Soroswap project directory lumenloop",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-soroswap-what-is:medium:1",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Soroswap DEX Stellar",
+      "register": "entity-only",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-defi-soroswap-what-is:medium:2",
+      "caseId": "agentic-lumenloop-q-defi-soroswap-what-is",
+      "agenticCaseId": "q-defi-soroswap-what-is",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "Soroswap project directory profile",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-eco-lobstr-wallet:low:1",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "LOBSTR wallet builder scale chain support",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-eco-lobstr-wallet:medium:1",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "LOBSTR wallet builder chain support",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-eco-lobstr-wallet:medium:2",
+      "caseId": "agentic-lumenloop-q-eco-lobstr-wallet",
+      "agenticCaseId": "q-eco-lobstr-wallet",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "LOBSTR project details builder team",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop"
+      ],
+      "acceptableOps": [
+        "lumenloop.get_project",
+        "lumenloop.search_directory"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-edge-fresh-latest-blend-tvl:low:1",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Blend TVL trend",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-edge-fresh-latest-blend-tvl:low:2",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "low",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "Blend protocol project total value locked",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-edge-fresh-latest-blend-tvl:medium:1",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 1,
+      "query": "Blend protocol TVL",
+      "register": "mixed",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    },
+    {
+      "id": "agentic-2026-07-04:q-edge-fresh-latest-blend-tvl:medium:2",
+      "caseId": "agentic-lumenloop-q-edge-fresh-latest-blend-tvl",
+      "agenticCaseId": "q-edge-fresh-latest-blend-tvl",
+      "effort": "medium",
+      "source": "agentic-2026-07-04.json",
+      "queryIndex": 2,
+      "query": "project TVL metrics lending market",
+      "register": "capability",
+      "expectedFamilies": [
+        "lumenloop",
+        "scout"
+      ],
+      "acceptableOps": [
+        "lumenloop.find_content_about_project",
+        "lumenloop.search_content_semantic",
+        "scout.analyzeEcosystem",
+        "scout.searchResearch"
+      ]
+    }
+  ]
+}

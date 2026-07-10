@@ -21,8 +21,8 @@ conviction or a winning A/B on golden Q→A accuracy.
    objection to the architecture with data, or redirects the project. The single
    highest-information experiment available.
 
-2. **Hybrid lexical+embedding retrieval A/B — GREENLIT as the Vectorize frontier spike
-   (Tyler, 2026-07-09; discovery-redesign round outcome).** The 2026-07-09 round hardened the
+2. **Hybrid lexical+embedding retrieval A/B — MEASURED NO-SHIP (todo 902, 2026-07-10).**
+   The 2026-07-09 round greenlit the Vectorize frontier spike and hardened the
    case: the lumenloop capture class is an entity→family mapping problem in a 66%-mixed-register
    query stream, and BOTH lexical levers are now measured at their ceiling — prose guidance is
    zero-sum across 7 live agentic runs, and generic catalog cards intercept ≤6.9% of real agent
@@ -35,7 +35,12 @@ conviction or a winning A/B on golden Q→A accuracy.
    with the discovery instrument, the mined real-query set (66% mixed register), and live
    agentic runs at ≥3 runs/arm with per-case family matrices (single runs proven unable to
    gate ±2-case movements); docs 100% and scout-medium hold as blocking guardrails. Run in a
-   fresh worktree after the discovery-redesign merge.
+   fresh worktree after the discovery-redesign merge. **Outcome:** the pinned local
+   Qwen3-Embedding-0.6B rerank harness and prerequisite discovery lanes landed as eval assets,
+   but the retrieval mode failed: mined target replay regressed top-1/top-5, legacy and extended
+   gates broke, and three vector agent runs failed docs/scout blockers despite a noisy LumenLoop
+   primary lift. No production Vectorize/index/runtime path shipped. Full record:
+   `eval/vectorize/README.md`.
 
 3. **MCP 2026-07-28 spec readiness spike** (1 day; TIME-SENSITIVE — final ships ~3 weeks from
    the review date). PARTIALLY RESOLVED 2026-07-09: the instructions-channel question was

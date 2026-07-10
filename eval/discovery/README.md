@@ -1,6 +1,6 @@
 # Discovery Eval
 
-Phase 0 discovery-only instrument for the discovery redesign. It asks a narrower question than QA: if a naive agent makes exactly one live MCP `search` call with the user's question, did the returned catalog hits surface the right source family and at least one usable operation or skill?
+Discovery instruments for the discovery redesign. The one-shot lane asks a narrower question than QA: if a naive agent makes exactly one live MCP `search` call with the user's question, did the returned catalog hits surface the right source family and at least one usable operation or skill? The paired agent lane allows a real headless agent at most three searches, and the replay lane replays search queries mined from prior eval agents.
 
 The runner talks to the real MCP server over HTTP and does not import `src/` search or scoring code. That keeps the lane pointed at the live product surface rather than an offline reimplementation.
 
@@ -8,11 +8,17 @@ The runner talks to the real MCP server over HTTP and does not import `src/` sea
 
 ```sh
 node eval/discovery/run-discovery.mjs --url http://localhost:8788
+node eval/discovery/run-agent-discovery.mjs --url http://localhost:8788
+node eval/discovery/run-replay.mjs --url http://localhost:8788
 ```
 
 `--url` defaults to `http://localhost:8788` and may include or omit `/mcp`. For non-local targets, provide an auth token through one of `RAVEN_MCP_BEARER_TOKEN`, `MCP_BEARER_TOKEN`, `MCP_ADMIN_TOKEN`, or `RAVEN_ADMIN_TOKEN`; the runner sends it as a bearer token and never prints it.
 
 Results are written to `eval/discovery/results/<ISO-stamp>.json` and are local evidence, matching the existing eval results convention.
+
+The agent runner defaults to `claude-sonnet-5` at medium effort, launches non-interactively with permission bypass, exposes only `mcp__raven__search`, enforces one to three observed search calls, and records both visible hits and the final selected family. `--repeat N`, `--cases`, `--ids`, `--model`, and `--effort` support isolated A/Bs.
+
+`mine-agent-queries.mjs` builds `mined-lumenloop-queries.json` only from agent-generated queries over committed eval questions; raw user traffic is forbidden. The committed lane has 91 occurrences across the eight LumenLoop target cases from three retained historical agentic result files. Its deterministic register classifier reports 42 mixed (46.2%), 19 entity-only, and 30 capability queries. This does not recreate the unavailable July 9 160-query artifact's 66.3% mixed share; the different retained sample is recorded honestly rather than relabeled to match history.
 
 ## Seed Pools
 
@@ -30,7 +36,11 @@ For each case, the runner calls `search` once with the case question and `limit:
 - `usableOp@5`: any rank 1-5 hit has `id` in `acceptableOps`.
 - Raw rank 1-8 hits are recorded as `{ rank, id, service, kind, tier, score }` plus any additional score fields returned by the server that this runner knows to preserve.
 
-The summary reports overall counts and per-seed-pool counts. The runner deliberately does not classify misses.
+The summary reports overall counts and per-seed-pool counts. `classify-misses.mjs` pairs a one-shot result with an agent result:
+
+- `downstream`: one shot already surfaced both expected family@3 and usable op@5;
+- `agent-behavior`: one shot missed at least one metric, but the ≤3-search agent surfaced both;
+- `retrieval`: the agent still did not surface both.
 
 ## Phase 0 Baseline
 
@@ -62,9 +72,31 @@ A free in-memory replay on 2026-07-09 from 22:04:36.356Z through 22:04:37.631Z r
 not an invented artifact stamp. The table above is therefore the committed historical record;
 the missing raw JSON is explicitly unavailable, and the next run must write a new honest stamp.
 
+## July 10 paired extension baseline
+
+The next run wrote the missing raw evidence and reproduced the historical one-shot table exactly:
+`2026-07-10T03-57-12-740Z.json` = 32/43 family@3 and 25/43 usable-op@5. The paired
+`2026-07-10T04-06-53-881Z-discovery-current-agent.json` agent run reached 40/43 family@3,
+36/43 usable-op@5, and selected an expected primary family on 36/43. Pool results:
+
+| pool | n | agent familyHit@3 | agent usableOp@5 | expected primary |
+| --- | ---: | ---: | ---: | ---: |
+| extended-strict-misses | 12 | 12/12 | 12/12 | 12/12 |
+| issue-9-exemplars | 10 | 10/10 | 9/10 | 10/10 |
+| lumenloop-agentic-misses | 8 | 5/8 | 4/8 | 3/8 |
+| pr17-fold | 3 | 3/3 | 3/3 | 3/3 |
+| round-844-real-user | 10 | 10/10 | 8/10 | 8/10 |
+| overall | 43 | **40/43** | **36/43** | **36/43** |
+
+Paired miss classification (`2026-07-10-current-miss-classification.json`): 25 downstream,
+12 agent-behavior, 6 retrieval. Five of the six retrieval cases are in the LumenLoop pool
+(tokenized-RWA freshness, Aquarius, RWA overview, Soroswap, LOBSTR); the sixth is testnet USDC
+faucet. This classification is discovery-layer only; it does not claim those questions are
+unanswerable downstream.
+
 ## Miss Classification
 
-Classification happens during review, not in the runner:
+The historical review taxonomy remains the interpretation layer:
 
 - `retrieval`: one-search discovery failed to surface a needed family or usable op even though the exposed catalog contains one.
 - `agent-behavior`: the needed family/op was visible, but an agent likely needs better search planning, follow-up search, or source-family guidance.
