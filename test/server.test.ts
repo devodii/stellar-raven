@@ -98,7 +98,7 @@ describe("tool registration", () => {
     expect(search!.description).not.toMatch(/TEMPORARY|A\/B candidate/);
     // …and the description points at execute's in-sandbox discovery affordances.
     expect(search!.description).toContain("codemode.search");
-    expect(search!.description).toContain("codemode.catalog()");
+    expect(search!.description).toContain("codemode.catalog({ kind?, service?, compact? })");
     expect(search!.description).toContain("codemode.spec()");
   });
 

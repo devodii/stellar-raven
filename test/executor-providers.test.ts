@@ -791,6 +791,79 @@ describe("codemode fns", () => {
     expect(view.entries.every((e) => !("transport" in e) && !("provenance" in e))).toBe(true);
   });
 
+  it("catalog() supports exact kind/service intersection filters and compact projection", async () => {
+    const full = (await codemode.catalog!({
+      kind: "operation",
+      service: "stellarDocs"
+    })) as {
+      entries: Array<{
+        id: string;
+        kind: string;
+        service: string;
+        inputSchema?: unknown;
+        outputSchema?: unknown;
+      }>;
+    };
+    expect(full.entries.length).toBeGreaterThan(0);
+    expect(full.entries.every((entry) => entry.kind === "operation")).toBe(true);
+    expect(full.entries.every((entry) => entry.service === "stellarDocs")).toBe(true);
+    expect(full.entries.every((entry) => "inputSchema" in entry && "outputSchema" in entry)).toBe(
+      true
+    );
+
+    const compact = (await codemode.catalog!({ service: "skills", compact: true })) as {
+      entries: Array<{
+        id: string;
+        service: string;
+        kind: string;
+        description: string;
+        runnable?: boolean;
+        inputSchema?: unknown;
+        outputSchema?: unknown;
+      }>;
+    };
+    expect(compact.entries.length).toBeGreaterThan(0);
+    expect(compact.entries.every((entry) => entry.service === "skills")).toBe(true);
+    expect(compact.entries.every((entry) => !("inputSchema" in entry) && !("outputSchema" in entry))).toBe(
+      true
+    );
+    expect(compact.entries.some((entry) => entry.runnable === true)).toBe(true);
+  });
+
+  it("catalog() rejects invalid option shapes and exact filter near-misses", async () => {
+    for (const [arg, needle] of [
+      ["skills", "options object"],
+      [{ kind: "operations" }, "operation, skill, skill-section"],
+      [{ service: "stellardocs" }, "stellarDocs"],
+      [{ compact: "yes" }, "compact must be a boolean"]
+    ] as const) {
+      const result = (await codemode.catalog!(arg)) as {
+        ok: boolean;
+        error: { service: string; kind: string; message: string };
+      };
+      expect(result.ok).toBe(false);
+      expect(result.error.service).toBe("codemode");
+      expect(result.error.kind).toBe("error");
+      expect(result.error.message).toContain(needle);
+    }
+  });
+
+  it("catalog() isolates cached views from model-authored mutations", async () => {
+    const first = (await codemode.catalog!({ compact: true })) as {
+      entries: Array<{ id: string }>;
+    };
+    const originalId = first.entries[0]?.id;
+    expect(originalId).toBeTruthy();
+    first.entries[0]!.id = "mutated";
+    first.entries.splice(1);
+
+    const second = (await codemode.catalog!({ compact: true })) as {
+      entries: Array<{ id: string }>;
+    };
+    expect(second.entries[0]?.id).toBe(originalId);
+    expect(second.entries.length).toBeGreaterThan(1);
+  });
+
   it("describe is exact-match only", async () => {
     const hit = (await codemode.describe!("lumenloop.search_directory")) as {
       ok: boolean;

@@ -354,8 +354,11 @@ The `codemode` provider (`buildCodemodeProvider`, `src/executor/providers.ts`) i
   §1/§2), with the same kind/service filter validation at the sandbox boundary — an unknown
   filter value returns `{ ok: false, error }` naming the valid ones (explicit `null` = no
   filter, like `limit`).
-- **`codemode.catalog()`** — the full manifest as flat data for arbitrary code-grep, with
-  host-only detail (transport, provenance) stripped. Everything in it is callable/readable —
+- **`codemode.catalog({ kind?, service?, compact? })`** — the manifest as flat data for arbitrary
+  code-grep, optionally sliced by exact kind/service filters. The default/full projection includes
+  schemas; `compact: true` omits `inputSchema`/`outputSchema` while retaining identity,
+  descriptions, and runnable markers. Host-only detail (transport, provenance) is stripped.
+  Everything in it is callable/readable —
   the manifest is pre-filtered at build time (ADR-0003), so there is no policy layer to show.
 - **`codemode.describe(id)`** — the canonical detail-on-demand step (exact-match id only;
   mirrors upstream codemode's search → describe → call). A describe result carries all the

@@ -36,11 +36,12 @@
  *     as error envelopes naming the valid set (todo 839) — the frozen
  *     searchCatalog contract keeps filters silent, so the validation lives
  *     here at the sandbox boundary.
- *   codemode.catalog()                — the FULL catalog as plain data for
- *     arbitrary code-grep discovery (spec-as-data pattern; strict superset of
- *     the fixed scorer). Everything in it is callable/readable — exposure is
- *     filtered at build time (ADR-0003). Host-only transport/provenance
- *     detail is stripped.
+ *   codemode.catalog({ kind?, service?, compact? }) — the catalog as plain
+ *     data for arbitrary code-grep discovery (spec-as-data pattern; strict
+ *     superset of the fixed scorer). Exact filters slice the exposed surface;
+ *     compact omits schemas. Everything returned is callable/readable —
+ *     exposure is filtered at build time (ADR-0003). Host-only transport/
+ *     provenance detail is stripped.
  *   codemode.describe(id)             — canonical detail-on-demand step
  *     (exact id): operations get the FULL rendered signature (search hits
  *     stub oversized output types) + inputSchema/outputSchema as data;
@@ -352,6 +353,7 @@ export function buildProviders(
 
 /** codemode.search input: a bare query string or search options. */
 type SearchArg = string | { query?: unknown; kind?: unknown; service?: unknown; limit?: unknown };
+type CatalogArg = { kind?: unknown; service?: unknown; compact?: unknown };
 
 /**
  * Sandbox-facing projection of one catalog entry for `codemode.catalog()`:
@@ -448,6 +450,7 @@ function describeCatalogEntry(catalog: Catalog, id?: unknown) {
 // without redoing the expensive derivations: keyed on the source objects,
 // which are module-singleton JSON imports in the Worker.
 const catalogViewCache = new WeakMap<Catalog, unknown>();
+const compactCatalogViewCache = new WeakMap<Catalog, unknown>();
 const resolvedSpecCache = new WeakMap<object, unknown>();
 
 export function buildCodemodeProvider(
@@ -498,6 +501,19 @@ export function buildCodemodeProvider(
       entries: catalog.entries.map(catalogEntryView)
     };
     catalogViewCache.set(catalog, catalogView);
+  }
+  let compactCatalogView = compactCatalogViewCache.get(catalog);
+  if (!compactCatalogView) {
+    compactCatalogView = {
+      version: catalog.version,
+      generatedAt: catalog.generatedAt,
+      entries: catalog.entries.map((entry) => {
+        const view = catalogEntryView(entry);
+        const { inputSchema: _inputSchema, outputSchema: _outputSchema, ...compact } = view;
+        return compact;
+      })
+    };
+    compactCatalogViewCache.set(catalog, compactCatalogView);
   }
   const enableDiscovery = discovery ?? true;
   const enableDescribe = enableDiscovery || describeOnly === true;
@@ -561,7 +577,72 @@ export function buildCodemodeProvider(
             return resolved;
           },
 
-          catalog: async () => catalogView,
+          catalog: async (arg?: unknown) => {
+            if (arg !== undefined && arg !== null && (typeof arg !== "object" || Array.isArray(arg))) {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message:
+                    "codemode.catalog expects an options object: catalog({ kind?, service?, compact? })"
+                }
+              };
+            }
+            const opts = (arg ?? {}) as CatalogArg;
+            const kind = opts.kind ?? undefined;
+            const service = opts.service ?? undefined;
+            const compact = opts.compact ?? false;
+            if (kind !== undefined && !CATALOG_KINDS.includes(kind as CatalogKind)) {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message: `unknown kind ${JSON.stringify(kind)} — valid kinds: ${CATALOG_KINDS.join(", ")}`
+                }
+              };
+            }
+            const services = catalogServices(catalog);
+            if (service !== undefined && !services.includes(service as string)) {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message: `unknown service ${JSON.stringify(service)} — valid services: ${services.join(", ")}`
+                }
+              };
+            }
+            if (typeof compact !== "boolean") {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message: `compact must be a boolean when provided, got ${JSON.stringify(compact)}`
+                }
+              };
+            }
+            const base = (compact ? compactCatalogView : catalogView) as {
+              version: number;
+              generatedAt: string;
+              entries: Array<{ kind: string; service: string }>;
+            };
+            const view = kind === undefined && service === undefined ? base : {
+              version: base.version,
+              generatedAt: base.generatedAt,
+              entries: base.entries.filter(
+                (entry) =>
+                  (kind === undefined || entry.kind === kind) &&
+                  (service === undefined || entry.service === service)
+              )
+            };
+            // The cached projections are shared across execute runs. Return a
+            // fresh plain-data graph so model-authored code cannot mutate one
+            // run's catalog view and poison subsequent runs.
+            return structuredClone(view);
+          },
 
           search: async (arg?: unknown) => {
             const t0 = Date.now();
