@@ -9,28 +9,14 @@
 import { existsSync, readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { resolve } from "node:path";
+import { RULE_CANARY_CASES } from "./lib/algolia-rule-canary.mjs";
 
 const PRIMARY_INDEX = "crawler_Stellar Docs - Docusaurus";
 const DOCS_FACET = [["docusaurus_tag:docs-default-current"]];
 const MEETINGS_FACET = [["docusaurus_tag:-docs-default-current"]];
 
 const CASES = [
-  {
-    id: "sd-006-cli-curl-command",
-    category: "CLI/install",
-    finding: "sd-006",
-    query: "curl -fsSL github stellar-cli",
-    expectUrlIncludes: ["/docs/tools/cli/install-cli"],
-    note: "Command-shaped install query should reach the canonical CLI install page."
-  },
-  {
-    id: "sd-006-cli-install-intent",
-    category: "CLI/install",
-    finding: "sd-006",
-    query: "stellar cli install command",
-    expectUrlIncludes: ["/docs/tools/cli/install-cli"],
-    note: "Natural install intent should not lose to unrelated install-command snippets."
-  },
+  ...RULE_CANARY_CASES.map(({ assertionPrefix: _assertionPrefix, ...testCase }) => testCase),
   {
     id: "sd-001-protocol-24",
     category: "Protocol 24",

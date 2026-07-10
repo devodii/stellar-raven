@@ -6,7 +6,9 @@ name: Refresh (live drift check)
 # fails so drift is impossible to miss. Diffing op-id sets is the signal —
 # info.version is NOT (Scout has shipped new ops without bumping it).
 #
-# Also checks the ecosystem-skills/ mirror for upstream drift (pinned commit
+# Also checks the load-bearing Stellar Docs Algolia rule through a read-only,
+# analytics:false rules-on/off behavioral delta, and checks the
+# ecosystem-skills/ mirror for upstream drift (pinned commit
 # SHAs / API version ref / stellarlight catalog) via check-skills-drift.mjs —
 # detection only; the mirror is never auto-synced from CI.
 
@@ -41,6 +43,20 @@ jobs:
             echo "ALGOLIA_API_KEY=${{ secrets.ALGOLIA_API_KEY }}"
           } > .env
       - run: node scripts/refresh-inventory.mjs
+      # Search-only behavioral guard. The script's exit codes distinguish real
+      # rule-effect drift (1) from a check/request error (2); both are captured
+      # so drift detection can report the right class without exposing keys.
+      - name: check load-bearing Algolia rule
+        id: algolia_rule
+        run: |
+          set -o pipefail
+          ec=0
+          npm run algolia:rule-canary -- --require-env --env-file .env 2>&1 | tee algolia-rule-canary.txt || ec=$?
+          case "$ec" in
+            0) echo "state=clean" >> "$GITHUB_OUTPUT" ;;
+            1) echo "state=drift" >> "$GITHUB_OUTPUT" ;;
+            *) echo "state=error" >> "$GITHUB_OUTPUT" ;;
+          esac
       - run: node scripts/build-catalog.mjs
       - run: npm run micro-map:build
       - run: npm run spec:build
@@ -82,8 +98,15 @@ jobs:
             true|false) ;;
             *) skills_error=true ;;
           esac
+          algolia_rule_state='${{ steps.algolia_rule.outputs.state }}'
+          algolia_rule_error=false
+          case "$algolia_rule_state" in
+            clean|drift) ;;
+            *) algolia_rule_error=true ;;
+          esac
           echo "skills_error=$skills_error" >> "$GITHUB_OUTPUT"
-          if [ "$inventory_drift" = "false" ] && [ "$skills_drift" != "true" ]; then
+          echo "algolia_rule_error=$algolia_rule_error" >> "$GITHUB_OUTPUT"
+          if [ "$inventory_drift" = "false" ] && [ "$skills_drift" != "true" ] && [ "$algolia_rule_state" != "drift" ]; then
             echo "drift=false" >> "$GITHUB_OUTPUT"
           else
             echo "drift=true" >> "$GITHUB_OUTPUT"
@@ -106,6 +129,17 @@ jobs:
                 echo '```'
                 echo
                 echo 'Remediation: run `ecosystem-skills/update.sh` locally, review the skill diffs (skills are prompt input — read them), re-pin, commit. Never auto-sync from CI.'
+              fi
+              if [ "$algolia_rule_state" = "drift" ]; then
+                echo
+                echo '#### Stellar Docs Algolia rule-effect drift'
+                echo
+                echo 'The read-only rules-on/off canary lost a named ranking invariant:'
+                echo '```'
+                cat algolia-rule-canary.txt
+                echo '```'
+                echo
+                echo 'Remediation: inspect the live rule and crawler/search behavior read-only; do not auto-write Algolia state.'
               fi
             } > drift-report.md
           fi
@@ -133,6 +167,11 @@ jobs:
         if: steps.drift.outputs.skills_error == 'true'
         run: |
           echo "::error::skills drift check errored — see skills-drift.txt output"
+          exit 1
+      - name: fail on Algolia rule check error
+        if: steps.drift.outputs.algolia_rule_error == 'true'
+        run: |
+          echo "::error::Algolia rule canary errored — see algolia-rule-canary.txt output"
           exit 1
       - name: fail on drift
         if: steps.drift.outputs.drift == 'true'
