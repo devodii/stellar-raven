@@ -135,6 +135,25 @@ Guardrails that do **not** relax because we now have write access:
   measured-win bar above.
 - Secrets host-side only; never printed or committed.
 
+### Load-bearing rule canary (2026-07-10)
+
+The daily/maintenance guard is `npm run algolia:rule-canary`. It uses the dedicated
+**search-only key** to run the shared CLI-install cases both with rules enabled and with
+`enableRules:false`; every query sends `analytics:false` and `clickAnalytics:false`. The named
+assertions require the canonical install page to rank first with rules and require that rules
+materially improve its rank over the rules-disabled control. Assertion drift exits 1; request or
+configuration errors exit 2. With no credentials, the default local invocation is explicitly
+inconclusive and exits 0 without making a request; daily CI passes `--require-env` so missing
+credentials fail closed.
+
+This behavioral delta was chosen over a rule-metadata snapshot. Metadata inspection would put the
+maintenance write key (the only current app key with `editSettings`) into daily CI and would prove
+only that a named rule exists, not that it still changes retrieval. The search-only delta uses the
+same low-privilege credential already required by inventory refresh and proves the load-bearing
+effect directly. The canary engine is generic over case data; adding a future approved rule guard
+adds cases and named invariants rather than query-specific control flow. This does not relax the
+policy above: it is a read-only alarm, never an automated Algolia repair.
+
 Headers on every request:
 
 ```
@@ -455,7 +474,8 @@ curl -sS -o /dev/null -w 'fallback_status=%{http_code} time=%{time_total}s\n' \
 
 Drift markers to alert on: `attributesForFaceting` change (breaks/extends the facet surface),
 `distinct`/`attributeForDistinct` change (changes nbHits semantics), index rename or replica list
-change, `updatedAt` staleness > 48 h, raw-record count swinging > 20%.
+change, `updatedAt` staleness > 48 h, raw-record count swinging > 20%, or any named
+`algolia:rule-canary` assertion failure.
 
 ## MCP fallback
 

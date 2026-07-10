@@ -595,7 +595,11 @@ which rebuilds catalog, super spec, skills bundle, mirror check, both eval compi
 the plan op-classes, then fails on any diff. The daily drift job
 (`.github/workflows/refresh.yml`, 06:17 UTC) re-fetches the live surfaces, rebuilds, and on
 any diff opens/updates an issue and fails the run — op-id sets are the drift signal, not
-`info.version` (Scout has shipped ops without bumping it).
+`info.version` (Scout has shipped ops without bumping it). The refresh also runs the
+search-only `algolia:rule-canary`: two shared CLI-install cases are queried with rules on and
+off, always with analytics disabled, and named assertions require rank 1 plus a material rules
+delta. Assertion drift is reported in the drift issue and fails the job; check errors fail as a
+separate class. Local no-credential runs are safely inconclusive, while CI requires credentials.
 
 ## 9. Evals
 
