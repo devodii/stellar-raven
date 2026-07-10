@@ -7,6 +7,7 @@
  * settings so the known improvements-derived cases have a repeatable baseline.
  */
 import { existsSync, readFileSync } from "node:fs";
+import assert from "node:assert/strict";
 import { resolve } from "node:path";
 
 const PRIMARY_INDEX = "crawler_Stellar Docs - Docusaurus";
@@ -35,8 +36,9 @@ const CASES = [
     category: "Protocol 24",
     finding: "sd-001",
     query: "Protocol 24",
-    expectUrlIncludes: ["/meetings/"],
-    note: "Protocol-version query should not collapse into SEP-24 anchor pages."
+    expectUrlIncludes: ["/meetings/2025/10/16"],
+    expectTextIncludesAll: ["state", "archival", "Whisk"],
+    note: "Protocol-version query should reach the actual Whisk/state-archival meeting record, not merely any meetings URL."
   },
   {
     id: "sd-003-gettransactions-limits",
@@ -51,8 +53,8 @@ const CASES = [
     category: "AP2/ACP",
     finding: "sd-005",
     query: "AP2 ACP Agentic Commerce Protocol Google agentic payments",
-    expectUrlIncludes: ["/meetings/"],
-    note: "AP2/ACP grounding is expected, at best, from meeting notes rather than current docs pages."
+    expectTextIncludesAny: ["AP2", "Agentic Commerce Protocol", "ACP"],
+    note: "A hit counts only when its returned text actually names AP2/ACP; generic x402/MPP meetings content is not landscape grounding."
   },
   {
     id: "opv-account-merge-reserve",
@@ -116,10 +118,11 @@ const STRATEGIES = [
 ];
 
 function parseArgs(argv) {
-  const out = { hitsPerPage: 10, json: false, envFile: undefined };
+  const out = { hitsPerPage: 10, json: false, envFile: undefined, selfTest: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--json") out.json = true;
+    else if (arg === "--self-test") out.selfTest = true;
     else if (arg === "--env-file") out.envFile = argv[++i];
     else if (arg === "--hits") out.hitsPerPage = Number(argv[++i]);
     else throw new Error(`unknown argument: ${arg}`);
@@ -206,10 +209,46 @@ function applyClientFilter(hits, clientFilter) {
   });
 }
 
-function rankExpected(hits, expected) {
-  const expectedList = Array.isArray(expected) ? expected : [expected];
-  const index = hits.findIndex((hit) => expectedList.some((item) => hit.url?.includes(item)));
+function containsBoundedTerm(text, term) {
+  const words = term.trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return false;
+  const phrase = words
+    .map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("\\s+");
+  return new RegExp(`(?:^|[^\\p{L}\\p{N}_])(?:${phrase})(?=$|[^\\p{L}\\p{N}_])`, "iu").test(text);
+}
+
+function rankExpected(hits, testCase) {
+  const expectedUrls = testCase.expectUrlIncludes ?? [];
+  const requiredText = testCase.expectTextIncludesAll ?? [];
+  const alternativeText = testCase.expectTextIncludesAny ?? [];
+  const index = hits.findIndex((hit) => {
+    if (expectedUrls.length && !expectedUrls.some((item) => hit.url?.includes(item))) return false;
+    const searchable = [hit.url, hit.breadcrumb, hit.snippet]
+      .filter(Boolean)
+      .join(" ")
+      .replace(/\*\*/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .normalize("NFKC");
+    if (requiredText.some((item) => !containsBoundedTerm(searchable, item))) return false;
+    if (alternativeText.length && !alternativeText.some((item) => containsBoundedTerm(searchable, item))) return false;
+    return expectedUrls.length > 0 || requiredText.length > 0 || alternativeText.length > 0;
+  });
   return index < 0 ? null : index + 1;
+}
+
+function expectedLabel(testCase) {
+  const groups = [];
+  if (testCase.expectUrlIncludes?.length) {
+    groups.push(`url-any(${testCase.expectUrlIncludes.join(" | ")})`);
+  }
+  if (testCase.expectTextIncludesAll?.length) {
+    groups.push(`text-all(${testCase.expectTextIncludesAll.join(" + ")})`);
+  }
+  if (testCase.expectTextIncludesAny?.length) {
+    groups.push(`text-any(${testCase.expectTextIncludesAny.join(" | ")})`);
+  }
+  return groups.join(" AND ");
 }
 
 async function runCase(auth, testCase, strategy, hitsPerPage) {
@@ -231,7 +270,7 @@ async function runCase(auth, testCase, strategy, hitsPerPage) {
     index: strategy.index,
     nbHits: body.nbHits,
     returned: hits.length,
-    expectedRank: rankExpected(hits, testCase.expectUrlIncludes),
+    expectedRank: rankExpected(hits, testCase),
     topUrl: hits[0]?.url ?? null,
     hits
   };
@@ -278,7 +317,7 @@ function printHuman(results) {
   for (const item of results) {
     console.log(`\n## ${item.id} (${item.category}; ${item.finding})`);
     console.log(`query: ${item.query}`);
-    console.log(`target: ${item.expectUrlIncludes.join(" OR ")}`);
+    console.log(`target: ${expectedLabel(item)}`);
     for (const result of item.results) {
       const rank = result.expectedRank === null ? "miss" : `#${result.expectedRank}`;
       console.log(`- ${result.strategy}: ${rank}; top=${result.topUrl ?? "none"}; nbHits=${result.nbHits}`);
@@ -296,8 +335,36 @@ function printHuman(results) {
   }
 }
 
+function runMatcherSelfTest() {
+  const byId = (id) => CASES.find((testCase) => testCase.id === id);
+  const hit = (snippet, url = "https://developers.stellar.org/unrelated") => ({
+    url,
+    breadcrumb: "",
+    snippet,
+  });
+  const sd001 = byId("sd-001-protocol-24");
+  const sd005 = byId("sd-005-ap2-acp-agentic-commerce");
+
+  assert.equal(rankExpected([hit("Whisk state archival", "https://developers.stellar.org/meetings/2025/10/15")], sd001), null);
+  assert.equal(rankExpected([hit("state archival", "https://developers.stellar.org/meetings/2025/10/16")], sd001), null);
+  assert.equal(rankExpected([hit("Whisk state archival", "https://developers.stellar.org/meetings/2025/10/16")], sd001), 1);
+
+  assert.equal(rankExpected([hit("generic x402 and MPP meeting notes")], sd005), null);
+  assert.equal(rankExpected([hit("SNAP2 upgrade notes")], sd005), null);
+  assert.equal(rankExpected([hit("SACP migration notes")], sd005), null);
+  assert.equal(rankExpected([hit("AP2 coordinates agent payment mandates")], sd005), 1);
+  assert.equal(rankExpected([hit("Agentic Commerce Protocol")], sd005), 1);
+  assert.equal(rankExpected([hit("ACP")], sd005), 1);
+
+  console.log("Algolia semantic matcher self-test ok (9 controls)");
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args.selfTest) {
+    runMatcherSelfTest();
+    return;
+  }
   const auth = requireAlgoliaEnv(args);
   const results = [];
   for (const testCase of CASES) {
