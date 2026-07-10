@@ -35,6 +35,11 @@ describe("plain operation eval harness", () => {
     );
   });
 
+  it("rejects double-underscore operation names instead of relying on parsing convention", () => {
+    expect(() => plainToolName("scout.bad__name")).toThrow(/double underscores/);
+    expect(operationIdFromPlainTool("scout_bad__name")).toBeNull();
+  });
+
   it("preserves __proto__ as an own argument key", () => {
     const args = JSON.parse('{"__proto__":{"polluted":true},"query":"safe"}');
     const code = executeCodeForOperation({ id: "scout.searchProjects" }, args);

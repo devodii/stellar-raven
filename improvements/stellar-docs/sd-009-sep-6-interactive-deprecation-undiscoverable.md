@@ -8,7 +8,9 @@ evidence:
   - stellar/stellar-protocol ecosystem/sep-0006.md live source rechecked 2026-07-09: status is "Active (Interactive components are deprecated in favor of SEP-24)"
   - developers.stellar.org Anchors fundamentals page rechecked 2026-07-09: contrasts SEP-6 programmatic with SEP-24 hosted flows but never surfaces the deprecation status
   - upstream issue filed 2026-07-09: https://github.com/stellar/stellar-docs/issues/2575
-  - 2026-07-10 architecture A/B recurrence (todo 903): q-sep-6-24-deprecation remained wrong/partial across the two QA arms, and a fresh live stellarDocs search for `SEP-6 interactive deprecated SEP-24` returned no `deprecated` text
+recurrences:
+  - date: 2026-07-10
+    evidence: architecture A/B todo 903 — q-sep-6-24-deprecation remained wrong/partial across the two QA arms, and a fresh live stellarDocs search for `SEP-6 interactive deprecated SEP-24` returned no `deprecated` text
 ---
 
 ## Finding

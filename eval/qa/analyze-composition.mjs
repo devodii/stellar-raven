@@ -40,7 +40,12 @@ import { extractExecuteOps, expandSkillRuns, loadRunnerOps } from "../plan/grade
  */
 export const ADOPTION_RE = /\bcodemode\.skill(?:\.run|_run)\s*\(/;
 
-/** src/policy/truncate.ts footer marker (also used by truncateLogsForModel). */
+/**
+ * Loss-boundary markers. Starting with the todo-903 round on 2026-07-10,
+ * SOURCE BASIS counts as truncation alongside the older TRUNCATED footer.
+ * Historical composition stamps produced before this boundary are therefore
+ * not like-for-like on truncation counts.
+ */
 const TRUNCATION_MARKER = "--- TRUNCATED ---";
 const SOURCE_BASIS_MARKER = "--- SOURCE BASIS ---";
 /** src/mcp/tools.ts appends logs after this marker; strip before JSON parsing. */

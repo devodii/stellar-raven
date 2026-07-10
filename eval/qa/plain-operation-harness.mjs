@@ -44,11 +44,16 @@ export function plainToolName(operationId) {
   if (!/^(lumenloop|scout|stellarDocs)\.[A-Za-z0-9_]+$/.test(operationId)) {
     throw new Error(`cannot map non-operation id to a plain tool name: ${operationId}`);
   }
+  const operationName = operationId.slice(operationId.indexOf(".") + 1);
+  if (operationName.includes("__")) {
+    throw new Error(`plain operation names cannot contain double underscores: ${operationId}`);
+  }
   return operationId.replace(".", "_");
 }
 
 export function operationIdFromPlainTool(name) {
-  const match = /^(lumenloop|scout|stellarDocs)_(.+)$/.exec(String(name));
+  const match = /^(lumenloop|scout|stellarDocs)_([A-Za-z0-9_]+)$/.exec(String(name));
+  if (match?.[2].includes("__")) return null;
   return match ? `${match[1]}.${match[2]}` : null;
 }
 

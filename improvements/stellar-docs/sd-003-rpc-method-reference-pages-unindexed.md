@@ -12,7 +12,9 @@ evidence:
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2566
   - live re-check 2026-07-09 (Solo scratchpad 565): `getTransactions limit 200 default 50 pagination` now ranks `/docs/data/apis/rpc/admin-guide/configuring` at #1 with the getTransactions transaction cap snippet, but `getTransactions API reference limit` still drifts to Horizon/API Explorer/structure pages and the generated method page remains unindexed; partial mitigation only
   - pending upstream PR https://github.com/stellar/stellar-docs/pull/2572 tracked 2026-07-09 at head eb676939424ea6b783729de6e94fbf93665b12e6: open, review required, merge blocked, core checks and preview green; production/live Algolia proof unavailable, so issue #2566 remains open
-  - 2026-07-10 architecture A/B recurrence (todo 903): both QA arms answered q-ti-rpc-gettransactions-pagination-xdr only partially; a fresh live execute re-check still returned soft-empty for the generated getTransactions method page, while the targeted admin query surfaced 200/default-50 and API-reference phrasing did not
+recurrences:
+  - date: 2026-07-10
+    evidence: architecture A/B todo 903 — both QA arms answered q-ti-rpc-gettransactions-pagination-xdr only partially; a fresh live execute re-check still returned soft-empty for the generated getTransactions method page, while the targeted admin query surfaced 200/default-50 and API-reference phrasing did not
 ---
 
 ## Finding
