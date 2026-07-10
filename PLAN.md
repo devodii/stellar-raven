@@ -133,13 +133,16 @@ data consolidated in `scripts/exposure.mjs`; later skill mirror drift moved the 
 204 without changing operation exposure).
 Entries additionally carry an `outputSchema` wherever the source declares one.
 
-Build pipeline: `scripts/build-catalog.mjs` reads `inventory/lumenloop.json`,
-`inventory/stellar-light.json`, the authored `specs/stellar-docs.json`,
-`inventory/stellar-docs-titles.json` (page-title vocabulary), and
-`ecosystem-skills/MANIFEST.json`, then emits only `catalog/manifest.json`. The Worker bundles that
-manifest and scores its entries at request time; the builder emits no other search artifact.
-Catalog assembly is deterministic and offline-testable; only inventory refresh and skill-mirror
-sync touch the network.
+Build pipeline: `scripts/build-catalog.mjs` has five snapshot/metadata roots:
+`inventory/lumenloop.json`, `inventory/stellar-light.json`, the authored
+`specs/stellar-docs.json`, `inventory/stellar-docs-titles.json` (page-title vocabulary), and
+`ecosystem-skills/MANIFEST.json`. The skills manifest enumerates additional semantic inputs that
+the builder reads directly from the mirror: each exposed `SKILL.md` and every additional listed
+Markdown file supply skill descriptions, sections, and routing keywords. The imported runner
+registry in `src/skills/runners/index.ts` supplies runnable flags and input/output schemas. The
+builder emits only `catalog/manifest.json`; the Worker bundles that manifest and scores its
+entries at request time, with no other search artifact. Catalog assembly is deterministic and
+offline-testable; only inventory refresh and skill-mirror sync touch the network.
 
 ## 3. Skills directory — selective + partial exposure
 

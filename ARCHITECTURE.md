@@ -449,8 +449,9 @@ emitted — no skill entry, no sections, no bundle bytes (ADR-0003; the retireme
 `RETIRED_ONBOARDING_SKILLS` in `scripts/exposure.mjs` plus the ADR). Lumenloop-API-served
 skill metadata (14 skills as zips) is likewise never emitted: public skills duplicate
 canonical `skills.*` mirror entries, and partner skills are deliberately non-mirrored.
-Currently 18 exposed skills + 204 sections; there is no `lumenloop.skill.*` namespace and no read alias —
-unknown ids fail exact-match with a nearest-id suggestion.
+Current exposed skill and section counts are authoritative in `catalog/manifest.json`; there is
+no `lumenloop.skill.*` namespace and no read alias — unknown ids fail exact-match with a
+nearest-id suggestion.
 
 **The read path** (`readSkill`, `src/skills/store.ts`) resolves through the **catalog**,
 not the filesystem: `name` must be an exact catalog id (a `#slug` suffix reads that one
@@ -560,23 +561,27 @@ Generated artifacts are rebuilt by scripts, never hand-edited
 ([`AGENTS.md` “Commands and verification”](./AGENTS.md#commands-and-verification)). The chain:
 
 ```
-scripts/refresh-inventory.mjs   (live; the ONLY network step)
+scripts/refresh-inventory.mjs   (live inventory network step)
    → inventory/lumenloop.json  inventory/stellar-light.json  inventory/stellar-docs.json
      inventory/stellar-docs-titles.json
 specs/stellar-docs.json         (authored spec-as-data, not fetched)
-ecosystem-skills/MANIFEST.json  (written by skill-mirror sync)
+ecosystem-skills/MANIFEST.json  (written by separate networked skill-mirror sync)
 scripts/build-catalog.mjs       → catalog/manifest.json        (offline, deterministic)
 scripts/build-micro-map.mjs     → src/mcp/micro-map.ts          (offline, deterministic)
 scripts/build-super-spec.mjs    → specs/super-spec.json        (npm run spec:build)
 scripts/bundle-skills.mjs       → src/skills/bundle.json       (npm run skills:bundle)
 ```
 
-`scripts/build-catalog.mjs` consumes `inventory/lumenloop.json`,
+`scripts/build-catalog.mjs` has five snapshot/metadata roots: `inventory/lumenloop.json`,
 `inventory/stellar-light.json`, `specs/stellar-docs.json`,
-`inventory/stellar-docs-titles.json`, and `ecosystem-skills/MANIFEST.json`. The refreshed
-`inventory/stellar-docs.json` is the live Algolia settings/drift snapshot; it is not a catalog
-builder input. The title snapshot contributes per-operation routing vocabulary and its `fetchedAt`
-participates in the catalog's deterministic `generatedAt`.
+`inventory/stellar-docs-titles.json`, and `ecosystem-skills/MANIFEST.json`. The manifest-enumerated
+mirror Markdown files are semantic inputs too: the builder reads each exposed `SKILL.md` and
+listed additional Markdown file to derive skill descriptions, sections, and routing keywords
+(§6). The imported registry in `src/skills/runners/index.ts` supplies emitted runnable flags and
+input/output schemas. The refreshed `inventory/stellar-docs.json` is the live Algolia
+settings/drift snapshot; it is not a catalog builder input. The title snapshot contributes
+per-operation routing vocabulary and its `fetchedAt` participates in the catalog's deterministic
+`generatedAt`.
 
 Determinism is a hard property: sorted keys, sorted entries, `generatedAt` derived from the
 newest *input* snapshot (never wall clock) — consecutive runs are byte-identical, and

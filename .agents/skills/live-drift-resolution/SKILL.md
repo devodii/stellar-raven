@@ -258,8 +258,8 @@ service, not against the runner's own contract:
 
 - **Re-run the affected runners' live smoke**: against a live-serving instance (for example, the
   existing Solo `dev` process and bound URL required by
-  [`AGENTS.md` “Coordination”](../../../AGENTS.md#coordination)), `execute` a
-  `codemode.skill.run(...)` call
+  [`AGENTS.md` “Commands and verification”](../../../AGENTS.md#commands-and-verification) and
+  [`Coordination`](../../../AGENTS.md#coordination)), `execute` a `codemode.skill.run(...)` call
   for each affected runnable id with a representative input, and confirm the envelope: `ok`
   as expected, `data.calls[].ok` all true, no section unexpectedly `null` or `softEmpty`.
 - **Re-verify projections against the observed shapes**: compare the fields each runner
