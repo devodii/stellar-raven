@@ -11,7 +11,7 @@ evidence:
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2565
 recurrences:
   - date: 2026-07-09
-    evidence: targeted QA row `eval/qa/results/2026-07-09T19-53-07-variantA.json` case `q-defi-agentic-payment-standards-compare` was partial with no wrong claims and one missing fact — it still could not ground AP2/ACP as general coordination standards from the catalog. The controlled Algolia harness now counts only returned text that actually names AP2, Agentic Commerce Protocol, or ACP; generic x402/MPP meetings hits no longer create a false positive and the semantic target remains a miss.
+    evidence: durable reviewed row `eval/qa/reviewed/2026-07-09-improvements-evidence.md` case `q-defi-agentic-payment-standards-compare` was partial with no wrong claims and one missing fact — it still could not ground AP2/ACP as general coordination standards from the catalog. The controlled Algolia harness now uses token-boundary matching for AP2, Agentic Commerce Protocol, and ACP; generic x402/MPP meetings and the negative mutation `SNAP2 upgrade notes` both miss.
 ---
 
 ## Finding
@@ -53,13 +53,17 @@ QA case q-defi-agentic-payment-standards-compare in the 2026-07-06 stamp;
 review triage in workflow wf_01b3347d-1b8.
 
 Recurrence 2026-07-09: targeted QA smoke
-`eval/qa/results/2026-07-09T19-53-07-variantA.json` again left
+`eval/qa/reviewed/2026-07-09-improvements-evidence.md` preserves the reviewed
+row from the 2026-07-09T19-53-07 round: it again left
 `q-defi-agentic-payment-standards-compare` ungrounded for AP2/ACP. The verdict
 was `partial`, with no wrong claims and one missing fact: AP2/ACP as general
 coordination standards rather than Stellar-native settlement mechanisms. The
-controlled Algolia harness now requires an actual AP2/ACP name in returned
+controlled Algolia harness now requires token-bounded AP2/ACP names in returned
 text. Its former any-`/meetings/` target could incorrectly count a generic
-x402/MPP meeting; the semantic target still misses.
+x402/MPP meeting, while substring matching could count `SNAP2`; both controls
+now miss. The matcher scans only URL, breadcrumb, and the query-conditioned
+snippet, so a harness miss is not proof of absence without checking raw hits or
+the full record.
 
 ## Recommendation
 

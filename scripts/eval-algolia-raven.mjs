@@ -7,6 +7,7 @@
  * settings so the known improvements-derived cases have a repeatable baseline.
  */
 import { existsSync, readFileSync } from "node:fs";
+import assert from "node:assert/strict";
 import { resolve } from "node:path";
 
 const PRIMARY_INDEX = "crawler_Stellar Docs - Docusaurus";
@@ -52,7 +53,7 @@ const CASES = [
     category: "AP2/ACP",
     finding: "sd-005",
     query: "AP2 ACP Agentic Commerce Protocol Google agentic payments",
-    expectTextIncludesAny: ["AP2", "Agentic Commerce Protocol", " ACP "],
+    expectTextIncludesAny: ["AP2", "Agentic Commerce Protocol", "ACP"],
     note: "A hit counts only when its returned text actually names AP2/ACP; generic x402/MPP meetings content is not landscape grounding."
   },
   {
@@ -117,10 +118,11 @@ const STRATEGIES = [
 ];
 
 function parseArgs(argv) {
-  const out = { hitsPerPage: 10, json: false, envFile: undefined };
+  const out = { hitsPerPage: 10, json: false, envFile: undefined, selfTest: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--json") out.json = true;
+    else if (arg === "--self-test") out.selfTest = true;
     else if (arg === "--env-file") out.envFile = argv[++i];
     else if (arg === "--hits") out.hitsPerPage = Number(argv[++i]);
     else throw new Error(`unknown argument: ${arg}`);
@@ -207,6 +209,15 @@ function applyClientFilter(hits, clientFilter) {
   });
 }
 
+function containsBoundedTerm(text, term) {
+  const words = term.trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return false;
+  const phrase = words
+    .map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("\\s+");
+  return new RegExp(`(?:^|[^\\p{L}\\p{N}_])(?:${phrase})(?=$|[^\\p{L}\\p{N}_])`, "iu").test(text);
+}
+
 function rankExpected(hits, testCase) {
   const expectedUrls = testCase.expectUrlIncludes ?? [];
   const requiredText = testCase.expectTextIncludesAll ?? [];
@@ -216,10 +227,11 @@ function rankExpected(hits, testCase) {
     const searchable = [hit.url, hit.breadcrumb, hit.snippet]
       .filter(Boolean)
       .join(" ")
-      .replace(/\*\*/g, " ");
-    const lower = searchable.toLowerCase();
-    if (requiredText.some((item) => !lower.includes(item.toLowerCase()))) return false;
-    if (alternativeText.length && !alternativeText.some((item) => lower.includes(item.toLowerCase()))) return false;
+      .replace(/\*\*/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .normalize("NFKC");
+    if (requiredText.some((item) => !containsBoundedTerm(searchable, item))) return false;
+    if (alternativeText.length && !alternativeText.some((item) => containsBoundedTerm(searchable, item))) return false;
     return expectedUrls.length > 0 || requiredText.length > 0 || alternativeText.length > 0;
   });
   return index < 0 ? null : index + 1;
@@ -323,8 +335,36 @@ function printHuman(results) {
   }
 }
 
+function runMatcherSelfTest() {
+  const byId = (id) => CASES.find((testCase) => testCase.id === id);
+  const hit = (snippet, url = "https://developers.stellar.org/unrelated") => ({
+    url,
+    breadcrumb: "",
+    snippet,
+  });
+  const sd001 = byId("sd-001-protocol-24");
+  const sd005 = byId("sd-005-ap2-acp-agentic-commerce");
+
+  assert.equal(rankExpected([hit("Whisk state archival", "https://developers.stellar.org/meetings/2025/10/15")], sd001), null);
+  assert.equal(rankExpected([hit("state archival", "https://developers.stellar.org/meetings/2025/10/16")], sd001), null);
+  assert.equal(rankExpected([hit("Whisk state archival", "https://developers.stellar.org/meetings/2025/10/16")], sd001), 1);
+
+  assert.equal(rankExpected([hit("generic x402 and MPP meeting notes")], sd005), null);
+  assert.equal(rankExpected([hit("SNAP2 upgrade notes")], sd005), null);
+  assert.equal(rankExpected([hit("SACP migration notes")], sd005), null);
+  assert.equal(rankExpected([hit("AP2 coordinates agent payment mandates")], sd005), 1);
+  assert.equal(rankExpected([hit("Agentic Commerce Protocol")], sd005), 1);
+  assert.equal(rankExpected([hit("ACP")], sd005), 1);
+
+  console.log("Algolia semantic matcher self-test ok (9 controls)");
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args.selfTest) {
+    runMatcherSelfTest();
+    return;
+  }
   const auth = requireAlgoliaEnv(args);
   const results = [];
   for (const testCase of CASES) {

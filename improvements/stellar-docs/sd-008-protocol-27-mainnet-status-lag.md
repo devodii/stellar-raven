@@ -8,7 +8,7 @@ evidence:
   - developers.stellar.org Software Versions fetched 2026-07-09 still heads Protocol 27 as "Testnet, June 18, 2026" and Protocol 26 as "Mainnet, May 6, 2026"
   - stellar/rs-soroban-sdk latest release API rechecked 2026-07-09: v27.0.0, prerelease false, published 2026-07-08T19:48:45Z; the P27 table still lists Smart Contract Rust SDK and Stellar CLI as TBD
   - Solo project 49, todo 831 and truth-maintenance scratchpad 567 independent corroboration matrices
-  - eval/qa/results/2026-07-09T19-25-25-variantA.json (8-case post-vote P27 smoke: 0 correct / 3 partial / 5 wrong; every verdict manually reviewed)
+  - eval/qa/reviewed/2026-07-09-improvements-evidence.md (durable redacted review of the 8-case post-vote P27 smoke: 0 correct / 3 partial / 5 wrong; every verdict manually reviewed)
   - upstream issue filed 2026-07-09: https://github.com/stellar/stellar-docs/issues/2574
 probe:
   type: http-text
@@ -48,14 +48,15 @@ correctly said P27 was live would have been punished by several stale `avoid` cl
 goldens were corrected through the `golden-truth` workflow; the upstream page remains the source of
 future agent confusion.
 
-A focused eight-case QA smoke after the local correction measured the consumer impact. Five answers
-were wrong and three partial. Docs-backed answers repeatedly called Protocol 26 current, treated the
-July 8 vote as unconfirmed, omitted the P27 history tail, or denied that CAP-0071 delegation was a
-protocol feature; the two partial release answers found v27 facts but missed either activation or
-the live release tag. The one SDK/CLI answer that recovered both stable v27.0.0 versions still lacked
-the durable release-feed freshness caveat. Manual review found no judge artifacts in the eight
-verdicts: this is upstream truth/discoverability drift plus downstream synthesis, not a score-only
-regression.
+The durable reviewed record at
+`eval/qa/reviewed/2026-07-09-improvements-evidence.md` captures a focused eight-case QA smoke after
+the local correction. Five answers were wrong and three partial. Docs-backed answers repeatedly
+called Protocol 26 current, treated the July 8 vote as unconfirmed, omitted the P27 history tail, or
+denied that CAP-0071 delegation was a protocol feature; the two partial release answers found v27
+facts but missed either activation or the live release tag. The one SDK/CLI answer that recovered
+both stable v27.0.0 versions still lacked the durable release-feed freshness caveat. Manual review
+found no judge artifacts in the eight verdicts: this is upstream truth/discoverability drift plus
+downstream synthesis, not a score-only regression.
 
 ## Recommendation
 
