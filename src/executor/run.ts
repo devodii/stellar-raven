@@ -48,12 +48,30 @@ import { shapeLogs } from "./shape-logs.ts";
 import { put as putArtifact, type ArtifactMime } from "../artifacts/store.ts";
 import { logArtifactWrite } from "../observability.ts";
 
+export type ExecuteOperationSummary = {
+  total: number;
+  ok: number;
+  error: number;
+  softEmpty: number;
+};
+
+export type ExecuteEvidenceSummary = {
+  kind: "service-data" | "service-inconclusive" | "skill-content" | "artifact-data" | "none";
+  skillRead: boolean;
+  skillRuns: number;
+  artifactReads: number;
+};
+
 export type ExecuteOutcome =
   | {
       ok: true;
       result: string;
       truncated: boolean;
       logs: string[];
+      /** Compact host-observed service-call outcomes; never includes payload data. */
+      operationSummary?: ExecuteOperationSummary;
+      /** Host-owned evidence classification; never inspects model-authored payload text. */
+      evidenceSummary?: ExecuteEvidenceSummary;
       resultOriginalChars?: number;
       resultReturnedChars?: number;
       resultMaxTokens?: number;
@@ -63,7 +81,17 @@ export type ExecuteOutcome =
       artifactReadCount?: number;
       artifactReadBytes?: number;
     }
-  | { ok: false; error: string; logs: string[]; artifactReadCount?: number; artifactReadBytes?: number };
+  | {
+      ok: false;
+      error: string;
+      logs: string[];
+      /** Calls completed before the sandbox failed, summarized without payload data. */
+      operationSummary?: ExecuteOperationSummary;
+      /** Host-owned evidence classification; never inspects model-authored payload text. */
+      evidenceSummary?: ExecuteEvidenceSummary;
+      artifactReadCount?: number;
+      artifactReadBytes?: number;
+    };
 
 export type ExecuteCallContext = {
   /** Auth-bound artifact owner: OAuth subject or fixed loopback-dev owner. Undefined disables artifacts. */
@@ -75,9 +103,8 @@ export type ExecuteCallContext = {
 export type ExecuteRunner = (code: string, context?: ExecuteCallContext) => Promise<ExecuteOutcome>;
 export type ExecuteRunnerOptions = {
   /**
-   * Production execute keeps codemode.search/catalog/spec/describe enabled.
-   * The public demo disables in-script search/catalog/spec so visible search
-   * calls stay the discovery step for that turn.
+   * Enable codemode.search/catalog/spec/describe. Production MCP and the
+   * playground enable the full discovery surface; focused tests may disable it.
    */
   codemodeDiscovery?: boolean;
   /** Allow codemode.describe(id) even when broader codemode discovery is off. */
@@ -88,6 +115,16 @@ export type ExecuteRunnerOptions = {
    */
   modelBoundaryMaxTokens?: number;
 };
+
+function summarizeOperationLedger(calls: readonly OpLedgerCall[]): ExecuteOperationSummary {
+  const summary: ExecuteOperationSummary = { total: calls.length, ok: 0, error: 0, softEmpty: 0 };
+  for (const call of calls) {
+    if (call.outcome === "ok") summary.ok += 1;
+    else if (call.outcome === "error") summary.error += 1;
+    else summary.softEmpty += 1;
+  }
+  return summary;
+}
 
 export type SpecSearchOutcome =
   | { ok: true; result: string }
@@ -213,12 +250,30 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       return result;
     });
     const logs = shapeLogs(outcome.logs, secrets);
+    const operationSummary = summarizeOperationLedger(opLedger);
+    const evidenceSummary: ExecuteEvidenceSummary = {
+      kind:
+        operationSummary.ok > 0
+          ? "service-data"
+          : operationSummary.total > 0
+            ? "service-inconclusive"
+            : artifactReadStats.count > 0
+              ? "artifact-data"
+              : skillRead
+                ? "skill-content"
+                : "none",
+      skillRead,
+      skillRuns,
+      artifactReads: artifactReadStats.count
+    };
     if (outcome.error !== undefined) {
       const hinted = withGlobalsHint(outcome.error, providers);
       return {
         ok: false,
         error: redactSecrets(hinted, secrets),
         logs,
+        operationSummary,
+        evidenceSummary,
         artifactReadCount: artifactReadStats.count,
         artifactReadBytes: artifactReadStats.bytes
       };
@@ -305,6 +360,8 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       result: text,
       truncated: result.truncated,
       logs,
+      operationSummary,
+      evidenceSummary,
       resultOriginalChars: result.originalChars,
       resultReturnedChars: text.length,
       resultMaxTokens: result.maxTokens,

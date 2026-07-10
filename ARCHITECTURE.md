@@ -55,9 +55,12 @@ list to the newest 20 messages and drops oldest messages until it is within the 
 budget when possible, always keeping the final new message. In the bundled client, tool trace frames
 (`search`/`execute` inputs, outputs, logs, and cards) are display-only and are not replayed on later
 turns except to the extent the assistant's final text summarized them.
-In-script discovery is deliberately narrower than production (`codemode.describe` only for
-exact visible hit ids; no `codemode.search/catalog/spec`) so the public playground remains a
-small guided demo, not a full agent harness.
+The playground receives the same production `SERVER_INSTRUCTIONS` source-family micro-map and
+in-script discovery helpers (`codemode.search/describe/catalog/spec`) as `/mcp`; its public-demo
+boundary is enforced by the outer step, tool-call, output, code-size, timeout, auth, and rate caps.
+A narrow AI SDK `prepareStep` policy reserves the final step for tool-free synthesis and asks for
+recovery only after structural navigation/failure/truncation signals or a host-observed execute
+ledger containing errors/soft-empty outcomes with no successful service operation.
 
 The retired page URLs `/demo` and `/demo/` return a permanent redirect to `/playground`.
 No legacy login or chat subroutes exist under that prefix.
@@ -518,19 +521,21 @@ before model/tool execution, so later model or tool failure still counts.
 | Replayed history | Newest 20 messages, then oldest messages dropped until total content is at most 24,000 chars when possible. | `src/demo/budget.ts` |
 | User-role message | 4,000 chars max per user-role message; overlong user content is truncated rather than rejected by the validation path. | `src/demo/budget.ts`, `src/demo/chat.ts` |
 | Whole turn | 120s abort signal covering model stream plus tool calls. | `src/demo/chat.ts` |
-| Model steps | 5 total steps. | `src/demo/budget.ts`, `src/demo/chat.ts` |
+| Model steps | 7 total; the seventh/final step has no active tools and is reserved for synthesis. | `src/demo/budget.ts`, `src/demo/chat.ts`, `src/demo/steps.ts` |
 | Model output | 4,096 output tokens. | `src/demo/budget.ts`, `src/demo/chat.ts` |
-| Search calls | 2 per turn. | `src/demo/budget.ts`, `src/demo/tools.ts` |
+| Search calls | 3 per turn. Search hits are navigation metadata, not answer evidence. | `src/demo/budget.ts`, `src/demo/tools.ts`, `src/demo/prompt.ts` |
 | Demo search page | Default 5 hits, caller `limit` clamped to 6. | `src/demo/budget.ts`, `src/demo/tools.ts` |
 | Demo search hit text | Description clipped to 220 chars; signature clipped to 400 chars while preserving the callable line. | `src/demo/tools.ts` |
-| Execute calls | 2 per turn. | `src/demo/budget.ts`, `src/demo/tools.ts` |
+| Execute calls | 3 per turn. The host aggregates operation outcomes (`ok` / `error` / `soft-empty`) without payload data so the loop can recover from evidence-poor runs. | `src/demo/budget.ts`, `src/demo/tools.ts`, `src/executor/run.ts` |
 | Execute code length | 8,000 chars. | `src/demo/budget.ts`, `src/demo/tools.ts` |
 | Execute preflight | Known-bad `Promise.all({ ... })` fanout is refused before sandbox execution. | `src/demo/tools.ts` |
-| In-script discovery | `codemode.describe("<visible id>")` is available; `codemode.search`, `codemode.catalog`, and `codemode.spec` are disabled in demo. | `src/demo/tools.ts`, `src/demo/prompt.ts` |
+| In-script discovery | Same as `/mcp`: `codemode.search`, `codemode.describe`, `codemode.catalog`, and `codemode.spec`, plus skill helpers. | `src/demo/tools.ts`, `src/demo/prompt.ts` |
 | Artifacts | Demo execute uses the shared runner without an artifact owner, so truncated demo results do not get readable R2 artifacts. | `src/demo/tools.ts`, `src/server.ts` |
 
-Observability to query: `demo-chat`, `demo-search`, `demo-execute`, `demo-search-refused`,
-`demo-execute-refused`, and `demo-chat-rejected`.
+Observability to query: `demo-chat`, `demo-step`, `demo-search`, `demo-execute`,
+`demo-search-refused`, `demo-execute-refused`, and `demo-chat-rejected`. `demo-step`,
+`demo-execute`, and the final `demo-chat` event carry compact operation-outcome totals; bounded,
+redacted execute previews remain available for answer-quality forensics.
 
 ### MCP-only `/mcp`
 

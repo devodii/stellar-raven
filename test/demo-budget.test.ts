@@ -39,13 +39,13 @@ function msg(role: string, content: string) {
 describe("DEMO_CAPS", () => {
   it("matches the accepted design's cap values exactly", () => {
     expect(DEMO_CAPS).toEqual({
-      maxSteps: 5,
+      maxSteps: 7,
       maxOutputTokens: 4096,
       maxHistoryMessages: 20,
       maxHistoryChars: 24000,
       maxSearchLimit: 6,
-      maxSearchCallsPerTurn: 2,
-      maxExecuteCallsPerTurn: 2,
+      maxSearchCallsPerTurn: 3,
+      maxExecuteCallsPerTurn: 3,
       maxExecuteCodeChars: 8000,
       maxUserMessageChars: 4000,
       chatsPerHour: 30
@@ -62,7 +62,16 @@ describe("createDemoToolBudget", () => {
       executeRefusals: 0,
       unknownServiceSearches: 0,
       executeFailures: 0,
-      executeResultTruncated: 0
+      executeResultTruncated: 0,
+      operationTotal: 0,
+      operationOk: 0,
+      operationError: 0,
+      operationSoftEmpty: 0,
+      latestOperationTotal: 0,
+      latestOperationOk: 0,
+      latestOperationError: 0,
+      latestOperationSoftEmpty: 0,
+      latestExecuteEvidence: null
     });
   });
 });

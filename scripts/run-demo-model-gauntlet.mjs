@@ -97,7 +97,7 @@ for (let modelIndex = 0; modelIndex < models.length; modelIndex += 1) {
           const label = `${model} :: reasoning=${reasoningEffortLabel(reasoningEffort)} :: ${prompt.id} :: ${repeat}/${repeats}`;
           console.log(`[gauntlet] ${label}`);
           const result = await runPrompt({
-            url: `http://localhost:${port}/demo/chat`,
+            url: `http://localhost:${port}/playground/chat`,
             cookie,
             model,
             reasoningEffort,

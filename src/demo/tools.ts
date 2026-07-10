@@ -3,11 +3,12 @@
  * the SAME in-process internals the MCP handlers use (design Decision 2:
  * searchCatalogPage/getCatalog and createExecuteRunner directly, no HTTP
  * round-trip to /mcp), with the exported production descriptions/input
- * schemas so the demo drives the exact production contract.
+ * schemas. The search description gets one demo evidence appendix; callable
+ * schemas remain the production contract.
  *
  * Behavior mirrors src/mcp/tools.ts registerTools handler-for-handler —
  * unknown-service validation, nextSteps copy, truncateForModel /
- * truncateLogsForModel shaping, logEvent fields — with three demo deltas
+ * truncateLogsForModel shaping, logEvent fields — with bounded demo deltas
  * (design Decision 5, all in-request enforced here because stepCountIs alone
  * does not cap tool calls within one model step):
  *  - search `limit` clamped to DEMO_CAPS.maxSearchLimit,
@@ -32,13 +33,19 @@ import {
   rankedSearchInputSchema,
   executeInputSchema
 } from "../mcp/tools.ts";
-import { createExecuteRunner, type ExecuteRunner } from "../executor/run.ts";
+import {
+  createExecuteRunner,
+  type ExecuteEvidenceSummary,
+  type ExecuteOperationSummary,
+  type ExecuteRunner
+} from "../executor/run.ts";
 import { logEvent, preview, CODE_LOG_MAX } from "../observability.ts";
 import {
   modelBoundaryMaxTokensFromEnv,
   truncateForModel,
   truncateLogsForModel
 } from "../policy/truncate.ts";
+import type { BuildSourceBasisManifestInput, SourceBasisCall } from "../policy/source-basis.ts";
 import { DEMO_CAPS, createDemoToolBudget, type DemoToolBudget } from "./budget.ts";
 import type { DemoFrame } from "./frames.ts";
 
@@ -50,8 +57,9 @@ function getRunner(env: Env): ExecuteRunner {
   const modelBoundaryMaxTokens = modelBoundaryMaxTokensFromEnv(env as unknown as Record<string, unknown>);
   if (!cachedRunner || cachedRunnerMaxTokens !== modelBoundaryMaxTokens) {
     cachedRunner = createExecuteRunner(env, {
-      codemodeDiscovery: false,
-      codemodeDescribe: true,
+      // Same in-execute discovery surface as the main MCP. Demo cost remains
+      // bounded by the outer execute-call and step caps.
+      codemodeDiscovery: true,
       modelBoundaryMaxTokens
     });
     cachedRunnerMaxTokens = modelBoundaryMaxTokens;
@@ -65,6 +73,63 @@ type SearchStructured = {
   truncated: boolean;
   nextSteps: string;
 };
+
+const SOURCE_BASIS_CALL_LIMIT = 8;
+
+function sourceBasisCallTotals(calls: SourceBasisCall[]): Record<SourceBasisCall["outcome"], number> {
+  const totals = { ok: 0, error: 0, "soft-empty": 0 };
+  for (const call of calls) totals[call.outcome] += 1;
+  return totals;
+}
+
+function sourceBasisSignals(sourceBasis: BuildSourceBasisManifestInput | undefined): unknown {
+  if (!sourceBasis) return null;
+  const calls = sourceBasis.calls ?? [];
+  return {
+    shape: sourceBasis.shape.kind,
+    calls: {
+      first: calls.slice(0, SOURCE_BASIS_CALL_LIMIT),
+      total: calls.length,
+      omitted: Math.max(0, calls.length - SOURCE_BASIS_CALL_LIMIT),
+      totals: sourceBasisCallTotals(calls)
+    },
+    canonicalUrlCount: sourceBasis.canonicalUrls?.length ?? 0,
+    artifactState: sourceBasis.artifact?.state ?? "absent",
+    skillSectionAdvice: sourceBasis.skillSectionAdvice === true
+  };
+}
+
+function evidenceOutcome(
+  outcome: { ok: boolean; operationSummary?: ExecuteOperationSummary }
+): "execute-error" | "not-observed" | "no-operations" | "data" | "soft-empty" | "error" | "mixed" {
+  if (!outcome.ok) return "execute-error";
+  const summary = outcome.operationSummary;
+  if (!summary) return "not-observed";
+  if (summary.total === 0) return "no-operations";
+  const problemCount = summary.error + summary.softEmpty;
+  if (summary.ok > 0 && problemCount > 0) return "mixed";
+  if (summary.ok > 0) return "data";
+  if (summary.error > 0 && summary.softEmpty > 0) return "mixed";
+  return summary.error > 0 ? "error" : "soft-empty";
+}
+
+function hostEvidenceSummary(
+  operations: ExecuteOperationSummary | undefined,
+  evidence: ExecuteEvidenceSummary | undefined,
+  truncated: boolean
+): string {
+  const op = operations ?? { total: 0, ok: 0, error: 0, softEmpty: 0 };
+  const kind =
+    evidence?.kind ??
+    (op.ok > 0 ? "service-data" : op.total > 0 ? "service-inconclusive" : "none");
+  return [
+    "--- host evidence summary ---",
+    `evidence: ${kind}`,
+    `service operations: total=${op.total} ok=${op.ok} error=${op.error} soft-empty=${op.softEmpty}`,
+    `skill content read: ${evidence?.skillRead === true ? "yes" : "no"}; artifact reads: ${evidence?.artifactReads ?? 0}`,
+    `model boundary: ${truncated ? "truncated; inspect the source-basis manifest above" : "complete"}`
+  ].join("\n");
+}
 
 // Demo deltas over the production page shape: a smaller default page and
 // clipped per-hit prose. Full pages (~16-19KB of hits) blow up the follow-up
@@ -168,7 +233,7 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
   const budget = opts.budget ?? createDemoToolBudget();
 
   const search = tool({
-    description: SEARCH_DESCRIPTION,
+    description: `${SEARCH_DESCRIPTION}\n\nPlayground evidence rule: search hits are navigation metadata and callable signatures, not sufficient factual evidence for the answer. Use execute to obtain factual service or skill results.`,
     inputSchema: z.object(rankedSearchInputSchema),
     execute: async (args) => {
       const id = crypto.randomUUID();
@@ -202,7 +267,7 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
           hits: [],
           total: 0,
           truncated: false,
-          nextSteps: "Search call limit reached for this demo turn. Use the earlier search result set(s), move to execute if an execute call remains, then summarize from tool evidence."
+          nextSteps: "Search call limit reached for this demo turn. Earlier hits are navigation only; use an exact discovered id in execute if an execute call remains, then summarize only from factual tool evidence."
         };
         logEvent("demo-search-refused", {
           reason: "call-limit",
@@ -238,14 +303,14 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
       const remainingSearches = Math.max(0, DEMO_CAPS.maxSearchCallsPerTurn - budget.searchCalls);
       const searchAgain =
         remainingSearches > 0
-          ? " If these hits are truncated, mismatched, need corroboration, or do not expose the right endpoint shape, spend the second and final `search` now with the other candidate family, varied vocabulary, or exact `kind`/`service` filters before executing."
+          ? ` If these hits are truncated, mismatched, need corroboration, or do not expose the right endpoint shape, use another targeted search (${remainingSearches} remain) with the other candidate family, varied vocabulary, or exact \`kind\`/\`service\` filters.`
           : " No search calls remain; do not conclude capability absence from mismatched hits alone, and use the best available exact ids.";
       const nextSteps =
         hits.length > 0
-          ? `These hits are composable: write ONE \`execute\` script that calls the several relevant operations from the visible search result sets (Promise.all across services for independent calls), then follow up with deeper calls parameterized by their results only when the exact operation was returned here — e.g. \`await lumenloop.search_directory({ query: "..." })\` then \`lumenloop.get_project({ slug })\` only if both ids are present. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under \`.data\` (\`r.data.projects\`, never \`r.projects\`); check \`r.ok\` first. Skill hits are operational playbooks — read the sections you need in-script via \`codemode.skill.read(id, { sections })\` (keys: the hit's \`availableSections\`). Hits whose \`signature\` shows a \`codemode.skill.run("<exact id>", input)\` line are runnable skills — call that line verbatim to run the whole pipeline in one step (payload under \`.data\`, constituent calls audited in \`data.calls\`). Scores compare only within the same \`tier\` (gated hits always rank above backfill hits). Demo rule: \`codemode.describe("<exact id>")\` is available for exact visible hit ids when a signature is stubbed or row fields are unclear; \`codemode.search\`, \`codemode.catalog\`, and \`codemode.spec\` are disabled in-script. Avoid lossy projection false negatives: inspect row keys or filter against raw row JSON before selecting fields, and include nested/common field variants.${truncated ? " More entries matched than shown (truncated)." : ""}${searchAgain}`
+          ? `Navigation only: these hits identify composable operations and skills, but they are not factual evidence for the user's answer. Write ONE \`execute\` script that calls several relevant operations (Promise.all across services for independent calls), then follow up with deeper calls parameterized by returned rows. Every call resolves to { ok: true, data } or { ok: false, error: { kind, message, hint? } } — payload fields live under \`.data\` (\`r.data.projects\`, never \`r.projects\`); check \`r.ok\` first. Errors are failed evidence and \`soft-empty\` is inconclusive: recover with remaining budget or qualify/abstain. Skill hits are operational playbooks — read needed sections via \`codemode.skill.read(id, { sections })\`; runnable hits show the exact \`codemode.skill.run("<exact id>", input)\` call. Scores compare only within the same \`tier\`. The same production discovery helpers are enabled in-script: \`codemode.search\`, \`codemode.describe\`, \`codemode.catalog\`, and \`codemode.spec\`. Avoid lossy projection false negatives: inspect row keys or filter raw rows before selecting fields.${truncated ? " More entries matched than shown (truncated)." : ""}${searchAgain}`
           : remainingSearches > 0
-            ? "No hits. Use the second and final search for the other candidate family or varied vocabulary; do not conclude the capability is missing from one empty result."
-            : "No hits and no search calls remain. Say the search found no matching exposed catalog entries, suggest another candidate family or varied vocabulary for a new turn, and do not conclude the capability is missing from one empty result.";
+            ? `No navigation hits. Use another candidate family or varied vocabulary (${remainingSearches} searches remain), or use codemode.search inside execute; do not conclude the capability or fact is absent from one empty catalog search.`
+            : "No navigation hits and no top-level search calls remain. You may use codemode.search inside execute; do not conclude the capability or fact is absent from an empty catalog search, and qualify if factual evidence cannot be recovered.";
       return respond({ hits, total, truncated, nextSteps });
     }
   });
@@ -298,6 +363,20 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
       }
       if (!outcome.ok) budget.executeFailures += 1;
       if (outcome.ok && outcome.truncated) budget.executeResultTruncated += 1;
+      if (outcome.operationSummary) {
+        budget.operationTotal += outcome.operationSummary.total;
+        budget.operationOk += outcome.operationSummary.ok;
+        budget.operationError += outcome.operationSummary.error;
+        budget.operationSoftEmpty += outcome.operationSummary.softEmpty;
+      }
+      const latest = outcome.operationSummary ?? { total: 0, ok: 0, error: 0, softEmpty: 0 };
+      budget.latestOperationTotal = latest.total;
+      budget.latestOperationOk = latest.ok;
+      budget.latestOperationError = latest.error;
+      budget.latestOperationSoftEmpty = latest.softEmpty;
+      budget.latestExecuteEvidence =
+        outcome.evidenceSummary?.kind ??
+        (latest.ok > 0 ? "service-data" : latest.total > 0 ? "service-inconclusive" : "none");
       // Same model-boundary budgets as the MCP handler: logs and error text
       // are model-authored channels and get the result's ~6k-token cap each
       // (rationale in src/policy/truncate.ts and src/mcp/tools.ts).
@@ -322,7 +401,13 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
         logLines: outcome.logs.length,
         logsTruncated: shapedLogs.truncated,
         errorTruncated: shapedError ? shapedError.truncated : null,
-        error: outcome.ok ? null : preview(outcome.error)
+        error: outcome.ok ? null : preview(outcome.error),
+        artifactReadCount: outcome.artifactReadCount ?? 0,
+        artifactReadBytes: outcome.artifactReadBytes ?? 0,
+        operationSummary: outcome.operationSummary ?? null,
+        evidenceSummary: outcome.evidenceSummary ?? null,
+        evidenceOutcome: evidenceOutcome(outcome),
+        sourceBasis: outcome.ok ? sourceBasisSignals(outcome.sourceBasis) : null
       });
 
       const logsBlock =
@@ -333,10 +418,15 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
         outcome.ok && outcome.truncated
           ? "\n\n--- demo advisory ---\nThis execute result was truncated before the final-answer step. Answer only from the visible returned fields, say the result was truncated if that affects completeness, and suggest a narrower follow-up for full detail."
           : "";
+      const evidenceBlock = hostEvidenceSummary(
+        outcome.operationSummary,
+        outcome.evidenceSummary,
+        outcome.ok && outcome.truncated
+      );
 
       const text = outcome.ok
-        ? `${outcome.result}${truncationAdvisory}${logsBlock}`
-        : `Execution failed: ${shapedError ? shapedError.text : outcome.error}${logsBlock}`;
+        ? `${outcome.result}\n\n${evidenceBlock}${truncationAdvisory}${logsBlock}`
+        : `Execution failed: ${shapedError ? shapedError.text : outcome.error}\n\n${evidenceBlock}${logsBlock}`;
       emit({ type: "tool-result", id, tool: "execute", ok: outcome.ok, output: text });
       return text;
     }

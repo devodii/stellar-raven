@@ -14,8 +14,8 @@
  */
 
 export const DEMO_CAPS = {
-  /** stepCountIs(5) — search, optional search, execute, optional execute, final summary. */
-  maxSteps: 5,
+  /** stepCountIs(7) — bounded recovery room, with the final step reserved for synthesis. */
+  maxSteps: 7,
   /**
    * streamText maxOutputTokens per request. Sized for a reasoning-capable
    * model: GPT-5.4 is the primary demo model, and Kimi K2.7 Code remains a
@@ -31,9 +31,9 @@ export const DEMO_CAPS = {
   /** search tool: input.limit is clamped to this ceiling. */
   maxSearchLimit: 6,
   /** search tool: closure-counted calls allowed per chat turn. */
-  maxSearchCallsPerTurn: 2,
+  maxSearchCallsPerTurn: 3,
   /** execute tool: closure-counted calls allowed per chat turn. */
-  maxExecuteCallsPerTurn: 2,
+  maxExecuteCallsPerTurn: 3,
   /** execute tool: input.code length ceiling. */
   maxExecuteCodeChars: 8000,
   /**
@@ -55,6 +55,21 @@ export type DemoToolBudget = {
   unknownServiceSearches: number;
   executeFailures: number;
   executeResultTruncated: number;
+  operationTotal: number;
+  operationOk: number;
+  operationError: number;
+  operationSoftEmpty: number;
+  latestOperationTotal: number;
+  latestOperationOk: number;
+  latestOperationError: number;
+  latestOperationSoftEmpty: number;
+  latestExecuteEvidence:
+    | "service-data"
+    | "service-inconclusive"
+    | "skill-content"
+    | "artifact-data"
+    | "none"
+    | null;
 };
 
 export function createDemoToolBudget(): DemoToolBudget {
@@ -65,7 +80,16 @@ export function createDemoToolBudget(): DemoToolBudget {
     executeRefusals: 0,
     unknownServiceSearches: 0,
     executeFailures: 0,
-    executeResultTruncated: 0
+    executeResultTruncated: 0,
+    operationTotal: 0,
+    operationOk: 0,
+    operationError: 0,
+    operationSoftEmpty: 0,
+    latestOperationTotal: 0,
+    latestOperationOk: 0,
+    latestOperationError: 0,
+    latestOperationSoftEmpty: 0,
+    latestExecuteEvidence: null
   };
 }
 

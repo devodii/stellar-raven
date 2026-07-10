@@ -389,6 +389,7 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
         error: outcome.ok ? null : preview(outcome.error),
         artifactReadCount: outcome.artifactReadCount ?? 0,
         artifactReadBytes: outcome.artifactReadBytes ?? 0,
+        operationSummary: outcome.operationSummary ?? null,
         sourceBasis: outcome.ok ? sourceBasisForTelemetry(outcome.sourceBasis) : null
       });
 

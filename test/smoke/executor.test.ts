@@ -66,7 +66,16 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
   it("runs model code in a fresh isolate and returns its result", async () => {
     const outcome = await run("async (codemode) => 1 + 1");
     expect(outcome.ok).toBe(true);
-    if (outcome.ok) expect(outcome.result).toBe("2");
+    if (outcome.ok) {
+      expect(outcome.result).toBe("2");
+      expect(outcome.operationSummary).toEqual({ total: 0, ok: 0, error: 0, softEmpty: 0 });
+      expect(outcome.evidenceSummary).toEqual({
+        kind: "none",
+        skillRead: false,
+        skillRuns: 0,
+        artifactReads: 0
+      });
+    }
   });
 
   it("writes an artifact only for a truncated result and stores redacted bytes before slicing", async () => {
@@ -85,6 +94,8 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
     expect(outcome.result).toContain("lumenloop.search_directory=error/");
     expect(outcome.result).toContain("https://example.test/path");
     expect(outcome.sourceBasis?.artifact?.state).toBe("available");
+    expect(outcome.operationSummary).toEqual({ total: 1, ok: 0, error: 1, softEmpty: 0 });
+    expect(outcome.evidenceSummary?.kind).toBe("service-inconclusive");
 
     const id = artifactIdFrom(outcome.result);
     const keys = await artifactKeysFor(owner);
@@ -353,6 +364,7 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
       expect(parsed.ok).toBe(true);
       expect(parsed.hasContent).toBe(true);
       expect(parsed.dataReadError).toContain("top level");
+      expect(outcome.evidenceSummary?.kind).toBe("skill-content");
     }
   });
 
@@ -397,6 +409,7 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
       expect(parsed.topHit).toBe("lumenloop.search_directory");
       expect(parsed.allCallable).toBe(true);
       expect(parsed.skillOk).toBe(true);
+      expect(outcome.evidenceSummary?.kind).toBe("skill-content");
     }
   });
 

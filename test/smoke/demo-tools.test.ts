@@ -1,5 +1,5 @@
 import { env } from "cloudflare:test";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildDemoTools } from "../../src/demo/tools";
 import { createDemoToolBudget, type DemoToolBudget } from "../../src/demo/budget";
 import type { DemoFrame } from "../../src/demo/frames";
@@ -7,6 +7,10 @@ import type { DemoFrame } from "../../src/demo/frames";
 type ToolWithExecute = {
   execute: (args: Record<string, unknown>) => Promise<unknown>;
 };
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 function makeTools(budget?: DemoToolBudget) {
   const frames: DemoFrame[] = [];
@@ -24,7 +28,7 @@ function makeTools(budget?: DemoToolBudget) {
 }
 
 describe("demo tools at the worker boundary", () => {
-  it("spends search budget on invalid service filters but allows one recovery search", async () => {
+  it("spends search budget on invalid service filters but allows bounded recovery searches", async () => {
     const { search, budgetReport } = makeTools();
 
     const invalid = (await search.execute({
@@ -36,13 +40,21 @@ describe("demo tools at the worker boundary", () => {
     expect(budgetReport()).toMatchObject({ searchCalls: 1, unknownServiceSearches: 1 });
 
     const recovery = (await search.execute({ query: "search directory" })) as { hits: unknown[]; nextSteps: string };
-    expect(recovery.nextSteps).toContain("No search calls remain");
+    expect(recovery.nextSteps).toContain("1 remain");
+    expect(recovery.nextSteps).toContain("Navigation only");
+    expect(recovery.nextSteps).toContain("not factual evidence");
+    expect(recovery.nextSteps).toContain("`codemode.search`");
+    expect(recovery.nextSteps).toContain("`soft-empty` is inconclusive");
     expect(budgetReport()).toMatchObject({ searchCalls: 2, unknownServiceSearches: 1 });
+
+    const finalAllowed = (await search.execute({ query: "search directory" })) as { hits: unknown[]; nextSteps: string };
+    expect(finalAllowed.nextSteps).toContain("No search calls remain");
+    expect(budgetReport()).toMatchObject({ searchCalls: 3, searchRefusals: 0 });
 
     const refused = (await search.execute({ query: "search directory" })) as { hits: unknown[]; nextSteps: string };
     expect(refused.hits).toEqual([]);
     expect(refused.nextSteps).toContain("Search call limit reached");
-    expect(budgetReport()).toMatchObject({ searchCalls: 2, searchRefusals: 1, unknownServiceSearches: 1 });
+    expect(budgetReport()).toMatchObject({ searchCalls: 3, searchRefusals: 1, unknownServiceSearches: 1 });
   });
 
   it("shares the turn budget across buildDemoTools calls", async () => {
@@ -55,13 +67,17 @@ describe("demo tools at the worker boundary", () => {
     expect(first.budgetReport().searchCalls).toBe(1);
 
     const allowed = (await second.search.execute({ query: "search directory" })) as { hits: unknown[]; nextSteps: string };
-    expect(allowed.nextSteps).toContain("No search calls remain");
+    expect(allowed.nextSteps).toContain("1 remain");
     expect(second.budgetReport()).toMatchObject({ searchCalls: 2 });
+
+    const finalAllowed = (await second.search.execute({ query: "search directory" })) as { hits: unknown[]; nextSteps: string };
+    expect(finalAllowed.nextSteps).toContain("No search calls remain");
+    expect(second.budgetReport()).toMatchObject({ searchCalls: 3 });
 
     const refused = (await second.search.execute({ query: "search directory" })) as { hits: unknown[]; nextSteps: string };
     expect(refused.hits).toEqual([]);
     expect(refused.nextSteps).toContain("Search call limit reached");
-    expect(second.budgetReport()).toMatchObject({ searchCalls: 2, searchRefusals: 1 });
+    expect(second.budgetReport()).toMatchObject({ searchCalls: 3, searchRefusals: 1 });
   });
 
   it("clips long signatures without amputating the final callable line", async () => {
@@ -79,17 +95,36 @@ describe("demo tools at the worker boundary", () => {
     expect(signature.split("\n").at(-1)).toContain('codemode.skill.run("skills.lumenloop.stellar-ecosystem-digest"');
   });
 
-  it("keeps in-script codemode search disabled in demo execute", async () => {
+  it("enables the main MCP's in-execute codemode discovery path", async () => {
     const { execute, budgetReport } = makeTools();
     const result = (await execute.execute({
       code: `async () => {
-        return await codemode.search("search directory");
+        const [search, described, catalog, spec] = await Promise.all([
+          codemode.search("search directory"),
+          codemode.describe("scout.searchProjects"),
+          codemode.catalog(),
+          codemode.spec()
+        ]);
+        return {
+          searchOk: search.ok,
+          described: described.id,
+          catalogEntries: catalog.entries.length,
+          specTitle: spec.info.title
+        };
       }`
     })) as string;
 
-    expect(result).toContain("Execution failed:");
-    expect(result).toContain('Tool "search" not found');
-    expect(budgetReport()).toMatchObject({ executeCalls: 1, executeFailures: 1 });
+    expect(result).toContain('"searchOk":true');
+    expect(result).toContain('"described":"scout.searchProjects"');
+    expect(result).toContain('"catalogEntries":');
+    expect(result).toContain('"specTitle":');
+    expect(result).toContain("--- host evidence summary ---");
+    expect(result).toContain("evidence: none");
+    expect(budgetReport()).toMatchObject({
+      executeCalls: 1,
+      executeFailures: 0,
+      latestExecuteEvidence: "none"
+    });
 
     const retry = (await execute.execute({
       code: `async () => {
@@ -97,15 +132,19 @@ describe("demo tools at the worker boundary", () => {
       }`
     })) as string;
     expect(retry).toContain("retry");
-    expect(budgetReport()).toMatchObject({ executeCalls: 2, executeFailures: 1 });
+    expect(budgetReport()).toMatchObject({ executeCalls: 2, executeFailures: 0 });
 
-    const refused = (await execute.execute({
+    const third = (await execute.execute({
       code: `async () => {
         return "third";
       }`
-    })) as { ok: false; error: string };
+    })) as string;
+    expect(third).toContain("third");
+    expect(budgetReport()).toMatchObject({ executeCalls: 3, executeFailures: 0 });
+
+    const refused = (await execute.execute({ code: `async () => "fourth"` })) as { ok: false; error: string };
     expect(refused.error).toContain("execute call limit reached");
-    expect(budgetReport()).toMatchObject({ executeCalls: 2, executeFailures: 1, executeRefusals: 1 });
+    expect(budgetReport()).toMatchObject({ executeCalls: 3, executeFailures: 0, executeRefusals: 1 });
   });
 
   it("refuses object-shaped Promise.all before spending an execute run", async () => {
@@ -141,17 +180,65 @@ describe("demo tools at the worker boundary", () => {
   });
 
   it("adds a demo-only advisory when execute output is truncated", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     const { execute, budgetReport } = makeTools();
     const result = (await execute.execute({
       code: `async () => {
-        return "x".repeat(25000);
+        const failed = await lumenloop.search_directory({ limit: 2 });
+        return { failed, padding: "x".repeat(25000) };
       }`
     })) as string;
 
     expect(result).toContain("--- SOURCE BASIS ---");
     expect(result).not.toContain("--- TRUNCATED ---");
     expect(result).toContain("--- demo advisory ---");
+    expect(result).toContain("--- host evidence summary ---");
+    expect(result).toContain("evidence: service-inconclusive");
+    expect(result).toContain("service operations: total=1 ok=0 error=1 soft-empty=0");
     expect(result).toContain("Answer only from the visible returned fields");
-    expect(budgetReport()).toMatchObject({ executeCalls: 1, executeResultTruncated: 1 });
+    expect(budgetReport()).toMatchObject({
+      executeCalls: 1,
+      executeResultTruncated: 1,
+      operationTotal: 1,
+      operationOk: 0,
+      operationError: 1,
+      operationSoftEmpty: 0,
+      latestOperationTotal: 1,
+      latestOperationOk: 0,
+      latestOperationError: 1,
+      latestOperationSoftEmpty: 0,
+      latestExecuteEvidence: "service-inconclusive"
+    });
+
+    const event = logSpy.mock.calls
+      .map(([line]) => {
+        try {
+          return JSON.parse(String(line)) as Record<string, unknown>;
+        } catch {
+          return null;
+        }
+      })
+      .find((entry) => entry?.evt === "demo-execute");
+    expect(event).toMatchObject({
+      evt: "demo-execute",
+      ok: true,
+      evidenceOutcome: "error",
+      operationSummary: { total: 1, ok: 0, error: 1, softEmpty: 0 },
+      evidenceSummary: {
+        kind: "service-inconclusive",
+        skillRead: false,
+        artifactReads: 0
+      },
+      sourceBasis: {
+        shape: "object",
+        calls: { total: 1, totals: { ok: 0, error: 1, "soft-empty": 0 } },
+        canonicalUrlCount: 0,
+        artifactState: "absent"
+      }
+    });
+    expect(event).toHaveProperty("code");
+    expect(event).toHaveProperty("resultPreview");
+    expect(event).toHaveProperty("error", null);
+    expect(String(event?.resultPreview).length).toBeLessThanOrEqual(320);
   });
 });

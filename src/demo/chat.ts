@@ -59,6 +59,7 @@ import {
   type DemoUsage
 } from "./output.ts";
 import { DEMO_SYSTEM_PROMPT } from "./prompt.ts";
+import { demoOperationSummary, demoStepTelemetry, prepareDemoStep } from "./steps.ts";
 import { buildDemoTools } from "./tools.ts";
 
 declare global {
@@ -282,6 +283,13 @@ async function runTurn(
           messages,
           tools: tools as ToolSet,
           stopWhen: stepCountIs(DEMO_CAPS.maxSteps),
+          prepareStep: ({ steps, stepNumber }) => prepareDemoStep({ steps, stepNumber, budget: toolBudget }),
+          onStepFinish: (step) => {
+            logEvent("demo-step", {
+              model: config.model,
+              ...demoStepTelemetry(step, toolBudget)
+            });
+          },
           maxOutputTokens: DEMO_CAPS.maxOutputTokens,
           temperature: DEMO_TEMPERATURE,
           ...demoOpenAiProviderOptions(config.model, openAiReasoningEffort),
@@ -398,6 +406,7 @@ async function runTurn(
       unknownServiceSearches: toolBudget.unknownServiceSearches,
       executeFailures: toolBudget.executeFailures,
       executeResultTruncated: toolBudget.executeResultTruncated,
+      operationSummary: demoOperationSummary(toolBudget),
       toolCounterScope: "turn",
       usageScope: "sum-per-model-attempt",
       ms: Date.now() - t0
