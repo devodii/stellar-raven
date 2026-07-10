@@ -12,6 +12,7 @@ evidence:
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2566
   - live re-check 2026-07-09 (Solo scratchpad 565): `getTransactions limit 200 default 50 pagination` now ranks `/docs/data/apis/rpc/admin-guide/configuring` at #1 with the getTransactions transaction cap snippet, but `getTransactions API reference limit` still drifts to Horizon/API Explorer/structure pages and the generated method page remains unindexed; partial mitigation only
   - pending upstream PR https://github.com/stellar/stellar-docs/pull/2572 tracked 2026-07-09 at head eb676939424ea6b783729de6e94fbf93665b12e6: open, review required, merge blocked, core checks and preview green; production/live Algolia proof unavailable, so issue #2566 remains open
+  - 2026-07-10 architecture A/B recurrence (todo 903): both QA arms answered q-ti-rpc-gettransactions-pagination-xdr only partially; a fresh live execute re-check still returned soft-empty for the generated getTransactions method page, while the targeted admin query surfaced 200/default-50 and API-reference phrasing did not
 ---
 
 ## Finding
@@ -58,6 +59,15 @@ flips it partial → wrong — the agent's denial of an RPC-side 200 cap is a
 genuine consumer-facing wrong answer produced by this indexing gap, not a
 grading nuance. Both the QA agent and the original golden author
 independently derived the same false belief from the indexed pages.
+
+Live 2026-07-10 (todo 903 closeout): both the shipped search+execute arm and the
+manifest-derived direct-operation arm answered
+`q-ti-rpc-gettransactions-pagination-xdr` only partially. A fresh execute probe reproduced the
+same split: `getTransactions limit 200 default 50 pagination` ranked the RPC admin configuring
+page first and contained both numbers; `getTransactions API reference limit` ranked Horizon and
+API Explorer pages and contained neither; direct page-section lookup for the generated
+`getTransactions` method returned the documented `soft-empty`. This is a recurrence of the
+existing mechanism, not a new finding.
 
 ## Recommendation
 

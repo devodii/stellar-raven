@@ -165,6 +165,21 @@ npx wrangler dev --port 8788 --host localhost   # --host is REQUIRED: with custo
 node eval/qa/run-qa.mjs --variant A --sample 30 --port 8788
 ```
 
+For the isolated 50-operation architecture instrument (todo 903), reuse the same already-running
+loopback server and select the manifest-derived stdio proxy:
+
+```sh
+node eval/qa/run-qa.mjs --surface per-operation --sample 30 --port 8788 \
+  --server-revision "$(git rev-parse HEAD)"
+node eval/qa/compare-architecture-ab.mjs \
+  eval/qa/results/<search-stamp>-variantA.json \
+  eval/qa/results/<direct-stamp>-perOperation.json
+```
+
+The proxy exposes only the manifest's 50 service operations and forwards each through the local
+server's shipped `execute` path; it never starts Wrangler and refuses non-loopback upstreams. The
+runner records advertised wire-surface bytes separately from actual agent usage/cache tokens.
+
 Variant→tool mapping (post-ADR-0001): **A = `search`** (host ranked-string — the shipped tool;
 the `search_ranked` A/B alias is retired), **B = code-shaped spec search — no longer live by
 default**; re-running B requires a build that exposes a code-shaped tool plus an explicit
@@ -407,6 +422,17 @@ heterogeneous omissions or one timeline imprecision, not a shared regression mec
 headline checkpoint and plan gate complete; prioritize upstream findings and risk-weighted corpus
 maintenance rather than spending on an archival/full-battery score.
 
+**Results — 2026-07-10 per-operation architecture A/B** (todo 903; full reviewed record:
+[`reviewed/2026-07-10-per-operation-architecture-ab.md`](./reviewed/2026-07-10-per-operation-architecture-ab.md)).
+The fixed QA-30 sample calibrated to **20C/9P/1W** for search+execute versus **17C/12P/1W** for
+the 50-operation arm. Canonical live-10 calibrated to **9C/1P/0W** versus **10C/0P/0W**.
+Claude used deferred MCP tools plus ToolSearch in both arms: the 79,817 versus 21,356 advertised
+wire characters are not consumed context, and actual usage/cache tokens are in the reviewed
+record. Every partial/wrong/flip was reviewed; three live suspects were identically rejudged and
+live-verified. With one replicate, cross-lane-only order reversal, direct-arm skills/artifact-read
+omissions, and mixed metrics, the result is **NULL / NO SHIP**. Routing and QA baselines remain
+unchanged.
+
 **Second judge-artifact class (2026-07-03 evening, Solo todo 826):** the rubric-v2 addendum can
 be bypassed by **avoid-clause phrasing** — a golden must-avoid banning claims "beyond corpus
 support" makes a corpus-blind judge read beyond-golden specifics as avoid-matched, wrong again.
@@ -505,6 +531,9 @@ counter-pressure fixtures plus the todo-865 untagged transcript-evidence negativ
   detect truncation footers. The judge sees only compact source-basis packs for live/freshness cases,
   not full payloads. The agent may also call its harness's own ToolSearch to load MCP tools — that
   appears in transcripts and is harmless.
+- **Cross-surface result bytes.** Search result bodies are not retained while execute and direct
+  operation bodies are. Captured tool-result character totals therefore cannot be compared across
+  search+execute and per-operation arms; use actual input/cache usage tokens instead.
 - **Long/truncated live-data evidence dilution.** v2.3 source-basis packs reduce the known failure
   mode where relevant source summaries were present in a saved execute result but buried in a long
   or truncated payload. They do not make the judge omniscient: the pack is still bounded, rank-based,

@@ -41,16 +41,27 @@
  *                      (live-digest-supplement-cases.json); run separately.
  *   --model name       answering-agent model (default claude-sonnet-5)
  *   --judge-model name judge model (default judge.mjs JUDGE_MODEL)
+ *   --surface name     search-execute (default) | per-operation. The latter
+ *                      starts the isolated stdio proxy harness for the
+ *                      manifest's 50 operations and still uses the existing
+ *                      local Wrangler server for adapter/executor traffic.
+ *   --server-revision  git revision of the checkout running the already-bound
+ *                      Wrangler process (recorded for reproducibility)
  *   --no-judge         collect answers only (judge later)
  */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { QA_DIR, loadCases, stratifiedSample, summarize, formatSummaryTable } from "./lib.mjs";
 import { buildTranscriptEvidence, judgeCase, JUDGE_MODEL, JUDGE_RUBRIC } from "./judge.mjs";
 import { PACK_VERSION } from "./evidence-pack.mjs";
+import {
+  PLAIN_SERVER_INSTRUCTIONS,
+  loadPlainOperationSurface,
+  operationIdFromPlainTool
+} from "./plain-operation-harness.mjs";
 
 // Variant→tool mapping post-ADR-0001: A (host-side ranked query) shipped as
 // `search` (the `search_ranked` A/B alias retired with the decision). B
@@ -61,13 +72,48 @@ const VARIANT_TOOL = { A: "search", B: null };
 const AGENT_MODEL = "claude-sonnet-5";
 const MAX_TURNS = 24;
 const AGENT_TIMEOUT_MS = 10 * 60_000;
+const SURFACES = new Set(["search-execute", "per-operation"]);
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
-function agentPrompt(question, searchTool) {
+function gitValue(args) {
+  const result = spawnSync("git", args, { cwd: path.resolve(QA_DIR, "..", ".."), encoding: "utf8" });
+  return result.status === 0 ? String(result.stdout).trim() : null;
+}
+
+function sourceIdentity(serverRevision) {
+  const status = gitValue(["status", "--porcelain=v1", "--untracked-files=all"]);
+  return {
+    runnerRevision: gitValue(["rev-parse", "HEAD"]),
+    runnerDirty: status === null ? null : status.length > 0,
+    runnerStatusSha256: status === null ? null : sha256(status),
+    serverRevision: serverRevision ?? null,
+    manifestFileSha256: sha256(readFileSync(path.join(path.resolve(QA_DIR, "..", ".."), "catalog", "manifest.json"), "utf8")),
+    runnerFileSha256: sha256(readFileSync(path.join(QA_DIR, "run-qa.mjs"), "utf8")),
+    plainHarnessFileSha256: sha256(readFileSync(path.join(QA_DIR, "plain-operation-harness.mjs"), "utf8"))
+  };
+}
+
+function agentPrompt(question, { surface, searchTool }) {
   const promptAppend = process.env.QA_AGENT_PROMPT_APPEND?.trim();
+  if (surface === "per-operation") {
+    return `You answer questions about the Stellar ecosystem using ONLY this session's manifest-derived MCP operation tools.
+
+The tools are named mcp__raven__<service>_<operation> for the lumenloop, scout, and stellarDocs source families. Choose operations directly from their descriptions and input schemas. Fan out independent broad calls when useful, then make targeted detail calls using ids or slugs returned by broad calls.
+
+Rules:
+- Ground every specific claim (names, numbers, SEP/CAP ids, commands, URLs) in tool results. Never invent them.
+- Tool results use { ok: true, data } | { ok: false, error }; read payload under data, and treat soft-empty as inconclusive.
+- If the tools cannot support an answer — the question is out of scope, the thing does not exist, or the request itself is something you should not do — say that plainly and briefly instead of guessing or playing along.
+- Do not use any tool outside the raven MCP operation set.
+- Your FINAL message must be the answer itself: concise, fact-dense, with source URLs from tool results where available. No preamble, no meta-commentary about tools.
+${promptAppend ? `\nAdditional run instructions:\n${promptAppend}\n` : ""}
+
+QUESTION:
+${question}`;
+  }
   return `You answer questions about the Stellar ecosystem using ONLY this session's MCP tools:
 
 - mcp__raven__${searchTool} — discover what the catalog can do (service operations, skills)
@@ -87,7 +133,8 @@ ${question}`;
 }
 
 /** Run one answering agent; returns { answer, transcript, costUsd, turns, error? } */
-function runAgent(question, { searchTool, mcpConfigPath, model }) {
+function runAgent(question, { surface, searchTool, allowedTools, mcpConfigPath, model }) {
+  const prompt = agentPrompt(question, { surface, searchTool });
   const res = spawnSync(
     "claude",
     [
@@ -101,24 +148,25 @@ function runAgent(question, { searchTool, mcpConfigPath, model }) {
       mcpConfigPath,
       "--strict-mcp-config",
       "--allowedTools",
-      `mcp__raven__${searchTool},mcp__raven__execute`,
+      allowedTools.join(","),
       "--max-turns",
       String(MAX_TURNS)
     ],
     {
-      input: agentPrompt(question, searchTool),
+      input: prompt,
       encoding: "utf8",
       timeout: AGENT_TIMEOUT_MS,
       maxBuffer: 64 * 1024 * 1024
     }
   );
   if (res.error) {
-    return { answer: "", transcript: [], error: `agent spawn failed: ${res.error.message}` };
+    return { answer: "", transcript: [], promptChars: prompt.length, error: `agent spawn failed: ${res.error.message}` };
   }
   const transcript = [];
   let answer = "";
   let costUsd;
   let turns;
+  let usage;
   let resultError;
   for (const line of String(res.stdout).split("\n")) {
     if (!line.trim().startsWith("{")) continue;
@@ -132,12 +180,13 @@ function runAgent(question, { searchTool, mcpConfigPath, model }) {
       for (const block of msg.message.content) {
         if (block.type === "tool_use") {
           const rawInput = JSON.stringify(block.input ?? {});
+          const isPlainOperation = operationIdFromPlainTool(String(block.name).replace(/^mcp__[^_]+__/, "")) !== null;
           transcript.push({
             toolUseId: block.id,
             tool: block.name,
             // execute inputs are kept whole — eval/plan/grade-plan.mjs parses
             // the {code} for service-op extraction; other tools stay sliced.
-            input: block.name.endsWith("execute") ? rawInput : rawInput.slice(0, 600)
+            input: block.name.endsWith("execute") || isPlainOperation ? rawInput : rawInput.slice(0, 600)
           });
         }
       }
@@ -156,7 +205,8 @@ function runAgent(question, { searchTool, mcpConfigPath, model }) {
             // truncation footers and skill.run `calls` tallies. Bounded: the server
             // already caps execute results at ~6k tokens via truncateForModel
             // (src/policy/truncate.ts), so whole capture cannot balloon the file.
-            if (entry.tool.endsWith("execute")) entry.result = text;
+            const bareToolName = String(entry.tool).replace(/^mcp__[^_]+__/, "");
+            if (entry.tool.endsWith("execute") || operationIdFromPlainTool(bareToolName)) entry.result = text;
           }
         }
       }
@@ -164,16 +214,34 @@ function runAgent(question, { searchTool, mcpConfigPath, model }) {
       answer = msg.result ?? "";
       costUsd = msg.total_cost_usd;
       turns = msg.num_turns;
+      usage = msg.usage;
       if (msg.is_error) resultError = msg.subtype ?? "agent result is_error";
     }
   }
   if (!answer && !resultError) {
     resultError = `no result message (exit ${res.status}); stderr: ${String(res.stderr).slice(0, 400)}`;
   }
-  return { answer, transcript, costUsd, turns, error: resultError };
+  return { answer, transcript, costUsd, turns, usage, promptChars: prompt.length, error: resultError };
 }
 
-async function preflight(port, searchTool) {
+function surfaceMetrics(tools, instructions) {
+  const serializedTools = JSON.stringify({ tools });
+  const instructionsChars = String(instructions ?? "").length;
+  const advertisedWireChars = serializedTools.length + instructionsChars;
+  return {
+    toolCount: tools.length,
+    descriptionsChars: tools.reduce((sum, tool) => sum + String(tool.description ?? "").length, 0),
+    inputSchemaChars: tools.reduce((sum, tool) => sum + JSON.stringify(tool.inputSchema ?? {}).length, 0),
+    serializedToolsChars: serializedTools.length,
+    instructionsChars,
+    advertisedWireChars,
+    estimatedAdvertisedWireTokens: Math.ceil(advertisedWireChars / 4),
+    metricMeaning: "serialized MCP tool definitions plus server instructions; not consumed model context",
+    surfaceSha256: sha256(`${instructions ?? ""}\n${serializedTools}`)
+  };
+}
+
+async function preflight(port, { surface, searchTool, plainSurface }) {
   const url = `http://localhost:${port}/mcp`;
   const post = async (body) => {
     const r = await fetch(url, {
@@ -186,15 +254,17 @@ async function preflight(port, searchTool) {
     const data = text.startsWith("event:") ? text.split("data: ")[1] : text;
     return JSON.parse(data.trim().split("\n")[0]);
   };
-  await post({
+  const initialized = await post({
     jsonrpc: "2.0",
     id: 1,
     method: "initialize",
     params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "run-qa", version: "0" } }
   });
   const list = await post({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
-  const names = (list.result?.tools ?? []).map((t) => t.name);
-  for (const need of [searchTool, "execute"]) {
+  const upstreamTools = list.result?.tools ?? [];
+  const names = upstreamTools.map((t) => t.name);
+  const required = surface === "per-operation" ? ["execute"] : [searchTool, "execute"];
+  for (const need of required) {
     if (!names.includes(need)) {
       throw new Error(
         `live server at :${port} exposes [${names.join(", ")}] — required tool "${need}" is missing. ` +
@@ -202,7 +272,18 @@ async function preflight(port, searchTool) {
       );
     }
   }
-  return names;
+  if (surface === "per-operation") {
+    return {
+      upstreamNames: names,
+      exposedNames: plainSurface.tools.map((tool) => tool.name),
+      metrics: { ...plainSurface.metrics, instructionsSha256: sha256(PLAIN_SERVER_INSTRUCTIONS) }
+    };
+  }
+  return {
+    upstreamNames: names,
+    exposedNames: names,
+    metrics: surfaceMetrics(upstreamTools, initialized.result?.instructions)
+  };
 }
 
 async function main() {
@@ -214,7 +295,9 @@ async function main() {
   const variant = (argVal("--variant") ?? "A").toUpperCase();
   if (!(variant in VARIANT_TOOL)) throw new Error(`--variant must be A or B, got ${variant}`);
   const searchTool = argVal("--search-tool") ?? VARIANT_TOOL[variant];
-  if (!searchTool) {
+  const surface = argVal("--surface") ?? "search-execute";
+  if (!SURFACES.has(surface)) throw new Error(`--surface must be search-execute or per-operation, got ${surface}`);
+  if (surface === "search-execute" && !searchTool) {
     throw new Error(
       `variant ${variant} has no default tool since ADR-0001 (the code-shaped search is not registered top-level) — pass --search-tool <name> against a build that exposes one`
     );
@@ -223,7 +306,9 @@ async function main() {
   const model = argVal("--model") ?? AGENT_MODEL;
   const judgeModel = argVal("--judge-model") ?? JUDGE_MODEL;
   const noJudge = args.includes("--no-judge");
+  const serverRevision = argVal("--server-revision");
   const casesPath = argVal("--cases") ?? path.join(QA_DIR, "cases.json");
+  const plainSurface = loadPlainOperationSurface();
 
   const battery = loadCases(casesPath);
   let cases = battery.cases;
@@ -237,17 +322,26 @@ async function main() {
   const sampleN = argVal("--sample") ? Number(argVal("--sample")) : undefined;
   if (sampleN) cases = stratifiedSample(cases, sampleN);
 
-  const toolNames = await preflight(port, searchTool);
+  const preflightResult = await preflight(port, { surface, searchTool, plainSurface });
   console.log(
-    `run-qa: variant ${variant} (search tool "${searchTool}") · ${battery.contract ? `contract ${battery.contract} · ` : ""}${cases.length} cases · server :${port} tools [${toolNames.join(", ")}] · agent ${model} · judge ${noJudge ? "OFF" : judgeModel}`
+    `run-qa: surface ${surface} · variant ${variant}${surface === "search-execute" ? ` (search tool "${searchTool}")` : ""} · ${battery.contract ? `contract ${battery.contract} · ` : ""}${cases.length} cases · server :${port} · ${preflightResult.exposedNames.length} exposed tool(s) · agent ${model} · judge ${noJudge ? "OFF" : judgeModel}`
   );
 
   const tmpDir = mkdtempSync(path.join(os.tmpdir(), "qa-mcp-"));
   const mcpConfigPath = path.join(tmpDir, "mcp.json");
-  writeFileSync(
-    mcpConfigPath,
-    JSON.stringify({ mcpServers: { raven: { type: "http", url: `http://localhost:${port}/mcp` } } })
-  );
+  const upstreamUrl = `http://localhost:${port}/mcp`;
+  const mcpServerConfig =
+    surface === "per-operation"
+      ? {
+          command: process.execPath,
+          args: [path.join(QA_DIR, "plain-operation-harness.mjs"), "--upstream", upstreamUrl]
+        }
+      : { type: "http", url: upstreamUrl };
+  writeFileSync(mcpConfigPath, JSON.stringify({ mcpServers: { raven: mcpServerConfig } }));
+  const allowedTools =
+    surface === "per-operation"
+      ? plainSurface.tools.map((tool) => `mcp__raven__${tool.name}`)
+      : [`mcp__raven__${searchTool}`, "mcp__raven__execute"];
 
   const rows = [];
   const startedAt = new Date().toISOString();
@@ -255,7 +349,7 @@ async function main() {
     for (const [i, c] of cases.entries()) {
       const t0 = Date.now();
       process.stdout.write(`[${i + 1}/${cases.length}] ${c.id} … `);
-      const run = runAgent(c.question, { searchTool, mcpConfigPath, model });
+      const run = runAgent(c.question, { surface, searchTool, allowedTools, mcpConfigPath, model });
       const transcriptEvidence = run.answer
         ? buildTranscriptEvidence({ ...c, candidateAnswer: run.answer, transcript: run.transcript })
         : "";
@@ -283,7 +377,14 @@ async function main() {
         tags: c.tags,
         answer: run.answer,
         transcript: run.transcript,
-        agent: { model, turns: run.turns, costUsd: run.costUsd, error: run.error ?? null },
+        agent: {
+          model,
+          turns: run.turns,
+          costUsd: run.costUsd,
+          usage: run.usage ?? null,
+          promptChars: run.promptChars,
+          error: run.error ?? null
+        },
         verdict,
         evidencePack: {
           packVersion: PACK_VERSION,
@@ -301,7 +402,8 @@ async function main() {
   }
 
   const summary = noJudge ? null : summarize(rows);
-  const stamp = `${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}-variant${variant}`;
+  const stampSuffix = surface === "per-operation" ? "perOperation" : `variant${variant}`;
+  const stamp = `${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}-${stampSuffix}`;
   const resultsDir = path.join(QA_DIR, "results");
   mkdirSync(resultsDir, { recursive: true });
   const outPath = path.join(resultsDir, `${stamp}.json`);
@@ -310,8 +412,9 @@ async function main() {
     JSON.stringify(
       {
         meta: {
-          variant,
-          searchTool,
+          variant: surface === "search-execute" ? variant : null,
+          surface,
+          searchTool: surface === "search-execute" ? searchTool : null,
           port,
           model,
           judgeModel: noJudge ? null : judgeModel,
@@ -324,7 +427,18 @@ async function main() {
           startedAt,
           finishedAt: new Date().toISOString(),
           caseCount: rows.length,
-          totalAgentCostUsd: rows.reduce((s, r) => s + (r.agent.costUsd ?? 0), 0)
+          inputSnapshot: {
+            casesSha256: sha256(JSON.stringify(cases)),
+            caseIdsSha256: sha256(JSON.stringify(cases.map((c) => c.id))),
+            manifestGeneratedAt: plainSurface.metrics.manifestGeneratedAt,
+            operationIdsSha256: plainSurface.metrics.operationIdsSha256,
+            operationEntriesSha256: plainSurface.metrics.operationEntriesSha256
+          },
+          sourceIdentity: sourceIdentity(serverRevision),
+          toolSurface: preflightResult.metrics,
+          totalAgentCostUsd: rows.reduce((s, r) => s + (r.agent.costUsd ?? 0), 0),
+          totalJudgeCostUsd: rows.reduce((s, r) => s + (r.verdict?.costUsd ?? 0), 0),
+          totalCostUsd: rows.reduce((s, r) => s + (r.agent.costUsd ?? 0) + (r.verdict?.costUsd ?? 0), 0)
         },
         summary,
         rows

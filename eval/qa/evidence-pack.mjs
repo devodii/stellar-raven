@@ -182,7 +182,10 @@ function shouldIncludeTranscriptEvidence(tags = {}) {
 
 function executeEntries(transcript) {
   return (Array.isArray(transcript) ? transcript : []).filter(
-    (entry) => String(entry.tool ?? "").endsWith("execute") && typeof entry.result === "string"
+    (entry) =>
+      (String(entry.tool ?? "").endsWith("execute") ||
+        /^mcp__.+__(?:lumenloop|scout|stellarDocs)_/.test(String(entry.tool ?? ""))) &&
+      typeof entry.result === "string"
   );
 }
 

@@ -11,6 +11,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   extractExecuteOps,
+  extractPlainOperationTool,
   matchPlanRule,
   detectProgression,
   gradeRow,
@@ -228,6 +229,30 @@ describe("gradeRow — end-to-end over a realistic transcript", () => {
     const summary = summarizePlan([g]);
     expect(summary.byRequired.missed.wrong).toBe(1);
     expect(summary.offPlanCounts.lumenloop).toBe(1);
+  });
+
+  it("grades the isolated plain-operation harness without execute-code extraction", () => {
+    expect(extractPlainOperationTool("mcp__raven__scout_getRfps")).toEqual({
+      service: "scout",
+      op: "getRfps"
+    });
+    const g = gradeRow(
+      {
+        ...scfRow,
+        transcript: [
+          { tool: "mcp__raven__scout_getRfps", input: "{}" },
+          { tool: "mcp__raven__scout_getHackathon", input: '{"slug":"demo"}' },
+          { tool: "mcp__raven__lumenloop_find_similar_scf_submissions", input: '{"query":"audit"}' }
+        ]
+      },
+      rulesDoc,
+      opClasses
+    );
+    expect(g.touchedServices).toEqual(["lumenloop", "scout"]);
+    expect(g.operationToolCalls).toBe(3);
+    expect(g.executeCalls).toBe(0);
+    expect(g.searchQueries).toBe(0);
+    expect(g.progression.scout.broadBeforeDetail).toBe(true);
   });
 });
 

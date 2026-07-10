@@ -42,6 +42,7 @@ export const ADOPTION_RE = /\bcodemode\.skill(?:\.run|_run)\s*\(/;
 
 /** src/policy/truncate.ts footer marker (also used by truncateLogsForModel). */
 const TRUNCATION_MARKER = "--- TRUNCATED ---";
+const SOURCE_BASIS_MARKER = "--- SOURCE BASIS ---";
 /** src/mcp/tools.ts appends logs after this marker; strip before JSON parsing. */
 const CONSOLE_MARKER = "\n\n--- console (";
 
@@ -126,7 +127,7 @@ export function analyzeRow(row, runnerOps) {
   for (const e of executeEntries) {
     if (typeof e.result !== "string") continue;
     resultsCaptured++;
-    if (e.result.includes(TRUNCATION_MARKER)) truncatedResults++;
+    if (e.result.includes(TRUNCATION_MARKER) || e.result.includes(SOURCE_BASIS_MARKER)) truncatedResults++;
     if (e.isError || e.result.startsWith("Execution failed:")) executionFailures++;
     const t = tallyCallsArrays(e.result);
     calls.arrays += t.arrays;

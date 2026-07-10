@@ -12,14 +12,16 @@ conviction or a winning A/B on golden Q→A accuracy.
 
 ## Ranked candidates
 
-1. **Run the null hypothesis: per-op MCP tool server vs search+execute** (~2–4 days; harness
-   exists). The foundational two-tool bet was never directly measured — ADR-0001 A/B'd two
-   *code-mode* search shapes against each other. Generate a variant server exposing the ~50
-   catalog ops as plain MCP tools (manifest already carries ids/descriptions/inputSchemas;
-   adapters exist), run the 30-case QA sample + live lane both ways. Evidence: verdicts, turns,
-   cost, truncation-driven context bloat per arm. Either retires the strongest standing
-   objection to the architecture with data, or redirects the project. The single
-   highest-information experiment available.
+1. **Per-op MCP tool server vs search+execute — MEASURED NULL / NO SHIP (2026-07-10, todo 903).**
+   The manifest-derived 50-operation harness ran against the fixed QA-30 and canonical live-10
+   lanes. After every partial/wrong/flip was reviewed, QA favored search+execute
+   (20C/9P/1W vs 17C/12P/1W); live favored direct by one verdict (9C/1P vs 10C), within a single
+   drifting replicate with cross-lane-only order reversal. Direct used lower cache tokens/cost but
+   more QA turns/calls, weaker plan coverage, and more truncation markers. The large definition
+   delta was only advertised wire surface under Claude deferred tools, not always-consumed context.
+   Skills and artifact-read were unavailable in the direct arm. Retain search+execute; do not
+   rebaseline. Harness, identities, metrics, and row dispositions:
+   [`eval/qa/reviewed/2026-07-10-per-operation-architecture-ab.md`](../eval/qa/reviewed/2026-07-10-per-operation-architecture-ab.md).
 
 2. **Hybrid lexical+embedding retrieval A/B — MEASURED NO-SHIP (todo 902, 2026-07-10).**
    The 2026-07-09 round greenlit the Vectorize frontier spike and hardened the

@@ -783,3 +783,16 @@ the vector arm. Per-case review found Aquarius wins offset by Blend/Comet churn 
 docs/scout ranking cannibalization. **Measured no-ship:** no production scorer, binding, index,
 runtime inference, deploy, or re-baseline. No upstream service defect surfaced, so
 `improvements/` is unchanged.
+
+## Per-operation architecture A/B (2026-07-10, todo 903): null / no ship
+
+The manifest-derived 50-operation plain MCP harness was measured against shipped search+execute on
+the fixed QA-30 and canonical live-10 lanes. Reviewed results were QA **20C/9P/1W vs
+17C/12P/1W**, live **9C/1P vs 10C**. Metrics were mixed: direct was cheaper and used fewer cache
+tokens, but regressed QA turns, calls, plan coverage, and truncation count. Claude deferred-tool /
+ToolSearch behavior means serialized tool definitions are advertised wire surface, not necessarily
+consumed context. The direct arm also omitted skills and artifact retrieval, and the experiment had
+only one run per cell with order reversed across lanes rather than within each lane. No production
+surface, routing, golden, or baseline changed. Full identities, usage counters, row review, live
+rechecks, and limitations are in
+[`eval/qa/reviewed/2026-07-10-per-operation-architecture-ab.md`](./qa/reviewed/2026-07-10-per-operation-architecture-ab.md).

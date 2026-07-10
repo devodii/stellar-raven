@@ -219,6 +219,12 @@ export function detectProgression(orderedOps, opClasses) {
 const isSearchToolCall = (t) => /^mcp__.+__search/.test(t.tool ?? "");
 const isExecuteToolCall = (t) => (t.tool ?? "").endsWith("execute");
 
+/** Todo-903 isolated harness tool: mcp__<server>__<service>_<operation>. */
+export function extractPlainOperationTool(toolName) {
+  const match = /^mcp__.+__(lumenloop|scout|stellarDocs)_([A-Za-z0-9_]+)$/.exec(String(toolName ?? ""));
+  return match ? { service: match[1], op: match[2] } : null;
+}
+
 /**
  * Grade one result row against the rules + op classes. `runnerOps` (from
  * loadRunnerOps) expands skill.run calls with their declared constituent ops
@@ -233,9 +239,14 @@ export function gradeRow(row, rulesDoc, opClasses, runnerOps = null) {
   const extractedOps = [];
   let searchQueries = 0;
   let executeCalls = 0;
+  let operationToolCalls = 0;
   let truncatedInputs = 0;
   for (const entry of row.transcript ?? []) {
-    if (isSearchToolCall(entry)) {
+    const plainOperation = extractPlainOperationTool(entry.tool);
+    if (plainOperation) {
+      operationToolCalls++;
+      extractedOps.push(plainOperation);
+    } else if (isSearchToolCall(entry)) {
       searchQueries++;
       extractedOps.push({ service: "meta-discovery", op: "search" });
     } else if (isExecuteToolCall(entry)) {
@@ -272,6 +283,7 @@ export function gradeRow(row, rulesDoc, opClasses, runnerOps = null) {
     progressionExpected: plan.progressionExpected,
     searchQueries,
     executeCalls,
+    operationToolCalls,
     truncatedInputs,
     ops: orderedOps,
     touchedServices,
