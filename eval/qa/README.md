@@ -97,9 +97,13 @@ freshness-sensitive cases): 42 quarterly / 29 weekly / 19 protocol-release / 13 
 snapshot (`eval/corpus/PROVENANCE.md`), so live-verified golden corrections land in
 `eval/qa/golden-overrides.json` — a hand-authored, committed, load-time supplement (same
 pattern as the routing overlay). `compile-qa.mjs` applies each entry after case assembly:
-per-field replacement of `golden` subfields plus `graderNotesAppend` (preserving the original
-review trail); applied ids are recorded in `cases.json → overrides`, stale ids warn at compile
-time.
+per-field replacement of `golden` subfields; exact-match, non-overlapping
+`graderNotesReplacements` resolved against the original inherited
+sentences that later evidence invalidated; plus `graderNotesAppend` for dated context. Replacements
+fail unless the inherited span occurs exactly once. The effective judge-facing `graderNotes` is
+unambiguous while `graderNotesHistory` preserves each inherited/effective pair in the compiled case
+and the hand-authored override remains the durable audit source. Applied ids are recorded in
+`cases.json → overrides`; stale ids warn at compile time.
 
 **Gospel changes go through the golden-truth skill.** Any change to golden *content*
 (`answer`/`keyFacts`/`avoid`/`sources`/`graderNotes`) follows

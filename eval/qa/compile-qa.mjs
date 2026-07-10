@@ -35,6 +35,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { QA_DIR, CASES_PATH, SERVICE_MAP, stratifiedSample } from "./lib.mjs";
+import { applyGraderNotesOverride } from "./grader-notes.mjs";
 
 const DEFAULT_CORPUS_ROOT = path.resolve(QA_DIR, "../corpus/raven-next");
 // Repo root, so the committed `corpus` path is machine-independent (determinism
@@ -205,9 +206,9 @@ function main() {
     const o = overrides[c.id];
     if (!o) continue;
     for (const [k, v] of Object.entries(o.golden ?? {})) c.golden[k] = v;
-    if (o.graderNotesAppend) {
-      c.graderNotes = [c.graderNotes, o.graderNotesAppend.trim()].filter(Boolean).join("\n");
-    }
+    const notes = applyGraderNotesOverride(c.graderNotes, o, c.id);
+    c.graderNotes = notes.effective;
+    if (notes.history.length > 0) c.graderNotesHistory = notes.history;
     overridesApplied.push(c.id);
   }
   const staleOverrides = Object.keys(overrides).filter((id) => !overridesApplied.includes(id));

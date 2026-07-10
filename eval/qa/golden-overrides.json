@@ -1,5 +1,5 @@
 {
- "$comment": "Hand-authored golden corrections, applied by compile-qa.mjs AFTER case assembly. The vendored corpus (eval/corpus/raven-next) is a verbatim read-only snapshot (see eval/corpus/PROVENANCE.md), so eval-side golden fixes live here instead of editing the archive. OVERRIDES ARE STOP-GAPS WEARING THEIR PROVENANCE: an override corrects the eval's copy of the truth, but the defect that made it necessary lives somewhere — an upstream service gap (file it in improvements/), an eval-side authoring/rubric flaw (file a Solo todo), or plain freshness drift (say so). Every entry MUST carry `why` (what was wrong), `evidence` (live re-execution provenance — a judge's opinion alone never justifies an override), and `rootCause` (non-empty array of improvements/ paths, solo:// refs, or an explicit eval-side rationale) — compile-qa.mjs REFUSES entries missing any of the three. Entries are re-checkable: a future round that finds an entry's facts drifted updates it with fresh evidence. Mechanics: per-field replacement of the compiled case's `golden` subfields plus `graderNotesAppend` (preserving the original review trail); load-time and hand-authored — recompiles never touch it; stale ids (not in kept cases) warn at compile time.",
+ "$comment": "Hand-authored golden corrections, applied by compile-qa.mjs AFTER case assembly. The vendored corpus (eval/corpus/raven-next) is a verbatim read-only snapshot (see eval/corpus/PROVENANCE.md), so eval-side golden fixes live here instead of editing the archive. OVERRIDES ARE STOP-GAPS WEARING THEIR PROVENANCE: an override corrects the eval's copy of the truth, but the defect that made it necessary lives somewhere — an upstream service gap (file it in improvements/), an eval-side authoring/rubric flaw (file a Solo todo), or plain freshness drift (say so). Every entry MUST carry `why` (what was wrong), `evidence` (live re-execution provenance — a judge's opinion alone never justifies an override), and `rootCause` (non-empty array of improvements/ paths, solo:// refs, or an explicit eval-side rationale) — compile-qa.mjs REFUSES entries missing any of the three. Entries are re-checkable: a future round that finds an entry's facts drifted updates it with fresh evidence. Mechanics: per-field replacement of the compiled case's `golden` subfields; exact, fail-loud `graderNotesReplacements` entries record inherited/effective spans and emit a separate compiled history; `graderNotesAppend` adds dated context afterward. Load-time and hand-authored — recompiles never touch this file; stale ids (not in kept cases) warn at compile time.",
  "overrides": {
   "q-scf-regional-india": {
    "why": "Under-enumeration + support-relative avoid clause caused a judge artifact (round 2026-07-03T16-06-45's only wrong verdict, overturned on live review — all 10 'fabricated' India events exist verbatim in the live corpus). Deep-verified same day per golden-truth skill (todo 828): 8/8 footprint items real-world-confirmed; two phrasing softeners applied (250+ figure is a Nov-2025 monthly stat; events are community/ambassador-run, not SDF-run). Solo todos 826/827/828, scratchpad 521.",
@@ -1321,6 +1321,16 @@
      "https://communityfund.stellar.org/dashboard/submissions/recDy2knwdmwAPWBd"
     ]
    },
+   "graderNotesReplacements": [
+    {
+     "inherited": "Dossier §2.2/§12. Honest 'not disclosed in the corpus' case — reward admitting the cap is undisclosed over inventing one.",
+     "effective": "Historical corpus note invalidated: the current official rules disclose the award structure; use the dated correction below."
+    },
+    {
+     "inherited": "Golden cites: The SCF Stellar Liquidity Award handbook page (which documents invite-only, undisclosed-cap status).",
+     "effective": "Golden cites: the SCF Stellar Liquidity Award landing page and current Official Rules; the inherited undisclosed-cap characterization is invalid."
+    }
+   ],
    "graderNotesAppend": "HISTORICAL NOTE INVALIDATION — CORRECTION 2026-07-09 (todo 901): disregard the inherited preceding 'not disclosed' review note and anti-amount trap; they are false under the current official rules. Reward the dated structure ($50K base + optional additional $50K, up to $100K total) and distinguish dollar-denominated XLM value from a fixed number of lumens. Preserve the invite-only/no-public-form behavior. Soroswap's $50K award is compatible with the base amount but the official row does not label it Base versus Supplemental, so do not require that classification."
   },
   "q-scf-total-distributed": {

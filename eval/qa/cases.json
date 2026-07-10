@@ -8335,7 +8335,19 @@
         "confidence": "high",
         "freshness": false
       },
-      "graderNotes": "Dossier §2.2/§12. Honest 'not disclosed in the corpus' case — reward admitting the cap is undisclosed over inventing one.\nAlso good if the answer: Explains it is not a self-apply program — SDF/SCF reaches out; there is no open application form.\nGolden cites: The SCF Stellar Liquidity Award handbook page (which documents invite-only, undisclosed-cap status).\nHISTORICAL NOTE INVALIDATION — CORRECTION 2026-07-09 (todo 901): disregard the inherited preceding 'not disclosed' review note and anti-amount trap; they are false under the current official rules. Reward the dated structure ($50K base + optional additional $50K, up to $100K total) and distinguish dollar-denominated XLM value from a fixed number of lumens. Preserve the invite-only/no-public-form behavior. Soroswap's $50K award is compatible with the base amount but the official row does not label it Base versus Supplemental, so do not require that classification."
+      "graderNotes": "Historical corpus note invalidated: the current official rules disclose the award structure; use the dated correction below.\nAlso good if the answer: Explains it is not a self-apply program — SDF/SCF reaches out; there is no open application form.\nGolden cites: the SCF Stellar Liquidity Award landing page and current Official Rules; the inherited undisclosed-cap characterization is invalid.\nHISTORICAL NOTE INVALIDATION — CORRECTION 2026-07-09 (todo 901): disregard the inherited preceding 'not disclosed' review note and anti-amount trap; they are false under the current official rules. Reward the dated structure ($50K base + optional additional $50K, up to $100K total) and distinguish dollar-denominated XLM value from a fixed number of lumens. Preserve the invite-only/no-public-form behavior. Soroswap's $50K award is compatible with the base amount but the official row does not label it Base versus Supplemental, so do not require that classification.",
+      "graderNotesHistory": [
+        {
+          "action": "replace-inherited",
+          "inherited": "Dossier §2.2/§12. Honest 'not disclosed in the corpus' case — reward admitting the cap is undisclosed over inventing one.",
+          "effective": "Historical corpus note invalidated: the current official rules disclose the award structure; use the dated correction below."
+        },
+        {
+          "action": "replace-inherited",
+          "inherited": "Golden cites: The SCF Stellar Liquidity Award handbook page (which documents invite-only, undisclosed-cap status).",
+          "effective": "Golden cites: the SCF Stellar Liquidity Award landing page and current Official Rules; the inherited undisclosed-cap characterization is invalid."
+        }
+      ]
     },
     {
       "id": "q-scf-nontechnical-participation",
