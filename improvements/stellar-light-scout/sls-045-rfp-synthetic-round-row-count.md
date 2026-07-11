@@ -8,6 +8,10 @@ evidence:
   - response metadata reported open=5 while matched/returned contained six rows
   - official SCF RFP page independently listed the same five real briefs
   - Solo scratchpad 575 GT-39 primary process 3300 and blind process 3303
+  - H1 recurrence 2026-07-11: /api/rfps?status=open again reported counts.open=5 but counts.matched=6 and counts.returned=6 because scf-round-45 is included as a synthetic row; solo://proj/49/scratchpad/super-corpus-rebuild--585
+recurrences:
+  - date: 2026-07-11
+    evidence: The synthetic current-round row continues to make the same response support both five real briefs and six returned rows; separate typed round metadata remains required.
 ---
 
 ## Finding

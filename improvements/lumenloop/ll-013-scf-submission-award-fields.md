@@ -19,6 +19,8 @@ recurrences:
     evidence: GT-37 primary/blind probes broadened the recurrence to Band, SocketFi, PayZoll, Reflector, CodeLnPay, partial-payment rows, and non-awarded rows with populated budgets
   - date: 2026-07-10
     evidence: GT-40 aggregate reconciliation confirmed that bare submission budgets cannot resolve reconstructed, round-ledger, project-record, awarded, or paid lifetime totals
+  - date: 2026-07-11
+    evidence: P4 Lane X observed successful exact-slug submission lookups whose rows retained linked_project_slug:null while Decaf used linked_project_slugs:["decaf"]; an unambiguous successful lookup therefore still cannot provide a stable primary project join or amount/status semantics. solo://proj/49/scratchpad/super-corpus-rebuild--585
 ---
 
 ## Finding

@@ -9,6 +9,10 @@ evidence:
   - summaries describe $61 million or $61M XLM and blur attempted incident, affected Blend/YieldBlox component, and containment status
   - primary operator/on-chain evidence establishes a completed 2026-02-22 drain, distinct quarantine, remediation, and unproven attacker recovery
   - Solo scratchpad 575 GT-09 primary process 3226
+  - P4 N2 recurrence 2026-07-11 independently rechecked the exact 61,249,278.31 XLM and 1,000,196.70 USDC transfers, 48,069,094 XLM quarantine, and distinct 2026 V2 versus 2022 incident context; solo://proj/49/scratchpad/super-corpus-rebuild--585
+recurrences:
+  - date: 2026-07-11
+    evidence: N2's independent on-chain/primary matrix confirms the existing amount-role and status defect: borrowed XLM and USDC, quarantined XLM, and valuation-dependent USD estimates must remain separate; the Lumenloop summaries still need those typed fields and attribution.
 ---
 
 ## Finding

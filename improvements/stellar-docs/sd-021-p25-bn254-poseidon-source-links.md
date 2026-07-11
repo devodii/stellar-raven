@@ -9,6 +9,10 @@ evidence:
   - pinned soroban-sdk 25 BN254 and hazmat Poseidon compile probes passed
   - shipped env.json uses Symbol field selector while checked-in CAP-75 says U32Val
   - Solo scratchpad 575 GT-43 primary 3311 and blind 3320
+  - P4 H2 recurrence 2026-07-11: the served ZK material still describes CAP-0074/CAP-0075 as proposed or gated after Protocol 25, while the official CAP index and v25 release notes mark the changes Final/shipped; solo://proj/49/scratchpad/super-corpus-rebuild--585
+recurrences:
+  - date: 2026-07-11
+    evidence: H2 independently reproduced the stale P25 BN254/Poseidon status language and the resulting incorrect advice to wait for BN254 before using Noir or RISC Zero toolchains.
 ---
 
 ## Finding

@@ -14,6 +14,8 @@ recurrences:
     evidence: GT-55 live Scout search returned zero rows for subquery/stellar-subql-starter at 2026-07-11T07:17:33Z; direct GitHub verification confirmed the repository exists, is non-archived, and was pushed in 2026
   - date: 2026-07-11
     evidence: GT-56 live Scout exact repository searches for passkey-kit and smart-account-kit returned zero while direct GitHub verification confirmed both repositories exist; broader smart-wallet vocabulary returned adjacent current rows
+  - date: 2026-07-11
+    evidence: H1's live searchRepos(q="passkey") returned only two SocketFi repositories while directly discoverable Stellar smart-wallet/passkey repositories remained absent; this is the same coverage/alias-recall defect, not evidence of an exhaustive result. solo://proj/49/scratchpad/super-corpus-rebuild--585
 ---
 
 ## Finding
