@@ -1,31 +1,31 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "165b9640b0dd95ad07bc82f0c792b7192877e19d6ba0b1a21510d580fa2707cf",
+  "corpusContentSha256": "ba493b5a8b94c1ee91cf57afd9360082082b62f04c6cb513d6989fcf9678fd97",
   "counts": {
-    "total": 413,
+    "total": 423,
     "byCategory": {
-      "assets-anchors-seps": 45,
-      "compliance-rwa-payments": 34,
-      "defi-ecosystem": 54,
+      "assets-anchors-seps": 47,
+      "compliance-rwa-payments": 36,
+      "defi-ecosystem": 55,
       "edge-behavior": 38,
       "history-org-tokenomics": 14,
-      "protocol-core": 44,
+      "protocol-core": 45,
       "retail-consumer": 10,
-      "scf-grants-builders": 42,
-      "soroban": 67,
+      "scf-grants-builders": 44,
+      "soroban": 69,
       "tooling-infra": 65
     },
     "byService": {
-      "lumenloop": 43,
-      "none": 19,
-      "scout": 121,
-      "skills": 24,
+      "lumenloop": 45,
+      "none": 20,
+      "scout": 127,
+      "skills": 25,
       "stellarDocs": 206
     },
     "byFreshness": {
       "live": 133,
-      "scheduled": 96,
+      "scheduled": 106,
       "stable": 184
     },
     "traps": {
@@ -1341,6 +1341,201 @@
           ]
         },
         "origin": "raven-next q-anchor-sdp-what"
+      }
+    },
+    {
+      "id": "q-ass-cross-bando-stablebonds-sac",
+      "question": "Which SCF-funded project proposed tokenized CETES for Mexican SMEs and, according to Scout, uses Etherfuse Stablebonds? If those are classic Stellar assets, how can a Soroban contract access them?",
+      "surface": [
+        "lumenloop.get_scf_submissions",
+        "scout.searchProjects",
+        "skills.stellar-dev.assets"
+      ],
+      "golden": {
+        "answer": "The project is Bando. Lumenloop's SCF record shows its SCF #42 Build submission titled 'Tokenized CETES for SMEs in Mexico,' and Scout lists Bando as a live, SCF-funded B2B treasury platform that routes Mexican-company cash into tokenized CETES through Etherfuse Stablebonds. If a given Stablebond is issued as a classic Stellar asset, Soroban reaches it through that asset's deterministic Stellar Asset Contract (SAC) address. The SAC exposes the SEP-41 token interface, so a contract can use a token client for operations such as `balance`, `transfer`, `approve`, and `allowance` after applying the required authorization. The conditional matters: this explains the classic-asset bridge and does not assert every Etherfuse product's issuance model.",
+        "keyFacts": [
+          "Identifies Bando and the SCF #42 Build submission 'Tokenized CETES for SMEs in Mexico.'",
+          "Uses Scout to state that Bando is a live SCF-funded treasury platform using Etherfuse Stablebonds for Mexican CETES exposure.",
+          "Explains that a classic Stellar asset is accessed from Soroban through its deterministic SAC address and SEP-41 token interface."
+        ],
+        "avoid": [
+          "Do NOT identify Etherfuse itself as the SCF #42 Bando submission.",
+          "Do NOT claim every Stablebond is necessarily a classic asset; the SAC answer is conditional on that issuance form."
+        ],
+        "notes": "The project/grant identity and the technical bridge are separate mandatory halves."
+      },
+      "tags": {
+        "category": "assets-anchors-seps",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-11-12",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — lumenloop.get_scf_submissions + scout.searchProjects, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/submissions/rec6A8ExCfeeCSeIy"
+          },
+          {
+            "class": "B",
+            "ref": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md#stellar-asset-contract-sac"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tokens/stellar-asset-contract"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Bando's SCF #42 submission concerns tokenized CETES for Mexican SMEs and Scout links Bando's live product to Etherfuse Stablebonds.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.get_scf_submissions(slug=bando) + scout.searchProjects(q=Bando)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/submissions/rec6A8ExCfeeCSeIy",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Soroban accesses a classic Stellar asset through its deterministic SAC, which implements SEP-41.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md#stellar-asset-contract-sac",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Bando/Etherfuse/SAC cases reviewed; classic-asset condition made explicit"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
+      }
+    },
+    {
+      "id": "q-ass-cross-etherfuse-cetes-controls",
+      "question": "A June 2026 article announces Anchorage custody for Etherfuse CETES on Stellar. What product does Scout identify, and which issuer controls do official Stellar docs provide for a regulated classic asset?",
+      "surface": [
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project",
+        "scout.searchProjects",
+        "stellarDocs.search_asset_token_docs"
+      ],
+      "golden": {
+        "answer": "The 2026-06-15 articles indexed by Lumenloop describe Anchorage Digital adding institutional custody for Etherfuse's tokenized Mexican government debt (CETES) on Stellar. As observed on 2026-07-11, Scout identifies Etherfuse as a live issuer of Stablebonds: tokenized government treasury bonds including Mexican CETES and U.S. Treasuries; it separately operates an FX/ramp product. For a regulated classic Stellar asset, official docs expose issuer controls such as authorization-required (approve before a trustline can receive), authorization-revocable (freeze/deauthorize a trustline), and clawback-enabled (recover units when the flag was enabled). These are available design controls, not evidence that Etherfuse configured every flag on CETES.",
+        "keyFacts": [
+          "Connects the June 15 custody announcement to Etherfuse's tokenized Mexican government debt (CETES) on Stellar and Anchorage Digital.",
+          "Uses Scout to identify Etherfuse Stablebonds as live tokenized government-treasury-bond products.",
+          "Explains the regulated-classic-asset controls authorization-required, authorization-revocable/freeze, and clawback-enabled without claiming Etherfuse necessarily uses all of them."
+        ],
+        "avoid": [
+          "Do NOT call CETES a stablecoin or confuse Etherfuse Stablebonds with Etherfuse FX.",
+          "Do NOT claim the custody announcement proves Etherfuse enabled every authorization or clawback flag."
+        ],
+        "notes": "A single-source product summary or a generic flag list alone is incomplete."
+      },
+      "tags": {
+        "category": "assets-anchors-seps",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-11-05",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — Lumenloop + Scout live probes, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://www.anchorage.com/insights/anchorage-digital-supports-custody-for-tokenized-cetes-etherfuses-tokenized-mexican-government-debt-on-stellar"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tokens/control-asset-access"
+          },
+          {
+            "class": "A",
+            "ref": "https://etherfuse.com/"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Anchorage announced custody for Etherfuse CETES on Stellar, while Scout identifies Stablebonds as Etherfuse's tokenized government-bond product.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.find_content_about_project(slug=etherfuse) + scout.searchProjects(q=Etherfuse)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://www.anchorage.com/insights/anchorage-digital-supports-custody-for-tokenized-cetes-etherfuses-tokenized-mexican-government-debt-on-stellar",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Classic Stellar assets support required authorization, revocation/freezing, and opt-in clawback controls.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_asset_token_docs(query=regulated asset authorization required revocable clawback)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tokens/control-asset-access",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Etherfuse/CETES and regulated-asset flag cases reviewed; no specific Etherfuse flag configuration asserted"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
       }
     },
     {
@@ -3189,6 +3384,205 @@
           ]
         },
         "origin": "raven-next q-comp-clawback-holder-risk"
+      }
+    },
+    {
+      "id": "q-comp-cross-bitso-sep31",
+      "question": "Scout lists Bitso for LATAM cross-border corridors. Which role does Scout assign it, and for an anchor-to-anchor implementation involving such a provider, how do official docs distinguish SEP-31 from SEP-24?",
+      "surface": [
+        "scout.searchProjects",
+        "stellarDocs.search_anchor_sep_docs"
+      ],
+      "golden": {
+        "answer": "As observed on 2026-07-11, Scout lists Bitso as a live Stellar anchor and Latin American crypto exchange providing fiat on/off-ramps between USDC and local currency in Mexico and Colombia, with banking-rail connectivity for remittance and B2B corridors. For an anchor-to-anchor cross-border implementation, official docs describe SEP-31 as the Cross-Border Payments flow between a sending anchor and a receiving anchor, including transaction-state and customer-information coordination. SEP-24 is different: it is Hosted Deposit and Withdrawal, an interactive wallet/user-to-anchor flow. Scout's Bitso profile does not enumerate implemented SEPs, so the answer must present SEP-31 as the relevant architecture for such a flow, not claim Bitso's profile proves SEP-31 support.",
+        "keyFacts": [
+          "Uses Scout to identify Bitso as a live Stellar anchor providing USDC/local-fiat ramps for LATAM corridors.",
+          "Uses official docs to explain SEP-31 as a sending-anchor to receiving-anchor cross-border payment flow.",
+          "Contrasts SEP-24 as the hosted interactive wallet/user-to-anchor deposit/withdrawal flow and avoids asserting unlisted Bitso SEP support."
+        ],
+        "avoid": [
+          "Do NOT claim Scout's Bitso profile explicitly lists SEP-31; its observed SEP list is empty.",
+          "Do NOT describe SEP-31 as an end-user hosted deposit/withdrawal webview."
+        ],
+        "notes": "This composition intentionally separates provider-directory role from protocol architecture."
+      },
+      "tags": {
+        "category": "compliance-rwa-payments",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-12-17",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — Scout + Stellar Docs probes, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://bitso.com/"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep31/integration"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors#sep-24-hosted-deposit-and-withdrawal"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Scout lists Bitso as a live Stellar anchor serving USDC/local-fiat LATAM corridors, without enumerating supported SEPs.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "scout.searchProjects(q=Bitso)",
+                "observedAt": "2026-07-11",
+                "note": "category Anchor; anchorProfile.seps=[]"
+              },
+              {
+                "class": "A",
+                "ref": "https://bitso.com/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "SEP-31 is sending-anchor to receiving-anchor cross-border payments, while SEP-24 is hosted interactive deposit/withdrawal.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_anchor_sep_docs queries for SEP-31 and SEP-24",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/platforms/anchor-platform/sep-guide/sep31/integration",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors#sep-24-hosted-deposit-and-withdrawal",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Bitso, SEP-31, and SEP-24 cases reviewed; no direct Bitso SEP-31 implementation claim made"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
+      }
+    },
+    {
+      "id": "q-comp-cross-moneygram-partnership-sep24",
+      "question": "After the April 2026 MoneyGram/Stellar partnership extension indexed by Lumenloop, what does Scout list MoneyGram as on Stellar, and which official SEP defines its wallet-facing cash-in/cash-out flow?",
+      "surface": [
+        "lumenloop.find_content_by_entity",
+        "scout.searchProjects",
+        "stellarDocs.search_anchor_sep_docs"
+      ],
+      "golden": {
+        "answer": "Lumenloop indexes the 2026-04-22 MoneyGram/Stellar partnership-extension announcement and related coverage about expanding stablecoin-backed services beyond Colombia into El Salvador. As observed on 2026-07-11, Scout lists MoneyGram Access/Ramps as a live Stellar anchor that provides fiat cash on- and off-ramps for USDC; its anchor profile names both ramp directions and SEP-24. Official Stellar docs define SEP-24 as Hosted Deposit and Withdrawal, the interactive wallet-to-anchor flow in which the anchor presents the user experience and gathers the information/KYC needed for cash-in or cash-out. The announcement supplies the dated event, Scout supplies the current role/profile, and the docs supply the protocol semantics.",
+        "keyFacts": [
+          "Identifies the indexed April 22, 2026 MoneyGram/Stellar partnership-extension event and its expansion of stablecoin-backed services.",
+          "Uses Scout to identify MoneyGram Access/Ramps as a live Stellar anchor offering USDC fiat on- and off-ramps.",
+          "Uses official docs to identify SEP-24 as the hosted interactive wallet-to-anchor deposit/withdrawal flow."
+        ],
+        "avoid": [
+          "Do NOT call SEP-31 the wallet-facing MoneyGram cash-in/cash-out flow.",
+          "Do NOT claim the April partnership announcement alone proves the current Scout anchor profile."
+        ],
+        "notes": "All three service-family contributions are required; numeric location/country claims are intentionally not gated."
+      },
+      "tags": {
+        "category": "compliance-rwa-payments",
+        "service": "lumenloop",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-12-10",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — Lumenloop + Scout + Stellar Docs probes, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/press/moneygram-and-stellar-extend-partnership-to-scale-real-world-stablecoin-utility-globally"
+          },
+          {
+            "class": "A",
+            "ref": "https://moneygram.com/"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors#sep-24-hosted-deposit-and-withdrawal"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The indexed April 2026 event is the MoneyGram/Stellar partnership extension, and Scout currently lists MoneyGram as a live USDC on/off-ramp anchor.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.find_content_by_entity(entity=MoneyGram, date=2026-04) + scout.searchProjects(q=MoneyGram)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/press/moneygram-and-stellar-extend-partnership-to-scale-real-world-stablecoin-utility-globally",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "SEP-24 defines the hosted interactive wallet-to-anchor deposit/withdrawal flow.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_anchor_sep_docs(query=SEP-24 hosted deposit withdrawal interactive)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors#sep-24-hosted-deposit-and-withdrawal",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: MoneyGram/SEP-24 cases reviewed; numeric footprint omitted because live records differ over time"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
       }
     },
     {
@@ -6578,6 +6972,109 @@
           ]
         },
         "origin": "raven-next q-defi-comet-what-is"
+      }
+    },
+    {
+      "id": "q-defi-cross-blend-rivool-sac",
+      "question": "A June 2026 ecosystem item says Rivool integrated a lending protocol for advisor-managed yield. Which live Scout project is it, who built it, and what standard asset interface should a Soroban integration use for classic USDC?",
+      "surface": [
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project",
+        "scout.searchProjects",
+        "skills.stellar-dev.assets"
+      ],
+      "golden": {
+        "answer": "The 2026-06-12 item is the Blend & Rivool case study: Rivool integrated Blend to put on-chain lending yield behind managed, risk-profiled strategies for financial advisers and clients. As observed on 2026-07-11, Scout lists Blend as a live Stellar/Soroban lending-and-borrowing protocol built by Script3, with permissionless isolated pools for assets such as USDC, XLM, and EURC. For classic USDC, a Soroban integration should use USDC's Stellar Asset Contract (SAC), which exposes the SEP-41 token interface; a token client can call standard functions such as `balance`, `transfer`, `approve`, and `allowance`. The interface fact comes from the asset skill and is not supplied by the project directory alone.",
+        "keyFacts": [
+          "Connects the Rivool advisor-managed-yield item to Blend's lending protocol.",
+          "Uses Scout to identify Blend as live, built by Script3, and based on permissionless isolated lending pools.",
+          "Explains that classic USDC is used in Soroban through its SAC implementing the SEP-41 token interface."
+        ],
+        "avoid": [
+          "Do NOT identify Aquarius or DeFindex as the protocol in the Rivool case-study item.",
+          "Do NOT treat classic USDC as a bespoke Blend-only contract token."
+        ],
+        "notes": "Both the live ecosystem correlation and the asset-interface implementation fact are required."
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-11-19",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — Lumenloop + Scout live probes, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://blend.capital/"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/blend-capital/blend-contracts"
+          },
+          {
+            "class": "B",
+            "ref": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md#stellar-asset-contract-sac"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The Rivool case study concerns Blend, which Scout lists as a live Script3-built lending protocol.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.find_content_about_project(slug=blend) + scout.searchProjects(q=Blend)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://blend.capital/",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/blend-capital/blend-contracts",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Classic USDC is exposed to Soroban through a SAC implementing SEP-41.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md#stellar-asset-contract-sac",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Blend, Rivool, SAC, and USDC mentions reviewed; no contradictory durable claim found"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
       }
     },
     {
@@ -18540,6 +19037,100 @@
       }
     },
     {
+      "id": "q-pc-cross-redstone-sep40",
+      "question": "A June 2026 ecosystem article says an oracle rolled out SEP-40 for Stellar's RWA moment. Which live project is it, and what do official Stellar docs say SEP-40-compatible feeds are for?",
+      "surface": [
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project",
+        "scout.searchProjects",
+        "stellarDocs.search_docs"
+      ],
+      "golden": {
+        "answer": "As observed on 2026-07-11, the article is RedStone's 2026-06-04 piece, 'Reliability at Scale: RedStone and the Data Standard for Stellar's RWA Moment.' Scout identifies Redstone Finance as a live modular price oracle on Stellar/Soroban that implements SEP-40 and delivers price feeds to contracts. The official Stellar oracle-provider docs describe public price-oracle feeds as compatible with the SEP-40 ecosystem interface, so consumers such as lending or derivatives contracts can integrate a common feed interface instead of a provider-specific one. The two live records use different counts for assets/feeds, so the answer should not freeze either count.",
+        "keyFacts": [
+          "Connects the June 2026 RWA-moment article to RedStone/Redstone Finance and its SEP-40 rollout.",
+          "Uses Scout to identify Redstone Finance as a live Stellar/Soroban modular price-oracle project.",
+          "Uses official Stellar docs to explain that SEP-40 is the compatible oracle-feed interface used by contract consumers, rather than merely naming the SEP."
+        ],
+        "avoid": [
+          "Do NOT identify Reflector, DIA, or Band as the project named by the June 2026 RedStone article.",
+          "Do NOT pin nine assets or ten feeds as a single reconciled count; the live sources use different scopes/counts."
+        ],
+        "notes": "Cross-service grading is strict: an answer with only the article/project identity or only the SEP-40 explanation is incomplete. The count discrepancy is intentionally not a key fact."
+      },
+      "tags": {
+        "category": "protocol-core",
+        "service": "none",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-10-15",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — lumenloop.find_content_about_project + scout.searchProjects, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://blog.redstone.finance/2026/06/04/reliability-at-scale-redstone-and-the-data-standard-for-stellars-rwa-moment/"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/oracles/oracle-providers#reflector-network"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The indexed June 2026 article is RedStone's SEP-40 rollout and Scout lists Redstone Finance as a live Stellar/Soroban oracle.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.find_content_about_project(slug=redstone-finance) + scout.searchProjects(q=RedStone Finance)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://blog.redstone.finance/2026/06/04/reliability-at-scale-redstone-and-the-data-standard-for-stellars-rwa-moment/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Official Stellar docs expose SEP-40-compatible public price-oracle feeds for consumers.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_docs(query=SEP-40 oracle providers compatible price feeds)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/data/oracles/oracle-providers#reflector-network",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: RedStone/SEP-40 mentions in the owned battery reviewed; no contradictory durable key fact found"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
+      }
+    },
+    {
       "id": "q-pc-fee-bump-channel-accounts-feepool",
       "question": "How do fee-bump transactions and channel or fee-paying accounts work, does the fee account sign or use sequence, why can fees look doubled, and what is the fee pool?",
       "surface": [
@@ -22832,6 +23423,210 @@
           ]
         },
         "origin": "core-35 open-rfp-contract-source-verification"
+      }
+    },
+    {
+      "id": "q-scf-cross-decaf-sep24",
+      "question": "Decaf Pay's SCF #17 submission named a specific MoneyGram integration. What does Scout say Decaf is today, and which official docs explain the SEP in the proposal?",
+      "surface": [
+        "lumenloop.get_scf_submissions",
+        "scout.searchProjects",
+        "stellarDocs.search_anchor_sep_docs"
+      ],
+      "golden": {
+        "answer": "Decaf Pay's SCF #17 application says its international-payment product had built a MoneyGram integration using SEP-24 and planned to reuse that integration pattern with other anchors. As observed on 2026-07-11, Scout describes Decaf as a live, non-custodial wallet on Stellar and Solana for cross-border money movement, using MoneyGram and partner ramps to move between fiat and USDC and cash out without a bank account. Official Stellar docs define SEP-24 as the hosted, interactive deposit-and-withdrawal flow: the wallet opens the anchor's experience and the anchor collects the information/KYC needed to complete the transaction. SEP-24 is therefore the bridge between the historical proposal detail and today's wallet/ramp record.",
+        "keyFacts": [
+          "States that Decaf Pay's SCF #17 application names a MoneyGram integration built with SEP-24.",
+          "Uses Scout to identify Decaf today as a live non-custodial cross-border wallet using fiat/USDC ramps including MoneyGram.",
+          "Uses official docs to explain SEP-24 as the anchor-hosted interactive deposit/withdrawal flow, including anchor-collected user information/KYC."
+        ],
+        "avoid": [
+          "Do NOT misidentify SEP-31 as the MoneyGram wallet-hosted deposit/withdrawal flow in the proposal.",
+          "Do NOT describe Decaf as a custodial bank account or as a MoneyGram-owned wallet."
+        ],
+        "notes": "Grant application, current directory record, and SEP semantics must all appear."
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "lumenloop",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-12-03",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — Lumenloop + Scout + Stellar Docs probes, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/submissions/recp4q5jA9dXq7to6"
+          },
+          {
+            "class": "A",
+            "ref": "https://decaf.so/"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors#sep-24-hosted-deposit-and-withdrawal"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Decaf's SCF #17 application names a MoneyGram SEP-24 integration, and Scout lists Decaf as a live cross-border wallet using MoneyGram ramps.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.get_scf_submissions(slug=decaf) + scout.searchProjects(q=Decaf)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/submissions/recp4q5jA9dXq7to6",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://decaf.so/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "SEP-24 is the hosted interactive deposit-and-withdrawal flow in which the anchor gathers required user information.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_anchor_sep_docs(query=SEP-24 hosted deposit withdrawal interactive)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors#sep-24-hosted-deposit-and-withdrawal",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Decaf, MoneyGram, and SEP-24 battery cases reviewed; no SEP-number contradiction found"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
+      }
+    },
+    {
+      "id": "q-scf-cross-reflector-rounds-current",
+      "question": "Match Reflector's SCF submission history to its current Scout record: what did the submissions fund, who does Scout credit as builder, and what live code reference does Scout surface?",
+      "surface": [
+        "lumenloop.get_scf_submissions",
+        "scout.searchProjects"
+      ],
+      "golden": {
+        "answer": "Lumenloop returns four Reflector awards: the original SCF #15 decentralized price-feed oracle grid, SCF #20 expansion, SCF #26 CEX price feeds, and SCF #29 Reflector DAO with public feeds and customizable subscriptions. As observed on 2026-07-11, Scout lists Reflector as a live decentralized price-oracle/data-feed network, credits Stellar Expert as the builder, and surfaces `reflector-network/reflector-contract` as a Rust code reference (alongside DAO and subscription contracts). The historical submission sequence comes from Lumenloop; the current builder/status/repository facts come from Scout, so neither service alone completes the match.",
+        "keyFacts": [
+          "Summarizes Reflector's four returned SCF stages: original oracle, expansion, CEX feeds, and DAO/custom subscriptions across SCF #15/#20/#26/#29.",
+          "Uses Scout to identify the current project as live and credit Stellar Expert as builder.",
+          "Names `reflector-network/reflector-contract` as the surfaced Rust code reference."
+        ],
+        "avoid": [
+          "Do NOT collapse the four SCF submissions into one award or assign them to RedStone.",
+          "Do NOT credit Script3 as Reflector's builder; Scout credits Stellar Expert."
+        ],
+        "notes": "The historical grant sequence and current project/code record are independently graded halves."
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-11-26",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — lumenloop.get_scf_submissions + scout.searchProjects, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/submissions/receZeLlUlVSruadg"
+          },
+          {
+            "class": "A",
+            "ref": "https://reflector.network/"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/reflector-network/reflector-contract"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Lumenloop returns four Reflector submissions covering the original oracle, expansion, CEX feeds, and DAO phases.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.get_scf_submissions(slug=reflector)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/submissions/receZeLlUlVSruadg",
+                "observedAt": "2026-07-11",
+                "note": "SCF #29 public submission; earlier returned submission URLs are recorded in evidence-matrix.md"
+              }
+            ]
+          },
+          {
+            "claim": "Scout lists Reflector as live, credits Stellar Expert, and surfaces reflector-network/reflector-contract.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "scout.searchProjects(q=Reflector)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://reflector.network/",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/reflector-network/reflector-contract",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Reflector SCF/builder/repository cases reviewed; no contradictory builder attribution found"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
       }
     },
     {
@@ -27425,6 +28220,206 @@
           ]
         },
         "origin": "raven-next q-sor-contract-trustlines-c-address"
+      }
+    },
+    {
+      "id": "q-sor-cross-socketfi-auth",
+      "question": "The ecosystem feed indexed @socketfi/server in July 2026. What kind of project is SocketFi according to Scout, and which Soroban hook do official docs say its passkey-style contract account must implement?",
+      "surface": [
+        "lumenloop.search_directory",
+        "lumenloop.find_content_about_project",
+        "scout.searchProjects",
+        "stellarDocs.search_docs"
+      ],
+      "golden": {
+        "answer": "As observed on 2026-07-11, Lumenloop's indexed @socketfi/server item describes a backend SDK that verifies SocketFi authentication tokens and prepares simulated/assembled Soroban transactions for paymaster signing. Scout lists SocketFi as a live, SCF-funded, non-custodial Soroban smart-wallet dApp using passkey sign-in with social-profile binding and gas abstraction. Official Stellar docs say a contract account implements `__check_auth`: `require_auth` for that contract address invokes this hook with the signed payload, signatures, and authorization context, and the hook accepts or rejects authentication and policy checks.",
+        "keyFacts": [
+          "Reports the indexed @socketfi/server backend role: token verification plus Soroban transaction preparation for paymaster signing.",
+          "Uses Scout to identify SocketFi as a live SCF-funded non-custodial Soroban smart wallet using passkeys.",
+          "Names `__check_auth` as the contract-account hook and explains that `require_auth` invokes it to enforce authentication/authorization."
+        ],
+        "avoid": [
+          "Do NOT describe SocketFi as a classic G-address wallet whose passkeys are checked by SEP-10.",
+          "Do NOT claim the npm package itself is the on-chain account contract."
+        ],
+        "notes": "Both the current project/package evidence and the official contract-account mechanism are mandatory."
+      },
+      "tags": {
+        "category": "soroban",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-10-22",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — Lumenloop and Scout live probes, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://registry.npmjs.org/@socketfi%2Fserver"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/contract-accounts"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/socket-fi"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "SocketFi is a live passkey-oriented Soroban smart-wallet project and @socketfi/server is its backend integration package.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.find_content_about_project(slug=socketfi) + scout.searchProjects(q=SocketFi)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://registry.npmjs.org/@socketfi%2Fserver",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/socket-fi",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Soroban contract accounts implement __check_auth, which is reached through require_auth.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_docs(query=__check_auth custom account contract passkey)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/smart-contracts/example-contracts/complex-account#policy-modification",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: SocketFi/passkey/__check_auth battery mentions reviewed; no contradiction found"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
+      }
+    },
+    {
+      "id": "q-sor-cross-warmancer-zk-stack",
+      "question": "Warmancer's SCF proposal says it wants hidden board positions with ZK. What does Scout say the project is, and which proof/curve stack does the served ZK skill say is verifiable on Stellar today?",
+      "surface": [
+        "lumenloop.get_scf_submissions",
+        "scout.searchProjects",
+        "skills.stellar-dev.zk-proofs"
+      ],
+      "golden": {
+        "answer": "The SCF #33 'Warmancer: Black Friday' proposal describes a free-to-play strategy game that wants zero-knowledge proofs to conceal board positions, explicitly qualifying that plan as pending technology availability. As observed on 2026-07-11, Scout lists Warmancer as a live, SCF-funded on-chain strategy game on Stellar. The served ZK skill says the presently native route is Groth16 over BLS12-381, for example Circom/snarkjs configured with `-p bls12381`, using BLS12-381 host operations from CAP-0059 (available from Protocol 22). BN254-based defaults remain gated on CAP-0074. That platform answer does not prove which proving stack Warmancer actually deployed.",
+        "keyFacts": [
+          "Identifies Warmancer: Black Friday as the SCF #33 hidden-information strategy-game proposal and preserves its 'pending technology availability' qualification.",
+          "Uses Scout to identify Warmancer as a live SCF-funded Stellar on-chain strategy game.",
+          "States that Groth16 over BLS12-381 is verifiable natively via CAP-0059, while BN254-based defaults remain gated on CAP-0074."
+        ],
+        "avoid": [
+          "Do NOT claim the proposal proves Warmancer deployed Groth16/BLS12-381 in production.",
+          "Do NOT say Circom's default BN254 proofs are natively verifiable on Stellar today."
+        ],
+        "notes": "The question composes a project/proposal lookup with a platform-capability lookup; the exact deployed Warmancer proof system is deliberately not pinned."
+      },
+      "tags": {
+        "category": "soroban",
+        "service": "skills",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "reverifyBy": "2026-10-29",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp — lumenloop.get_scf_submissions + scout.searchProjects, observed 2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/submissions/recsJtI0JZOmnayxP"
+          },
+          {
+            "class": "B",
+            "ref": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md"
+          },
+          {
+            "class": "A",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0059.md"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Warmancer's SCF proposal is a hidden-information strategy game with ZK aspirations, and Scout lists the project as live and funded.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "lumenloop.get_scf_submissions(slug=warmancer) + scout.searchProjects(q=Warmancer)",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/submissions/recsJtI0JZOmnayxP",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Groth16/BLS12-381 is the currently available native verification route, while BN254 is status-gated.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md#what-s-available-verify-before-building",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0059.md",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 Lane X cross-service live composition probe",
+          "evidence": [
+            "http://localhost:8787/mcp search→execute transcript summarized in evidence-matrix.md",
+            "Sibling sweep: Warmancer and CAP-0059/CAP-0074 cases reviewed; no exact-deployment claim imported"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "authored 2026-07 (cross-service)"
       }
     },
     {
