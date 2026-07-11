@@ -6,25 +6,25 @@
     "scout.matchPartners"
   ],
   "golden": {
-    "answer": "Use a dated status table rather than one timeless deployment list. **MoneyGram Ramps** is a current Stellar/USDC cash-in/out example, with exact coverage stated from a dated operator source. **Nium's ~190-country statement** is a 2022 platform capability claim; **Velo/PDAX** described an agreement/intended Philippines corridor; **Coins.ph** is a historical Stellar route; and Onafriq's broad corporate footprint does not by itself prove current Stellar consumer availability in every market. For every row label live, historical, announced, or capability-only, identify the actual settlement asset when known, and verify current corridor/provider availability.",
+    "answer": "Use `scout.getPartners`, `scout.matchPartners` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
     "keyFacts": [
-      "Provides at least one dated live deployment and classifies every other example by lifecycle/evidence status and settlement asset."
+      "Retrieves source-bounded live results via scout.getPartners, scout.matchPartners and reports their source and as-of date without freezing a roster, rank, count, or current value."
     ],
     "avoid": [
-      "Do NOT present every historic/announced capability as a current corridor, equate corporate footprint with Stellar coverage, globally ban XLM settlement, or freeze one coverage count."
+      "Do NOT present every historic/announced capability as a current corridor, equate corporate footprint with Stellar coverage, globally ban XLM settlement, or freeze one coverage count.",
+      "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
     ],
     "notes": "GT-27 2026-07-10: grade dated row-level lifecycle and settlement-asset evidence. MoneyGram is current; Nium/Velo-PDAX/Coins.ph/Onafriq require capability, announcement, historical, or coverage caveats. Counts remain source/time scoped.\nGT-27 CORRECTION 2026-07-10: a partner roster is not a current deployment census."
   },
   "tags": {
     "category": "history-org-tokenomics",
     "service": "scout",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-10-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -71,14 +71,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited roster flattened live, historical, announced, and capability-only relationships into current production corridors and overgeneralized USDC settlement to every deployment.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-27 primary 3270 and blind 3272; corridor sibling sweep."
+        "P4 Lane R behavioral conversion queue, row 44 (q-hist-remittance-corridors): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+        "Current source retained for behavioral retrieval: https://stellar.org/products-and-tools/moneygram"
       ],
       "rootCause": [
-        "Partner capability, announcement, historic route, and live consumer deployment were collapsed.",
-        "improvements/lumenloop/ll-008-directory-record-coverage-field-quality.md",
-        "improvements/stellar-light-scout/sls-024-project-lifecycle-operator-conflicts.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-hist-remittance-corridors"

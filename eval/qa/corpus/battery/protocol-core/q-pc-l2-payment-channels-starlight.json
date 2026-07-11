@@ -5,27 +5,28 @@
     "stellarDocs.search_protocol_concepts_docs"
   ],
   "golden": {
-    "answer": "**As of 2026-07-10**, Starlight is historical SDF payment-channel research/protocol work and its `stellar-deprecated/starlight` reference repository is archived. It pursued Lightning-like repeated off-chain updates with on-chain settlement, but used Stellar accounts/transactions rather than Bitcoin's unchanged UTXO/HTLC stack. CAP-0021 generalized preconditions and CAP-0040 signed-payload signers are Final/active protocol primitives; they do not prove Starlight is maintained production infrastructure. Current alternatives remain project-specific: Perun has an active SCF-backed Stellar payment-channel codebase whose public instructions establish local/standalone use but not Mainnet deployment; Scout's Centaurus Live+Unverified row conflicts with stale repositories and is not deployment proof. Treat payment channels, commit-chains, and rollups as separate architectures and require dated contracts, operator endpoints, or other primary deployment evidence before calling any live.",
+    "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Dates Starlight's archived experimental status and explains its Lightning-like goal/Stellar-specific construction. Separates CAP primitives, active code development, directory labels, and verified Mainnet deployment.",
     "keyFacts": [
+      "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
       "Dates Starlight's archived experimental status and explains its Lightning-like goal/Stellar-specific construction.",
       "Separates CAP primitives, active code development, directory labels, and verified Mainnet deployment."
     ],
     "avoid": [
       "Do NOT call Starlight maintained/live production Mainnet infrastructure or say Stellar uses Bitcoin Lightning unchanged.",
-      "Do NOT promote Perun local code or Centaurus Live+Unverified metadata into deployment without primary evidence."
+      "Do NOT promote Perun local code or Centaurus Live+Unverified metadata into deployment without primary evidence.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "GT-29 CORRECTION 2026-07-10: Starlight is archived experimental work; CAP-21/40 are active primitives, not deployment evidence. Perun is active local/standalone code without verified Mainnet deployment; Centaurus Live+Unverified conflicts with stale repos and remains source-relative.\nsd-015 captures glossary lifecycle ambiguity; sls-024 captures project-status conflicts."
   },
   "tags": {
     "category": "protocol-core",
     "service": "stellarDocs",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "mixed",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2027-07-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -82,13 +83,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The Starlight prototype framing is correct but required a current archived-status date and a broader source-scoped landscape answer without promoting directory labels into deployment proof.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-29 primary 3276 and blind 3278; both confirmed archived/source-relative status. GT-29 recurrence appended to sls-024 for Centaurus lifecycle ambiguity."
+        "P4 Lane R behavioral conversion queue, row 55 (q-pc-l2-payment-channels-starlight): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://stellar.org/blog/developers/experiment-with-payment-channels-on-stellar"
       ],
       "rootCause": [
-        "improvements/stellar-docs/sd-015-starlight-lifecycle-status.md",
-        "improvements/stellar-light-scout/sls-024-project-lifecycle-operator-conflicts.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-pc-l2-payment-channels-starlight"

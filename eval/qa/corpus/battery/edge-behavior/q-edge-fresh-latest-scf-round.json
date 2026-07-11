@@ -7,25 +7,25 @@
     "scout.searchResearch"
   ],
   "golden": {
-    "answer": "As of **2026-07-10**, **SCF #45** is the Build Award round in the **Submission** phase, with an official submission deadline of **August 16, 2026**. The page does not provide an answer-safe deadline time/timezone, so do not invent one. Teams are directed to submit the interest form promptly; qualifying teams are invited to submit by the deadline. Distinguish this from **#44**, which is in Notification & Award Distribution, and **#43**, the last concluded round. Re-check the live official page because round phases and dates can change.",
+    "answer": "Use `scout.getRfps`, `scout.searchRepos`, `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
     "keyFacts": [
-      "Answers with a dated round, phase, and deadline and distinguishes accepting submissions from review/distribution/concluded states."
+      "Retrieves source-bounded live results via scout.getRfps, scout.searchRepos, scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value."
     ],
     "avoid": [
-      "Do NOT substitute #44 or #43, invent a deadline time/timezone, give only a dashboard pointer, or freeze #45/August 16 as permanent."
+      "Do NOT substitute #44 or #43, invent a deadline time/timezone, give only a dashboard pointer, or freeze #45/August 16 as permanent.",
+      "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
     ],
     "notes": "GT-23 2026-07-10: require an actual dated round/phase/deadline answer plus live-source pointer. Distinguish #45 Submission, #44 distribution, and #43 concluded; examples remain non-gating and no deadline time/timezone is inferred.\nGT-23 CORRECTION 2026-07-10: phase semantics and an answer-visible dated exemplar replace the abstract pointer-only template."
   },
   "tags": {
     "category": "edge-behavior",
     "service": "scout",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-08-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -66,13 +66,14 @@
       }
     ],
     "verified": {
-      "date": "2026-07-10",
-      "by": "Golden-truth sweep import — The behavior-first template was safe but under-answered the question and drifted from the corrected current-round sibling. Highest, accepting submissions, reviewing, distributing, and concluded are distinct SCF states.",
+      "date": "2026-07-11",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-23 primary 3264 and blind 3267; official/Scout agreement asOf 2026-07-10."
+        "P4 Lane R behavioral conversion queue, row 39 (q-edge-fresh-latest-scf-round): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+        "Current source retained for behavioral retrieval: https://communityfund.stellar.org/awards"
       ],
       "rootCause": [
-        "A volatile direct sibling was corrected without propagating the new phase/deadline model to this generic freshness row."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-edge-fresh-latest-scf-round"

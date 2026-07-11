@@ -7,28 +7,28 @@
     "stellarDocs.search_sdk_cli_tools_docs"
   ],
   "golden": {
-    "answer": "Hubble is SDF's public, read-only Stellar historical analytics dataset in BigQuery. The canonical project/dataset path is `crypto-stellar.crypto_stellar`, usable from the BigQuery UI, SDKs, SQL tools, and Looker-style analytics. It is for bulk historical queries, not transaction submission or low-latency current-state reads. Current docs describe intraday batch updates but no guaranteed same-day cadence, so date exact table/schema/freshness claims and do not call it real time.",
+    "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs`, `stellarDocs.search_sdk_cli_tools_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Names the public BigQuery dataset path and historical analytics workload. Rejects real-time/submission use and qualifies cadence/schema freshness.",
     "keyFacts": [
+      "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs, stellarDocs.search_sdk_cli_tools_docs and labels version, UI, provider, and availability claims as observed.",
       "Names the public BigQuery dataset path and historical analytics workload.",
-      "Rejects real-time/submission use and qualifies cadence/schema freshness.",
-      "Separates current/recent RPC, historical SQL Hubble, and curated indexer workloads."
+      "Rejects real-time/submission use and qualifies cadence/schema freshness."
     ],
     "avoid": [
       "Do NOT describe Hubble as RPC, a wallet, or a real-time guaranteed feed.",
-      "Do NOT invent a dataset path or freeze schema/cadence."
+      "Do NOT invent a dataset path or freeze schema/cadence.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "The crypto-stellar.crypto_stellar BigQuery path is the load-bearing fact — verified against connecting-to-bigquery (project crypto-stellar, dataset crypto_stellar; UI/SDK/Looker access; billing-enabled GCP project required).\nAlso good if the answer: You can access it via the BigQuery UI, the BigQuery client SDK (e.g. google-cloud-bigquery), or Looker Studio. | Example tables include current-state tables like `accounts_current`.\nGolden cites: developers.stellar.org Hubble docs (analytics/hubble, connecting-to-bigquery).\nGT-49 CORRECTION 2026-07-11: gate dataset identity/workload; exact cadence/schema is dated."
   },
   "tags": {
     "category": "tooling-infra",
     "service": "stellarDocs",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
     "asOf": "2026-07-11",
-    "reverifyBy": "2026-08-01",
     "sources": [
       {
         "class": "A",
@@ -100,15 +100,10 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "P4 Lane R absorb triage",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-49 primary 3335 and blind 3341.",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-infra-hubble-vs-rpc-layer",
-        "https://developers.stellar.org/docs/data/apis/rpc",
-        "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/configuring",
-        "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/data-lake-integration",
-        "https://developers.stellar.org/docs/data/analytics/hubble",
-        "Solo scratchpad 575 GT-49 primary 3335 and blind 3341; deduped to sd-023."
+        "P4 Lane R behavioral conversion queue, row 48 (q-infra-hubble-bigquery): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/data/analytics/hubble"
       ],
       "rootCause": [
         "eval-authoring"

@@ -6,29 +6,29 @@
     "stellarDocs.search_rpc_horizon_data_docs"
   ],
   "golden": {
-    "answer": "**Testnet** and **Futurenet** are separate public test networks with fake XLM and no real-value assets. Use Testnet for stable, near-production integration testing; use Futurenet to exercise the next/pre-release protocol and features. They have different passphrases, endpoints, ledgers, accounts, assets, and contract IDs, and neither promises production availability or permanent state. Testnet resets on a planned cadence; Futurenet resets as needed and is more volatile.\n\nFriendbot funds **accounts** on the applicable test network; it does not directly fund a contract. Provider coverage and live protocol versions change, so consult the current Networks/Providers pages and date any exact snapshot rather than using it to define the networks forever.",
+    "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Testnet is the stable integration network; Futurenet previews upcoming protocol/features. The networks have distinct passphrases/state/identifiers and fake, valueless XLM.",
     "keyFacts": [
+      "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs and labels version, UI, provider, and availability claims as observed.",
       "Testnet is the stable integration network; Futurenet previews upcoming protocol/features.",
-      "The networks have distinct passphrases/state/identifiers and fake, valueless XLM.",
-      "Reset, provider, and protocol-version claims are freshness-sensitive; Friendbot funds accounts, not contracts."
+      "The networks have distinct passphrases/state/identifiers and fake, valueless XLM."
     ],
     "avoid": [
       "Do NOT swap Testnet/Futurenet roles, equate either with Mainnet, or claim real-value assets.",
       "Do NOT reuse passphrases/accounts/assets/contracts across networks or promise persistence/SLA.",
-      "Do NOT freeze provider counts or protocol versions without an as-of date."
+      "Do NOT freeze provider counts or protocol versions without an as-of date.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "Verified against the networks docs: both are public, fake-XLM networks separate from Mainnet; Testnet is stable (resets ~2-4×/yr), Futurenet runs bleeding-edge/pre-release protocol features (irregular resets). Both fundable via Friendbot (~10,000 fake XLM). Role swap is the trap.\nAlso good if the answer: Use Testnet for normal app testing and Futurenet only when you need to exercise pre-release protocol features. | Far fewer RPC providers support Futurenet than Testnet/Mainnet.\nGolden cites: developers.stellar.org networks docs (testnet/futurenet).\nGT-50 CORRECTION 2026-07-11: gate durable roles and network separation, not a provider count or protocol snapshot. Friendbot funds accounts."
   },
   "tags": {
     "category": "tooling-infra",
     "service": "stellarDocs",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
     "asOf": "2026-07-11",
-    "reverifyBy": "2026-10-01",
     "sources": [
       {
         "class": "A",
@@ -81,13 +81,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited durable role split was correct, but it made undated provider coverage a fact, said Friendbot funds contracts, and marked a reset/provider-sensitive case non-fresh.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-50 primary/blind matrices independently confirmed the durable roles and freshness correction.",
-        "Sibling sweep checked q-protocol-futurenet-vs-testnet, q-protocol-network-passphrases, q-ti-testnet-mainnet-migration, and q-tool-cli-testnet-identity-howto."
+        "P4 Lane R behavioral conversion queue, row 50 (q-infra-testnet-vs-futurenet): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/networks"
       ],
       "rootCause": [
-        "Plain freshness drift plus eval-side wording error: provider coverage was frozen and Friendbot account funding was misstated as contract funding."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-infra-testnet-vs-futurenet"

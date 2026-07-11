@@ -5,26 +5,27 @@
     "lumenloop.search_content_semantic"
   ],
   "golden": {
-    "answer": "Define **this week's window** and an as-of timestamp, retrieve candidate items from dated Stellar/Lumenloop content and an independent recency-aware check, then validate an eligible **publication or event date** for every row and state which date is being used. Exclude undated rows from 'this week' and post-sort chronologically rather than treating semantic rank as newest. Choose 'big' items with a short significance rationale, label the digest non-exhaustive and moment-bounded, and keep specific headlines illustrative rather than permanent grading facts.",
+    "answer": "Use `lumenloop.search_content_semantic` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Uses an explicit window/asOf, validates and labels the date field, chronologically post-sorts candidates, and excludes undated rows. Separates recency from editorial significance and states the digest is non-exhaustive.",
     "keyFacts": [
+      "Retrieves source-bounded live results via lumenloop.search_content_semantic and reports their source and as-of date without freezing a roster, rank, count, or current value.",
       "Uses an explicit window/asOf, validates and labels the date field, chronologically post-sorts candidates, and excludes undated rows.",
       "Separates recency from editorial significance and states the digest is non-exhaustive."
     ],
     "avoid": [
-      "Do NOT treat the top semantic hit, ingestion/scrape time, or an undated row as the newest publication/event; do not fabricate news or expose retired/non-manifest operation names."
+      "Do NOT treat the top semantic hit, ingestion/scrape time, or an undated row as the newest publication/event; do not fabricate news or expose retired/non-manifest operation names.",
+      "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
     ],
     "notes": "GT-23 2026-07-10: require explicit window/asOf, eligible date-field validation, chronological post-sort, exclusion of undated rows, significance rationale, and non-exhaustive scope. Semantic relevance is not chronology; publication, event, ingestion, and scrape dates are distinct.\nGT-23 CORRECTION 2026-07-10: current exposed-surface wording and chronology checks replace legacy operation names and top-hit=newest assumptions."
   },
   "tags": {
     "category": "edge-behavior",
     "service": "lumenloop",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-08-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -77,12 +78,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The freshness core is right, but the answer leaked retired/non-exposed operation names and did not require chronological date validation after semantic retrieval. Relevance, publication, event, ingestion, and scrape dates are distinct.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-23 primary 3264 and blind 3267; ll-006 recurrence. July 6 UNDP/SDF and July 8 P27 are illustrative, not gating."
+        "P4 Lane R behavioral conversion queue, row 40 (q-edge-fresh-most-recent-news): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+        "Current source retained for behavioral retrieval: https://stellar.org/blog"
       ],
       "rootCause": [
-        "Prior-art routing metadata leaked into gospel and a generic freshness template treated relevance rank as sufficiently recent."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-edge-fresh-most-recent-news"

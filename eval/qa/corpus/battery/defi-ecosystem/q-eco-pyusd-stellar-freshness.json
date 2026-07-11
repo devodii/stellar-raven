@@ -5,28 +5,27 @@
     "lumenloop.find_content_by_entity"
   ],
   "golden": {
-    "answer": "**PayPal USD (PYUSD) is live on Stellar.** It launched on **September 18, 2025**. PYUSD is PayPal-branded and **issued by Paxos**. The 2025 SDF launch release and Paxos Stellar metadata name **Paxos Trust Company, LLC**; Paxos's current product page names **Paxos Trust Company, N.A.** Treat this as a dated source/time-slice disagreement—not evidence of a corporate transition unless corporate or regulatory proof establishes one.\n\nThe mainnet issuer is `GDQE7IXJ4HUHV6RQHIUPRJSEZE4DRS5WY577O2FY6YQ5LVWZ7JZTU2V5`; do not confuse it with PayPal's documented testnet issuer. Current supply/circulation is volatile, so cite a ledger/date for any amount and distinguish brand, legal issuer, testnet, mainnet, and SAC identities.",
+    "answer": "Use `lumenloop.find_content_by_entity` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Distinguishes PayPal's product/brand from Paxos as issuer and dates any LLC-versus-N.A. legal-entity wording.",
     "keyFacts": [
-      "Confirms PYUSD launched on Stellar on September 18, 2025.",
-      "Distinguishes PayPal's product/brand from Paxos as issuer and dates any LLC-versus-N.A. legal-entity wording.",
-      "Treats current circulating/supply figures as freshness-sensitive."
+      "Retrieves source-bounded live results via lumenloop.find_content_by_entity and reports their source and as-of date without freezing a roster, rank, count, or current value.",
+      "Distinguishes PayPal's product/brand from Paxos as issuer and dates any LLC-versus-N.A. legal-entity wording."
     ],
     "avoid": [
       "Do NOT claim PayPal itself is the legal issuer, or hard-code one Paxos legal entity without a date/source while the primary disclosures differ.",
-      "Do NOT claim PYUSD is absent from Stellar or give a current supply figure without a dated source."
+      "Do NOT claim PYUSD is absent from Stellar or give a current supply figure without a dated source.",
+      "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
     ],
     "notes": "FRESHNESS + entity. Verified: PayPal's PYUSD launched on Stellar Sep 18, 2025 (SDF press), part of the Sep-2025 RWA/stablecoin cluster around Meridian 2025. Issuer = PayPal (with Paxos). Any circulating/supply figure is volatile — gate on a dated source + staleness caveat.\nAlso good if the answer: Attributes PYUSD to PayPal and frames it as part of the issuer-led stablecoin set on Stellar.\nGolden cites: A dated source for PYUSD on Stellar (Sep 2025).\nGT-20 RE-VERIFIED 2026-07-10: replace inherited 'issuer=PayPal (with Paxos)' shorthand with PayPal-branded, Paxos-issued. LLC-versus-N.A. is a source/time-slice disagreement, not proof of a corporate transition. Mainnet/testnet/SAC addresses and any supply require explicit network/date provenance."
   },
   "tags": {
     "category": "defi-ecosystem",
     "service": "lumenloop",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "disputed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-10-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -77,15 +76,14 @@
       }
     ],
     "verified": {
-      "date": "2026-07-10",
-      "by": "Golden-truth sweep import — The answer already corrected PayPal-brand versus Paxos-issuer roles. GT-20 adds provider TOML, PayPal's mainnet/testnet integration page, and a live Horizon read, while clarifying that LLC-versus-N.A. is a source/time-slice disagreement—not proof of a corporate transition.",
+      "date": "2026-07-11",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 569 Batches D and G and stablecoin sibling sweep, 2026-07-09.",
-        "Solo scratchpad 575 GT-20 primary 3256 and blind 3257; provider TOML/Horizon evidence asOf 2026-07-10."
+        "P4 Lane R behavioral conversion queue, row 32 (q-eco-pyusd-stellar-freshness): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+        "Current source retained for behavioral retrieval: https://stellar.org/press/paypal-pyusd-is-now-available-on-stellar"
       ],
       "rootCause": [
-        "Eval-side brand-versus-issuer shorthand in inherited notes.",
-        "solo://proj/49/todo/golden-corpus-health--901"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-eco-pyusd-stellar-freshness"

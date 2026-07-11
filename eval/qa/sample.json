@@ -1,7 +1,7 @@
 {
   "$comment": "Deterministic stratified sample (N=30, by service) of the owned QA battery.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "7406ec462807c02f4364e78aa817f388a6b8f39b83f9e7611a616989e39754c3",
+  "corpusContentSha256": "f986309e582ad413d1303cfcb4ba074ebd77510f94016ca4ab65c9fdb1072ee2",
   "counts": {
     "total": 30,
     "byCategory": {
@@ -24,8 +24,8 @@
       "stellarDocs": 17
     },
     "byFreshness": {
-      "live": 3,
-      "scheduled": 10,
+      "live": 4,
+      "scheduled": 9,
       "stable": 17
     },
     "traps": {
@@ -1466,9 +1466,9 @@
         "stellarDocs.search_protocol_concepts_docs"
       ],
       "golden": {
-        "answer": "The question's word **queued** is stale: **Protocol 27 (Zipper)** has been live on Stellar Mainnet since **ledger 63386819**, closed **2026-07-08 at 17:00:10 UTC**; ledger 63386818 was the final P26 ledger. Two independent Pubnet RPCs still reported protocol 27 on **2026-07-11**.\n\n**CAP-0071** adds first-class authentication delegation for custom accounts through `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` and recursive `SorobanDelegateSignature` chains. It also adds `SOROBAN_CREDENTIALS_ADDRESS_V2`, which binds the credential to its account address to prevent cross-account credential reuse. This is a Soroban authorization/credential change, not ZK, consensus, or parallel execution. The current CAP registry still labels CAP-0071 **Accepted**; that normative document status is distinct from the already-completed software implementation and Mainnet activation.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Explains CAP-0071 delegation chains and address-bound V2 credentials. Distinguishes the CAP's Accepted registry status from implementation and network activation.",
         "keyFacts": [
-          "Corrects the stale queued premise: P27 is active since ledger 63386819 on 2026-07-08 and remained live when checked on 2026-07-11.",
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
           "Explains CAP-0071 delegation chains and address-bound V2 credentials.",
           "Distinguishes the CAP's Accepted registry status from implementation and network activation."
         ],
@@ -1476,20 +1476,20 @@
           "Do NOT claim Protocol 27 is still queued or pending on Mainnet.",
           "Do NOT mis-describe CAP-0071 as a consensus, ZK, or parallelism change.",
           "Do NOT infer network activation or non-activation from the CAP status label alone.",
-          "Do NOT present network status without a dated live source or freshness caveat."
+          "Do NOT present network status without a dated live source or freshness caveat.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-31 CORRECTION 2026-07-11: the queued premise and pending/future judge prose are stale. P27 is live from ledger 63386819; CAP-0071 remains labelled Accepted in the registry, demonstrating that normative status and actual network activation are distinct. Grade delegation chains and address-bound V2 mechanics."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "A",
@@ -1547,15 +1547,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The effective answer was post-vote correct, but inherited judge prose still said P27 was future and the answer did not explicitly separate CAP-0071's Accepted registry status from P27 network activation.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-31 primary process 3280 and blind process 3282 independently retained the mechanics and required replacement of stale pending/future judge prose.",
-            "2026-07-11 author re-check: Horizon P26/P27 boundary, two independent Pubnet RPCs, current CAP-0071 source, and official Zipper guide."
+            "P4 Lane R behavioral conversion queue, row 59 (q-protocol-27-cap-0071): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://horizon.stellar.org/ledgers/63386819"
           ],
           "rootCause": [
-            "eval-side date-contingent status trap expired after the scheduled Mainnet vote and survived as contradictory inherited judge prose",
-            "solo://proj/49/todo/date-contingent-trap--831",
-            "improvements/stellar-docs/sd-008-protocol-27-mainnet-status-lag.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-protocol-27-cap-0071"

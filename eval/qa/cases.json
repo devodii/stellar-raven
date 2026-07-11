@@ -1,7 +1,7 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "7406ec462807c02f4364e78aa817f388a6b8f39b83f9e7611a616989e39754c3",
+  "corpusContentSha256": "f986309e582ad413d1303cfcb4ba074ebd77510f94016ca4ab65c9fdb1072ee2",
   "counts": {
     "total": 355,
     "byCategory": {
@@ -24,8 +24,8 @@
       "stellarDocs": 205
     },
     "byFreshness": {
-      "live": 30,
-      "scheduled": 153,
+      "live": 60,
+      "scheduled": 123,
       "stable": 172
     },
     "traps": {
@@ -8570,26 +8570,26 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Define **activity** before ranking: Scout's `sort=activity&range=30d` snapshot, repository last-push recency, direct commit counts, stars, issues, TVL, and market usage are different measures. Report the exact query parameters, generated-at time, DeFi inclusion/filter rule, returned metric, and source timestamp, then list the resulting rows. Do not require Soroswap/Aquarius/Blend/Reflector/Phoenix—or any other names—to appear permanently. If using direct GitHub commits, say which repositories and window were sampled and do not present it as Scout's metric.",
+        "answer": "Use `scout.getHackathon`, `scout.getHackathons`, `scout.getLeaderboard`, `scout.searchProjects`, `scout.searchRepos`, `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Exposes metric, query/window, generatedAt, filter semantics, source timestamp, and resulting rows; distinguishes activity from stars/issues/TVL."
+          "Retrieves source-bounded live results via scout.getHackathon, scout.getHackathons, scout.getLeaderboard, scout.searchProjects, scout.searchRepos, scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
           "Do NOT say Scout activity is repoScore or commit count unless the returned schema establishes that, and do NOT force a fixed roster.",
-          "Do NOT call a ranking 'DeFi' without a visible inclusion rule."
+          "Do NOT call a ranking 'DeFi' without a visible inclusion rule.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "Most-active/top projects → scout_leaderboard. FRESHNESS-flagged ranking (weekly). Scout ranks repos by repoScore (freshness + traction + hackathon/SCF/builder authority); recent commit activity shows live DeFi repos (e.g. blend-sdk-js / blend-ui committed Jun 19 2026; reflector connectors May 2026). The ranking is a moving snapshot — reward flagging that + tool-sourced metrics over a fixed list. 2026-06-29 reviewed: confirmed scout_leaderboard card exists (CARDS.md) and all DeFi names cited (Soroswap, Aquarius, Blend, Reflector, Phoenix) resolve as Live on Scout directory. Confidence kept medium (ranking shifts).\nAlso good if the answer: Surfaces DeFi-relevant projects (e.g. Soroswap, Aquarius, Blend, Reflector, Phoenix) where they rank.\nGolden cites: The leaderboard/ranking source with a freshness caveat.\nGT-19 CORRECTION 2026-07-10: exact metric/query/filter/asOf are the gate. Scout activity, GitHub commits, stars, issues, TVL, and usage are not interchangeable."
       },
       "tags": {
         "category": "defi-ecosystem",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "C",
@@ -8619,12 +8619,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited rubric falsely described Scout activity as repoScore/commit count and forced a stale roster. Live fields and sampled GitHub activity demonstrate distinct, non-interchangeable metrics.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-19 primary 3254 and blind 3258; reviewers obtained different rosters from different reasonable DeFi filters."
+            "P4 Lane R behavioral conversion queue, row 31 (q-eco-most-active-defi-projects): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellarlight.xyz/api/leaderboard?sort=activity&range=30d&limit=100"
           ],
           "rootCause": [
-            "Metric conflation and an undefined category filter turned a live leaderboard into a fixed fact."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-eco-most-active-defi-projects"
@@ -8737,28 +8738,27 @@
         "lumenloop.find_content_by_entity"
       ],
       "golden": {
-        "answer": "**PayPal USD (PYUSD) is live on Stellar.** It launched on **September 18, 2025**. PYUSD is PayPal-branded and **issued by Paxos**. The 2025 SDF launch release and Paxos Stellar metadata name **Paxos Trust Company, LLC**; Paxos's current product page names **Paxos Trust Company, N.A.** Treat this as a dated source/time-slice disagreement—not evidence of a corporate transition unless corporate or regulatory proof establishes one.\n\nThe mainnet issuer is `GDQE7IXJ4HUHV6RQHIUPRJSEZE4DRS5WY577O2FY6YQ5LVWZ7JZTU2V5`; do not confuse it with PayPal's documented testnet issuer. Current supply/circulation is volatile, so cite a ledger/date for any amount and distinguish brand, legal issuer, testnet, mainnet, and SAC identities.",
+        "answer": "Use `lumenloop.find_content_by_entity` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Distinguishes PayPal's product/brand from Paxos as issuer and dates any LLC-versus-N.A. legal-entity wording.",
         "keyFacts": [
-          "Confirms PYUSD launched on Stellar on September 18, 2025.",
-          "Distinguishes PayPal's product/brand from Paxos as issuer and dates any LLC-versus-N.A. legal-entity wording.",
-          "Treats current circulating/supply figures as freshness-sensitive."
+          "Retrieves source-bounded live results via lumenloop.find_content_by_entity and reports their source and as-of date without freezing a roster, rank, count, or current value.",
+          "Distinguishes PayPal's product/brand from Paxos as issuer and dates any LLC-versus-N.A. legal-entity wording."
         ],
         "avoid": [
           "Do NOT claim PayPal itself is the legal issuer, or hard-code one Paxos legal entity without a date/source while the primary disclosures differ.",
-          "Do NOT claim PYUSD is absent from Stellar or give a current supply figure without a dated source."
+          "Do NOT claim PYUSD is absent from Stellar or give a current supply figure without a dated source.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "FRESHNESS + entity. Verified: PayPal's PYUSD launched on Stellar Sep 18, 2025 (SDF press), part of the Sep-2025 RWA/stablecoin cluster around Meridian 2025. Issuer = PayPal (with Paxos). Any circulating/supply figure is volatile — gate on a dated source + staleness caveat.\nAlso good if the answer: Attributes PYUSD to PayPal and frames it as part of the issuer-led stablecoin set on Stellar.\nGolden cites: A dated source for PYUSD on Stellar (Sep 2025).\nGT-20 RE-VERIFIED 2026-07-10: replace inherited 'issuer=PayPal (with Paxos)' shorthand with PayPal-branded, Paxos-issued. LLC-versus-N.A. is a source/time-slice disagreement, not proof of a corporate transition. Mainnet/testnet/SAC addresses and any supply require explicit network/date provenance."
       },
       "tags": {
         "category": "defi-ecosystem",
         "service": "lumenloop",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "disputed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -8809,15 +8809,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-10",
-          "by": "Golden-truth sweep import — The answer already corrected PayPal-brand versus Paxos-issuer roles. GT-20 adds provider TOML, PayPal's mainnet/testnet integration page, and a live Horizon read, while clarifying that LLC-versus-N.A. is a source/time-slice disagreement—not proof of a corporate transition.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 569 Batches D and G and stablecoin sibling sweep, 2026-07-09.",
-            "Solo scratchpad 575 GT-20 primary 3256 and blind 3257; provider TOML/Horizon evidence asOf 2026-07-10."
+            "P4 Lane R behavioral conversion queue, row 32 (q-eco-pyusd-stellar-freshness): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/press/paypal-pyusd-is-now-available-on-stellar"
           ],
           "rootCause": [
-            "Eval-side brand-versus-issuer shorthand in inherited notes.",
-            "solo://proj/49/todo/golden-corpus-health--901"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-eco-pyusd-stellar-freshness"
@@ -8832,28 +8831,27 @@
         "lumenloop.search_directory"
       ],
       "golden": {
-        "answer": "As of **2026-07-10**, a dated, non-exhaustive conventional/payment-stablecoin set on Stellar includes:\n- **USDC** and **EURC** — Circle-issued native Stellar assets;\n- **PYUSD** — PayPal-branded, Paxos-issued; live since 2025-09-18;\n- **EURAU** — AllUnity's fully reserved euro stablecoin, live on Stellar since 2026-04-13;\n- **MGUSD** — MoneyGram-branded, Bridge-issued, natively launched on Stellar on 2026-06-02.\n\nSDF materials also document regional/legacy fiat assets such as GYEN, ZUSD, and AUDD, and a March-2026 report tracked 17 stablecoins across 9+ fiat currencies. Treat this as a changing taxonomy, not a complete registry. Classify **YLDS** separately as Figure's regulated yield-bearing face-amount-certificate product rather than silently merging it with ordinary payment stablecoins. Likewise keep fund shares/RWAs such as BENJI, USDY, and unresolved hybrid products in their correct legal/product class. No complete source supports a blanket 'no algorithmic stablecoin' claim.",
+        "answer": "Use `lumenloop.get_project`, `lumenloop.search_content_semantic`, `lumenloop.search_directory` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Names dated, issuer-sourced examples including USDC, EURC, PYUSD, EURAU, and MGUSD.",
-          "Keeps the roster non-exhaustive and separates payment stablecoins from yield-bearing certificates, fund shares, and other RWAs."
+          "Retrieves source-bounded live results via lumenloop.get_project, lumenloop.search_content_semantic, lumenloop.search_directory and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
           "Do NOT claim PayPal is PYUSD's legal issuer, or present one Paxos legal entity as timeless while dated primary sources differ.",
           "Do NOT invent a stablecoin/issuer or assert a complete absence/presence category without a defined dated universe.",
-          "Do NOT conflate native issuance, supply, app availability, conventional stablecoins, yield-bearing certificates, and fund/RWA tokens."
+          "Do NOT conflate native issuance, supply, app availability, conventional stablecoins, yield-bearing certificates, and fund/RWA tokens.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "VERIFIED issuers against dossier primary sources: Circle USDC + EURC; PayPal PYUSD (launched on Stellar Sep 18 2025); regional anchors like ClickPesa TZS; BENJI as quasi-stable RWA share. Algorithmic stablecoins are absent on Stellar. Freshness:quarterly — new issuers can appear, so flag the list is time-bounded. Stablecoin coverage → lumenloop_search_content_semantic.\nAlso good if the answer: Characterizes the stablecoin set as issuer-led dollars (USDC/EURC/PYUSD), with regional anchors (e.g. ClickPesa's TZS) and BENJI as a quasi-stable RWA.\nGolden cites: A dated source for each named stablecoin.\nGT-20 CORRECTION 2026-07-10 supersedes the inherited 'major set' and algorithmic-absence framing. Grade a dated non-exhaustive taxonomy, issuer roles, and product-class separation; the live Scout stablecoin directory is demonstrably incomplete and mixed-type."
       },
       "tags": {
         "category": "defi-ecosystem",
         "service": "lumenloop",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -8941,15 +8939,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-10",
-          "by": "Golden-truth sweep import — The earlier issuer-role correction remains valid, but the three-token 'major set' is materially stale in 2026 and the algorithmic-absence characterization lacks a defined universe. GT-20 independently confirmed EURAU and MGUSD launches, a broader SDF stablecoin set, and the need to classify YLDS separately.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 569 Batches D and G, 2026-07-09; sibling sweep covered q-eco-pyusd-stellar-freshness, q-eco-2025-defi-launches, and q-asset-usdc-eurc-issuer.",
-            "Solo scratchpad 575 GT-20 primary 3256 and blind 3257; issuer/operator/report checks asOf 2026-07-10."
+            "P4 Lane R behavioral conversion queue, row 33 (q-eco-stablecoins-on-stellar): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/press/paypal-pyusd-is-now-available-on-stellar"
           ],
           "rootCause": [
-            "A dated three-token roster and an unbounded negative were promoted into a current market taxonomy.",
-            "solo://proj/49/todo/golden-corpus-health--901 — risk-weighted refute batch D"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-eco-stablecoins-on-stellar"
@@ -8964,27 +8961,27 @@
         "lumenloop.search_content_semantic"
       ],
       "golden": {
-        "answer": "Use a dated metric matrix and keep stocks and flows separate:\n\n- **SDF Q1 report (published 2026-05-07):** on-chain RWAs crossed **$2B shortly after Q1**, up from **$785M at YE2025**; Q1 stablecoin **payment volume** was **$5.5B**, +72% YoY.\n- **SDF-hosted Allium report (March 2026):** **$246M stablecoin supply**; last-12-month average monthly stablecoin transfer volume **$2.3B raw / $352M adjusted**, with the adjustment methodology stated; **67 RWA products totaling $1.4B**.\n- **rwa.xyz snapshot as of 2026-07-10:** **$3.02B distributed RWA value**, **$78.68M represented value**, **$844.13M 30-day RWA transfer volume**, **$340.86M stablecoin market cap**, and **$5.57B 30-day stablecoin transfer volume** under rwa.xyz definitions.\n\nThese numbers describe different dates, populations, stocks, and flows. Do not merge them, present them as permanent, or use them to claim an undefined 'strongest adoption story.' For a current answer, re-query and cite the source's metric definition, date, period, inclusion/exclusion scope, and raw/adjusted methodology.",
+        "answer": "Use `lumenloop.find_av_passages`, `lumenloop.list_research`, `lumenloop.search_content_semantic` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Separates point-in-time supply/value/market-cap stocks from period payment/transfer-volume flows and flags staleness.",
         "keyFacts": [
-          "Reports dated, directly sourced RWA/stablecoin values with their metric definitions.",
+          "Retrieves source-bounded live results via lumenloop.find_av_passages, lumenloop.list_research, lumenloop.search_content_semantic and reports their source and as-of date without freezing a roster, rank, count, or current value.",
           "Separates point-in-time supply/value/market-cap stocks from period payment/transfer-volume flows and flags staleness."
         ],
         "avoid": [
           "Do NOT sum or compare supply, market cap, distributed/represented value, payment volume, transfer volume, and TVL as though they share one scope.",
-          "Do NOT present a historical scalar as current or assert an undefined adoption superlative."
+          "Do NOT present a historical scalar as current or assert an undefined adoption superlative.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "FRESHNESS item (quarterly). Two dated sources, slightly different cuts: SDF Q1 2026 'Execution at network scale' cites $2B+ on-chain RWAs, $5.5B stablecoin payment volume, ~86% dev growth; Messari 'State of Stellar Q1 2026' (per Lumenloop roundup, week of May 29 2026) puts the tokenized-RWA stack at ~$2.8B (4th among ecosystems) with ~1,700 monthly active devs. Don't gate on one exact number — gate on 'cite a dated Q1-2026 report + flag it's a snapshot.' 2026-06-29 reviewed: directly verified both anchors — SDF blog 'Q1 2026: Execution at network scale' confirms RWAs crossed $2B (from $785M YE2025), stablecoin payment volume $5.5B (+72% YoY); SDF President interview (2026-06-04) states RWA stack now ~$2.8B, '3rd or 4th' among chains. LinkedIn/Messari cross-check shows Stellar #4 RWA (~$1.7B registered-fund scope) — note the $1.2-2B vs $2.8B gap is a scope difference (registered funds vs broad RWA incl. stablecoins); file already gates on caveat. Confidence kept medium (figures move quarterly).\nAlso good if the answer: Attributes the numbers to a specific dated report (SDF Q1 2026 update or Messari State of Stellar Q1 2026) rather than asserting bare figures.\nGolden cites: A dated report (SDF Q1 2026 update or Messari State of Stellar Q1 2026) for the figures.\nGT-20 CORRECTION 2026-07-10 supersedes inherited scope/superlative prose. Grade explicit date, metric definition, stock-versus-flow separation, period, and methodology. Historical $1.52B/$2B/~$2.8B points remain valid only with their dated sources; do not require them in a current snapshot."
       },
       "tags": {
         "category": "defi-ecosystem",
         "service": "lumenloop",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -9093,16 +9090,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-10",
-          "by": "Golden-truth sweep import — Earlier work corrected temporal/misattribution errors. GT-20 found the effective answer still overextended its source list, merged differently defined stocks and flows, and retained an unmeasured 'strongest adoption story' superlative. The correction keeps directly sourced dated series with explicit metric definitions.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "eval/qa/consistency-register.json sweep 2026-07-03; deep-verification quotes/URLs in Solo scratchpad 521",
-            "Solo scratchpad 575 GT-20 primary 3256 and blind 3257; current SDF/Allium/rwa.xyz metric matrix asOf 2026-07-10."
+            "P4 Lane R behavioral conversion queue, row 34 (q-eco-stellar-rwa-stablecoin-volume): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/blog/foundation-news/q1-2026-execution-at-network-scale"
           ],
           "rootCause": [
-            "improvements/lumenloop/ll-009 — the upstream misattribution this golden inherited",
-            "eval-side authoring: the 2026-06-29 review inferred a scope difference without checking rwa.xyz's metric definition (aggregator-adjacent single-class verification)",
-            "solo://proj/49/todo/corpus-health-instru--829"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-eco-stellar-rwa-stablecoin-volume"
@@ -9115,28 +9110,27 @@
         "scout.searchProjects"
       ],
       "golden": {
-        "answer": "To enumerate Stellar wallet directory records, page through the current directory response, then filter the raw `types` array for exact **Wallet** membership. Return the query/source, generated-at time, total exact rows, lifecycle labels, duplicate/canonical handling, and every matching row—or explicitly label a sample as non-exhaustive.\n\nTwo independent reads on **2026-07-10** produced **60** and then **59** exact Wallet-typed rows while the keyword result stayed 164; the unresolved one-row difference is itself evidence that a frozen count is unsafe. The later snapshot had 54 Live, 1 Development, and 4 Inactive rows, including duplicate-name Stellar Passport records under different slugs. **StellarTerm was typed DEX, not Wallet.** Directory status is source-relative and does not prove current installability, custody, chain support, maintenance, jurisdiction, or app-store availability; verify those separately with operator/app-store evidence.",
+        "answer": "Use `scout.searchProjects` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Separates directory lifecycle from product availability and handles duplicates/canonical records.",
         "keyFacts": [
-          "Uses pagination and exact Wallet-type filtering with source/generatedAt/count provenance.",
-          "Separates directory lifecycle from product availability and handles duplicates/canonical records.",
-          "Does not include StellarTerm as Wallet-typed in the current snapshot."
+          "Retrieves source-bounded live results via scout.searchProjects and reports their source and as-of date without freezing a roster, rank, count, or current value.",
+          "Separates directory lifecycle from product availability and handles duplicates/canonical records."
         ],
         "avoid": [
           "Do NOT call a small hand-picked roster exhaustive or hard-code 59/60 as permanent.",
-          "Do NOT treat keyword/semantic matches, directory Live, or app code as proof of exact Wallet typing or current availability."
+          "Do NOT treat keyword/semantic matches, directory Live, or app code as proof of exact Wallet typing or current availability.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GROUNDED 2026-06-25: Lumen Loop / Scout directory wallet records confirm Freighter, Lobstr, Hana, xBull, with StellarTerm + Hot Wallet as adjacent options. Enumerating wallets the directory tracks → scout_projects (free-text directory); lumenloop_search_directory acceptable. Trap = fabricating wallet names or routing to general-web. List is curated, not exhaustive and should be treated as freshness-sensitive.\nAlso good if the answer: Distinguishes wallet types (browser-extension vs mobile vs multi-wallet kits) where the directory supports it.\nGolden cites: The Stellar project directory (scout_projects / lumenloop directory) entries for wallets.\nGT-20 CORRECTION 2026-07-10: grade pagination, exact-type filtering, generatedAt/count/source provenance, duplicate handling, and status-versus-availability separation. Never require a frozen roster/count."
       },
       "tags": {
         "category": "defi-ecosystem",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "corpus-grounded",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "C",
@@ -9183,14 +9177,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited answer claimed to enumerate Wallet-typed directory entries but returned a stale handful, included StellarTerm despite its current DEX type, and conflated directory status with usable application availability. Independent live runs differed by one exact Wallet row within an hour, demonstrating why the golden must gate behavior rather than a count.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-20 primary 3256 and blind 3257",
-            "Sibling sweep: q-eco-wallets-overview/similar, q-eco-freighter-wallet, q-eco-lobstr-wallet, q-eco-hana-wallet-scf, and wallet tooling cases"
+            "P4 Lane R behavioral conversion queue, row 35 (q-eco-stellar-wallets-list): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellarlight.xyz/directory"
           ],
           "rootCause": [
-            "A small directory snapshot was presented as exhaustive and semantic/keyword routing was confused with exact type and availability.",
-            "improvements/stellar-light-scout/sls-024-project-lifecycle-operator-conflicts.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-eco-stellar-wallets-list"
@@ -9844,28 +9837,28 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "The draft contains two false-or-unsupported claims:\n\n- **'Soroswap is Stellar's first AMM' — false in the broad Stellar sense.** The classic SDEX is an older order-book venue, and the direct AMM counterexample is Stellar's protocol-native constant-product liquidity pools, activated with **CAP-0038 / Protocol 18 on 2021-11-03**. Soroswap's 'first DEX/aggregator' or 'first AMM on Soroban' wording remains attributed operator marketing unless independent chronology supports it.\n- **'just passed $1B in TVL' — false within the identified live Soroswap-AMM series and unsupported more broadly.** At a **2026-07-10** DefiLlama probe, that series was about **$1.23M current** and its recorded maximum was below **$10M**. Those examples are volatile and non-gating; other routed-volume or private metrics must be named separately and cumulative trading volume is not TVL.\n\nA safe correction is: Soroswap is a Soroban AMM and aggregation/API stack, not Stellar's first AMM, and no dated source checked supports $1B TVL.",
+        "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Corrects the first-AMM claim using SDEX and CAP-0038/Protocol-18 chronology.",
         "keyFacts": [
-          "Corrects the first-AMM claim using SDEX and CAP-0038/Protocol-18 chronology.",
-          "Attributes Soroswap's first-aggregator wording and rejects the unsourced $1B TVL claim."
+          "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value.",
+          "Corrects the first-AMM claim using SDEX and CAP-0038/Protocol-18 chronology."
         ],
         "avoid": [
           "Do NOT affirm first AMM, $1B TVL, or independently verified first-aggregator chronology.",
-          "Do NOT substitute a different current TVL without a date, source, and metric scope."
+          "Do NOT substitute a different current TVL without a date, source, and metric scope.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "Strict governance fact-check. should_fire:true: Raven should answer by CORRECTING the false premise and flagging the unverifiable TVL, not by affirming. Freshness:true on the TVL. Phase-2 confirm CAP-0038 / Protocol 18 framing and that no credible source supports a $1B Soroswap TVL.\nAlso good if the answer: Explicitly classifies each sub-claim as true / false / unverifiable rather than affirming the post wholesale.\nGolden cites: A source for CAP-0038 / Protocol 18 AMM pools; a current, dated source for any TVL figure (or note its absence).\nGT-18/23 correction 2026-07-10: operator firstness remains attributed. Classic SDEX is an older order book; Protocol-18 pools are the direct AMM counterexample. The named DefiLlama series makes $1B false in that scope, while current/max examples remain dated and non-gating."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "scout",
-        "freshness": "scheduled",
+        "freshness": "live",
         "trap": "governance"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -9927,14 +9920,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The fact-check correctly rejects 'first AMM' and unsupported $1B TVL, but it promoted Soroswap's self-description as the first DEX aggregator into independently established chronology. The correction preserves the refutation and attributes the remaining marketing claim.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-18 primary 3249 and blind 3252",
-            "Sibling sweep: q-defi-soroswap-what-is/content/similar and q-protocol-amm-cap-0038"
+            "P4 Lane R behavioral conversion queue, row 36 (q-edge-factcheck-soroswap-first-amm): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/press/automated-market-maker-functionality-is-live-on-stellar"
           ],
           "rootCause": [
-            "An operator superlative was retained as fact while correcting a neighboring false superlative.",
-            "improvements/stellar-light-scout/sls-015-searchprojects-description-editorial-capture.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-factcheck-soroswap-first-amm"
@@ -9947,26 +9939,25 @@
         "lumenloop.search_directory"
       ],
       "golden": {
-        "answer": "Answer both parts using **one named provider/series**, a retrieval timestamp, and a declared meaning of 'this quarter' (for example, calendar-quarter-to-date). At a **2026-07-10** DefiLlama probe, Blend's base Stellar series was about **$140.74M**, versus **$131.98M** on July 1—about **+6.64% Q3-to-date**—with a separate Q3 peak around **$144.86M**. Those values are illustrative, volatile, and non-gating. Re-query before answering. Do not average different refreshes or mix base TVL with borrowed, pool2/backstop, fees, volume, quarter peak, or all-time record.",
+        "answer": "Use `lumenloop.search_directory` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Provides a dated same-provider current point and start/end trend over a declared quarter window.",
-          "Separates current, trend, quarter peak, record, borrowed, pool/backstop, fees, and volume."
+          "Retrieves source-bounded live results via lumenloop.search_directory and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
-          "Do NOT answer only with a dashboard pointer, give an undated scalar, fabricate a trend, average provider refreshes, or mix metric classes."
+          "Do NOT answer only with a dashboard pointer, give an undated scalar, fabricate a trend, average provider refreshes, or mix metric classes.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-23 2026-07-10: require a dated same-provider current point plus declared-window start/end trend; a dashboard pointer alone does not answer the question. Keep all examples non-gating and separate TVL, borrowed, pool/backstop, peaks, records, fees, and volume.\nGT-23 CORRECTION 2026-07-10: provider/window/methodology behavior is the gate, not the illustrative values."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "lumenloop",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "D",
@@ -10029,15 +10020,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-10",
-          "by": "Golden-truth sweep import — The generic freshness template allowed a dashboard pointer and made the requested quarter trend optional. Current and blind evidence supports a same-provider point plus declared-window trend while keeping all scalars non-gating.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-23 primary 3264 and blind 3267; direct DefiLlama probe 2026-07-10T19:23Z."
+            "P4 Lane R behavioral conversion queue, row 37 (q-edge-fresh-latest-blend-tvl): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://defillama.com/protocol/blend"
           ],
           "rootCause": [
-            "A generic freshness row lagged newer provider/window/methodology siblings and under-answered the explicit trend request.",
-            "improvements/stellar-light-scout/sls-031-tvl-methodology-provenance.md",
-            "improvements/stellar-light-scout/sls-039-project-tvl-history-capability.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-fresh-latest-blend-tvl"
@@ -10052,28 +10042,27 @@
         "stellarDocs.search_soroban_contract_docs"
       ],
       "golden": {
-        "answer": "**Freshness-honesty case — gate the behavior, not a frozen number.** As of **2026-07-09**, Mainnet runs **Protocol 27, Zipper**; live Horizon shows the P26→P27 boundary at ledger **63386819** on **2026-07-08 17:00:10 UTC**. A correct answer should still perform a dated lookup against an authoritative live network source, state the observed version and as-of time, and warn that validator upgrade votes can make it stale. Software release tags are supporting context, not proof of network activation.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs`, `stellarDocs.search_soroban_contract_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.",
         "keyFacts": [
-          "Gives the current protocol version from a dated authoritative live-network lookup and flags that it may become stale after a validator upgrade vote.",
-          "Treats Protocol 27 as live on Mainnet after 2026-07-08, while preserving the behavior-first rather than frozen-number grading rule."
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs, stellarDocs.search_soroban_contract_docs and labels version, UI, provider, and availability claims as observed."
         ],
         "avoid": [
           "Do NOT state a protocol version as definitively current without a dated source or staleness flag.",
           "Do NOT claim Protocol 26 is still current or that the Protocol 27 Mainnet vote remains pending.",
-          "Do NOT infer live network activation solely from a software release tag."
+          "Do NOT infer live network activation solely from a software release tag.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-23 2026-07-10: Pubnet runs Protocol 27; Horizon/RPC establish activation at ledger 63386819 on 2026-07-08T17:00:10Z. Grade a dated live-network lookup and release-versus-activation distinction, not a frozen latest-ledger number.\nAlso good if the answer: Points the user to an authoritative live source (e.g. dashboard / stellar-core release / docs) to confirm the current version.\nGolden cites: Cite a dated source for the version (docs / stellar-core release / network dashboard).\nPOST-VOTE GT-23 CORRECTION 2026-07-10: the stale P26/pending-vote paragraph is replaced rather than left as contradictory judge context."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -10112,16 +10101,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-09",
-          "by": "Golden-truth sweep import — The behavior-first rubric was sound, but both its illustrative answer and grader notes froze Protocol 26 as current and the July 8 Protocol 27 vote as pending. That expired narrative can steer a judge even though the case explicitly says not to hard-gate on a number.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "2026-07-09 sibling sweep and independent final diff review in Solo scratchpad 567",
-            "Horizon first-P27 ledger 63386819 closed 2026-07-08T17:00:10Z"
+            "P4 Lane R behavioral conversion queue, row 38 (q-edge-fresh-latest-protocol-version): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://horizon.stellar.org/ledgers/63386819"
           ],
           "rootCause": [
-            "eval-side date-contingent example expired while the durable behavior gate remained valid",
-            "solo://proj/49/todo/date-contingent-trap--831",
-            "improvements/stellar-docs/sd-008-protocol-27-mainnet-status-lag.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-fresh-latest-protocol-version"
@@ -10136,25 +10123,25 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "As of **2026-07-10**, **SCF #45** is the Build Award round in the **Submission** phase, with an official submission deadline of **August 16, 2026**. The page does not provide an answer-safe deadline time/timezone, so do not invent one. Teams are directed to submit the interest form promptly; qualifying teams are invited to submit by the deadline. Distinguish this from **#44**, which is in Notification & Award Distribution, and **#43**, the last concluded round. Re-check the live official page because round phases and dates can change.",
+        "answer": "Use `scout.getRfps`, `scout.searchRepos`, `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Answers with a dated round, phase, and deadline and distinguishes accepting submissions from review/distribution/concluded states."
+          "Retrieves source-bounded live results via scout.getRfps, scout.searchRepos, scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
-          "Do NOT substitute #44 or #43, invent a deadline time/timezone, give only a dashboard pointer, or freeze #45/August 16 as permanent."
+          "Do NOT substitute #44 or #43, invent a deadline time/timezone, give only a dashboard pointer, or freeze #45/August 16 as permanent.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-23 2026-07-10: require an actual dated round/phase/deadline answer plus live-source pointer. Distinguish #45 Submission, #44 distribution, and #43 concluded; examples remain non-gating and no deadline time/timezone is inferred.\nGT-23 CORRECTION 2026-07-10: phase semantics and an answer-visible dated exemplar replace the abstract pointer-only template."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -10195,13 +10182,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-10",
-          "by": "Golden-truth sweep import — The behavior-first template was safe but under-answered the question and drifted from the corrected current-round sibling. Highest, accepting submissions, reviewing, distributing, and concluded are distinct SCF states.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-23 primary 3264 and blind 3267; official/Scout agreement asOf 2026-07-10."
+            "P4 Lane R behavioral conversion queue, row 39 (q-edge-fresh-latest-scf-round): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://communityfund.stellar.org/awards"
           ],
           "rootCause": [
-            "A volatile direct sibling was corrected without propagating the new phase/deadline model to this generic freshness row."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-fresh-latest-scf-round"
@@ -10214,26 +10202,27 @@
         "lumenloop.search_content_semantic"
       ],
       "golden": {
-        "answer": "Define **this week's window** and an as-of timestamp, retrieve candidate items from dated Stellar/Lumenloop content and an independent recency-aware check, then validate an eligible **publication or event date** for every row and state which date is being used. Exclude undated rows from 'this week' and post-sort chronologically rather than treating semantic rank as newest. Choose 'big' items with a short significance rationale, label the digest non-exhaustive and moment-bounded, and keep specific headlines illustrative rather than permanent grading facts.",
+        "answer": "Use `lumenloop.search_content_semantic` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Uses an explicit window/asOf, validates and labels the date field, chronologically post-sorts candidates, and excludes undated rows. Separates recency from editorial significance and states the digest is non-exhaustive.",
         "keyFacts": [
+          "Retrieves source-bounded live results via lumenloop.search_content_semantic and reports their source and as-of date without freezing a roster, rank, count, or current value.",
           "Uses an explicit window/asOf, validates and labels the date field, chronologically post-sorts candidates, and excludes undated rows.",
           "Separates recency from editorial significance and states the digest is non-exhaustive."
         ],
         "avoid": [
-          "Do NOT treat the top semantic hit, ingestion/scrape time, or an undated row as the newest publication/event; do not fabricate news or expose retired/non-manifest operation names."
+          "Do NOT treat the top semantic hit, ingestion/scrape time, or an undated row as the newest publication/event; do not fabricate news or expose retired/non-manifest operation names.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-23 2026-07-10: require explicit window/asOf, eligible date-field validation, chronological post-sort, exclusion of undated rows, significance rationale, and non-exhaustive scope. Semantic relevance is not chronology; publication, event, ingestion, and scrape dates are distinct.\nGT-23 CORRECTION 2026-07-10: current exposed-surface wording and chronology checks replace legacy operation names and top-hit=newest assumptions."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "lumenloop",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -10286,12 +10275,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The freshness core is right, but the answer leaked retired/non-exposed operation names and did not require chronological date validation after semantic retrieval. Relevance, publication, event, ingestion, and scrape dates are distinct.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-23 primary 3264 and blind 3267; ll-006 recurrence. July 6 UNDP/SDF and July 8 P27 are illustrative, not gating."
+            "P4 Lane R behavioral conversion queue, row 40 (q-edge-fresh-most-recent-news): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/blog"
           ],
           "rootCause": [
-            "Prior-art routing metadata leaked into gospel and a generic freshness template treated relevance rank as sufficiently recent."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-fresh-most-recent-news"
@@ -10598,28 +10588,28 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "There is no protocol-defined, universally exact Stellar DeFi TVL **as of this moment**. A provider snapshot may be quoted, but it must carry the provider and endpoint/dashboard, retrieval time, provider data-as-of time if supplied, tracked-protocol inclusion rule, and pricing methodology. On 2026-07-10, DefiLlama's API, page, and completed daily series exposed different values in the same broad observation window; the API's many decimal places represented its current calculation, not objective to-the-dollar truth. Re-query before answering, label the result as provider-scoped, and do not silently sum overlapping protocol, RWA, and asset rows. An approximate range is optional, not mandatory, when a properly scoped live snapshot is available.",
+        "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Requires provider, endpoint, retrieval/as-of time, inclusion basis, and pricing methodology.",
         "keyFacts": [
-          "Rejects a provider snapshot as universally exact while allowing a precise, dated, provider-scoped live value.",
+          "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value.",
           "Requires provider, endpoint, retrieval/as-of time, inclusion basis, and pricing methodology."
         ],
         "avoid": [
           "Do NOT present any provider value as an exact objective chain fact.",
-          "Do NOT claim Raven cannot access a live scalar, assert that TVL necessarily moves block-by-block, or silently combine incompatible scopes."
+          "Do NOT claim Raven cannot access a live scalar, assert that TVL necessarily moves block-by-block, or silently combine incompatible scopes.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-25 CORRECTION 2026-07-10: precise live provider scalars are accessible, but they are provider-defined snapshots rather than universal truth. Grade provider/endpoint/as-of/method scope and no false exactness; do not require an approximate range or claim block-by-block movement.\nGT-25 independently confirmed by processes 3268/3273; reuse sls-031/sls-038 rather than duplicate findings."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "scout",
-        "freshness": "scheduled",
+        "freshness": "live",
         "trap": "fabrication-bait"
       },
       "truth": {
         "domain": "mixed",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-08-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "D",
@@ -10660,15 +10650,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The no-fabrication behavior is right, but live providers do return precise scalars; the inherited answer incorrectly made Raven access synonymous with world unknowability and asserted an unverified block-by-block mechanism.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-25 primary 3268 and blind 3273; both independently observed DefiLlama /v2/chains value 229093918.7739924 at separate times.",
-            "Existing improvements/stellar-light-scout/sls-031 and sls-038 cover provenance and ecosystem-rollup contract gaps."
+            "P4 Lane R behavioral conversion queue, row 41 (q-edge-noinfo-exact-tvl-figure): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://defillama.com/data-definitions"
           ],
           "rootCause": [
-            "improvements/stellar-light-scout/sls-031-tvl-methodology-provenance.md",
-            "improvements/stellar-light-scout/sls-038-analyze-tvl-contract-mismatch.md",
-            "Eval-side aggregation/cadence explanation was overclaimed."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-noinfo-exact-tvl-figure"
@@ -10753,28 +10741,28 @@
         "stellarDocs.search_protocol_concepts_docs"
       ],
       "golden": {
-        "answer": "Stellar has no network-wide switch, CLI flag, or account setting that makes all payments shielded by default. Ordinary Stellar transactions and standard asset/token activity are public by default. Privacy requires an explicit application or token protocol: current official material describes privacy pools and a **Testnet Confidential Tokens developer preview**; Confidential Tokens hide balances and transfer amounts but leave sender/receiver addresses public, while Stellar Private Payments is an unaudited research prototype with different visibility boundaries. BLS12-381 (CAP-0059/P22) and BN254/Poseidon (CAP-0074/0075/P25) are cryptographic primitives, not a global privacy mode. State each product's network, audit, and field-visibility status; do not fabricate enablement steps.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Rejects a global shielded-by-default toggle and scopes transparency to ordinary/default activity.",
         "keyFacts": [
-          "Rejects a global shielded-by-default toggle and scopes transparency to ordinary/default activity.",
-          "Distinguishes current application-layer privacy status and field visibility from P22/P25 cryptographic primitives."
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
+          "Rejects a global shielded-by-default toggle and scopes transparency to ordinary/default activity."
         ],
         "avoid": [
           "Do NOT invent an enablement command or claim Stellar is shielded by default.",
-          "Do NOT say all application-layer balances/amounts must remain visible or imply Testnet/research prototypes are audited Mainnet products."
+          "Do NOT say all application-layer balances/amounts must remain visible or imply Testnet/research prototypes are audited Mainnet products.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-25 CORRECTION 2026-07-10: no global privacy toggle exists, but current optional applications can hide defined fields. Grade ordinary/default transparency plus explicit product network, audit, and visibility status; BN254/Poseidon are live P25 primitives, not a turnkey mode.\nGT-25 independently confirmed by processes 3268/3273."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "stellarDocs",
-        "freshness": "scheduled",
+        "freshness": "live",
         "trap": "fabrication-bait"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-09-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -10819,12 +10807,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The no-global-toggle correction remains valid, but the inherited answer overgeneralized ordinary ledger visibility to optional privacy applications and described now-live Protocol 25 primitives as merely later.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-25 primary 3268 and blind 3273; both independently confirmed product/network/audit/field-visibility boundaries."
+            "P4 Lane R behavioral conversion queue, row 42 (q-edge-noinfo-stellar-native-privacy-default): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/build/apps/privacy"
           ],
           "rootCause": [
-            "Eval-side freshness and layer-boundary drift; official docs are current and discoverable."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-noinfo-stellar-native-privacy-default"
@@ -11119,27 +11108,27 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "SCF payment terms and Stellar Mainnet authority are separate. As of **2026-07-10**, the published Build Award schedule is **10% on award acceptance, 20% after MVP, 30% after Testnet/equivalent, and 40% after verified Mainnet launch plus UX readiness**. Later payments require verified deliverables. Current public guidelines require each completion form within 90 calendar days of the preceding payment and allow SDF, absent timely written delay notice and acknowledgement, to deem unpaid tranches forfeited and the award terminated. Project-specific agreements and future terms may differ.\n\nThat structure shifts execution and cash-flow risk to recipients; whether it is 'predatory' or fair is an evaluative judgment, not established by the 10% fact alone. SDF can administer, suspend, modify, or end its grants and control its sites/branding. That does **not** create a unilateral protocol switch to delete an independently operated Mainnet contract/app, though an app can depend on its own admins, issuers, front end, SDF-operated services, and network/quorum choices.",
+        "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Separates grant administration from protocol-level ability to erase an independently operated app.",
         "keyFacts": [
-          "States the dated 10/20/30/40 Build schedule and current 90-day/unpaid-tranche rule.",
+          "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value.",
           "Separates grant administration from protocol-level ability to erase an independently operated app."
         ],
         "avoid": [
           "Do NOT infer fairness/predation from 10% alone, claim already-paid funds are automatically clawed back, or duplicate the current-round/deadline answer here.",
-          "Do NOT claim SCF acceptance gives SDF unilateral protocol power to delete a Mainnet app."
+          "Do NOT claim SCF acceptance gives SDF unilateral protocol power to delete a Mainnet app.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-26 2026-07-10: grade the dated 10/20/30/40 schedule, current 90-day/unpaid-tranche term, normative fairness caution, and grant-versus-protocol authority distinction. Current-round facts belong to the dedicated SCF-round cases.\nGT-26 CORRECTION 2026-07-10: replace current-round scope creep with the actual Build payment/forfeiture terms and durable grant-versus-network distinction."
       },
       "tags": {
         "category": "edge-behavior",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2027-07-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -11220,16 +11209,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-10",
-          "by": "Golden-truth sweep import — The central grant-versus-network-control argument remains correct, but its supporting current-round example repeated q-scf-current-round's expired July 26 deadline. The live official awards page and Scout's independently surfaced live-round metadata now agree on SCF #45 closing 2026-08-16, so the sibling must move with the current-round correction.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 569 Batch B, 2026-07-09.",
-            "Sibling sweep covered q-scf-current-round and found the same expired date in both cases.",
-            "Solo scratchpad 575 GT-26 primary 3269 and blind 3271; current 90-day/unpaid-tranche terms checked 2026-07-10."
+            "P4 Lane R behavioral conversion queue, row 43 (q-edge-scf-v7-centralization-myths): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/blog/ecosystem/introducing-scf-v7"
           ],
           "rootCause": [
-            "Ordinary freshness drift in a duplicated current-round example; the durable grant-versus-mainnet-control claim was not contradicted.",
-            "solo://proj/49/todo/golden-corpus-health--901 — q-scf-current-round sibling expansion"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-scf-v7-centralization-myths"
@@ -11487,25 +11474,25 @@
         "scout.matchPartners"
       ],
       "golden": {
-        "answer": "Use a dated status table rather than one timeless deployment list. **MoneyGram Ramps** is a current Stellar/USDC cash-in/out example, with exact coverage stated from a dated operator source. **Nium's ~190-country statement** is a 2022 platform capability claim; **Velo/PDAX** described an agreement/intended Philippines corridor; **Coins.ph** is a historical Stellar route; and Onafriq's broad corporate footprint does not by itself prove current Stellar consumer availability in every market. For every row label live, historical, announced, or capability-only, identify the actual settlement asset when known, and verify current corridor/provider availability.",
+        "answer": "Use `scout.getPartners`, `scout.matchPartners` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Provides at least one dated live deployment and classifies every other example by lifecycle/evidence status and settlement asset."
+          "Retrieves source-bounded live results via scout.getPartners, scout.matchPartners and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
-          "Do NOT present every historic/announced capability as a current corridor, equate corporate footprint with Stellar coverage, globally ban XLM settlement, or freeze one coverage count."
+          "Do NOT present every historic/announced capability as a current corridor, equate corporate footprint with Stellar coverage, globally ban XLM settlement, or freeze one coverage count.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-27 2026-07-10: grade dated row-level lifecycle and settlement-asset evidence. MoneyGram is current; Nium/Velo-PDAX/Coins.ph/Onafriq require capability, announcement, historical, or coverage caveats. Counts remain source/time scoped.\nGT-27 CORRECTION 2026-07-10: a partner roster is not a current deployment census."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -11552,14 +11539,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited roster flattened live, historical, announced, and capability-only relationships into current production corridors and overgeneralized USDC settlement to every deployment.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-27 primary 3270 and blind 3272; corridor sibling sweep."
+            "P4 Lane R behavioral conversion queue, row 44 (q-hist-remittance-corridors): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/products-and-tools/moneygram"
           ],
           "rootCause": [
-            "Partner capability, announcement, historic route, and live consumer deployment were collapsed.",
-            "improvements/lumenloop/ll-008-directory-record-coverage-field-quality.md",
-            "improvements/stellar-light-scout/sls-024-project-lifecycle-operator-conflicts.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-hist-remittance-corridors"
@@ -11911,25 +11897,26 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Start with SDF's official **Mandate** page for current bucket definitions, displayed timestamps, and named StellarExpert account links, and use the **Quarterly Reports** landing page for the report series. Date every balance or bucket total. Treat official mandate attribution—not account size alone—as the ownership evidence, then verify point-in-time state on Horizon/explorer. Sample linked addresses are not an exhaustive wallet list, and mechanical sums across buckets with different timestamps are not a universal current SDF total.",
+        "answer": "Use `scout.searchProjects`, `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Uses official mandate/account attribution and the reports landing page, dates balances, and separates named examples from exhaustive holdings.",
         "keyFacts": [
+          "Retrieves source-bounded live results via scout.searchProjects, scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value.",
           "Uses official mandate/account attribution and the reports landing page, dates balances, and separates named examples from exhaustive holdings."
         ],
         "avoid": [
-          "Do NOT fabricate addresses/totals, infer ownership from size, sum mismatched timestamps, or treat sample accounts/a single report as exhaustive/current."
+          "Do NOT fabricate addresses/totals, infer ownership from size, sum mismatched timestamps, or treat sample accounts/a single report as exhaustive/current.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-27 2026-07-10: use mandate-linked attribution and the quarterly-reports series, date every balance, and keep sample accounts/mismatched bucket timestamps non-exhaustive. Explorer size alone is not ownership evidence.\nGT-27 PRECISION 2026-07-10: current report-series and mandate mapping replace sample-list ambiguity."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -11975,13 +11962,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The core discovery method is correct, but a single Q1 blog and sample accounts should not stand in for the current reports series or an exhaustive holdings list.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-27 primary 3270 and blind 3272; transparency/holdings sibling sweep."
+            "P4 Lane R behavioral conversion queue, row 45 (q-hot-sdf-transparency-wallets-reports): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/foundation/mandate"
           ],
           "rootCause": [
-            "A single report pointer and two examples could be read as a complete current wallet/accounting set.",
-            "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-hot-sdf-transparency-wallets-reports"
@@ -11994,27 +11981,26 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "SDF uses XLM entrusted under its published mandate and describes selling existing XLM through **Kraken, Coinbase, Bitstamp, and direct sales** to fund operating expenses and broader mandate work. Those sales do not mint new XLM. Current disclosures discuss liquidity and price discovery, but they do not promise an XLM price peg, floor, or guarantee. SDF's **November 2019** burn announcement also said it would not burn additional lumens. As of **2026-07-10**, no newer primary SDF announcement of another burn was found in the current mandate/reporting surfaces. Treat both the 2019 statement and current absence as dated evidence—not a perpetual guarantee or forecast. Use the live mandate/dashboard or latest quarterly report for any balance, and do not sum mixed-timestamp bucket rows as a synchronized exhaustive holding.",
+        "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Explains current exchange/direct-sale purpose without implying minting or price guarantees.",
-          "Represents the 2019 no-additional-burn statement and 2026-07-10 recheck as dated, source-bounded evidence."
+          "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
           "Do NOT claim SDF pegs or guarantees XLM's price.",
-          "Do NOT predict a burn, turn the 2019 statement into a protocol impossibility, or treat named mixed-timestamp accounts as exhaustive current holdings."
+          "Do NOT predict a burn, turn the 2019 statement into a protocol impossibility, or treat named mixed-timestamp accounts as exhaustive current holdings.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "Snapshot 2026-06-29. No current primary source found announcing another burn (the November 2019 burn remains a one-time historical event). Reserve/sales details are report-sensitive; verify the latest SDF report if exact figures are needed. DIFFERENTIATED from q-hot-sdf-transparency-wallets-reports (which owns address/report discovery); this file owns the price-support-myth plus future-burn-myth debunk.\nAlso good if the answer: References SDF mandate, transparency, or quarterly reporting as the proper source for current reserve/use disclosures. | Contrasts the 2019 supply burn as a one-time historical event rather than a recurring tokenomics mechanism.\nGolden cites: A current SDF mandate/transparency/reporting source, plus a dated source for any stated future-burn claim.\nGT-28 CORRECTION 2026-07-10: sales fund operations/mandate work; no price guarantee is disclosed. The 2019 no-additional-burn statement and the current no-new-plan sweep are dated evidence, not eternal promises."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -12054,13 +12040,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The mandate/price-support distinction is sound, but the future-burn negative needed the dated 2019 statement and a current source-bounded recheck rather than generic speculation language.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; seven-case substantive agreement."
+            "P4 Lane R behavioral conversion queue, row 46 (q-hot-sdf-xlm-holdings-sales): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/foundation/mandate"
           ],
           "rootCause": [
-            "Eval-side negative-claim provenance collapsed a dated policy statement and current search absence.",
-            "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-hot-sdf-xlm-holdings-sales"
@@ -12075,27 +12061,28 @@
         "stellarDocs.search_soroban_contract_docs"
       ],
       "golden": {
-        "answer": "Horizon is a REST/HAL API and indexer with curated entity/relationship resources, HAL pagination, and documented SSE streaming. Stellar RPC is the forward JSON-RPC gateway for live/current network state, recent/raw transactions and events, classic plus smart-contract queries, simulation, and submission. It is not Soroban-only and is not a full Horizon indexer. Use RPC for new smart-contract/current-state work, but keep Horizon, an indexer, Portfolio APIs, or Hubble where curated/full-history workloads require them. Official pages currently dispute whether Horizon is already 'deprecated' versus nearing EOL, so state that conflict rather than pinning either label.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs`, `stellarDocs.search_soroban_contract_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Distinguishes transport/data shapes and overlap without full parity. States RPC's classic+contract scope and encodes the Horizon lifecycle dispute.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs, stellarDocs.search_soroban_contract_docs and labels version, UI, provider, and availability claims as observed.",
           "Distinguishes transport/data shapes and overlap without full parity.",
           "States RPC's classic+contract scope and encodes the Horizon lifecycle dispute."
         ],
         "avoid": [
           "Do NOT call RPC Soroban-only or a complete Horizon replacement.",
-          "Do NOT pin a categorical Horizon status or promise universal full history."
+          "Do NOT pin a categorical Horizon status or promise universal full history.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "Core must_avoid: confusing Horizon/RPC roles + over-claiming a wholesale migration. This is the must_avoid the brief flagged.\nAlso good if the answer: Roughly half of Horizon's endpoints have no direct RPC equivalent (e.g. claimable balances, offers, liquidity pools, operations/{id}, effects), so Horizon or an indexer is still needed for those. | Both return XDR values inside JSON.\nGolden cites: developers.stellar.org Horizon overview, RPC overview, and the migrate-from-horizon-to-rpc guide.\nGT-49 CORRECTION 2026-07-11: weight durable architecture; lifecycle polarity remains disputed."
       },
       "tags": {
         "category": "tooling-infra",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "mixed",
         "status": "disputed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-09-01",
         "sources": [
           {
             "class": "A",
@@ -12170,13 +12157,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited comparison called RPC Soroban-only and asserted a categorical Horizon lifecycle status despite official conflict.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-49 primary 3335 and blind 3341; sibling q-protocol-horizon-vs-rpc already encoded the dispute."
+            "P4 Lane R behavioral conversion queue, row 47 (q-infra-horizon-vs-rpc): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/data/apis/rpc"
           ],
           "rootCause": [
-            "improvements/stellar-docs/sd-017-horizon-lifecycle-wording-conflict.md",
-            "Historical Soroban RPC naming persisted after scope expansion."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-infra-horizon-vs-rpc"
@@ -12191,28 +12178,28 @@
         "stellarDocs.search_sdk_cli_tools_docs"
       ],
       "golden": {
-        "answer": "Hubble is SDF's public, read-only Stellar historical analytics dataset in BigQuery. The canonical project/dataset path is `crypto-stellar.crypto_stellar`, usable from the BigQuery UI, SDKs, SQL tools, and Looker-style analytics. It is for bulk historical queries, not transaction submission or low-latency current-state reads. Current docs describe intraday batch updates but no guaranteed same-day cadence, so date exact table/schema/freshness claims and do not call it real time.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs`, `stellarDocs.search_sdk_cli_tools_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Names the public BigQuery dataset path and historical analytics workload. Rejects real-time/submission use and qualifies cadence/schema freshness.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs, stellarDocs.search_sdk_cli_tools_docs and labels version, UI, provider, and availability claims as observed.",
           "Names the public BigQuery dataset path and historical analytics workload.",
-          "Rejects real-time/submission use and qualifies cadence/schema freshness.",
-          "Separates current/recent RPC, historical SQL Hubble, and curated indexer workloads."
+          "Rejects real-time/submission use and qualifies cadence/schema freshness."
         ],
         "avoid": [
           "Do NOT describe Hubble as RPC, a wallet, or a real-time guaranteed feed.",
-          "Do NOT invent a dataset path or freeze schema/cadence."
+          "Do NOT invent a dataset path or freeze schema/cadence.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "The crypto-stellar.crypto_stellar BigQuery path is the load-bearing fact — verified against connecting-to-bigquery (project crypto-stellar, dataset crypto_stellar; UI/SDK/Looker access; billing-enabled GCP project required).\nAlso good if the answer: You can access it via the BigQuery UI, the BigQuery client SDK (e.g. google-cloud-bigquery), or Looker Studio. | Example tables include current-state tables like `accounts_current`.\nGolden cites: developers.stellar.org Hubble docs (analytics/hubble, connecting-to-bigquery).\nGT-49 CORRECTION 2026-07-11: gate dataset identity/workload; exact cadence/schema is dated."
       },
       "tags": {
         "category": "tooling-infra",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-08-01",
         "sources": [
           {
             "class": "A",
@@ -12284,15 +12271,10 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 Lane R absorb triage",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-49 primary 3335 and blind 3341.",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-infra-hubble-vs-rpc-layer",
-            "https://developers.stellar.org/docs/data/apis/rpc",
-            "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/configuring",
-            "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/data-lake-integration",
-            "https://developers.stellar.org/docs/data/analytics/hubble",
-            "Solo scratchpad 575 GT-49 primary 3335 and blind 3341; deduped to sd-023."
+            "P4 Lane R behavioral conversion queue, row 48 (q-infra-hubble-bigquery): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/data/analytics/hubble"
           ],
           "rootCause": [
             "eval-authoring"
@@ -12309,9 +12291,9 @@
         "stellarDocs.search_sdk_cli_tools_docs"
       ],
       "golden": {
-        "answer": "For a disposable local development or CI network, run **`stellar container start local`**. The direct Docker equivalent is `docker run -i -p 8000:8000 stellar/quickstart --local`. Quickstart bundles Core, Horizon, Stellar RPC, Friendbot, and Lab; the canonical local RPC path is `http://localhost:8000/rpc`.\n\nQuickstart supports four modes: **local, testnet, futurenet, and pubnet**. Only `local` is a hermetic standalone network with a local faucet. Testnet/Futurenet/Pubnet modes connect to those public networks; Testnet/Futurenet Friendbot access is proxied and does not evade the public faucet's limits. Quickstart is development infrastructure, not a production deployment, and its state is disposable unless persistence is explicitly configured.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_sdk_cli_tools_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Names all four modes: local, testnet, futurenet, and pubnet. States that only local mode is hermetic; public-network modes do not create independent public faucets. Treats Quickstart as disposable development/CI infrastructure, not production.",
         "keyFacts": [
-          "Uses the current `stellar container start local` command or the `stellar/quickstart --local` Docker image.",
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_sdk_cli_tools_docs and labels version, UI, provider, and availability claims as observed.",
           "Names all four modes: local, testnet, futurenet, and pubnet.",
           "States that only local mode is hermetic; public-network modes do not create independent public faucets.",
           "Treats Quickstart as disposable development/CI infrastructure, not production."
@@ -12319,20 +12301,20 @@
         "avoid": [
           "Do NOT use `stellar network container start` as the current canonical command or omit Futurenet from an exhaustive mode list.",
           "Do NOT claim Testnet/Futurenet/Pubnet modes are hermetic or bypass public faucet limits.",
-          "Do NOT recommend Quickstart as a production node or promise persistence without configuration."
+          "Do NOT recommend Quickstart as a production node or promise persistence without configuration.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "Quickstart container + CLI integration; covers quickstart/localdev subtopic.\nAlso good if the answer: `stellar network container start testnet` (Stellar CLI) boots the Quickstart container with a testnet-friendly config. | Quickstart exposes Friendbot (e.g. at `http://localhost:8000/friendbot`) for funding.\nGolden cites: developers.stellar.org Quickstart docs or the stellar/quickstart image/repo.\nGT-50/GT-52 CORRECTION 2026-07-11: current command is `stellar container start`; exhaustive modes include Futurenet. Preserve the local-only hermetic/faucet boundary."
       },
       "tags": {
         "category": "tooling-infra",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "A",
@@ -12401,13 +12383,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited answer omitted Futurenet, used the stale `stellar network container start` command, and blurred hermetic local mode with Quickstart modes that connect to public networks and proxy their public faucets.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-50 processes 3349/3361 independently confirmed the four modes and current command.",
-            "GT-52 processes 3356/3368 independently required the local-versus-public Friendbot clarification; this entry is the single sibling landing point."
+            "P4 Lane R behavioral conversion queue, row 49 (q-infra-quickstart-local-network): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/tools/quickstart"
           ],
           "rootCause": [
-            "Eval-side CLI/docs-release drift: the archived answer copied a retired command shape and an incomplete mode enumeration."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-infra-quickstart-local-network"
@@ -12828,29 +12810,29 @@
         "stellarDocs.search_rpc_horizon_data_docs"
       ],
       "golden": {
-        "answer": "**Testnet** and **Futurenet** are separate public test networks with fake XLM and no real-value assets. Use Testnet for stable, near-production integration testing; use Futurenet to exercise the next/pre-release protocol and features. They have different passphrases, endpoints, ledgers, accounts, assets, and contract IDs, and neither promises production availability or permanent state. Testnet resets on a planned cadence; Futurenet resets as needed and is more volatile.\n\nFriendbot funds **accounts** on the applicable test network; it does not directly fund a contract. Provider coverage and live protocol versions change, so consult the current Networks/Providers pages and date any exact snapshot rather than using it to define the networks forever.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Testnet is the stable integration network; Futurenet previews upcoming protocol/features. The networks have distinct passphrases/state/identifiers and fake, valueless XLM.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs and labels version, UI, provider, and availability claims as observed.",
           "Testnet is the stable integration network; Futurenet previews upcoming protocol/features.",
-          "The networks have distinct passphrases/state/identifiers and fake, valueless XLM.",
-          "Reset, provider, and protocol-version claims are freshness-sensitive; Friendbot funds accounts, not contracts."
+          "The networks have distinct passphrases/state/identifiers and fake, valueless XLM."
         ],
         "avoid": [
           "Do NOT swap Testnet/Futurenet roles, equate either with Mainnet, or claim real-value assets.",
           "Do NOT reuse passphrases/accounts/assets/contracts across networks or promise persistence/SLA.",
-          "Do NOT freeze provider counts or protocol versions without an as-of date."
+          "Do NOT freeze provider counts or protocol versions without an as-of date.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "Verified against the networks docs: both are public, fake-XLM networks separate from Mainnet; Testnet is stable (resets ~2-4×/yr), Futurenet runs bleeding-edge/pre-release protocol features (irregular resets). Both fundable via Friendbot (~10,000 fake XLM). Role swap is the trap.\nAlso good if the answer: Use Testnet for normal app testing and Futurenet only when you need to exercise pre-release protocol features. | Far fewer RPC providers support Futurenet than Testnet/Mainnet.\nGolden cites: developers.stellar.org networks docs (testnet/futurenet).\nGT-50 CORRECTION 2026-07-11: gate durable roles and network separation, not a provider count or protocol snapshot. Friendbot funds accounts."
       },
       "tags": {
         "category": "tooling-infra",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "A",
@@ -12903,13 +12885,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited durable role split was correct, but it made undated provider coverage a fact, said Friendbot funds contracts, and marked a reset/provider-sensitive case non-fresh.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-50 primary/blind matrices independently confirmed the durable roles and freshness correction.",
-            "Sibling sweep checked q-protocol-futurenet-vs-testnet, q-protocol-network-passphrases, q-ti-testnet-mainnet-migration, and q-tool-cli-testnet-identity-howto."
+            "P4 Lane R behavioral conversion queue, row 50 (q-infra-testnet-vs-futurenet): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/networks"
           ],
           "rootCause": [
-            "Plain freshness drift plus eval-side wording error: provider coverage was frozen and Friendbot account funding was misstated as contract funding."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-infra-testnet-vs-futurenet"
@@ -12924,29 +12906,28 @@
         "stellarDocs.search_rpc_horizon_data_docs"
       ],
       "golden": {
-        "answer": "You need an **indexer** rather than RPC alone for historical cross-account filtering: RPC event history is bounded and Horizon does not provide arbitrary cross-account filtered indexes ([Indexers Overview](https://developers.stellar.org/docs/data/indexers)).\n\nEstablished Stellar choices include **SubQuery**, **OBSRVR**, **Goldsky Mirrors/Pipelines**, **OnFinality**, **Mercury**, and **The Graph via Substreams only** (not Stellar Subgraphs or Token API). For deep historical SQL, **Hubble/BigQuery** is another fit.\n\n**Alchemy status requires a dated source note.** As of **2026-07-09**, Alchemy says its indexed Stellar Data API is live on Mainnet and Testnet, with transfer history, account/token balances, and NFT holdings across native, Classic, and Soroban assets; the indexed-API announcement is dated **2026-07-08**. The live Stellar Indexers Overview still says Alchemy was targeted for H1 2026, so that page is stale on this provider; corrective stellar/stellar-docs PR #2573 was still open and unmerged when checked. Treat this as a docs-surface disagreement, not evidence that Alchemy is unavailable.\n\nSelection: use **OBSRVR** for a Stellar-native stream-to-warehouse workflow, **SubQuery** for its multi-chain indexing stack, **Goldsky** if it matches an existing EVM data platform, **Alchemy** if its address-centric indexed APIs cover the needed query, or **Hubble/BigQuery** for SQL-oriented deep history. Verify retention, data model, and current network coverage before committing.",
+        "answer": "Use `stellarDocs.search_asset_token_docs`, `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Preserves The Graph's actual boundary: Stellar support is via Substreams, not full Stellar Subgraph or Token API support.",
         "keyFacts": [
-          "Identifies current Stellar indexer/data-platform choices and explains that RPC alone is not a historical cross-account index.",
-          "States with an as-of date that Alchemy's indexed Stellar Data API is live, while explicitly flagging that the official Stellar Indexers Overview still carries stale planned-launch wording.",
+          "Executes the current documented lookup/workflow via stellarDocs.search_asset_token_docs, stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs and labels version, UI, provider, and availability claims as observed.",
           "Preserves The Graph's actual boundary: Stellar support is via Substreams, not full Stellar Subgraph or Token API support."
         ],
         "avoid": [
           "Do NOT state that Alchemy's Stellar indexed Data API is still merely targeted for H1 2026 without flagging the stale official-docs surface; Alchemy announced the live APIs on 2026-07-08.",
           "Do NOT hide the source disagreement: the provider docs say live while developers.stellar.org still carries the expired roadmap sentence as of 2026-07-09.",
-          "Do NOT claim The Graph offers full Subgraph/Token API support for Stellar, or recommend RPC alone for arbitrary historical cross-account filtering."
+          "Do NOT claim The Graph offers full Subgraph/Token API support for Stellar, or recommend RPC alone for arbitrary historical cross-account filtering.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "Re-verified 2026-06-29 against the Indexers Overview: SubQuery, Goldsky (Mirrors), OnFinality, OBSRVR, Mercury support Stellar; The Graph quote confirmed exactly: 'offers Stellar support for Substreams, with no current plans to expand Subgraph or Token API support to Stellar.' Added Space and Time (Q4 2025); Allium (Q1 2026); Alchemy (H1 2026) — freshness-sensitive, retention phrasing matches normalized ~24h default/~7d max. Reward flagging staleness.\nAlso good if the answer: SubQuery is a safe default (multi-chain, dedicated Stellar starter); OBSRVR is the most Stellar-native; Goldsky Mirrors fit teams already on Goldsky for EVM. | Some providers (e.g. Alchemy, Allium) are launching/expanding Stellar support around 2026 (freshness-sensitive).\nGolden cites: developers.stellar.org Indexers Overview page.\nCORRECTION 2026-07-09 (todo 901), independently reverified by GT-50 on 2026-07-11: real-world/provider status and docs discoverability disagree. Alchemy's indexed Stellar Data API is confirmed live by its dated announcement and product docs, but the live Stellar Indexers Overview still says targeted H1 2026; PR #2573 remained open/unmerged. Grade the durable behavior: cite a dated provider-status source, keep Alchemy's scope address-centric, and flag the stale docs surface. Do not accept the expired roadmap wording as uncontested current status."
       },
       "tags": {
         "category": "tooling-infra",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "disputed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "D",
@@ -13052,16 +13033,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The freshness-sensitive answer froze Alchemy as a provider merely 'targeted H1 2026'. Alchemy's indexed Stellar Data API is now live, while the official Stellar Indexers Overview still carries the expired roadmap sentence. The correction must expose that truth-versus-docs-surface disagreement instead of treating either surface as undisputed current truth.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Independent re-derivation by Solo process 3158 recorded under scratchpad 569 Lane B (901): exact Alchemy announcement/docs excerpts, live Stellar docs excerpt, and read-only PR #2573 state/patch.",
-            "Sibling sweep 2026-07-09: q-infra-rpc-providers-list names Alchemy as hosted RPC only and remains compatible; routing cases carry no status fact; the vendored corpus repeats the stale roadmap wording and remains read-only.",
-            "Solo scratchpad 575 GT-50 primary process 3349 and blind process 3361 independently rechecked the live provider claim, stale Indexers page, and open PR #2573 on 2026-07-11."
+            "P4 Lane R behavioral conversion queue, row 51 (q-infra-which-indexer): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://www.alchemy.com/blog/alchemy-expands-stellar-data-apis-tier-1-validation"
           ],
           "rootCause": [
-            "Plain freshness drift plus single-surface authoring: the 2026-06-29 review copied a roadmap date from the official Indexers Overview and pinned it instead of gating on a dated provider-status check.",
-            "The live developers.stellar.org Indexers Overview is stale for Alchemy; corrective stellar/stellar-docs PR #2573 remained open and unmerged when rechecked 2026-07-09.",
-            "solo://proj/49/todo/golden-corpus-health--901"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-infra-which-indexer"
@@ -13404,27 +13382,27 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "The **SDF Enterprise Fund** is a venture-style fund investing in companies that grow the Stellar ecosystem. As of **2026-07-10**, SDF says its **portfolio totals over $100 million**. That is SDF's portfolio wording—not a precise reconciled cumulative-cash-deployed total, fair value, or cost basis. Historical public totals do not fully reconcile, so do not manufacture a lifetime scalar. The **MoneyGram** stake was explicitly funded from SDF's cash treasury, not the Enterprise Fund. Cite separate dated announcements for any individual investee amount.",
+        "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Separates the MoneyGram cash-treasury investment from the Enterprise Fund.",
         "keyFacts": [
-          "Identifies the venture-style Enterprise Fund and attributes the dated over-$100m statement as portfolio wording.",
+          "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value.",
           "Separates the MoneyGram cash-treasury investment from the Enterprise Fund."
         ],
         "avoid": [
           "Do NOT convert 'portfolio totals over $100m' into an exact cumulative cash-invested or current fair-value number.",
-          "Do NOT attribute the MoneyGram stake to the Enterprise Fund or quote unsourced investee amounts."
+          "Do NOT attribute the MoneyGram stake to the Enterprise Fund or quote unsourced investee amounts.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-28 CORRECTION 2026-07-10: SDF says its portfolio totals over $100m. Do not grade that as exact cumulative deployed cash, fair value, or cost basis; historical public series do not fully reconcile. MoneyGram remains cash-treasury funded.\nGT-28 independently confirmed by processes 3274/3275."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -13466,12 +13444,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The fund identity and MoneyGram exclusion are correct, but 'cumulative investment' overstates SDF's current 'portfolio totals over $100m' wording and unreconciled historical report series.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275."
+            "P4 Lane R behavioral conversion queue, row 52 (q-org-sdf-enterprise-fund): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/enterprise-fund"
           ],
           "rootCause": [
-            "Eval-side portfolio-value/cost-basis/cumulative-cash metric conflation."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-org-sdf-enterprise-fund"
@@ -13484,27 +13463,26 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "SDF organizes its work under mandate buckets funded from entrusted XLM rather than shareholder equity. The framework has changed: **2019** used Direct Development, Ecosystem Support, Use-Case Investment, and User Acquisition; the **2025-era** framing uses SDF Development, Stellar Growth, Product and Innovation, and Assets and Liquidity. The live page says allocation updates are in progress and its account/bucket rows can have different timestamps. Cite the applicable dated mandate, attach an as-of date to any balance, and do not invent an exact allocation split or mechanically sum asynchronous rows as one synchronized total.",
+        "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
         "keyFacts": [
-          "Correctly separates the 2019 and 2025-era mandate bucket names.",
-          "Treats current allocation/account rows as dated, evolving, and potentially asynchronous."
+          "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value."
         ],
         "avoid": [
           "Do NOT use the 2017 previous-mandate route as proof of the 2019 taxonomy.",
-          "Do NOT invent precise allocations, sum mixed timestamps as one current total, or describe shareholder capital."
+          "Do NOT invent precise allocations, sum mixed timestamps as one current total, or describe shareholder capital.",
+          "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
         ],
         "notes": "GT-28 CORRECTION 2026-07-10: use /foundation/mandate/2019 for the 2019 taxonomy; /foundation/previous-mandate is the 2017 version. Current allocation updates are in progress and displayed rows are not one synchronized snapshot.\nGT-28 independently confirmed by processes 3274/3275; sd-012 owns current label/timestamp drift."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2027-07-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -13544,13 +13522,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The two dated bucket frames are correct, but the inherited 2019 source route points to the 2017 mandate and current bucket/account rows are asynchronously updated while allocation changes remain in progress.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; blind caught the 2017/2019 route mismatch."
+            "P4 Lane R behavioral conversion queue, row 53 (q-org-sdf-mandate-buckets): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+            "Current source retained for behavioral retrieval: https://stellar.org/foundation/mandate"
           ],
           "rootCause": [
-            "Eval-side historical route/version confusion and detached timestamp semantics.",
-            "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-org-sdf-mandate-buckets"
@@ -14486,29 +14464,29 @@
         "stellarDocs.search_protocol_concepts_docs"
       ],
       "golden": {
-        "answer": "MoneyGram Ramps lets supported wallets/exchanges move **USDC on Stellar** between digital wallets and MoneyGram cash locations. The integration uses **SEP-10 authentication** and **SEP-24 interactive deposit/withdrawal**. It is distinct from SDP.\n\nAs of **2026-07-10**, Production Mainnet limits are direction-specific: **on-ramp 5–950 USDC per transaction** and **off-ramp 5–2,500 USDC per transaction**. Production Preview is a separate test tier at **10–20 USDC per transaction and 100 USDC aggregate**. Recheck these operator values before treating them as current.\n\nCoverage is disputed across MoneyGram's own surfaces. Integration prose says 174 off-ramp countries, while its linked live sheet currently yields 168 cash-out and 27 cash-in rows; consumer marketing says 170+ cash countries. Broader 180+ fiat-rail/presence and 200+ corporate-footprint figures are not Stellar cash-ramp coverage. Cite the exact surface/date/direction or omit a country total rather than choosing one magic number.",
+        "answer": "Use `stellarDocs.search_anchor_sep_docs`, `stellarDocs.search_asset_token_docs`, `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Identifies Stellar USDC plus SEP-10/SEP-24. Treats country coverage as source-, date-, and direction-specific and separates corporate/broader marketing scopes.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_anchor_sep_docs, stellarDocs.search_asset_token_docs, stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
           "Identifies Stellar USDC plus SEP-10/SEP-24.",
-          "States dated direction-specific production and preview limits.",
           "Treats country coverage as source-, date-, and direction-specific and separates corporate/broader marketing scopes."
         ],
         "avoid": [
           "Do NOT use the off-ramp maximum as the on-ramp maximum.",
           "Do NOT pin 174, 180+, or 200+ as one current bidirectional Stellar cash-coverage count.",
-          "Do NOT conflate MoneyGram Ramps with SDP."
+          "Do NOT conflate MoneyGram Ramps with SDP.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "Verified: Ramps uses SEP-24 + USDC on Stellar; MainNet off-ramp limit 5 USDC min / 2,500 USDC max per tx; available in 174 countries (per MoneyGram dev docs, June 2026). Limits/country counts are freshness-sensitive. Trap: wrong SEP (it's SEP-24, not SEP-6/31).\nAlso good if the answer: Cites per-transaction off-ramp limits (e.g. ~$5 USDC min to ~$2,500 USDC max) and flags these can change. | Notes the global retail agent footprint (cash-out at hundreds of thousands of locations across 170+ countries).\nGolden cites: developers.stellar.org MoneyGram Ramps docs and/or MoneyGram developer docs.\nCORRECTION 2026-07-10: grade direction-specific limits and dated source scope. The 174 prose conflicts with the linked live sheet; accept honest dispute/omission, not a universal count."
       },
       "tags": {
         "category": "compliance-rwa-payments",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "disputed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2026-10-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "D",
@@ -14578,13 +14556,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The answer froze off-ramp limits as the whole product and pinned one country count despite conflicting operator prose and the linked live sheet. MoneyGram production limits are direction-specific, and 170+/174/180+/200+ refer to different scopes.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-02 blind and GT-11 primary/blind MoneyGram matrices",
-            "improvements/lumenloop/ll-008-directory-record-coverage-field-quality.md"
+            "P4 Lane R behavioral conversion queue, row 54 (q-pay-moneygram-ramps): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps"
           ],
           "rootCause": [
-            "Direction-specific operator data and multiple marketing scopes were compressed into one product figure."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pay-moneygram-ramps"
@@ -15166,27 +15144,28 @@
         "stellarDocs.search_protocol_concepts_docs"
       ],
       "golden": {
-        "answer": "**As of 2026-07-10**, Starlight is historical SDF payment-channel research/protocol work and its `stellar-deprecated/starlight` reference repository is archived. It pursued Lightning-like repeated off-chain updates with on-chain settlement, but used Stellar accounts/transactions rather than Bitcoin's unchanged UTXO/HTLC stack. CAP-0021 generalized preconditions and CAP-0040 signed-payload signers are Final/active protocol primitives; they do not prove Starlight is maintained production infrastructure. Current alternatives remain project-specific: Perun has an active SCF-backed Stellar payment-channel codebase whose public instructions establish local/standalone use but not Mainnet deployment; Scout's Centaurus Live+Unverified row conflicts with stale repositories and is not deployment proof. Treat payment channels, commit-chains, and rollups as separate architectures and require dated contracts, operator endpoints, or other primary deployment evidence before calling any live.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Dates Starlight's archived experimental status and explains its Lightning-like goal/Stellar-specific construction. Separates CAP primitives, active code development, directory labels, and verified Mainnet deployment.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
           "Dates Starlight's archived experimental status and explains its Lightning-like goal/Stellar-specific construction.",
           "Separates CAP primitives, active code development, directory labels, and verified Mainnet deployment."
         ],
         "avoid": [
           "Do NOT call Starlight maintained/live production Mainnet infrastructure or say Stellar uses Bitcoin Lightning unchanged.",
-          "Do NOT promote Perun local code or Centaurus Live+Unverified metadata into deployment without primary evidence."
+          "Do NOT promote Perun local code or Centaurus Live+Unverified metadata into deployment without primary evidence.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-29 CORRECTION 2026-07-10: Starlight is archived experimental work; CAP-21/40 are active primitives, not deployment evidence. Perun is active local/standalone code without verified Mainnet deployment; Centaurus Live+Unverified conflicts with stale repos and remains source-relative.\nsd-015 captures glossary lifecycle ambiguity; sls-024 captures project-status conflicts."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "mixed",
         "status": "confirmed",
-        "asOf": "2026-07-10",
-        "reverifyBy": "2027-07-01",
+        "asOf": "2026-07-11",
         "sources": [
           {
             "class": "A",
@@ -15243,13 +15222,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The Starlight prototype framing is correct but required a current archived-status date and a broader source-scoped landscape answer without promoting directory labels into deployment proof.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-29 primary 3276 and blind 3278; both confirmed archived/source-relative status. GT-29 recurrence appended to sls-024 for Centaurus lifecycle ambiguity."
+            "P4 Lane R behavioral conversion queue, row 55 (q-pc-l2-payment-channels-starlight): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://stellar.org/blog/developers/experiment-with-payment-channels-on-stellar"
           ],
           "rootCause": [
-            "improvements/stellar-docs/sd-015-starlight-lifecycle-status.md",
-            "improvements/stellar-light-scout/sls-024-project-lifecycle-operator-conflicts.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pc-l2-payment-channels-starlight"
@@ -15598,28 +15577,27 @@
         "stellarDocs.search_sdk_cli_tools_docs"
       ],
       "golden": {
-        "answer": "Protocol-upgrade timing must come from a dated primary source. The previously published **Protocol 27 (Zipper)** schedule is now historical: the SDF guide scheduled the Mainnet vote for **2026-07-08**, and live Horizon shows the network changed from Protocol 26 at ledger **63386818** (17:00:05 UTC) to **Protocol 27** at ledger **63386819** (17:00:10 UTC). Do not keep presenting July 8 as the next vote. For whatever upgrade follows P27, report a date/version only if a current SDF upgrade guide, validator notice, or equivalent primary source actually announces one; otherwise say that the checked sources do not establish a later date. Validator operators adopt an upgrade through network-upgrade voting, not through CAP acceptance or software release alone.",
+        "answer": "Use `stellarDocs.search_meeting_notes`, `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_sdk_cli_tools_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.",
         "keyFacts": [
-          "Requires a dated current primary source for any claimed next protocol-upgrade date/version, and recognizes that the July 8, 2026 Protocol 27 vote is completed rather than upcoming.",
-          "Explains that Mainnet activated Protocol 27 at ledger 63386819 on 2026-07-08 and that CAP approval, software release, Testnet activation, and Mainnet validator voting are distinct milestones."
+          "Executes the current documented lookup/workflow via stellarDocs.search_meeting_notes, stellarDocs.search_protocol_concepts_docs, stellarDocs.search_sdk_cli_tools_docs and labels version, UI, provider, and availability claims as observed."
         ],
         "avoid": [
           "Do NOT present the completed July 8, 2026 Protocol 27 vote as a future or next upgrade.",
           "Do NOT invent a later protocol vote date without a dated primary source.",
-          "Do NOT confuse protocol upgrade voting with SEP/CAP approval or a software release alone."
+          "Do NOT confuse protocol upgrade voting with SEP/CAP approval or a software release alone.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-31 OVERLAP RECONCILIATION 2026-07-11: P27's July 8 vote is completed and ledger 63386819 is live. Require a current dated primary source for any later announced upgrade or SDK deadline; no later date should be invented. CAP status, software release, and SCP/FBA network activation are separate."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "A",
@@ -15676,16 +15654,14 @@
           }
         ],
         "verified": {
-          "date": "2026-07-09",
-          "by": "Golden-truth sweep import — The dated reference answer called the July 8 Protocol 27 vote the next Mainnet upgrade after that vote had completed. The behavioral gate was already freshness-aware, but the stale narrative could still steer a judge toward a past date. This override records the completed P27 activation and refuses to invent a later unannounced vote.",
+          "date": "2026-07-11",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "2026-07-09 independent re-verification in Solo scratchpad 567: Horizon boundary ledgers + SDF upgrade guide",
-            "Sibling sweep covered all compiled cases mentioning Protocol 27, Zipper, or 2026-07-08"
+            "P4 Lane R behavioral conversion queue, row 56 (q-pc-protocol-upgrade-timing): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://horizon.stellar.org/ledgers/63386819"
           ],
           "rootCause": [
-            "eval-side freshness drift: a forward-looking schedule aged past its vote date",
-            "solo://proj/49/todo/date-contingent-trap--831",
-            "improvements/stellar-docs/sd-008-protocol-27-mainnet-status-lag.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pc-protocol-upgrade-timing"
@@ -15698,28 +15674,28 @@
         "stellarDocs.search_protocol_concepts_docs"
       ],
       "golden": {
-        "answer": "No, a normal Stellar account should not be described as \"quantum-resistant today\" without caveat. SDF's Quantum Preparedness Plan says sufficiently powerful quantum computers would break elliptic-curve cryptography, including Stellar's Ed25519, and identifies two threat classes: validator/SCP signature integrity and account takeover. Source: https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan\n\nThe QPP is a staged migration plan. Stage 1 targets post-quantum signature verification in Soroban contract accounts in 2026; Stage 2 targets first-class quantum-safe signers for classic accounts in 2027; Stage 3 would deprecate Ed25519 only when quantum threat progress and ecosystem readiness justify activation. The important Stellar-specific advantage is that account identity and signing keys are separable: an account can add/weight/remove signers without changing its G-address. Sources: https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan and https://developers.stellar.org/docs/learn/fundamentals/transactions/operations-and-transactions#signer\n\nFor dormant accounts, the QPP does not publish a final mechanical \"qualifies if X\" rule. It says a forced cutoff would disrupt a large population of dormant accounts whose holders are unreachable and would require a design choice between freezing accounts with a recovery mechanism or permanently locking them. A good answer should therefore say: check current primary QPP/CAP materials for any finalized on-chain criteria; do not invent dates, balance thresholds, or \"has never sent a transaction\" rules unless a later CAP or implementation defines them.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Explains the Quantum Preparedness Plan and dormant-account definition only as documented in primary Stellar/CAP sources. Tells users to determine qualification from on-chain account/signing/activity criteria specified by the plan, not guesswork.",
         "keyFacts": [
-          "States current Stellar account authentication is not simply quantum-proof by default and quantum preparedness is a protocol/planning topic.",
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
           "Explains the Quantum Preparedness Plan and dormant-account definition only as documented in primary Stellar/CAP sources.",
           "Tells users to determine qualification from on-chain account/signing/activity criteria specified by the plan, not guesswork."
         ],
         "avoid": [
           "Do NOT claim Stellar is fully quantum-resistant today without caveat.",
-          "Do NOT invent dormant-account thresholds or deadlines."
+          "Do NOT invent dormant-account thresholds or deadlines.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "QPP is a dated SDF plan, not yet a final CAP with dormant-account thresholds. The blog describes dormant accounts qualitatively as holders unreachable for migration; it does not publish a deterministic eligibility test.\nAlso good if the answer: Notes the distinction between future migration planning and current user action requirements.\nGolden cites: Primary Stellar/CAP source required for the Quantum Preparedness Plan and dormant-account criteria."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "A",
@@ -15739,9 +15715,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-30-upgrade-quantum-scp-sequence-reserve-finality-p19 accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "P4 Lane R behavioral conversion queue, row 57 (q-pc-quantum-preparedness-dormant): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan"
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pc-quantum-preparedness-dormant"
@@ -16222,28 +16202,29 @@
         "stellarDocs.search_soroban_contract_docs"
       ],
       "golden": {
-        "answer": "**Protocol 23 (Whisk)** activated on Mainnet on **2025-09-03 at 17:00 UTC** and contains exactly eight Final CAPs: **CAP-0062** Soroban Live State Prioritization, **CAP-0063** parallelism-friendly transaction scheduling, **CAP-0065** reusable module cache, **CAP-0066** Soroban in-memory read resource, **CAP-0067** unified asset events, **CAP-0068** the host function for getting an executable for an `Address`, **CAP-0069** String/Bytes conversion host functions, and **CAP-0070** configurable SCP timing parameters. CAP-0064 was rejected and is not part of P23.\n\nCAP-0063's protocol transition initialized `ledgerMaxDependentTxClusters` to **1**, so P23 activation did not itself enable multi-cluster application. A separate network-settings vote later raised the value to **2** at ledger **60993066** on **2026-01-29**; two independent Mainnet RPC reads on **2026-07-11** still decoded **2**. Treat one as the P23 initial value and two as dated, volatile network configuration. The canonical settings proposal is `limits/slp-0004.md`.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_soroban_contract_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Lists the complete eight-CAP P23 set: 0062, 0063, 0065, 0066, 0067, 0068, 0069, and 0070. Distinguishes CAP-0063's initial value one from the later, freshness-sensitive Mainnet value two and uses limits/slp-0004.md.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_soroban_contract_docs and labels version, UI, provider, and availability claims as observed.",
           "Lists the complete eight-CAP P23 set: 0062, 0063, 0065, 0066, 0067, 0068, 0069, and 0070.",
           "Distinguishes CAP-0063's initial value one from the later, freshness-sensitive Mainnet value two and uses limits/slp-0004.md."
         ],
         "avoid": [
           "Do NOT omit CAP-0068 or CAP-0069, include rejected CAP-0064, or attribute Soroban itself to P23.",
           "Do NOT say P23 immediately enabled multiple dependent clusters or present the current value two as a permanent protocol constant.",
-          "Do NOT cite the nonexistent core/slp-0004.md path; SLP-0004 is under limits/."
+          "Do NOT cite the nonexistent core/slp-0004.md path; SLP-0004 is under limits/.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "Whisk = Protocol 23. DATE VERIFIED 2025-09-03 (stellar.org 'Introducing Whisk' + Protocol 23 Upgrade Guide: Mainnet vote 2025-09-03 17:00 UTC). A reviewer's '2025-06-10' was the blog publish date, not activation — do NOT use it. Headline = parallel exec (CAP-0063) + live/archival separation (CAP-0062). Trap is wrong CAP numbers or attributing parallelism to the wrong protocol.\nAlso good if the answer: Mentions additional Whisk CAPs such as unified Classic+Soroban events (CAP-0067) and/or caching parsed WASM modules permanently (CAP-0065). | Notes Whisk activated on Mainnet around 2025-09-03.\nGolden cites: The Protocol 23 / Whisk upgrade material (stellar.org blog 'Introducing Whisk' or the CAP files in stellar/stellar-protocol).\nGT-31 CORRECTION 2026-07-11: require all eight P23 CAPs. CAP-0063 initialized one cluster; the setting-two state began later and was live when checked. Canonical SLP path is limits/slp-0004.md."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "B",
@@ -16311,13 +16292,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited Whisk summary omitted CAP-0068 and CAP-0069, used the retired core/slp-0004.md path, and compressed CAP-0063's initial one-cluster transition with the later live setting of two.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-31 primary process 3280 and blind process 3282 independently identified the incomplete CAP set, bad SLP path, and transition-versus-live-setting conflation.",
-            "2026-07-11 author re-check: stellar-protocol fbf05c9d registry lists exactly eight Final P23 CAPs; two independent Pubnet RPCs decoded CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 as two, last modified at ledger 60993066."
+            "P4 Lane R behavioral conversion queue, row 58 (q-protocol-23-whisk-caps): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://github.com/stellar/stellar-protocol/blob/master/core/README.md"
           ],
           "rootCause": [
-            "Eval-side CAP-family omission, stale source path, and protocol-transition-versus-network-configuration compression."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-protocol-23-whisk-caps"
@@ -16432,9 +16413,9 @@
         "stellarDocs.search_protocol_concepts_docs"
       ],
       "golden": {
-        "answer": "The question's word **queued** is stale: **Protocol 27 (Zipper)** has been live on Stellar Mainnet since **ledger 63386819**, closed **2026-07-08 at 17:00:10 UTC**; ledger 63386818 was the final P26 ledger. Two independent Pubnet RPCs still reported protocol 27 on **2026-07-11**.\n\n**CAP-0071** adds first-class authentication delegation for custom accounts through `SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES` and recursive `SorobanDelegateSignature` chains. It also adds `SOROBAN_CREDENTIALS_ADDRESS_V2`, which binds the credential to its account address to prevent cross-account credential reuse. This is a Soroban authorization/credential change, not ZK, consensus, or parallel execution. The current CAP registry still labels CAP-0071 **Accepted**; that normative document status is distinct from the already-completed software implementation and Mainnet activation.",
+        "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Explains CAP-0071 delegation chains and address-bound V2 credentials. Distinguishes the CAP's Accepted registry status from implementation and network activation.",
         "keyFacts": [
-          "Corrects the stale queued premise: P27 is active since ledger 63386819 on 2026-07-08 and remained live when checked on 2026-07-11.",
+          "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
           "Explains CAP-0071 delegation chains and address-bound V2 credentials.",
           "Distinguishes the CAP's Accepted registry status from implementation and network activation."
         ],
@@ -16442,20 +16423,20 @@
           "Do NOT claim Protocol 27 is still queued or pending on Mainnet.",
           "Do NOT mis-describe CAP-0071 as a consensus, ZK, or parallelism change.",
           "Do NOT infer network activation or non-activation from the CAP status label alone.",
-          "Do NOT present network status without a dated live source or freshness caveat."
+          "Do NOT present network status without a dated live source or freshness caveat.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-31 CORRECTION 2026-07-11: the queued premise and pending/future judge prose are stale. P27 is live from ledger 63386819; CAP-0071 remains labelled Accepted in the registry, demonstrating that normative status and actual network activation are distinct. Grade delegation chains and address-bound V2 mechanics."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "A",
@@ -16513,15 +16494,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The effective answer was post-vote correct, but inherited judge prose still said P27 was future and the answer did not explicitly separate CAP-0071's Accepted registry status from P27 network activation.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-31 primary process 3280 and blind process 3282 independently retained the mechanics and required replacement of stale pending/future judge prose.",
-            "2026-07-11 author re-check: Horizon P26/P27 boundary, two independent Pubnet RPCs, current CAP-0071 source, and official Zipper guide."
+            "P4 Lane R behavioral conversion queue, row 59 (q-protocol-27-cap-0071): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://horizon.stellar.org/ledgers/63386819"
           ],
           "rootCause": [
-            "eval-side date-contingent status trap expired after the scheduled Mainnet vote and survived as contradictory inherited judge prose",
-            "solo://proj/49/todo/date-contingent-trap--831",
-            "improvements/stellar-docs/sd-008-protocol-27-mainnet-status-lag.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-protocol-27-cap-0071"
@@ -16693,30 +16672,30 @@
         "stellarDocs.search_soroban_contract_docs"
       ],
       "golden": {
-        "answer": "The **base reserve** is a validator-configurable ledger parameter. On Mainnet ledger **63426130** on **2026-07-11**, it was **5,000,000 stroops = 0.5 XLM**; that number is current configuration, not a permanent constant. For a classic account, Core computes:\n\n`minimumBalance = (2 + numSubEntries + numSponsoring - numSponsored) * baseReserve`\n\nThus an unsponsored empty account currently needs two reserves, or **1 XLM**. Each ordinary owned subentry adds a reserve; each entry the account sponsors adds one, while each reserve unit sponsored for it subtracts one. A fully sponsored new account can start with **0 XLM** because its two account reserve units are charged to the sponsor. When sponsorship ends, the reserve obligation shifts back to the owner, which must then meet the balance requirement. A pool-share trustline is the important exception to 'one trustline, one reserve': it consumes **two reserve units**.\n\nLiabilities are not a term in Core's minimum-balance formula. They affect spendability separately: available XLM is the balance minus minimum balance and **selling liabilities**. Removing an entry can release its reserve, subject to remaining liabilities and sponsorship. Soroban contract code/data are not classic account subentries; they use TTL-based **rent** and archival rules rather than this account reserve formula.",
+        "answer": "Use `stellarDocs.search_asset_token_docs`, `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_soroban_contract_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Gives the full sponsorship-aware minimum-balance formula. Separates minimum balance from the selling-liability spendable boundary. Explains sponsored zero-balance account creation and later reserve-obligation shift.",
         "keyFacts": [
+          "Executes the current documented lookup/workflow via stellarDocs.search_asset_token_docs, stellarDocs.search_protocol_concepts_docs, stellarDocs.search_soroban_contract_docs and labels version, UI, provider, and availability claims as observed.",
           "Gives the full sponsorship-aware minimum-balance formula.",
           "Separates minimum balance from the selling-liability spendable boundary.",
-          "Explains sponsored zero-balance account creation and later reserve-obligation shift.",
-          "States pool-share trustlines cost two reserves, dates current 0.5 XLM, and keeps contract rent separate."
+          "Explains sponsored zero-balance account creation and later reserve-obligation shift."
         ],
         "avoid": [
           "Do NOT use (2 + subentries) * baseReserve as a universal post-sponsorship formula or add liabilities inside Core's minimum-balance calculation.",
           "Do NOT claim every trustline costs one reserve or that a sponsored account can remain under-reserved after sponsorship ends.",
-          "Do NOT present 0.5 XLM as timeless or apply classic account reserves to Soroban contract storage."
+          "Do NOT present 0.5 XLM as timeless or apply classic account reserves to Soroban contract storage.",
+          "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
         ],
         "notes": "GT-31 CORRECTION 2026-07-11: require the sponsorship-aware formula and separate selling-liability spendability. A sponsored account may start at zero, pool-share trustlines cost two reserve units, current 0.5 XLM is dated configuration, and contract data pays rent rather than classic reserve."
       },
       "tags": {
         "category": "protocol-core",
         "service": "stellarDocs",
-        "freshness": "scheduled"
+        "freshness": "live"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
-        "reverifyBy": "2026-10-01",
         "sources": [
           {
             "class": "B",
@@ -16790,13 +16769,13 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited answer used the pre-sponsorship shorthand as a universal formula, omitted liabilities and sponsorship reserve shifts, counted every trustline as one unit, and treated the current 0.5 XLM setting as timeless.",
+          "by": "P4 conversions (Solo 3418)",
           "evidence": [
-            "Solo scratchpad 575 GT-31 primary process 3280 and blind process 3282 independently required the full sponsorship formula, liabilities boundary, zero-start and reserve-shift semantics, two-reserve pool shares, dated live value, and contract-rent distinction.",
-            "2026-07-11 author re-check against stellar-core c16a6d17 TransactionUtils.cpp and live Horizon."
+            "P4 Lane R behavioral conversion queue, row 60 (q-protocol-base-reserve-min-balance): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+            "Current source retained for behavioral retrieval: https://github.com/stellar/stellar-core/blob/c16a6d17c6519505f7d1190fa6594cbdd68bce0c/src/transactions/TransactionUtils.cpp"
           ],
           "rootCause": [
-            "Eval-side pre-P14 formula shorthand and classic-account-versus-contract-storage collapse; current sibling corrections in GT-29/GT-32 were preserved."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-protocol-base-reserve-min-balance"

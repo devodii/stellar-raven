@@ -7,28 +7,27 @@
     "stellarDocs.search_soroban_contract_docs"
   ],
   "golden": {
-    "answer": "**Freshness-honesty case — gate the behavior, not a frozen number.** As of **2026-07-09**, Mainnet runs **Protocol 27, Zipper**; live Horizon shows the P26→P27 boundary at ledger **63386819** on **2026-07-08 17:00:10 UTC**. A correct answer should still perform a dated lookup against an authoritative live network source, state the observed version and as-of time, and warn that validator upgrade votes can make it stale. Software release tags are supporting context, not proof of network activation.",
+    "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_rpc_horizon_data_docs`, `stellarDocs.search_soroban_contract_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.",
     "keyFacts": [
-      "Gives the current protocol version from a dated authoritative live-network lookup and flags that it may become stale after a validator upgrade vote.",
-      "Treats Protocol 27 as live on Mainnet after 2026-07-08, while preserving the behavior-first rather than frozen-number grading rule."
+      "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_rpc_horizon_data_docs, stellarDocs.search_soroban_contract_docs and labels version, UI, provider, and availability claims as observed."
     ],
     "avoid": [
       "Do NOT state a protocol version as definitively current without a dated source or staleness flag.",
       "Do NOT claim Protocol 26 is still current or that the Protocol 27 Mainnet vote remains pending.",
-      "Do NOT infer live network activation solely from a software release tag."
+      "Do NOT infer live network activation solely from a software release tag.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "GT-23 2026-07-10: Pubnet runs Protocol 27; Horizon/RPC establish activation at ledger 63386819 on 2026-07-08T17:00:10Z. Grade a dated live-network lookup and release-versus-activation distinction, not a frozen latest-ledger number.\nAlso good if the answer: Points the user to an authoritative live source (e.g. dashboard / stellar-core release / docs) to confirm the current version.\nGolden cites: Cite a dated source for the version (docs / stellar-core release / network dashboard).\nPOST-VOTE GT-23 CORRECTION 2026-07-10: the stale P26/pending-vote paragraph is replaced rather than left as contradictory judge context."
   },
   "tags": {
     "category": "edge-behavior",
     "service": "stellarDocs",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-10-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -67,16 +66,14 @@
       }
     ],
     "verified": {
-      "date": "2026-07-09",
-      "by": "Golden-truth sweep import — The behavior-first rubric was sound, but both its illustrative answer and grader notes froze Protocol 26 as current and the July 8 Protocol 27 vote as pending. That expired narrative can steer a judge even though the case explicitly says not to hard-gate on a number.",
+      "date": "2026-07-11",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "2026-07-09 sibling sweep and independent final diff review in Solo scratchpad 567",
-        "Horizon first-P27 ledger 63386819 closed 2026-07-08T17:00:10Z"
+        "P4 Lane R behavioral conversion queue, row 38 (q-edge-fresh-latest-protocol-version): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://horizon.stellar.org/ledgers/63386819"
       ],
       "rootCause": [
-        "eval-side date-contingent example expired while the durable behavior gate remained valid",
-        "solo://proj/49/todo/date-contingent-trap--831",
-        "improvements/stellar-docs/sd-008-protocol-27-mainnet-status-lag.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-edge-fresh-latest-protocol-version"

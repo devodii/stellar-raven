@@ -7,28 +7,27 @@
     "stellarDocs.search_sdk_cli_tools_docs"
   ],
   "golden": {
-    "answer": "Protocol-upgrade timing must come from a dated primary source. The previously published **Protocol 27 (Zipper)** schedule is now historical: the SDF guide scheduled the Mainnet vote for **2026-07-08**, and live Horizon shows the network changed from Protocol 26 at ledger **63386818** (17:00:05 UTC) to **Protocol 27** at ledger **63386819** (17:00:10 UTC). Do not keep presenting July 8 as the next vote. For whatever upgrade follows P27, report a date/version only if a current SDF upgrade guide, validator notice, or equivalent primary source actually announces one; otherwise say that the checked sources do not establish a later date. Validator operators adopt an upgrade through network-upgrade voting, not through CAP acceptance or software release alone.",
+    "answer": "Use `stellarDocs.search_meeting_notes`, `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_sdk_cli_tools_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.",
     "keyFacts": [
-      "Requires a dated current primary source for any claimed next protocol-upgrade date/version, and recognizes that the July 8, 2026 Protocol 27 vote is completed rather than upcoming.",
-      "Explains that Mainnet activated Protocol 27 at ledger 63386819 on 2026-07-08 and that CAP approval, software release, Testnet activation, and Mainnet validator voting are distinct milestones."
+      "Executes the current documented lookup/workflow via stellarDocs.search_meeting_notes, stellarDocs.search_protocol_concepts_docs, stellarDocs.search_sdk_cli_tools_docs and labels version, UI, provider, and availability claims as observed."
     ],
     "avoid": [
       "Do NOT present the completed July 8, 2026 Protocol 27 vote as a future or next upgrade.",
       "Do NOT invent a later protocol vote date without a dated primary source.",
-      "Do NOT confuse protocol upgrade voting with SEP/CAP approval or a software release alone."
+      "Do NOT confuse protocol upgrade voting with SEP/CAP approval or a software release alone.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "GT-31 OVERLAP RECONCILIATION 2026-07-11: P27's July 8 vote is completed and ledger 63386819 is live. Require a current dated primary source for any later announced upgrade or SDK deadline; no later date should be invented. CAP status, software release, and SCP/FBA network activation are separate."
   },
   "tags": {
     "category": "protocol-core",
     "service": "stellarDocs",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
     "asOf": "2026-07-11",
-    "reverifyBy": "2026-10-01",
     "sources": [
       {
         "class": "A",
@@ -85,16 +84,14 @@
       }
     ],
     "verified": {
-      "date": "2026-07-09",
-      "by": "Golden-truth sweep import — The dated reference answer called the July 8 Protocol 27 vote the next Mainnet upgrade after that vote had completed. The behavioral gate was already freshness-aware, but the stale narrative could still steer a judge toward a past date. This override records the completed P27 activation and refuses to invent a later unannounced vote.",
+      "date": "2026-07-11",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "2026-07-09 independent re-verification in Solo scratchpad 567: Horizon boundary ledgers + SDF upgrade guide",
-        "Sibling sweep covered all compiled cases mentioning Protocol 27, Zipper, or 2026-07-08"
+        "P4 Lane R behavioral conversion queue, row 56 (q-pc-protocol-upgrade-timing): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://horizon.stellar.org/ledgers/63386819"
       ],
       "rootCause": [
-        "eval-side freshness drift: a forward-looking schedule aged past its vote date",
-        "solo://proj/49/todo/date-contingent-trap--831",
-        "improvements/stellar-docs/sd-008-protocol-27-mainnet-status-lag.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-pc-protocol-upgrade-timing"

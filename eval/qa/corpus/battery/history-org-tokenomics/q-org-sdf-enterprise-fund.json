@@ -5,27 +5,27 @@
     "scout.searchResearch"
   ],
   "golden": {
-    "answer": "The **SDF Enterprise Fund** is a venture-style fund investing in companies that grow the Stellar ecosystem. As of **2026-07-10**, SDF says its **portfolio totals over $100 million**. That is SDF's portfolio wording—not a precise reconciled cumulative-cash-deployed total, fair value, or cost basis. Historical public totals do not fully reconcile, so do not manufacture a lifetime scalar. The **MoneyGram** stake was explicitly funded from SDF's cash treasury, not the Enterprise Fund. Cite separate dated announcements for any individual investee amount.",
+    "answer": "Use `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.\n\nStable guardrails that remain in force: Separates the MoneyGram cash-treasury investment from the Enterprise Fund.",
     "keyFacts": [
-      "Identifies the venture-style Enterprise Fund and attributes the dated over-$100m statement as portfolio wording.",
+      "Retrieves source-bounded live results via scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value.",
       "Separates the MoneyGram cash-treasury investment from the Enterprise Fund."
     ],
     "avoid": [
       "Do NOT convert 'portfolio totals over $100m' into an exact cumulative cash-invested or current fair-value number.",
-      "Do NOT attribute the MoneyGram stake to the Enterprise Fund or quote unsourced investee amounts."
+      "Do NOT attribute the MoneyGram stake to the Enterprise Fund or quote unsourced investee amounts.",
+      "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
     ],
     "notes": "GT-28 CORRECTION 2026-07-10: SDF says its portfolio totals over $100m. Do not grade that as exact cumulative deployed cash, fair value, or cost basis; historical public series do not fully reconcile. MoneyGram remains cash-treasury funded.\nGT-28 independently confirmed by processes 3274/3275."
   },
   "tags": {
     "category": "history-org-tokenomics",
     "service": "scout",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-10-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -67,12 +67,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The fund identity and MoneyGram exclusion are correct, but 'cumulative investment' overstates SDF's current 'portfolio totals over $100m' wording and unreconciled historical report series.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-28 primary 3274 and blind 3275."
+        "P4 Lane R behavioral conversion queue, row 52 (q-org-sdf-enterprise-fund): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+        "Current source retained for behavioral retrieval: https://stellar.org/enterprise-fund"
       ],
       "rootCause": [
-        "Eval-side portfolio-value/cost-basis/cumulative-cash metric conflation."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-org-sdf-enterprise-fund"

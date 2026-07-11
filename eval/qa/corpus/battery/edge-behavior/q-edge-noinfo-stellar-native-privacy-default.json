@@ -5,28 +5,28 @@
     "stellarDocs.search_protocol_concepts_docs"
   ],
   "golden": {
-    "answer": "Stellar has no network-wide switch, CLI flag, or account setting that makes all payments shielded by default. Ordinary Stellar transactions and standard asset/token activity are public by default. Privacy requires an explicit application or token protocol: current official material describes privacy pools and a **Testnet Confidential Tokens developer preview**; Confidential Tokens hide balances and transfer amounts but leave sender/receiver addresses public, while Stellar Private Payments is an unaudited research prototype with different visibility boundaries. BLS12-381 (CAP-0059/P22) and BN254/Poseidon (CAP-0074/0075/P25) are cryptographic primitives, not a global privacy mode. State each product's network, audit, and field-visibility status; do not fabricate enablement steps.",
+    "answer": "Use `stellarDocs.search_protocol_concepts_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Rejects a global shielded-by-default toggle and scopes transparency to ordinary/default activity.",
     "keyFacts": [
-      "Rejects a global shielded-by-default toggle and scopes transparency to ordinary/default activity.",
-      "Distinguishes current application-layer privacy status and field visibility from P22/P25 cryptographic primitives."
+      "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs and labels version, UI, provider, and availability claims as observed.",
+      "Rejects a global shielded-by-default toggle and scopes transparency to ordinary/default activity."
     ],
     "avoid": [
       "Do NOT invent an enablement command or claim Stellar is shielded by default.",
-      "Do NOT say all application-layer balances/amounts must remain visible or imply Testnet/research prototypes are audited Mainnet products."
+      "Do NOT say all application-layer balances/amounts must remain visible or imply Testnet/research prototypes are audited Mainnet products.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "GT-25 CORRECTION 2026-07-10: no global privacy toggle exists, but current optional applications can hide defined fields. Grade ordinary/default transparency plus explicit product network, audit, and visibility status; BN254/Poseidon are live P25 primitives, not a turnkey mode.\nGT-25 independently confirmed by processes 3268/3273."
   },
   "tags": {
     "category": "edge-behavior",
     "service": "stellarDocs",
-    "freshness": "scheduled",
+    "freshness": "live",
     "trap": "fabrication-bait"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-09-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "A",
@@ -71,12 +71,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The no-global-toggle correction remains valid, but the inherited answer overgeneralized ordinary ledger visibility to optional privacy applications and described now-live Protocol 25 primitives as merely later.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-25 primary 3268 and blind 3273; both independently confirmed product/network/audit/field-visibility boundaries."
+        "P4 Lane R behavioral conversion queue, row 42 (q-edge-noinfo-stellar-native-privacy-default): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/build/apps/privacy"
       ],
       "rootCause": [
-        "Eval-side freshness and layer-boundary drift; official docs are current and discoverable."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-edge-noinfo-stellar-native-privacy-default"

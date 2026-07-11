@@ -6,9 +6,9 @@
     "stellarDocs.search_sdk_cli_tools_docs"
   ],
   "golden": {
-    "answer": "For a disposable local development or CI network, run **`stellar container start local`**. The direct Docker equivalent is `docker run -i -p 8000:8000 stellar/quickstart --local`. Quickstart bundles Core, Horizon, Stellar RPC, Friendbot, and Lab; the canonical local RPC path is `http://localhost:8000/rpc`.\n\nQuickstart supports four modes: **local, testnet, futurenet, and pubnet**. Only `local` is a hermetic standalone network with a local faucet. Testnet/Futurenet/Pubnet modes connect to those public networks; Testnet/Futurenet Friendbot access is proxied and does not evade the public faucet's limits. Quickstart is development infrastructure, not a production deployment, and its state is disposable unless persistence is explicitly configured.",
+    "answer": "Use `stellarDocs.search_protocol_concepts_docs`, `stellarDocs.search_sdk_cli_tools_docs` to perform the current documented lookup or workflow for this question. Report the source and as-of date for the observed documentation or response. Treat version, UI, provider, and availability statements as observations of that retrieval, not timeless facts.\n\nStable guardrails that remain in force: Names all four modes: local, testnet, futurenet, and pubnet. States that only local mode is hermetic; public-network modes do not create independent public faucets. Treats Quickstart as disposable development/CI infrastructure, not production.",
     "keyFacts": [
-      "Uses the current `stellar container start local` command or the `stellar/quickstart --local` Docker image.",
+      "Executes the current documented lookup/workflow via stellarDocs.search_protocol_concepts_docs, stellarDocs.search_sdk_cli_tools_docs and labels version, UI, provider, and availability claims as observed.",
       "Names all four modes: local, testnet, futurenet, and pubnet.",
       "States that only local mode is hermetic; public-network modes do not create independent public faucets.",
       "Treats Quickstart as disposable development/CI infrastructure, not production."
@@ -16,20 +16,20 @@
     "avoid": [
       "Do NOT use `stellar network container start` as the current canonical command or omit Futurenet from an exhaustive mode list.",
       "Do NOT claim Testnet/Futurenet/Pubnet modes are hermetic or bypass public faucet limits.",
-      "Do NOT recommend Quickstart as a production node or promise persistence without configuration."
+      "Do NOT recommend Quickstart as a production node or promise persistence without configuration.",
+      "Do NOT state a specific current version, UI, provider, or availability observation as a timeless fact."
     ],
     "notes": "Quickstart container + CLI integration; covers quickstart/localdev subtopic.\nAlso good if the answer: `stellar network container start testnet` (Stellar CLI) boots the Quickstart container with a testnet-friendly config. | Quickstart exposes Friendbot (e.g. at `http://localhost:8000/friendbot`) for funding.\nGolden cites: developers.stellar.org Quickstart docs or the stellar/quickstart image/repo.\nGT-50/GT-52 CORRECTION 2026-07-11: current command is `stellar container start`; exhaustive modes include Futurenet. Preserve the local-only hermetic/faucet boundary."
   },
   "tags": {
     "category": "tooling-infra",
     "service": "stellarDocs",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
     "asOf": "2026-07-11",
-    "reverifyBy": "2026-10-01",
     "sources": [
       {
         "class": "A",
@@ -98,13 +98,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited answer omitted Futurenet, used the stale `stellar network container start` command, and blurred hermetic local mode with Quickstart modes that connect to public networks and proxy their public faucets.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-50 processes 3349/3361 independently confirmed the four modes and current command.",
-        "GT-52 processes 3356/3368 independently required the local-versus-public Friendbot clarification; this entry is the single sibling landing point."
+        "P4 Lane R behavioral conversion queue, row 49 (q-infra-quickstart-local-network): Behavioral golden: execute the current documented workflow/lookup, state version or UI/provider claims only as observed, and do not pin a snapshot.",
+        "Current source retained for behavioral retrieval: https://developers.stellar.org/docs/tools/quickstart"
       ],
       "rootCause": [
-        "Eval-side CLI/docs-release drift: the archived answer copied a retired command shape and an incomplete mode enumeration."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-infra-quickstart-local-network"

@@ -22,7 +22,7 @@
           "disposition": "resolved by provenance-bearing overrides on 2026-07-03; retained as historical contradiction evidence and rechecked in the 2026-07-09 corpus-health sweep",
           "memberContentSha256": {
             "q-asset-rwa-tokenized-freshness": "75289339b1b33100f65c72b7d150e534611700322a527cea0142faf371b38598",
-            "q-eco-stellar-rwa-stablecoin-volume": "cc18344d59fe32f4e4607dc57dae5e14c8e13d73106b217da093d8e88fdf26dc"
+            "q-eco-stellar-rwa-stablecoin-volume": "c5bdfff24428493d1fd20bf8513807890aff03e6ebd1edf1268afc41592fa5a6"
           },
           "verdict": "reopen",
           "reopened": {
@@ -45,7 +45,7 @@
           "disposition": "grader-caution candidate",
           "memberContentSha256": {
             "q-crp-anchors-by-corridor": "0e098a4f4cf3152b8988bed1e68a9b05ab3be0052407cf000a7777296ceff3fd",
-            "q-hist-remittance-corridors": "f8c448828ce0385720a88dcf45cc09d795849fecfe98539487dcb7b66d7a9540"
+            "q-hist-remittance-corridors": "3c6e72109d3f7a202d16ccd7e5073f1d32f59ea890ad3ff4edca51c1c249ea31"
           },
           "verdict": "reopen",
           "reopened": {
@@ -147,12 +147,12 @@
           ],
           "note": "Historical 2026-07-03 snapshot only: the P17-P26 mappings were consistent, and P27 was then queued for the 2026-07-08 Mainnet vote. SUPERSEDED by the 2026-07-09 post-vote sweep below: P27/Zipper activated at ledger 63386819 on 2026-07-08T17:00:10Z, so no current grader may use this historical pending wording.",
           "memberContentSha256": {
-            "q-edge-fresh-latest-protocol-version": "1ec69dea8478142fe1014371e8a628d05078d36e7c420d669cc274827c8491ca",
+            "q-edge-fresh-latest-protocol-version": "7e2296f4d984ed3624defd36d01c6606810d4f337ed2545edffed06593eec0f1",
             "q-hist-soroban-launch-protocol20": "84b2553a92c0e1be6aadb90a623d02a6b16c3abebecb2101df6e45bbfd6aa79a",
-            "q-pc-protocol-upgrade-timing": "d39cdc555387533687195855a482112cdeaf3fba5743b7e387b7fbaca3438b97",
-            "q-protocol-23-whisk-caps": "ca92ab8ee3ee339ae1e006fd9f1315b4f5d84ead0c8710f3178f4576edbf1c62",
+            "q-pc-protocol-upgrade-timing": "30fff95837f2bf70346c6cf7d6a7a9ece86cd0414bbcaaa0703d85c5efc4f0c9",
+            "q-protocol-23-whisk-caps": "eb620780c7f2f1a5e5a9db4a7532961eff33d2aa00be8d8db59f265664b78396",
             "q-protocol-24-whisk-incident": "ab20fc1e57bac81dc235394042b073a7bdc509ecf02b15e0fcbf3051d83ebf6b",
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-protocol-amm-cap-0038": "43fb785cf05f8436cd71f9287dad88d0ec3b7eeefc56febb7f306e104c88a78e",
             "q-protocol-bls12-381-cap59": "d4bc4977e5484b4f97ca70b3485fb903688ca9818762b366c6995e22dbfed8e6",
             "q-protocol-bn254-poseidon-xray": "d948e69401372260296c369a60f6fb40023b52290eabc8e1dc47705d39ef4105",
@@ -160,6 +160,11 @@
             "q-protocol-version-history-list": "44ac9ee8f004b01ca1183a72ee5aab0b67f968e269eb3e2b2edbb64a4036fcfc",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13",
             "q-soroban-constructor-lifecycle": "114f88f767361237a6302841911018cc131d8a39c30615516ae6fc3afb84418f"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -182,9 +187,9 @@
           ],
           "note": "CAP-35 Final/P17, CAP-38 P18, CAP-46 series P20, CAP-51+53 P21, CAP-58+59 Final/P22, CAP-62/63/65/67 P23 (CAP-67 Final), CAP-73 Implemented/P26, CAP-74+75 Final/P25, CAP-71 Accepted/P27 — status and protocol number identical everywhere they appear.",
           "memberContentSha256": {
-            "q-edge-factcheck-soroswap-first-amm": "d54c1ee4fb5674f050ecd2286d73fcd4adb24338c691c83c5f9348146f6d9427",
-            "q-protocol-23-whisk-caps": "ca92ab8ee3ee339ae1e006fd9f1315b4f5d84ead0c8710f3178f4576edbf1c62",
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-edge-factcheck-soroswap-first-amm": "42daac76d7cef07cfda98db42506ac9dd8ff8e16405f67f87c38546983f4dbd6",
+            "q-protocol-23-whisk-caps": "eb620780c7f2f1a5e5a9db4a7532961eff33d2aa00be8d8db59f265664b78396",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-protocol-bn254-poseidon-xray": "d948e69401372260296c369a60f6fb40023b52290eabc8e1dc47705d39ef4105",
             "q-sep-41-token-interface": "5abe01e5a1ccd089e39dd69901374d6493d0b3e57f235a4d404662e5eb23d45c",
             "q-sor-confidential-tokens": "9c83a6d23252e30d4aeaa8b5988cce33d3ef4f652f26eb1b151ff91c76d6500b",
@@ -283,8 +288,8 @@
           ],
           "note": "Historical 2026-07-03 snapshot: Build/Instawards/Public Goods/Audit Bank/Growth Hack and SDF-vs-SCF distinctions were consistent. SUPERSEDED in part by the 2026-07-09 corpus-health sweep: this cluster omitted q-scf-liquidity-award-amount, while q-scf-award-tiers-list repeated its false 'amount undisclosed' claim. Current official rules publish $50K in XLM base plus an optional additional $50K supplemental award, up to $100K total. Funding-v2 also supersedes the old ~$19.97M/~223 analytics snapshot; current grading remains dated/source/count-basis-gated.",
           "memberContentSha256": {
-            "q-edge-scf-v7-centralization-myths": "9781e88594dbfa0510ddc0dc8d9948a87f25cc988aeee2c5aefb342bbe5042f5",
-            "q-org-sdf-enterprise-fund": "6c8a1979601e38b5e7b22609225ec8bfafbfe0c7d7db7cfa0e48ab28d54bf251",
+            "q-edge-scf-v7-centralization-myths": "aae24ca61ecccba033b330b45ab59ff4ee8bd9612ee7cfd3c931a0c1ed2bbab1",
+            "q-org-sdf-enterprise-fund": "125968b2586431731425f2858fa8cf86e711053b59afc0b41bec77d1911f9628",
             "q-scf-ambassador-program": "a4521ba9e66fe04356d4266180d55ea872b518ef2e72e152a7927d637139be1b",
             "q-scf-audit-bank": "83a69abbc5284205aa4552beac60b54ad96a75d15b475ab0351c77f3b8534270",
             "q-scf-build-award-cap": "a084bef7e3fd4a11947823a2036a6308bc215397bdd7769d348bd371692421f0",
@@ -299,6 +304,11 @@
             "q-scf-total-distributed": "398ac1400c1e84ae12f03f88bb28855ad5b1a63d8c530a0e2ec3fa6b70d06f28",
             "q-scf-v7-changes": "4abcebc2f528ba09759a8c71723e70f16d39ec418bab0af7a1964a4a3a587255",
             "q-scf-vs-sdf-enterprise-fund": "5ff537118db26494af91a8d7de18522bde68084f884aef1b315e6e80d400fa03"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -376,7 +386,7 @@
           "memberContentSha256": {
             "q-defi-soroswap-vs-stellarx": "2029c303131f07f42f04fc4897140fd058f605063ae398281cbd5bc8786ab267",
             "q-defi-soroswap-what-is": "86daa625039419f533796797b2b9cb2ef2fe9a6d2fcaa1900e9791c5c1e1602f",
-            "q-edge-factcheck-soroswap-first-amm": "d54c1ee4fb5674f050ecd2286d73fcd4adb24338c691c83c5f9348146f6d9427",
+            "q-edge-factcheck-soroswap-first-amm": "42daac76d7cef07cfda98db42506ac9dd8ff8e16405f67f87c38546983f4dbd6",
             "q-protocol-amm-cap-0038": "43fb785cf05f8436cd71f9287dad88d0ec3b7eeefc56febb7f306e104c88a78e"
           },
           "verdict": "reopen",
@@ -409,8 +419,8 @@
             "q-defi-benji-franklin-templeton": "4013b5d48f17b52495c9c282db319e6a97e3442d04fe30c1b4d7557e61967a4b",
             "q-defi-ondo-usdy": "084bf1b02daebdc1f0ddfcc018a104f9d28917e9aa902890a6fc937136074308",
             "q-defi-wisdomtree-crdt": "b3c9cfb60942105cefe352f526d44e480a0b2bbfd9641f26f2ab2159e9555622",
-            "q-eco-pyusd-stellar-freshness": "bca4c3a220620e0eaf282795d8701195f70b4ea8780538ef0e492d0fcad5ce7b",
-            "q-eco-stablecoins-on-stellar": "167172f629ccf950593ba5d2021e9943fcd14bb8a6964905d1e13e94d9432078",
+            "q-eco-pyusd-stellar-freshness": "5b8d774dbda7a31478667485e6ce1c2aaae90a64924dad02ad57dcc8cebbfa24",
+            "q-eco-stablecoins-on-stellar": "b1336dee09fe6757e9129c395db95a8844502e8243e99df6e5ccaa8af1b63e9c",
             "q-rwa-projects-tokenizing-stellar": "7cf83a3898f31e63d34412f583c65688f4bcc7362264adc7a00d525817aa931c",
             "q-token-circle-usdc-on-stellar": "7d72cec465a97dd62cfd56d5178df5cbaba1d1581dfcc100a3a511f8c078b58a",
             "q-tool-cctp-stellar-integration": "9ea1cf0497128126f3e0a77cbfe477b8a57c2c320aaf31be2ad7726b1665e2ec"
@@ -433,8 +443,8 @@
           "memberContentSha256": {
             "q-anchor-moneygram-ramps": "4db6ff0f2a65fee40b4c3261c4a3f1a976f898361d1b9e777d8c9c222b57b8f6",
             "q-crp-anchors-by-corridor": "0e098a4f4cf3152b8988bed1e68a9b05ab3be0052407cf000a7777296ceff3fd",
-            "q-hist-remittance-corridors": "f8c448828ce0385720a88dcf45cc09d795849fecfe98539487dcb7b66d7a9540",
-            "q-pay-moneygram-ramps": "49973681eb7b65b589215df2502520d3adc4cecdc5222bd94e74cd7029c181d0"
+            "q-hist-remittance-corridors": "3c6e72109d3f7a202d16ccd7e5073f1d32f59ea890ad3ff4edca51c1c249ea31",
+            "q-pay-moneygram-ramps": "754af6cf36ff38d3cc49e36b8f4198b6606b25e7428953bee93d89aaf789c598"
           },
           "verdict": "reopen",
           "reopened": {
@@ -475,7 +485,7 @@
             "q-pc-account-activation-not-found": "21b1b9acb4751c40673f4bc56dde04bba925cf1657df2dcd9b64e2aae3a4294b",
             "q-pc-practical-fee-setting": "7f1fb22b99c229c9d3552a758f015ae50593744f4097e64468aa51c4949aef80",
             "q-pc-sponsored-reserves": "045dc3b79bff803fb96078c8050bc8125b47a2d8585d4663e52f7abd28c7b4ec",
-            "q-protocol-base-reserve-min-balance": "0eacced5ca6275a4ce4a6174e90cdcde01116ba381f9d0cdd293ba0cd36d71a5",
+            "q-protocol-base-reserve-min-balance": "c43bf6b4979cbd18b8ba5e8cff98fd88bebec73ad2789aab6de674e602f95363",
             "q-protocol-ledger-close-time": "1538fc8f452dfd22d1107a087331c6138eb053d9d30505e756b2dd43bc637ca3",
             "q-sor-doc-timestamping-manage-data": "445b50f369919c0723cc05250925e6917c68dead18bf64875ee0c7e0d572f37b",
             "q-token-initial-supply-distribution": "22dd877260037d0517f016039abd58921c4c708f7a049f53071121da3856c3b2"
@@ -510,13 +520,18 @@
           "memberContentSha256": {
             "q-infra-rpc-methods-list": "aaec9f171646c7c23ebc173dd87525a522fc9ac9d8ce29f6c5a779c0b65c9e78",
             "q-infra-rpc-provider-archive-tier": "163326deb611f94c0261e85a99dce36d33550d011c6596ece6650cb8f20cf1fa",
-            "q-infra-which-indexer": "8eac14f6a94a22a31e137db954ff859eeb4532ba7b8b453d6797d3976743c748",
+            "q-infra-which-indexer": "7b2d688aeaef5776640f3dbcf807d008043a729250d4ec261cfdfdcc85871c4c",
             "q-soroban-event-indexing-design": "163f3d83dff9c72e8eaf5e8c6ab0406e4f69dce17867ab85e01bfbc72727ef65",
             "q-soroban-publish-events": "6e05c8521d7b29746cd47c26faddfeee7270201975b896fd8a91ec272cd4e92c",
             "q-ti-enumerate-holders-airdrop": "761e51b39e0fad7844582671923a3f450ceca9a4f0816b081ce02a0a9ce5811e",
             "q-ti-historical-pointintime-balances": "7e3f5cee601cf6016d15bb9551d72f85a482c86242a12423ae0787b1f5dc88a2",
             "q-ti-rpc-gettransactions-pagination-xdr": "25223c2a57b6121f045ad7ddf3e9fcbeab4fde768fa1cde3ef6c78b710b15b3c",
             "q-ti-self-host-retention-backfill": "079bd59085acf1b6e57bf8dd58cc41b7d30f0568a7eda93ab8976efb657bf7f6"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -571,8 +586,8 @@
             "q-defi-aquarius-what-is": "c11c995962eb4bc57a0068ec7811b666b20b2b25172ab9872dd46696bb307c41",
             "q-defi-defindex-honest": "abde03c42e2b7f805f2db555856385da3020bb715f76289034199f915e8320df",
             "q-eco-defi-tvl-current": "71b686a6b5fa489ef61c8eab48fafa70d797c1a48234d53be836afedd6bedf48",
-            "q-edge-fresh-latest-blend-tvl": "d0799561b518147599cf1140671e31da26e730945e00a0e85295a017f4eb7284",
-            "q-edge-noinfo-exact-tvl-figure": "7fdfbdda5e54f05c0c6603a60098d2d9e46e5bf8f7dc8293a0f8a451d7263274"
+            "q-edge-fresh-latest-blend-tvl": "318dc3e51983fea633654dd972edc9b470d53790a104702ef38263cf30240058",
+            "q-edge-noinfo-exact-tvl-figure": "ce1a9b51b3ee858dfd12894d4da16ef0c30d6414d55ad0e72515d82080901068"
           },
           "verdict": "reopen",
           "reopened": {
@@ -623,7 +638,7 @@
           "memberContentSha256": {
             "q-edge-jailbreak-generate-secret-keys": "3a689a5dbe9c5675b91b56cb7b0a674b5997cd78c189ed0cdb79a7c7e70c8686",
             "q-edge-send-me-free-xlm": "be3bf999862788c1a1ec8da972475056374640a58e27d4629580f29f647c945b",
-            "q-infra-testnet-vs-futurenet": "d6f6789b00dffa6690d7f11b996afe47e6a0fb118a9c19d6d6e44c01ee5e840d",
+            "q-infra-testnet-vs-futurenet": "e3b4885029389842f576b1feb4f7aaf884aaf0669df16ee2b884e93c16026f3d",
             "q-ti-stellar-lab-usage-and-new-ui": "5a7fa88f1ffd5c6cfabb70b558a3b55d54d7b0f2d66baf867e6d5adbad71ce53",
             "q-ti-testnet-usdc-faucet": "698fdb4fecb12cd170708f6d8a4c60ac0a4a4602b6f2dbd44dee5a18baad892b",
             "q-tool-cli-testnet-identity-howto": "a5f6a5ddc7fc93751fe7427d1e0999de75018c0ce036a735adaf91fccdb27ab0"
@@ -657,8 +672,13 @@
           "why": "The live chain and release feeds have advanced while the official version table lags. Current-network and latest-release questions must use Horizon/RPC and GitHub releases; the docs lag is tracked as sd-008.",
           "disposition": "grader caution + improvements/stellar-docs/sd-008",
           "memberContentSha256": {
-            "q-pc-protocol-upgrade-timing": "d39cdc555387533687195855a482112cdeaf3fba5743b7e387b7fbaca3438b97",
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24"
+            "q-pc-protocol-upgrade-timing": "30fff95837f2bf70346c6cf7d6a7a9ece86cd0414bbcaaa0703d85c5efc4f0c9",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         }
       ],
@@ -678,11 +698,16 @@
           ],
           "note": "Post-override truth is consistent: P27/Zipper activated on Mainnet at ledger 63386819 on 2026-07-08T17:00:10Z; CAP-0071 provides authentication delegation/address-bound credentials; stellar-core, soroban-sdk, and stellar-cli have stable v27 releases. The edge latest-version case remains behavior-gated rather than number-gated, and the stellar-core identity case never carried an activation claim.",
           "memberContentSha256": {
-            "q-edge-fresh-latest-protocol-version": "1ec69dea8478142fe1014371e8a628d05078d36e7c420d669cc274827c8491ca",
-            "q-pc-protocol-upgrade-timing": "d39cdc555387533687195855a482112cdeaf3fba5743b7e387b7fbaca3438b97",
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-edge-fresh-latest-protocol-version": "7e2296f4d984ed3624defd36d01c6606810d4f337ed2545edffed06593eec0f1",
+            "q-pc-protocol-upgrade-timing": "30fff95837f2bf70346c6cf7d6a7a9ece86cd0414bbcaaa0703d85c5efc4f0c9",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-protocol-version-history-list": "44ac9ee8f004b01ca1183a72ee5aab0b67f968e269eb3e2b2edbb64a4036fcfc",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         }
       ]
@@ -721,8 +746,13 @@
           "why": "Two siblings froze the wrong current deadline.",
           "disposition": "resolved with dated official-source overrides",
           "memberContentSha256": {
-            "q-edge-scf-v7-centralization-myths": "9781e88594dbfa0510ddc0dc8d9948a87f25cc988aeee2c5aefb342bbe5042f5",
+            "q-edge-scf-v7-centralization-myths": "aae24ca61ecccba033b330b45ab59ff4ee8bd9612ee7cfd3c931a0c1ed2bbab1",
             "q-scf-current-round": "2ed412bee0d0a0dc01a5f73bc69e5bbeade8ac7a41b775f65d1b6c483e3472d1"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -750,8 +780,13 @@
           "why": "Product brand was conflated with issuer, then one historical Paxos entity was frozen as timeless despite current primary-source drift.",
           "disposition": "resolved as PayPal-branded/Paxos-issued with explicit dated LLC-versus-N.A. disagreement",
           "memberContentSha256": {
-            "q-eco-pyusd-stellar-freshness": "bca4c3a220620e0eaf282795d8701195f70b4ea8780538ef0e492d0fcad5ce7b",
-            "q-eco-stablecoins-on-stellar": "167172f629ccf950593ba5d2021e9943fcd14bb8a6964905d1e13e94d9432078"
+            "q-eco-pyusd-stellar-freshness": "5b8d774dbda7a31478667485e6ce1c2aaae90a64924dad02ad57dcc8cebbfa24",
+            "q-eco-stablecoins-on-stellar": "b1336dee09fe6757e9129c395db95a8844502e8243e99df6e5ccaa8af1b63e9c"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -827,7 +862,12 @@
           "why": "Provider truth has advanced while the official discovery page remains stale.",
           "disposition": "encoded as an explicit real-world-versus-docs-surface disagreement; never mark Alchemy not live solely from the stale page",
           "memberContentSha256": {
-            "q-infra-which-indexer": "8eac14f6a94a22a31e137db954ff859eeb4532ba7b8b453d6797d3976743c748"
+            "q-infra-which-indexer": "7b2d688aeaef5776640f3dbcf807d008043a729250d4ec261cfdfdcc85871c4c"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -903,8 +943,13 @@
           ],
           "note": "P27/Zipper is active from ledger 63386819 at 2026-07-08T17:00:10Z; the earlier pending note is historical and explicitly superseded.",
           "memberContentSha256": {
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -929,7 +974,12 @@
           ],
           "note": "Alchemy Data API live status and the stale H1-2026 Stellar docs statement coexist only as a disclosed surface disagreement; RPC hosted/public provider categories remain separate.",
           "memberContentSha256": {
-            "q-infra-which-indexer": "8eac14f6a94a22a31e137db954ff859eeb4532ba7b8b453d6797d3976743c748"
+            "q-infra-which-indexer": "7b2d688aeaef5776640f3dbcf807d008043a729250d4ec261cfdfdcc85871c4c"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -947,7 +997,7 @@
           "memberContentSha256": {
             "q-asset-usdc-eurc-issuer": "f66c9cf923e027db215975b2a2f41de0a444ea36bcd376baed6d23fd53db4ec1",
             "q-builder-by-region-latam": "9a7ca9e3f397d8ed377ae2257dcd172cb51f029f7d65b91c37a3c5ae96d0dc23",
-            "q-eco-pyusd-stellar-freshness": "bca4c3a220620e0eaf282795d8701195f70b4ea8780538ef0e492d0fcad5ce7b",
+            "q-eco-pyusd-stellar-freshness": "5b8d774dbda7a31478667485e6ce1c2aaae90a64924dad02ad57dcc8cebbfa24",
             "q-scf-funding-by-category": "0a447671f02a65a6dbc27d2a1fb6584b5d4bb68362cfe3a4a24279cda9062946",
             "q-soroban-deploy-cli": "fb814a3ee0db326611cce267c2033e234e0d8618436ae8862b8cb8860b7e780d"
           },
@@ -1030,7 +1080,12 @@
           ],
           "note": "Semantic relevance rank is not chronology. Recent-window answers declare window/asOf, validate and label publication versus event date, exclude undated rows, post-sort chronologically, explain editorial significance, and remain non-exhaustive. Ingestion/scrape timestamps do not silently become publication dates.",
           "memberContentSha256": {
-            "q-edge-fresh-most-recent-news": "a60ca6d42a00ac8fe3778a972ec8f8cfe49ade866558e30c07e1cf84551e8e36"
+            "q-edge-fresh-most-recent-news": "cc82588b49e14245700580cffc2ae2f21f653ac0c7dfade209c97465a08e82a3"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1058,10 +1113,15 @@
           ],
           "note": "The dated Build schedule is 10/20/30/40 with current 90-day completion-form/unpaid-tranche terms. Grant administration and normative fairness are distinct from protocol authority. Current round/phase/deadline facts stay in the dedicated round cases rather than standing in for award terms.",
           "memberContentSha256": {
-            "q-edge-fresh-latest-scf-round": "4cc9f4b77b1e7dc9c9012da033dbb0b5d5230e8c53695a3624b779e5e4dfdf59",
-            "q-edge-scf-v7-centralization-myths": "9781e88594dbfa0510ddc0dc8d9948a87f25cc988aeee2c5aefb342bbe5042f5",
+            "q-edge-fresh-latest-scf-round": "8354f15e7eaa6daa8587803b4fa2f5aea47a0622202cc78701dd1a89f3db5da7",
+            "q-edge-scf-v7-centralization-myths": "aae24ca61ecccba033b330b45ab59ff4ee8bd9612ee7cfd3c931a0c1ed2bbab1",
             "q-scf-current-round": "2ed412bee0d0a0dc01a5f73bc69e5bbeade8ac7a41b775f65d1b6c483e3472d1",
             "q-scf-v7-changes": "4abcebc2f528ba09759a8c71723e70f16d39ec418bab0af7a1964a4a3a587255"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1104,9 +1164,14 @@
           ],
           "note": "Announcements, capabilities, historic routes, phased activation, GA, and current deployment are distinct. Aid individuals/households/countries/windows and RWA chain/suite/fund values remain source-scoped. Current rosters and chain support never overwrite dated launch history or imply sole-chain deployment.",
           "memberContentSha256": {
-            "q-hist-remittance-corridors": "f8c448828ce0385720a88dcf45cc09d795849fecfe98539487dcb7b66d7a9540",
+            "q-hist-remittance-corridors": "3c6e72109d3f7a202d16ccd7e5073f1d32f59ea890ad3ff4edca51c1c249ea31",
             "q-hist-soroban-launch-protocol20": "84b2553a92c0e1be6aadb90a623d02a6b16c3abebecb2101df6e45bbfd6aa79a",
             "q-hist-unhcr-stellar-aid-assist": "60962626aa3794493cfa4c2d5e4685fd91bef24f6d23491819b760155939071c"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         }
       ]
@@ -1129,9 +1194,14 @@
           ],
           "note": "No official sharding CAP was found in the dated registry/history sweep. P23 introduced CAP-0063 scheduling support with ledgerMaxDependentTxClusters initially one (no multi-cluster parallel execution); later settings activation led to the current Mainnet value two. Parallel scheduling is not sharding, and the setting-change date is not invented.",
           "memberContentSha256": {
-            "q-protocol-23-whisk-caps": "ca92ab8ee3ee339ae1e006fd9f1315b4f5d84ead0c8710f3178f4576edbf1c62",
+            "q-protocol-23-whisk-caps": "eb620780c7f2f1a5e5a9db4a7532961eff33d2aa00be8d8db59f265664b78396",
             "q-protocol-parallel-execution": "dffcbee9a462ecc12ba4e2dbf3f78a8dcd39da72b528c37d0edbd41004f6b2ca",
             "q-protocol-version-history-list": "44ac9ee8f004b01ca1183a72ee5aab0b67f968e269eb3e2b2edbb64a4036fcfc"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1147,8 +1217,8 @@
           "memberContentSha256": {
             "q-defi-defindex-honest": "abde03c42e2b7f805f2db555856385da3020bb715f76289034199f915e8320df",
             "q-eco-defi-tvl-current": "71b686a6b5fa489ef61c8eab48fafa70d797c1a48234d53be836afedd6bedf48",
-            "q-edge-fresh-latest-blend-tvl": "d0799561b518147599cf1140671e31da26e730945e00a0e85295a017f4eb7284",
-            "q-edge-noinfo-exact-tvl-figure": "7fdfbdda5e54f05c0c6603a60098d2d9e46e5bf8f7dc8293a0f8a451d7263274"
+            "q-edge-fresh-latest-blend-tvl": "318dc3e51983fea633654dd972edc9b470d53790a104702ef38263cf30240058",
+            "q-edge-noinfo-exact-tvl-figure": "ce1a9b51b3ee858dfd12894d4da16ef0c30d6414d55ad0e72515d82080901068"
           },
           "verdict": "reopen",
           "reopened": {
@@ -1179,9 +1249,14 @@
           ],
           "note": "Ordinary Stellar activity is public by default and there is no global privacy toggle. Optional applications have explicit visibility/network/audit boundaries; Confidential Tokens is a 2026-06-29 Testnet developer preview, while P22/P25 ZK host functions are primitives rather than turnkey privacy.",
           "memberContentSha256": {
-            "q-edge-noinfo-stellar-native-privacy-default": "43d0265e94c33ddfacd88d7ac9015b93047956a63578ae3c4ab3180e67d9069c",
+            "q-edge-noinfo-stellar-native-privacy-default": "9bd6d67b9d2a6b78cb9d2a78b1b01eedb3356092c149ada02509019ef5e7b5f2",
             "q-protocol-bn254-poseidon-xray": "d948e69401372260296c369a60f6fb40023b52290eabc8e1dc47705d39ef4105",
             "q-sor-confidential-tokens": "9c83a6d23252e30d4aeaa8b5988cce33d3ef4f652f26eb1b151ff91c76d6500b"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1225,10 +1300,15 @@
           ],
           "note": "SDF sells existing XLM through named exchanges/direct sales for operations and mandate work without a price guarantee. The 2019 no-additional-burn statement and current no-new-plan sweep are dated evidence. Current mandate/dashboard/report balances are source-, method-, and timestamp-scoped; ~30B is not a current durable reserve fact and named mixed-timestamp accounts are non-exhaustive.",
           "memberContentSha256": {
-            "q-hot-sdf-transparency-wallets-reports": "3b764b2cf4a29d45ec19b542f4ab67cbea827568422b3b554d3dcac3e9d47da2",
-            "q-hot-sdf-xlm-holdings-sales": "8da245386b47c3a83814be7edd0baa12859ebf079acb23e8fda18c244e3f7d81",
-            "q-org-sdf-mandate-buckets": "466ea01e52d406ae2a2448b5da90499068809552996a4a3f13275a02716d82fa",
+            "q-hot-sdf-transparency-wallets-reports": "752064e7f62c82d6d9169ad6fd09d3e72f87d368758d83ab4efd27e156936625",
+            "q-hot-sdf-xlm-holdings-sales": "d056a91e9f53ed1cb9a920ddc44f460c744ddba0c38d2cb64b6a5f9a9b31e658",
+            "q-org-sdf-mandate-buckets": "4ab69b407a587b024cfba7f4e53a257381904342e2d87584b90f13d07a9b1fa3",
             "q-org-sdf-structure-mandate": "8fe48491de528b55bebcaf17a441ecca9851cac9e14cb05fe857c594f91008c0"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1252,8 +1332,13 @@
           ],
           "note": "SDF's current 'portfolio totals over $100m' wording is not an exact cumulative-cash, fair-value, or cost-basis scalar. MoneyGram was funded from SDF cash treasury outside the Enterprise Fund.",
           "memberContentSha256": {
-            "q-org-sdf-enterprise-fund": "6c8a1979601e38b5e7b22609225ec8bfafbfe0c7d7db7cfa0e48ab28d54bf251",
+            "q-org-sdf-enterprise-fund": "125968b2586431731425f2858fa8cf86e711053b59afc0b41bec77d1911f9628",
             "q-scf-vs-sdf-enterprise-fund": "5ff537118db26494af91a8d7de18522bde68084f884aef1b315e6e80d400fa03"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1352,8 +1437,13 @@
           ],
           "note": "Starlight is archived experimental work; CAP-0021/0040 are active protocol primitives, not production-deployment evidence. Perun local/standalone code and Centaurus Live+Unverified metadata remain source-relative until primary Mainnet deployment evidence exists.",
           "memberContentSha256": {
-            "q-pc-l2-payment-channels-starlight": "6435b61181e8e8f76e4b32b6a80091d45b24aab740165d0270900a9297b18bc9",
+            "q-pc-l2-payment-channels-starlight": "7c3ee34a4b75d6b85761767fa215d074e8f50e881bbab47ad62220fd389e087e",
             "q-protocol-19-preconditions-cap-0021": "ed8751655de4381a343f5d6b1c3cd0fcc952e61d3636b3b27fb114d73cc1a80a"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2051,8 +2141,13 @@
           "why": "Official current surfaces conflict.",
           "disposition": "route to current form with explicit conflict; sibling follow-up remains.",
           "memberContentSha256": {
-            "q-org-sdf-enterprise-fund": "6c8a1979601e38b5e7b22609225ec8bfafbfe0c7d7db7cfa0e48ab28d54bf251",
+            "q-org-sdf-enterprise-fund": "125968b2586431731425f2858fa8cf86e711053b59afc0b41bec77d1911f9628",
             "q-scf-vs-sdf-enterprise-fund": "5ff537118db26494af91a8d7de18522bde68084f884aef1b315e6e80d400fa03"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2155,8 +2250,13 @@
           "why": "Stellar has not standardized one universal offline-leaf audit package.",
           "disposition": "corrected with dated preview status and conditional evidence.",
           "memberContentSha256": {
-            "q-edge-noinfo-stellar-native-privacy-default": "43d0265e94c33ddfacd88d7ac9015b93047956a63578ae3c4ab3180e67d9069c",
+            "q-edge-noinfo-stellar-native-privacy-default": "9bd6d67b9d2a6b78cb9d2a78b1b01eedb3356092c149ada02509019ef5e7b5f2",
             "q-sor-confidential-tokens": "9c83a6d23252e30d4aeaa8b5988cce33d3ef4f652f26eb1b151ff91c76d6500b"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2431,9 +2531,14 @@
           ],
           "note": "P27 live from ledger 63386819 and first-class CAP-0071 delegation. Legacy P20 custom-account delegation remains a distinct true statement.",
           "memberContentSha256": {
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-protocol-version-history-list": "44ac9ee8f004b01ca1183a72ee5aab0b67f968e269eb3e2b2edbb64a4036fcfc",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2609,8 +2714,13 @@
           "why": "CAP-family omission, dead path, and transition/configuration collapse.",
           "disposition": "target corrected; fake-sharding path/freshness corrected; later coherent parallel sibling retained.",
           "memberContentSha256": {
-            "q-protocol-23-whisk-caps": "ca92ab8ee3ee339ae1e006fd9f1315b4f5d84ead0c8710f3178f4576edbf1c62",
+            "q-protocol-23-whisk-caps": "eb620780c7f2f1a5e5a9db4a7532961eff33d2aa00be8d8db59f265664b78396",
             "q-protocol-parallel-execution": "dffcbee9a462ecc12ba4e2dbf3f78a8dcd39da72b528c37d0edbd41004f6b2ca"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2641,9 +2751,14 @@
           "why": "Append-only post-vote corrections left contradictory grading context.",
           "disposition": "stale spans replaced; delegation/V2 mechanics and CAP Accepted-versus-network-live distinction retained.",
           "memberContentSha256": {
-            "q-pc-protocol-upgrade-timing": "d39cdc555387533687195855a482112cdeaf3fba5743b7e387b7fbaca3438b97",
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-pc-protocol-upgrade-timing": "30fff95837f2bf70346c6cf7d6a7a9ece86cd0414bbcaaa0703d85c5efc4f0c9",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2681,7 +2796,12 @@
             "q-asset-amm-fee-reserve": "3feb34dfcd8ca8783634658bd76bcff031a2453dbf2e19c4cfab30f043218886",
             "q-pc-account-activation-not-found": "21b1b9acb4751c40673f4bc56dde04bba925cf1657df2dcd9b64e2aae3a4294b",
             "q-pc-sponsored-reserves": "045dc3b79bff803fb96078c8050bc8125b47a2d8585d4663e52f7abd28c7b4ec",
-            "q-protocol-base-reserve-min-balance": "0eacced5ca6275a4ce4a6174e90cdcde01116ba381f9d0cdd293ba0cd36d71a5"
+            "q-protocol-base-reserve-min-balance": "c43bf6b4979cbd18b8ba5e8cff98fd88bebec73ad2789aab6de674e602f95363"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2784,9 +2904,14 @@
           ],
           "note": "P23 initialized one cluster; a separate settings upgrade activated two on 2026-01-29. Current value two is dated/configuration-sensitive and canonical SLP path is limits/slp-0004.md.",
           "memberContentSha256": {
-            "q-protocol-23-whisk-caps": "ca92ab8ee3ee339ae1e006fd9f1315b4f5d84ead0c8710f3178f4576edbf1c62",
+            "q-protocol-23-whisk-caps": "eb620780c7f2f1a5e5a9db4a7532961eff33d2aa00be8d8db59f265664b78396",
             "q-protocol-parallel-execution": "dffcbee9a462ecc12ba4e2dbf3f78a8dcd39da72b528c37d0edbd41004f6b2ca",
             "q-protocol-version-history-list": "44ac9ee8f004b01ca1183a72ee5aab0b67f968e269eb3e2b2edbb64a4036fcfc"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2798,9 +2923,14 @@
           ],
           "note": "Address-with-delegates chains and address-bound V2 credentials are P27/CAP-0071; Pubnet activated at ledger 63386819 even though the registry still says Accepted.",
           "memberContentSha256": {
-            "q-protocol-27-cap-0071": "fc2eaa9b6d602517a05077517861845e3afccb74024400e85e08aecef3cb7a24",
+            "q-protocol-27-cap-0071": "fc3730522474538610e5a57656aab6a654e24fc2985b567b0f22262bcb977f51",
             "q-protocol-version-history-list": "44ac9ee8f004b01ca1183a72ee5aab0b67f968e269eb3e2b2edbb64a4036fcfc",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         }
       ]

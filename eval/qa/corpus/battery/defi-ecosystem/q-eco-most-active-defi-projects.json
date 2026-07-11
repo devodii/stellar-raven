@@ -10,26 +10,26 @@
     "scout.searchResearch"
   ],
   "golden": {
-    "answer": "Define **activity** before ranking: Scout's `sort=activity&range=30d` snapshot, repository last-push recency, direct commit counts, stars, issues, TVL, and market usage are different measures. Report the exact query parameters, generated-at time, DeFi inclusion/filter rule, returned metric, and source timestamp, then list the resulting rows. Do not require Soroswap/Aquarius/Blend/Reflector/Phoenix—or any other names—to appear permanently. If using direct GitHub commits, say which repositories and window were sampled and do not present it as Scout's metric.",
+    "answer": "Use `scout.getHackathon`, `scout.getHackathons`, `scout.getLeaderboard`, `scout.searchProjects`, `scout.searchRepos`, `scout.searchResearch` to retrieve current, source-bounded results for this question. Report the source and as-of date. Treat returned rosters, ranks, counts, and current values as observations, not timeless facts.",
     "keyFacts": [
-      "Exposes metric, query/window, generatedAt, filter semantics, source timestamp, and resulting rows; distinguishes activity from stars/issues/TVL."
+      "Retrieves source-bounded live results via scout.getHackathon, scout.getHackathons, scout.getLeaderboard, scout.searchProjects, scout.searchRepos, scout.searchResearch and reports their source and as-of date without freezing a roster, rank, count, or current value."
     ],
     "avoid": [
       "Do NOT say Scout activity is repoScore or commit count unless the returned schema establishes that, and do NOT force a fixed roster.",
-      "Do NOT call a ranking 'DeFi' without a visible inclusion rule."
+      "Do NOT call a ranking 'DeFi' without a visible inclusion rule.",
+      "Do NOT state a specific current TVL, count, roster, rank, or value as a timeless fact."
     ],
     "notes": "Most-active/top projects → scout_leaderboard. FRESHNESS-flagged ranking (weekly). Scout ranks repos by repoScore (freshness + traction + hackathon/SCF/builder authority); recent commit activity shows live DeFi repos (e.g. blend-sdk-js / blend-ui committed Jun 19 2026; reflector connectors May 2026). The ranking is a moving snapshot — reward flagging that + tool-sourced metrics over a fixed list. 2026-06-29 reviewed: confirmed scout_leaderboard card exists (CARDS.md) and all DeFi names cited (Soroswap, Aquarius, Blend, Reflector, Phoenix) resolve as Live on Scout directory. Confidence kept medium (ranking shifts).\nAlso good if the answer: Surfaces DeFi-relevant projects (e.g. Soroswap, Aquarius, Blend, Reflector, Phoenix) where they rank.\nGolden cites: The leaderboard/ranking source with a freshness caveat.\nGT-19 CORRECTION 2026-07-10: exact metric/query/filter/asOf are the gate. Scout activity, GitHub commits, stars, issues, TVL, and usage are not interchangeable."
   },
   "tags": {
     "category": "defi-ecosystem",
     "service": "scout",
-    "freshness": "scheduled"
+    "freshness": "live"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
-    "reverifyBy": "2026-08-01",
+    "asOf": "2026-07-11",
     "sources": [
       {
         "class": "C",
@@ -59,12 +59,13 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited rubric falsely described Scout activity as repoScore/commit count and forced a stale roster. Live fields and sampled GitHub activity demonstrate distinct, non-interchangeable metrics.",
+      "by": "P4 conversions (Solo 3418)",
       "evidence": [
-        "Solo scratchpad 575 GT-19 primary 3254 and blind 3258; reviewers obtained different rosters from different reasonable DeFi filters."
+        "P4 Lane R behavioral conversion queue, row 31 (q-eco-most-active-defi-projects): Behavioral golden: retrieve current source-bounded results, report an as-of/source, and do not pin a roster, rank, count, or current value.",
+        "Current source retained for behavioral retrieval: https://stellarlight.xyz/api/leaderboard?sort=activity&range=30d&limit=100"
       ],
       "rootCause": [
-        "Metric conflation and an undefined category filter turned a live leaderboard into a fixed fact."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-eco-most-active-defi-projects"
