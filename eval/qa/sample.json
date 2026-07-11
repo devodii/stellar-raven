@@ -1,7 +1,7 @@
 {
   "$comment": "Deterministic stratified sample (N=30, by service) of the owned QA battery.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "a99f1ac9118147381f5fb4894f225b8cce7ed9443a5e1ae6f2da35632fe32b4d",
+  "corpusContentSha256": "165b9640b0dd95ad07bc82f0c792b7192877e19d6ba0b1a21510d580fa2707cf",
   "counts": {
     "total": 30,
     "byCategory": {
