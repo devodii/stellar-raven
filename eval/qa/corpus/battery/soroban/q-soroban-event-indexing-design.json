@@ -63,16 +63,44 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Correctly models custom SEP-41 versus current asset-appended SAC/CAP-67 schemas and path metadata.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents",
+            "observedAt": "2026-07-11",
+            "note": "Official RPC documentation defines current event-query fields and pagination metadata."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-41 source defines custom token event semantics."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0067.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched CAP-0067 source defines current SAC/classic unified asset event schema changes."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — GT-42 independently established the current CAP-67 event atom needed by this sibling: direct SAC and Classic unified events append the asset topic, while robust indexing still requires producer/path provenance.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-42 blind process 3315."
+        "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0067.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "improvements/stellar-docs/sd-018-sac-cap67-event-schema-gap.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-soroban-event-indexing-design"

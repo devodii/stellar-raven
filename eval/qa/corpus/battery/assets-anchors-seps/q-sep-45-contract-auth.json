@@ -49,18 +49,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "P4 conversions rework after independent Fable copy/quality review",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575",
-        "Preserved main's 2026-06-22 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-        "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0045.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "eval-authoring",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-45-contract-auth"
+    "origin": "raven-next q-sep-45-contract-auth",
+    "corroboration": [
+      {
+        "claim": "Names SEP-45 as Stellar Web Authentication for Contract Accounts (the Soroban smart-account analog of SEP-10).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation identifies SEP specifications as the ecosystem standards surface."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0045.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-45 source identifies Stellar Web Authentication for Contract Accounts and relates it to SEP-10."
+          }
+        ]
+      }
+    ]
   }
 }

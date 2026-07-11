@@ -53,11 +53,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-41-bindings-target-dex-confidentiality-claims-deploy-porting accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sor-contract-as-claimable-arbiter"
+    "origin": "raven-next q-sor-contract-as-claimable-arbiter",
+    "corroboration": [
+      {
+        "claim": "Provides the correct Soroban escrow design: hold SAC/SEP-41 token balances in contract storage or contract-owned balances and release with contract logic/authorization.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+            "observedAt": "2026-07-11",
+            "note": "Official SAC documentation describes contract token balances, transfers, and authorization."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-41 source defines the token interface used for contract-held escrow balances."
+          }
+        ]
+      }
+    ]
   }
 }

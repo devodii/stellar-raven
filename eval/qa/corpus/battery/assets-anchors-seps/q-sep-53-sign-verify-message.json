@@ -34,11 +34,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-53-sign-verify-message"
+    "origin": "raven-next q-sep-53-sign-verify-message",
+    "corroboration": [
+      {
+        "claim": "SEP-53 is titled 'Sign and Verify Messages'. SEP-53 standardizes signing and verifying arbitrary messages with Stellar keypairs. SEP-53 is in Final status.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation provides the current SEP catalog context."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-53 source is titled Sign and Verify Messages, defines arbitrary-message signing, and records Final status."
+          }
+        ]
+      }
+    ]
   }
 }

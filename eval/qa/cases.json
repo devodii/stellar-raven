@@ -1,7 +1,7 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "eb90100ecb92deb9297b855b886ba1ae69f455cd7b56936218822a7c43b36859",
+  "corpusContentSha256": "8f6d4d870ecc086072c01e2c8c1407c7a367ca565334f70be4a49c491fc218a0",
   "counts": {
     "total": 484,
     "byCategory": {
@@ -343,12 +343,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-aas-list-token-on-exchanges-aggregators"
+        "origin": "raven-next q-aas-list-token-on-exchanges-aggregators",
+        "corroboration": [
+          {
+            "claim": "Explains technical prerequisites: issued asset, trustlines, home domain, valid SEP-1 stellar.toml metadata, and accessible logo/issuer information.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+                "observedAt": "2026-07-11",
+                "note": "Official SEP-1 integration guidance confirms stellar.toml asset metadata and discovery."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+                "observedAt": "2026-07-11",
+                "note": "The fetched SEP-1 source defines the stellar.toml fields and publication contract."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -404,12 +430,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/build/apps/wallet/sep30",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0030.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-aas-sep30-recoverable-wallets"
+        "origin": "raven-next q-aas-sep30-recoverable-wallets",
+        "corroboration": [
+          {
+            "claim": "Names SEP-30 as Stellar's account recovery standard using recovery signer servers.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/apps/wallet/sep30",
+                "observedAt": "2026-07-11",
+                "note": "Official wallet documentation identifies SEP-30 and its recovery-signer-server flow."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0030.md",
+                "observedAt": "2026-07-11",
+                "note": "The fetched SEP-30 source defines recoverable wallets and recovery signer servers."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -466,12 +518,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0042.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-aas-trusted-asset-list-whitelist"
+        "origin": "raven-next q-aas-trusted-asset-list-whitelist",
+        "corroboration": [
+          {
+            "claim": "Explains wallets should evaluate issuer account, home domain, SEP-1 metadata, known issuer/project sources, liquidity, and user risk signals.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+                "observedAt": "2026-07-11",
+                "note": "Official guidance confirms SEP-1 stellar.toml as issuer and asset metadata."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0042.md",
+                "observedAt": "2026-07-11",
+                "note": "The fetched SEP-42 source defines ecosystem-wide asset-list conventions and evaluation inputs."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -1574,12 +1652,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-03-classic-assets-clawback-trustlines-paths accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/liquidity-on-stellar-sdex-liquidity-pools",
+            "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0038.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-asset-amm-fee-reserve"
+        "origin": "raven-next q-asset-amm-fee-reserve",
+        "corroboration": [
+          {
+            "claim": "States a pool-share trustline consumes two base reserves (1.0 XLM).",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/liquidity-on-stellar-sdex-liquidity-pools",
+                "observedAt": "2026-07-11",
+                "note": "Official liquidity-pool documentation states that a pool-share trustline adds two base reserves, currently 1 XLM."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0038.md",
+                "observedAt": "2026-07-11",
+                "note": "The fetched CAP-0038 source defines the liquidity-pool trustline ledger entry and reserve treatment."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -2295,12 +2399,66 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-04-sac-stablecoins-issuance-fx accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://stellar.org/products-and-tools/wallet-sdk",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0012.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-asset-wallet-sdk-seps"
+        "origin": "raven-next q-asset-wallet-sdk-seps",
+        "corroboration": [
+          {
+            "claim": "It wraps client-side SEP-10 (auth), SEP-12 (KYC), SEP-24 (hosted deposit/withdraw), SEP-31 (cross-border), and SEP-38 (quotes).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/products-and-tools/wallet-sdk",
+                "observedAt": "2026-07-11",
+                "note": "The official Wallet SDK page identifies the supported anchor and wallet SEP workflows."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-10 source confirms web authentication."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0012.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-12 source confirms KYC/customer information."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-24 source confirms hosted deposit and withdrawal."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-31 source confirms cross-border payments."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-38 source confirms quotes/RFQ."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -7212,16 +7370,37 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "Identifies Comet as an SCF-funded weighted-AMM design with two awards totaling $291K.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/submissions/recG7Kj7ouwAFP2XY",
+                "observedAt": "2026-07-11",
+                "note": "Fetched official SCF record identifies Comet, Awarded status, and the $150,000 SCF #13 budget."
+              },
+              {
+                "class": "F",
+                "ref": "https://communityfund.stellar.org/submissions/recIRbsKDA1ayFXCF",
+                "observedAt": "2026-07-11",
+                "note": "Direct fetch of the second official record shows $141,000 and the project total $291,000; arithmetic rechecked on 2026-07-11."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — GT-15 blind evidence directly disproved the inherited 'not SCF-funded' claim and verified a current mainnet Blend backstop deployment while preserving the non-dominant standalone conclusion.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-15 primary 3243 and blind 3246"
+            "https://communityfund.stellar.org/submissions/recG7Kj7ouwAFP2XY",
+            "https://communityfund.stellar.org/submissions/recIRbsKDA1ayFXCF",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "one Scout funding flag and a historical Futurenet label were promoted over primary awards/deployment evidence"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-defi-comet-what-is"
@@ -11921,18 +12100,37 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "A $1B Soroswap TVL figure is supportable from current operator or independent TVL records.",
+            "verdict": "unverifiable",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://github.com/soroswap/docs",
+                "observedAt": "2026-07-11",
+                "note": "Fetched operator-owned documentation does not substantiate a $1B TVL figure."
+              },
+              {
+                "class": "F",
+                "ref": "https://api.llama.fi/protocol/soroswap",
+                "observedAt": "2026-07-11",
+                "note": "Direct current protocol-series fetch provides independent TVL observations far below $1B; it does not establish the claimed figure."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The fact-check correctly rejects 'first AMM' and unsupported $1B TVL, but it promoted Soroswap's self-description as the first DEX aggregator into independently established chronology. The correction preserves the refutation and attributes the remaining marketing claim.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-18 primary 3249 and blind 3252",
-            "Sibling sweep: q-defi-soroswap-what-is/content/similar and q-protocol-amm-cap-0038"
+            "https://github.com/soroswap/docs",
+            "https://api.llama.fi/protocol/soroswap",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "An operator superlative was retained as fact while correcting a neighboring false superlative.",
-            "improvements/stellar-light-scout/sls-015-searchprojects-description-editorial-capture.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-edge-factcheck-soroswap-first-amm"
@@ -20041,22 +20239,44 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "Identifies Stellar USDC plus SEP-10/SEP-24.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps",
+                "observedAt": "2026-07-11",
+                "note": "MoneyGram operator documentation identifies Stellar USDC and the hosted anchor integration."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-10 source defines the authentication layer."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-24 source defines the interactive deposit/withdrawal layer."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-02 blind and GT-11 primary/blind MoneyGram matrices",
-            "improvements/lumenloop/ll-008-directory-record-coverage-field-quality.md",
-            "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "Direction-specific operator data and multiple marketing scopes were compressed into one product figure.",
-            "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pay-moneygram-ramps"
@@ -20133,16 +20353,37 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "States current Dashboard/Core/TSS and native SEP-10/24 architecture without external Anchor Platform.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/platforms/stellar-disbursement-platform/admin-guide/design-and-architecture",
+                "observedAt": "2026-07-11",
+                "note": "Current official SDP architecture documents Dashboard, Core, TSS, and native receiver workflows."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-disbursement-platform-backend/tree/03e44fbedceab188cb91c77a181d8c734ffbd822",
+                "observedAt": "2026-07-11",
+                "note": "Pinned backend source exists and implements the current SDP application and SEP integration paths."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The durable bulk-payments definition was correct, but a historical Aid Assist/MoneyGram route was generalized into SDP architecture. Current SDP implements native SEP-10/24 and supports multiple receiver models without depending on Anchor Platform or a cash-out anchor.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-10/11 SDP matrices"
+            "https://developers.stellar.org/docs/platforms/stellar-disbursement-platform/admin-guide/design-and-architecture",
+            "https://github.com/stellar/stellar-disbursement-platform-backend/tree/03e44fbedceab188cb91c77a181d8c734ffbd822",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "A dated deployment's optional downstream cash-out path became a universal product dependency."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pay-sdp-disbursement"
@@ -20307,16 +20548,37 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "Distinguishes the dated unsponsored minimum from CAP-0033 sponsored zero-balance creation.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/guides/transactions/create-account",
+                "observedAt": "2026-07-11",
+                "note": "Official account-creation guidance distinguishes ordinary account funding requirements."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0033.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched CAP-0033 source defines sponsored reserves, including sponsored zero-starting-balance creation."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The keypair/nonexistent-payment core is correct, but the inherited answer turned the ordinary unsponsored 1 XLM minimum into a universal existence rule and omitted CAP-0033 sponsored zero-balance creation.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-29 primary 3276 and blind lock/report 3278; blind reviewer independently exposed the sponsored-path omission."
+            "https://developers.stellar.org/docs/build/guides/transactions/create-account",
+            "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0033.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "improvements/stellar-docs/sd-013-account-creation-merge-sponsorship-semantics.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-pc-account-activation-not-found"
@@ -22220,12 +22482,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-30-upgrade-quantum-scp-sequence-reserve-finality-p19 accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://stellar.org/blog/developers/announcing-protocol-19",
+            "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-protocol-19-preconditions-cap-0021"
+        "origin": "raven-next q-protocol-19-preconditions-cap-0021",
+        "corroboration": [
+          {
+            "claim": "States Protocol 19 (activated ~2022-06-08) introduced generalized transaction preconditions via CAP-0021 (time bounds, ledger bounds, min sequence number / age / gap, extra signers).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/developers/announcing-protocol-19",
+                "observedAt": "2026-07-11",
+                "note": "Official Protocol 19 announcement gives the June 2022 activation context and generalized preconditions."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched CAP-0021 source defines generalized transaction preconditions and their fields."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30280,12 +30568,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-1-toml"
+        "origin": "raven-next q-sep-1-toml",
+        "corroboration": [
+          {
+            "claim": "SEP-1 defines the stellar.toml (Stellar Info File) used to publish an org's Stellar metadata and endpoints.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies the SEP catalog and SEP purposes."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-1 source is titled Stellar Info File and defines stellar.toml metadata/endpoints."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30442,12 +30756,45 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-31-cross-border"
+        "origin": "raven-next q-sep-31-cross-border",
+        "corroboration": [
+          {
+            "claim": "Names SEP-31 as the Cross-Border Payments API — a sending anchor to a receiving anchor (anchor-to-anchor) flow. Contrasts SEP-24 as wallet↔anchor interactive (hosted) deposit/withdrawal for an end user, not anchor-to-anchor.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+                "observedAt": "2026-07-11",
+                "note": "Official anchor documentation distinguishes interactive deposit/withdrawal from cross-border anchor flows."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-24 source defines the hosted wallet-to-anchor flow."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-31 source defines the sending-anchor to receiving-anchor cross-border API."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30484,12 +30831,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-38-quotes"
+        "origin": "raven-next q-sep-38-quotes",
+        "corroboration": [
+          {
+            "claim": "Names SEP-38 as the Anchor RFQ / quote API for pricing between assets.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies the SEP catalog."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-38 source defines the Anchor RFQ API for asset prices and quotes."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30641,19 +31014,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575",
-            "Preserved main's 2024-04-11 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0043.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-43-web-wallet-api"
+        "origin": "raven-next q-sep-43-web-wallet-api",
+        "corroboration": [
+          {
+            "claim": "SEP-43 is 'Standard Web Wallet API Interface' — a standard interface (getAddress, signTransaction, signAuthEntry, signMessage, getNetwork) for web wallets so dapps integrate once. Does NOT claim SEP-43 is unpublished/nonexistent (the sep-0043.md file exists in stellar-protocol/ecosystem).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies SEP specifications as the ecosystem standards surface."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0043.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-43 source exists and defines the Standard Web Wallet API Interface and methods."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30707,19 +31099,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575",
-            "Preserved main's 2026-06-22 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0045.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-45-contract-auth"
+        "origin": "raven-next q-sep-45-contract-auth",
+        "corroboration": [
+          {
+            "claim": "Names SEP-45 as Stellar Web Authentication for Contract Accounts (the Soroban smart-account analog of SEP-10).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies SEP specifications as the ecosystem standards surface."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0045.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-45 source identifies Stellar Web Authentication for Contract Accounts and relates it to SEP-10."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30758,12 +31169,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-53-sign-verify-message"
+        "origin": "raven-next q-sep-53-sign-verify-message",
+        "corroboration": [
+          {
+            "claim": "SEP-53 is titled 'Sign and Verify Messages'. SEP-53 standardizes signing and verifying arbitrary messages with Stellar keypairs. SEP-53 is in Final status.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation provides the current SEP catalog context."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-53 source is titled Sign and Verify Messages, defines arbitrary-message signing, and records Final status."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30806,12 +31243,45 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-6-24-deprecation"
+        "origin": "raven-next q-sep-6-24-deprecation",
+        "corroboration": [
+          {
+            "claim": "Yes — SEP-6's interactive components are deprecated in favor of SEP-24 for hosted/interactive deposit & withdrawal. SEP-6's non-interactive (programmatic) API portion remains useful for fully API-driven anchors.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+                "observedAt": "2026-07-11",
+                "note": "Official anchor documentation distinguishes programmatic and hosted deposit/withdrawal integrations."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-6 source retains the non-interactive API and marks interactive portions deprecated."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-24 source defines the replacement hosted interactive flow."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30855,12 +31325,52 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-6-vs-31-misnumber-trap"
+        "origin": "raven-next q-sep-6-vs-31-misnumber-trap",
+        "corroboration": [
+          {
+            "claim": "Corrects the premise: SEP-31 is the Cross-Border Payments API (anchor-to-anchor), NOT a wallet's hosted-UI deposit standard. Identifies SEP-24 as the hosted/interactive deposit & withdrawal standard for a wallet's user (with SEP-6 as the programmatic API).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+                "observedAt": "2026-07-11",
+                "note": "Official anchor documentation distinguishes programmatic, interactive, and cross-border flows."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-6 source defines programmatic deposit/withdrawal."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-24 source defines hosted interactive deposit/withdrawal."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-31 source defines cross-border sending-anchor to receiving-anchor payments."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30899,12 +31409,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0007.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-7-uri"
+        "origin": "raven-next q-sep-7-uri",
+        "corroboration": [
+          {
+            "claim": "Names SEP-7 as the URI scheme for delegated/wallet signing requests.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies the SEP catalog."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0007.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-7 source defines the URI scheme for delegated signing requests."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30945,12 +31481,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0008.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-8-regulated-assets"
+        "origin": "raven-next q-sep-8-regulated-assets",
+        "corroboration": [
+          {
+            "claim": "Names SEP-8 as the Regulated Assets standard, adding per-transaction issuer approval.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies the SEP catalog."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0008.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-8 source defines regulated assets and per-transaction issuer approval."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -31085,19 +31647,37 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "SEP-1 = stellar.toml info/discovery file. SEP-10 = Stellar Web Authentication. SEP-12 = KYC API; SEP-24 = hosted/interactive deposit & withdrawal; SEP-6 = programmatic deposit & withdrawal. SEP-31 = cross-border payments API; SEP-38 = Anchor RFQ/quotes API.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation corroborates the numbered catalog and purposes."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched ecosystem registry corroborates SEP-1, SEP-6, SEP-10, SEP-12, SEP-24, SEP-31, and SEP-38 mappings."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The answer claimed its lifecycle statuses were verified against the stellar-protocol registry, but it mixed SEP-7's file-preamble value (Active) with SEP-8's registry value (Final). Current primary sources are internally inconsistent for both SEPs, and no official precedence rule was found. Because the question asks for numbers and purposes rather than lifecycle status, the honest correction removes the status column and records the conflict as dated, non-gating grader context.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575: GT-06 primary process 3222 and blind status process 3224",
-            "Independent blind reconciliation agreed on the source conflict and catalog defect, and rejected selecting the registry as an unsupported winner",
-            "Sibling sweep: q-sep-7-uri and q-sep-8-regulated-assets preserve durable mechanics and treat status as disputed/non-gating"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "Upstream source drift: individual SEP preambles and the ecosystem registry disagree for SEP-7 and SEP-8.",
-            "Eval authoring mixed values from different surfaces while claiming registry-only verification."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-sep-catalog-list"
@@ -31200,12 +31780,45 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-interactive-deposit-withdraw"
+        "origin": "raven-next q-sep-interactive-deposit-withdraw",
+        "corroboration": [
+          {
+            "claim": "Names SEP-24 as the interactive (anchor-hosted UI / webview) deposit & withdrawal standard. Contrasts SEP-6 as the programmatic (API-driven, no hosted UI) deposit/withdrawal counterpart.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+                "observedAt": "2026-07-11",
+                "note": "Official anchor documentation distinguishes hosted and programmatic deposit/withdrawal."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-6 source defines the programmatic API."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-24 source defines the interactive anchor-hosted flow."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -31250,12 +31863,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-wallet-seps-list"
+        "origin": "raven-next q-sep-wallet-seps-list",
+        "corroboration": [
+          {
+            "claim": "Names SEP-1 (stellar.toml — anchor/asset discovery metadata). Names SEP-10 (web authentication — challenge/response to authenticate an account with an anchor). Names SEP-24 (interactive/hosted deposit & withdrawal) and/or SEP-6 (programmatic deposit & withdrawal).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation corroborates the wallet-relevant SEP catalog."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched ecosystem registry corroborates SEP-1, SEP-6, SEP-10, and SEP-24 mappings."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32227,12 +32866,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-41-bindings-target-dex-confidentiality-claims-deploy-porting accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/build/smart-contracts/overview",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sor-classic-dex-from-contract"
+        "origin": "raven-next q-sor-classic-dex-from-contract",
+        "corroboration": [
+          {
+            "claim": "Gives the practical design alternative: use SAC/SEP-41 token transfers and Soroban-native DEX/AMM contracts, or orchestrate classic and Soroban actions in separate transactions off-chain.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/smart-contracts/overview",
+                "observedAt": "2026-07-11",
+                "note": "Official smart-contract documentation distinguishes contract execution and token interactions."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-41 source defines the contract token interface used by custom tokens and SAC-compatible flows."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32375,12 +33040,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-41-bindings-target-dex-confidentiality-claims-deploy-porting accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sor-contract-as-claimable-arbiter"
+        "origin": "raven-next q-sor-contract-as-claimable-arbiter",
+        "corroboration": [
+          {
+            "claim": "Provides the correct Soroban escrow design: hold SAC/SEP-41 token balances in contract storage or contract-owned balances and release with contract logic/authorization.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tokens/stellar-asset-contract",
+                "observedAt": "2026-07-11",
+                "note": "Official SAC documentation describes contract token balances, transfers, and authorization."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-41 source defines the token interface used for contract-held escrow balances."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32446,12 +33137,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-41-bindings-target-dex-confidentiality-claims-deploy-porting accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/build/guides/tokens/custom-sac-admin",
+            "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0073.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sor-contract-trustlines-c-address"
+        "origin": "raven-next q-sor-contract-trustlines-c-address",
+        "corroboration": [
+          {
+            "claim": "Mentions G-address recipients still need a trustline and enough XLM/base reserve unless the SAC `trust` function creates the trustline under Protocol 26 with the address's authorization.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/guides/tokens/custom-sac-admin",
+                "observedAt": "2026-07-11",
+                "note": "Official token guidance describes SAC trustline administration and address authorization."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0073.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched CAP-0073 source defines the Protocol 26 trustline-creation path and authorization semantics."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34310,16 +35027,44 @@
               }
             ],
             "note": "Legacy verdict: confirmed-with-versioned-id."
+          },
+          {
+            "claim": "Version-qualifies V2 versus V2.1 identifiers.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf",
+                "observedAt": "2026-07-11",
+                "note": "Fetched auditor-owned report records the V2/V2.1 finding identifiers and disposition."
+              },
+              {
+                "class": "D",
+                "ref": "https://sorobansecurity.com/report/28",
+                "observedAt": "2026-07-11",
+                "note": "Fetched independent security-portal record corroborates the version-qualified report history."
+              },
+              {
+                "class": "D",
+                "ref": "https://sorobansecurity.com/report/42",
+                "observedAt": "2026-07-11",
+                "note": "Fetched sibling security-portal record corroborates the changed identifier/disposition."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The exploit conclusion was sound, but the finding identifier changed between Veridise V2 and V2.1 and must be version-qualified.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-44 primary 3316 and blind 3324."
+            "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf",
+            "https://sorobansecurity.com/report/28",
+            "https://sorobansecurity.com/report/42",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "Eval-side report-version provenance omission."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-soroban-auth-recursion-dos-audit"
@@ -34612,12 +35357,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-45-constructor-verification-ids-events-cross-contract-versions accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://stellar.org/blog/developers/announcing-protocol-22",
+            "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0058.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-soroban-constructor-lifecycle"
+        "origin": "raven-next q-soroban-constructor-lifecycle",
+        "corroboration": [
+          {
+            "claim": "Constructor support was added at the protocol level via CAP-0058 (Protocol 22).",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/developers/announcing-protocol-22",
+                "observedAt": "2026-07-11",
+                "note": "Official Protocol 22 announcement identifies constructor support in the release."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0058.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched CAP-0058 source defines smart-contract constructors and its protocol assignment."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34664,12 +35435,45 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-45-constructor-verification-ids-events-cross-contract-versions accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0058.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-soroban-contract-build-verification"
+        "origin": "raven-next q-soroban-contract-build-verification",
+        "corroboration": [
+          {
+            "claim": "Verification works by building the WASM in CI and producing GitHub Attestations (SEP-55, e.g. the soroban-build-workflow) and/or by reproducibly rebuilding it and comparing bytes (SEP-58). The relevant standards are SEP-55 (Contract Build Verification, Draft) and SEP-58 (Contract Build Reproducibility for Verification, Draft).",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation provides the current SEP catalog/status context."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-55 source defines CI build verification and attestations."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0058.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-58 source defines reproducible contract builds and byte comparison."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35100,16 +35904,44 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "Correctly models custom SEP-41 versus current asset-appended SAC/CAP-67 schemas and path metadata.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents",
+                "observedAt": "2026-07-11",
+                "note": "Official RPC documentation defines current event-query fields and pagination metadata."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-41 source defines custom token event semantics."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0067.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched CAP-0067 source defines current SAC/classic unified asset event schema changes."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — GT-42 independently established the current CAP-67 event atom needed by this sibling: direct SAC and Classic unified events append the asset topic, while robust indexing still requires producer/path provenance.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-42 blind process 3315."
+            "https://developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getEvents",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+            "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0067.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "improvements/stellar-docs/sd-018-sac-cap67-event-schema-gap.md"
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-soroban-event-indexing-design"
@@ -39802,19 +40634,38 @@
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
+          },
+          {
+            "claim": "Dates the 0.0.25 registry and React/Svelte template examples to 2026-07-11 rather than making them permanent requirements.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tools/scaffold-stellar",
+                "observedAt": "2026-07-11",
+                "note": "Official documentation confirms Scaffold Stellar and its supported templates/workflow."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar-scaffold/cli/blob/main/crates/stellar-scaffold-cli/Cargo.toml",
+                "observedAt": "2026-07-11",
+                "note": "Fetched source manifest exists and records stellar-scaffold-cli version 0.0.25."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited full-stack distinction was sound, but it froze a local core-CLI version, blurred separate-plugin installation, and encoded an older React/layout/script view. GT-53 confirmed the current plugin, repositories, templates and contract-only boundary with dated registry evidence.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575, GT-53 primary 3372 and blind 3378. The blind parent and harvested child 3379 independently re-derived the scope that the primary's failed helper did not cover.",
-            "Registry/source checks dated 2026-07-11 found stellar-scaffold-cli 0.0.25 and React/Svelte official template sources; those values are not treated as timeless."
+            "https://developers.stellar.org/docs/tools/scaffold-stellar",
+            "https://github.com/stellar-scaffold/cli/blob/main/crates/stellar-scaffold-cli/Cargo.toml",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "Eval-side CLI/plugin freshness drift; stale-link/layout improvement candidate documented in the GT-53 audit pending a second authoring lane."
-          ],
-          "note": "GT-53 final state imported from process 3153; near-term re-verification retained by design."
+            "eval-authoring"
+          ]
         },
         "origin": "raven-next q-ti-scaffold-stellar"
       }
@@ -43045,19 +43896,44 @@
               }
             ],
             "note": "Legacy verdict: confirmed-as-of-2026-07-11."
+          },
+          {
+            "claim": "Dates Smart Account Kit 0.4.2 and OpenZeppelin stellar-contracts v0.7.2 to their observed releases.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://docs.openzeppelin.com/stellar-contracts/accounts/smart-account",
+                "observedAt": "2026-07-11",
+                "note": "Official OpenZeppelin documentation corroborates the Stellar smart-account contract family."
+              },
+              {
+                "class": "B",
+                "ref": "https://raw.githubusercontent.com/kalepail/smart-account-kit/main/package.json",
+                "observedAt": "2026-07-11",
+                "note": "Fetched package source records Smart Account Kit version 0.4.2."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/OpenZeppelin/stellar-contracts/releases/tag/v0.7.2",
+                "observedAt": "2026-07-11",
+                "note": "Fetched source release page records OpenZeppelin stellar-contracts v0.7.2."
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited migration direction was right, but it omitted Passkey Kit's explicit unaudited/demo/no-real-value warning, used a stale successor version, treated both kits as exposing identical primitives, and allowed OpenZeppelin audit scope to flow across the whole application stack.",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "Solo scratchpad 575 GT-56 primary process 3394 and sealed blind process 3398 independently retained the successor direction and required the legacy safety warning, exact versioning, and audit-scope boundary.",
-            "Sibling sweep checked q-tool-passkey-wallet-recovery, q-tool-smart-wallet-repos-discovery, q-infra-secp256r1-passkeys, and q-soroban-add-signer-smart-wallet-howto.",
-            "The stale official smart-wallet guide routing is recorded separately in improvements/stellar-docs/sd-034-smart-wallet-passkey-kit-legacy-routing.md; sd-027 remains limited to LaunchTube submission/indexing migration."
+            "https://docs.openzeppelin.com/stellar-contracts/accounts/smart-account",
+            "https://raw.githubusercontent.com/kalepail/smart-account-kit/main/package.json",
+            "https://github.com/OpenZeppelin/stellar-contracts/releases/tag/v0.7.2",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
           ],
           "rootCause": [
-            "improvements/stellar-docs/sd-034-smart-wallet-passkey-kit-legacy-routing.md",
-            "Eval-side audit-scope and API-lineage overreach: a dependency's audit and broad signer vocabulary were promoted to the entire SDK/application stack."
+            "eval-authoring"
           ]
         },
         "origin": "raven-next q-tool-passkeykit-smart-wallet"

@@ -97,22 +97,44 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Identifies Stellar USDC plus SEP-10/SEP-24.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps",
+            "observedAt": "2026-07-11",
+            "note": "MoneyGram operator documentation identifies Stellar USDC and the hosted anchor integration."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-10 source defines the authentication layer."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-24 source defines the interactive deposit/withdrawal layer."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "P4 conversions rework after independent Fable copy/quality review",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-02 blind and GT-11 primary/blind MoneyGram matrices",
-        "improvements/lumenloop/ll-008-directory-record-coverage-field-quality.md",
-        "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-        "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "https://developer.moneygram.com/moneygram-developer/docs/integrate-moneygram-ramps",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "Direction-specific operator data and multiple marketing scopes were compressed into one product figure.",
-        "eval-authoring",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-pay-moneygram-ramps"

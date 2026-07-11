@@ -38,11 +38,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-30-upgrade-quantum-scp-sequence-reserve-finality-p19 accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://stellar.org/blog/developers/announcing-protocol-19",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-protocol-19-preconditions-cap-0021"
+    "origin": "raven-next q-protocol-19-preconditions-cap-0021",
+    "corroboration": [
+      {
+        "claim": "States Protocol 19 (activated ~2022-06-08) introduced generalized transaction preconditions via CAP-0021 (time bounds, ledger bounds, min sequence number / age / gap, extra signers).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/announcing-protocol-19",
+            "observedAt": "2026-07-11",
+            "note": "Official Protocol 19 announcement gives the June 2022 activation context and generalized preconditions."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0021.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched CAP-0021 source defines generalized transaction preconditions and their fields."
+          }
+        ]
+      }
+    ]
   }
 }

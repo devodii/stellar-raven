@@ -38,11 +38,44 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-6-24-deprecation"
+    "origin": "raven-next q-sep-6-24-deprecation",
+    "corroboration": [
+      {
+        "claim": "Yes — SEP-6's interactive components are deprecated in favor of SEP-24 for hosted/interactive deposit & withdrawal. SEP-6's non-interactive (programmatic) API portion remains useful for fully API-driven anchors.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "observedAt": "2026-07-11",
+            "note": "Official anchor documentation distinguishes programmatic and hosted deposit/withdrawal integrations."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-6 source retains the non-interactive API and marks interactive portions deprecated."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-24 source defines the replacement hosted interactive flow."
+          }
+        ]
+      }
+    ]
   }
 }

@@ -75,16 +75,37 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Identifies Comet as an SCF-funded weighted-AMM design with two awards totaling $291K.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/submissions/recG7Kj7ouwAFP2XY",
+            "observedAt": "2026-07-11",
+            "note": "Fetched official SCF record identifies Comet, Awarded status, and the $150,000 SCF #13 budget."
+          },
+          {
+            "class": "F",
+            "ref": "https://communityfund.stellar.org/submissions/recIRbsKDA1ayFXCF",
+            "observedAt": "2026-07-11",
+            "note": "Direct fetch of the second official record shows $141,000 and the project total $291,000; arithmetic rechecked on 2026-07-11."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — GT-15 blind evidence directly disproved the inherited 'not SCF-funded' claim and verified a current mainnet Blend backstop deployment while preserving the non-dominant standalone conclusion.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-15 primary 3243 and blind 3246"
+        "https://communityfund.stellar.org/submissions/recG7Kj7ouwAFP2XY",
+        "https://communityfund.stellar.org/submissions/recIRbsKDA1ayFXCF",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "one Scout funding flag and a historical Futurenet label were promoted over primary awards/deployment evidence"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-defi-comet-what-is"

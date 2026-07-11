@@ -85,8 +85,13 @@
           "why": "The upstream stellar-protocol repo itself disagrees on SEP-8's status; the catalog case pins 'Final' (README table) without the caveat while the dedicated case documents the inconsistency. A candidate answering 'Active' (per the SEP file preamble) against q-sep-catalog-list would be marked wrong despite citing a primary source. Graders should accept either status when sourced.",
           "disposition": "grader-caution candidate",
           "memberContentSha256": {
-            "q-sep-8-regulated-assets": "21e5699c9289499fc31ec9fe18e910b355801aca0bc0869b5bdaafe632e43e9a",
-            "q-sep-catalog-list": "332f613d8ef16443ed4bacf1896eec42c8eb43432228ac5f05ca1ba18eb0f6c3"
+            "q-sep-8-regulated-assets": "ba888ea81f0d00a190f38783fead2894fb8fe8d594c27cea4387438c434ee26c",
+            "q-sep-catalog-list": "a0d9ad9232cff22cee1b08343c99a0d875b701efa502158af35751811c0cb421"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -169,7 +174,7 @@
             "q-protocol-parallel-execution": "dffcbee9a462ecc12ba4e2dbf3f78a8dcd39da72b528c37d0edbd41004f6b2ca",
             "q-protocol-version-history-list": "16fcda8caee456d795ddb1a05925156ff4251c1343c1d5deeeb4ac0d9a5537a3",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13",
-            "q-soroban-constructor-lifecycle": "114f88f767361237a6302841911018cc131d8a39c30615516ae6fc3afb84418f"
+            "q-soroban-constructor-lifecycle": "405a6636719fc5a4eb436f61a59706057238708350257fc8435bee4ab09edf46"
           },
           "verdict": "reopen",
           "reopened": {
@@ -197,15 +202,15 @@
           ],
           "note": "CAP-35 Final/P17, CAP-38 P18, CAP-46 series P20, CAP-51+53 P21, CAP-58+59 Final/P22, CAP-62/63/65/67 P23 (CAP-67 Final), CAP-73 Implemented/P26, CAP-74+75 Final/P25, CAP-71 Accepted/P27 — status and protocol number identical everywhere they appear.",
           "memberContentSha256": {
-            "q-edge-factcheck-soroswap-first-amm": "d54c1ee4fb5674f050ecd2286d73fcd4adb24338c691c83c5f9348146f6d9427",
+            "q-edge-factcheck-soroswap-first-amm": "9a94649a090e75b0de1965468deb1af5e2938269f274ec3ea6b1dfb3323478d5",
             "q-protocol-23-whisk-caps": "06d3060bc86235dadcf1606821dcadd93a97fcd47905d9603f8689ac0745cce5",
             "q-protocol-27-cap-0071": "7fa767468113dff7fb46cb69d3caa451562dfdd27e820cd35acd10574af17fb1",
             "q-protocol-bn254-poseidon-xray": "3b1c66c28f7257a71959326dccf9c2c166931589fd472f490e3bc9305c2d4f0d",
             "q-sep-41-token-interface": "61feeda011b8564c02b50509a67a5e8e17e17a2d8fef1b88b90c7b9930cd9d2e",
             "q-sor-confidential-tokens": "9c83a6d23252e30d4aeaa8b5988cce33d3ef4f652f26eb1b151ff91c76d6500b",
-            "q-sor-contract-trustlines-c-address": "6d000fb2252263dbf51eae8d56eaf6101ac3628adf2fa565a6119235d9ee3aa0",
+            "q-sor-contract-trustlines-c-address": "e89a7f3dc71cb6b24ba93e21f71b6dac7e6d1bd7c5967ab5012dcd36992ad184",
             "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13",
-            "q-soroban-constructor-lifecycle": "114f88f767361237a6302841911018cc131d8a39c30615516ae6fc3afb84418f"
+            "q-soroban-constructor-lifecycle": "405a6636719fc5a4eb436f61a59706057238708350257fc8435bee4ab09edf46"
           },
           "verdict": "reopen",
           "reopened": {
@@ -234,18 +239,18 @@
           ],
           "note": "SEP-1/9/10/12/24/31/46/48 Active; SEP-6 Active with only interactive components deprecated in favor of SEP-24 (the only-partial-deprecation nuance is stated identically in all 3 cases that touch it); SEP-30/38/39/41/43/45/55/57/58 Draft — consistent everywhere. SEP-8 moved to tensions (upstream repo itself inconsistent).",
           "memberContentSha256": {
-            "q-aas-sep30-recoverable-wallets": "c72eedb4d18b6c17775d0d963c134f23ce8eac867eb666e1c2dda123727a629f",
+            "q-aas-sep30-recoverable-wallets": "c38fe3d3b568684f2297716c5a57ea10733eabb94bc9ccaa0a7c9a21da760555",
             "q-crp-oz-rwa-erc3643-trex": "f2d0efd5e41ed9495379733ebccf34f8fcb8aaf0469d3669ac39eca1c926e874",
-            "q-sep-1-toml": "248a159e7b6e8dc220acef9209b7fa9883ecffa5c25e799e3d7ce69be4866fb7",
+            "q-sep-1-toml": "212b3b57a3df6340b2403be3c8bf1ffe7ed192936510325f29ef6598f6f771b9",
             "q-sep-12-kyc": "6510a9b0102ea22bef0c1f1520be925dfe5583cd2b5ffdd3ec5c96a845c65f88",
-            "q-sep-31-cross-border": "4547c299b9315f7ae9f9c8b34b510b62e96b8bc8c084830c1ebd0913f0a5a726",
-            "q-sep-38-quotes": "cb24e3ecda99c9009744a01e941352780d58af41efbccf5206c711298c47dff9",
+            "q-sep-31-cross-border": "ab2fbde621e8d7d68c96bfa7f22496ff8956477d489edce55f3b957bec9a0463",
+            "q-sep-38-quotes": "3ccfc451935748bb2bbb8299c1b4bbc1f6e553430fc69b339b6c0d7a7975c240",
             "q-sep-41-token-interface": "61feeda011b8564c02b50509a67a5e8e17e17a2d8fef1b88b90c7b9930cd9d2e",
-            "q-sep-45-contract-auth": "bc5784f895b7a40c1991d24e3d76b1d76495029d491c05ac6c76ac183fb1524d",
-            "q-sep-6-24-deprecation": "c60258c0ece182ef9d191be059a0ce20d71b9da07849a57a39a8e0bd8b8678e6",
-            "q-sep-catalog-list": "332f613d8ef16443ed4bacf1896eec42c8eb43432228ac5f05ca1ba18eb0f6c3",
-            "q-sep-interactive-deposit-withdraw": "3da7898ee9ada5755853195215101593796578b1afe59cc0d7fd39bbc8106ac8",
-            "q-soroban-contract-build-verification": "6683ee5f07d41c3a4b766dda82e57a625f36b314cc16f8cac9f248efdb39b321"
+            "q-sep-45-contract-auth": "ba1d42a11b4ecd7659c2219e2cece9daed4cf530981f155578ec4d9032eb572b",
+            "q-sep-6-24-deprecation": "dc2de103b38942f6fdbf3566d5f1f6a35ad853454269a69e1cd6b618abf69e45",
+            "q-sep-catalog-list": "a0d9ad9232cff22cee1b08343c99a0d875b701efa502158af35751811c0cb421",
+            "q-sep-interactive-deposit-withdraw": "de645a85ad7e3311342803e552f542cf5ed4ac06637f09f246bca15b85c3929f",
+            "q-soroban-contract-build-verification": "0b3526f5297897cfe5f361f55ece819ea2b3f7ee130655fbe4c4a4bb82134b0b"
           },
           "verdict": "reopen",
           "reopened": {
@@ -396,7 +401,7 @@
           "memberContentSha256": {
             "q-defi-soroswap-vs-stellarx": "2029c303131f07f42f04fc4897140fd058f605063ae398281cbd5bc8786ab267",
             "q-defi-soroswap-what-is": "86daa625039419f533796797b2b9cb2ef2fe9a6d2fcaa1900e9791c5c1e1602f",
-            "q-edge-factcheck-soroswap-first-amm": "d54c1ee4fb5674f050ecd2286d73fcd4adb24338c691c83c5f9348146f6d9427",
+            "q-edge-factcheck-soroswap-first-amm": "9a94649a090e75b0de1965468deb1af5e2938269f274ec3ea6b1dfb3323478d5",
             "q-protocol-amm-cap-0038": "43fb785cf05f8436cd71f9287dad88d0ec3b7eeefc56febb7f306e104c88a78e"
           },
           "verdict": "reopen",
@@ -454,7 +459,7 @@
             "q-anchor-moneygram-ramps": "4db6ff0f2a65fee40b4c3261c4a3f1a976f898361d1b9e777d8c9c222b57b8f6",
             "q-crp-anchors-by-corridor": "e7efa4310d84087692e4f8524b5cee2ac0e828d2d311c58daf461b9e34bb5465",
             "q-hist-remittance-corridors": "dd838f5d6f8d8869d02c695f4c19468ec607f611e9d3c902197aa90f847e91bd",
-            "q-pay-moneygram-ramps": "4f230b1cad847fe4706a2b073380cd5924709be7cb2cc820e2104236cfd8bb40"
+            "q-pay-moneygram-ramps": "d9bca22145dd0de916a04926ca2e6e77bd301f0b92d23bb5b30982815d351ea1"
           },
           "verdict": "reopen",
           "reopened": {
@@ -485,14 +490,14 @@
           ],
           "note": "Corrected 2026-07-10: base fee 100 stroops, 1 XLM = 10,000,000 stroops, base reserve 0.5 XLM, empty unsponsored account minimum 2 reserves = 1 XLM, and fees are separate. q-edge-1xlm-activation-fee previously mislabeled the 1 XLM minimum as the base reserve and is now overridden. Other repeated constants remain as previously reviewed; sponsorship terms qualify the simple minimum-balance formula.",
           "memberContentSha256": {
-            "q-asset-amm-fee-reserve": "3feb34dfcd8ca8783634658bd76bcff031a2453dbf2e19c4cfab30f043218886",
+            "q-asset-amm-fee-reserve": "b6a6f8cf8cb877dc04e54fc4bdffc85bece09121aca3bb910507f5bb9317d521",
             "q-asset-path-payment-ops": "6a780dfd6424ddd38b112eeaaec88eb22d3f782ac41b04ec985e26a7ae58912f",
             "q-asset-sdex-vs-amm": "949b9100fad18263425b414dc2266689af84a0194505b843d6527089f423e3f7",
             "q-asset-trustline-basics": "cf63cc5bf2858594e4f033d491ff2b6982d7716887ae28874f2ed1288bcb481b",
             "q-edge-1xlm-activation-fee": "e11bf06d657c1649e7f65faab3714e42c003fd47a22fe591cc589ff1cf063635",
             "q-edge-noinfo-stellar-pos-staking-rewards": "23b7f3e25cbbd6121be7c3fd8029e7eb3ddef8a7ae7aea767b161fc0a2aa46e6",
             "q-hot-fee-pool-burn-deflation": "b0228760656129f0856cdef7bbf2d476604be0f604ab7456a548ea47b9d42076",
-            "q-pc-account-activation-not-found": "21b1b9acb4751c40673f4bc56dde04bba925cf1657df2dcd9b64e2aae3a4294b",
+            "q-pc-account-activation-not-found": "9b661b2d84134e41cba184045521cd92f432738fe6bd843e02fef254c727c46d",
             "q-pc-practical-fee-setting": "7f1fb22b99c229c9d3552a758f015ae50593744f4097e64468aa51c4949aef80",
             "q-pc-sponsored-reserves": "045dc3b79bff803fb96078c8050bc8125b47a2d8585d4663e52f7abd28c7b4ec",
             "q-protocol-base-reserve-min-balance": "0eacced5ca6275a4ce4a6174e90cdcde01116ba381f9d0cdd293ba0cd36d71a5",
@@ -531,7 +536,7 @@
             "q-infra-rpc-methods-list": "aaec9f171646c7c23ebc173dd87525a522fc9ac9d8ce29f6c5a779c0b65c9e78",
             "q-infra-rpc-provider-archive-tier": "163326deb611f94c0261e85a99dce36d33550d011c6596ece6650cb8f20cf1fa",
             "q-infra-which-indexer": "ce3a02b43a9d5036c7813ae624bfe05928b9344dd68d6208bed51f308d608218",
-            "q-soroban-event-indexing-design": "163f3d83dff9c72e8eaf5e8c6ab0406e4f69dce17867ab85e01bfbc72727ef65",
+            "q-soroban-event-indexing-design": "d6a752816919234354bc9e7e85649f94a478b69bbc74811de61caf5307109807",
             "q-soroban-publish-events": "6e05c8521d7b29746cd47c26faddfeee7270201975b896fd8a91ec272cd4e92c",
             "q-ti-enumerate-holders-airdrop": "761e51b39e0fad7844582671923a3f450ceca9a4f0816b081ce02a0a9ce5811e",
             "q-ti-historical-pointintime-balances": "7e3f5cee601cf6016d15bb9551d72f85a482c86242a12423ae0787b1f5dc88a2",
@@ -622,7 +627,7 @@
             "q-defi-soroswap-vs-stellarx": "2029c303131f07f42f04fc4897140fd058f605063ae398281cbd5bc8786ab267",
             "q-eco-dex-saturation": "b7ddea4105290d4f53c7667f5f77fadbf1c05a714a42aa5c679f1270705d0432",
             "q-eco-lobstr-wallet": "d9cb16d6099add68fc6dcdcd52e6666ab280c6a8aeb029975e4f3b42abb781e2",
-            "q-tool-passkeykit-smart-wallet": "1381da03acb6acaf3030b4ba4df1b4beb16d65fb84ce4bc0efda650cb49f8185",
+            "q-tool-passkeykit-smart-wallet": "e7db4cdb4600b431fe1f519960e22d63d9d718ac82163e5ca9b7b530015cc2a9",
             "q-tool-smart-wallet-repos-discovery": "7c7c763ea815448ebca1b2f1a73395046303665b7beda3c71c74c911f06a09af"
           },
           "verdict": "reopen",
@@ -924,8 +929,8 @@
           "memberContentSha256": {
             "q-crp-anchors-by-corridor": "e7efa4310d84087692e4f8524b5cee2ac0e828d2d311c58daf461b9e34bb5465",
             "q-eco-lobstr-wallet": "d9cb16d6099add68fc6dcdcd52e6666ab280c6a8aeb029975e4f3b42abb781e2",
-            "q-sep-8-regulated-assets": "21e5699c9289499fc31ec9fe18e910b355801aca0bc0869b5bdaafe632e43e9a",
-            "q-sep-catalog-list": "332f613d8ef16443ed4bacf1896eec42c8eb43432228ac5f05ca1ba18eb0f6c3"
+            "q-sep-8-regulated-assets": "ba888ea81f0d00a190f38783fead2894fb8fe8d594c27cea4387438c434ee26c",
+            "q-sep-catalog-list": "a0d9ad9232cff22cee1b08343c99a0d875b701efa502158af35751811c0cb421"
           },
           "verdict": "reopen",
           "reopened": {
@@ -1064,7 +1069,7 @@
           "note": "SEP-10 uses a signed challenge transaction and JWT for classic G and muxed M clients. C contract accounts use SEP-45 authorization-entry authentication; SEP-45 complements rather than replaces SEP-10.",
           "memberContentSha256": {
             "q-edge-inject-ignore-instructions": "e31d09b50fa2152280a93474f9ce1ab72bc38e3638e58de3fadfc740ff3edcee",
-            "q-sep-45-contract-auth": "bc5784f895b7a40c1991d24e3d76b1d76495029d491c05ac6c76ac183fb1524d"
+            "q-sep-45-contract-auth": "ba1d42a11b4ecd7659c2219e2cece9daed4cf530981f155578ec4d9032eb572b"
           },
           "verdict": "reopen",
           "reopened": {
@@ -1417,9 +1422,14 @@
           "note": "A keypair is not an account and Payment does not create one. The dated 1 XLM empty-account minimum is the unsponsored path; CAP-0033 sponsored CreateAccount may use startingBalance=0. AccountMerge requires non-signer blockers and provided-sponsorship obligations to be resolved, but current Core removes remaining signers during deletion.",
           "memberContentSha256": {
             "q-edge-1xlm-activation-fee": "e11bf06d657c1649e7f65faab3714e42c003fd47a22fe591cc589ff1cf063635",
-            "q-pc-account-activation-not-found": "21b1b9acb4751c40673f4bc56dde04bba925cf1657df2dcd9b64e2aae3a4294b",
+            "q-pc-account-activation-not-found": "9b661b2d84134e41cba184045521cd92f432738fe6bd843e02fef254c727c46d",
             "q-pc-account-merge-reclaim-reserve": "0d4d337ffa37bab11a6eb91e771ff751548aeee02602f85bd846af5d3458dd09",
             "q-pc-sponsored-reserves": "045dc3b79bff803fb96078c8050bc8125b47a2d8585d4663e52f7abd28c7b4ec"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -1463,7 +1473,7 @@
           "note": "Starlight is archived experimental work; CAP-0021/0040 are active protocol primitives, not production-deployment evidence. Perun local/standalone code and Centaurus Live+Unverified metadata remain source-relative until primary Mainnet deployment evidence exists.",
           "memberContentSha256": {
             "q-pc-l2-payment-channels-starlight": "750442fadee8052439b398bdaf8201bb9ebaeb37bb9fcd9af035419a54ad4371",
-            "q-protocol-19-preconditions-cap-0021": "ed8751655de4381a343f5d6b1c3cd0fcc952e61d3636b3b27fb114d73cc1a80a"
+            "q-protocol-19-preconditions-cap-0021": "fc8a9eefc50d0d7a0f08e491503ac3980c58e4605991a83af49a9a59edc12cf4"
           },
           "verdict": "reopen",
           "reopened": {
@@ -2441,9 +2451,14 @@
           ],
           "note": "Contracts cannot issue classic SDEX/LP/claimable-balance operations or mix classic+Soroban ops atomically. SAC contract balances are ContractData, not C-address trustlines; direct contract invoker authorization and fee payer remain separate.",
           "memberContentSha256": {
-            "q-sor-classic-dex-from-contract": "1335d35bcd98aed08e8c6c79557d0ab57837b0dfd837564d94b9d483d9dc498c",
-            "q-sor-contract-as-claimable-arbiter": "c80ca2c0e0b2ad12c064184305c72bb95bfc85e604fd5ec28da0a62232b84674",
-            "q-sor-contract-trustlines-c-address": "6d000fb2252263dbf51eae8d56eaf6101ac3628adf2fa565a6119235d9ee3aa0"
+            "q-sor-classic-dex-from-contract": "06dd40d9536d4d5d2181e53193e1bd18976b15e4e103f5fe6e79980c66837720",
+            "q-sor-contract-as-claimable-arbiter": "5ef8f6f27a5a21ddca02323d8d92edd35ca843bc8e6d618652e6a806f8c09d8c",
+            "q-sor-contract-trustlines-c-address": "e89a7f3dc71cb6b24ba93e21f71b6dac7e6d1bd7c5967ab5012dcd36992ad184"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2513,7 +2528,12 @@
           "why": "Generic SEP-41 schema was incorrectly applied to SAC.",
           "disposition": "blind correction controls; sd-018.",
           "memberContentSha256": {
-            "q-soroban-event-indexing-design": "163f3d83dff9c72e8eaf5e8c6ab0406e4f69dce17867ab85e01bfbc72727ef65"
+            "q-soroban-event-indexing-design": "d6a752816919234354bc9e7e85649f94a478b69bbc74811de61caf5307109807"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2662,7 +2682,12 @@
           "why": "Versioned report identifiers appear contradictory without report version.",
           "disposition": "encode both; preserve invalid/not-practical conclusion.",
           "memberContentSha256": {
-            "q-soroban-auth-recursion-dos-audit": "b57331e71eb5669063d736a5bd34fe6dc0de8050094f07406fbedafb530e2f86"
+            "q-soroban-auth-recursion-dos-audit": "71b4a9ef670ed4818a76f30f55cacd74e90fe4652b47fd4833e81e9104e63a90"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         }
       ],
@@ -2925,8 +2950,13 @@
           "disposition": "target and GT-30 sequence sibling corrected; P19 sibling retained.",
           "memberContentSha256": {
             "q-pc-sequence-numbers-ordering-replace": "389c3e3194c82019e1d23f0c7b40eb7ff34bbc6817491ba815590a1176843af5",
-            "q-protocol-19-preconditions-cap-0021": "ed8751655de4381a343f5d6b1c3cd0fcc952e61d3636b3b27fb114d73cc1a80a",
+            "q-protocol-19-preconditions-cap-0021": "fc8a9eefc50d0d7a0f08e491503ac3980c58e4605991a83af49a9a59edc12cf4",
             "q-protocol-accounts-signers-thresholds": "c6ebfce9dad5d3ecb75dece6b6c5d43942e9a6bf5a5c70ab501500903eee4381"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {
@@ -2943,8 +2973,8 @@
           "why": "Pre-sponsorship shorthand was made universal and classic/contract storage mixed.",
           "disposition": "target corrected; later GT-29/32 siblings retained.",
           "memberContentSha256": {
-            "q-asset-amm-fee-reserve": "3feb34dfcd8ca8783634658bd76bcff031a2453dbf2e19c4cfab30f043218886",
-            "q-pc-account-activation-not-found": "21b1b9acb4751c40673f4bc56dde04bba925cf1657df2dcd9b64e2aae3a4294b",
+            "q-asset-amm-fee-reserve": "b6a6f8cf8cb877dc04e54fc4bdffc85bece09121aca3bb910507f5bb9317d521",
+            "q-pc-account-activation-not-found": "9b661b2d84134e41cba184045521cd92f432738fe6bd843e02fef254c727c46d",
             "q-pc-sponsored-reserves": "045dc3b79bff803fb96078c8050bc8125b47a2d8585d4663e52f7abd28c7b4ec",
             "q-protocol-base-reserve-min-balance": "0eacced5ca6275a4ce4a6174e90cdcde01116ba381f9d0cdd293ba0cd36d71a5"
           },
@@ -3038,8 +3068,13 @@
           ],
           "note": "Protocol 18/CAP-0038 native constant-product path-routing liquidity pools remain protocol ledger primitives, not Soroban contracts; target retained unchanged.",
           "memberContentSha256": {
-            "q-asset-amm-fee-reserve": "3feb34dfcd8ca8783634658bd76bcff031a2453dbf2e19c4cfab30f043218886",
+            "q-asset-amm-fee-reserve": "b6a6f8cf8cb877dc04e54fc4bdffc85bece09121aca3bb910507f5bb9317d521",
             "q-protocol-amm-cap-0038": "43fb785cf05f8436cd71f9287dad88d0ec3b7eeefc56febb7f306e104c88a78e"
+          },
+          "verdict": "reopen",
+          "reopened": {
+            "date": "2026-07-11",
+            "reason": "member-content-changed"
           }
         },
         {

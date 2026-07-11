@@ -69,16 +69,37 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "States current Dashboard/Core/TSS and native SEP-10/24 architecture without external Anchor Platform.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/platforms/stellar-disbursement-platform/admin-guide/design-and-architecture",
+            "observedAt": "2026-07-11",
+            "note": "Current official SDP architecture documents Dashboard, Core, TSS, and native receiver workflows."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-disbursement-platform-backend/tree/03e44fbedceab188cb91c77a181d8c734ffbd822",
+            "observedAt": "2026-07-11",
+            "note": "Pinned backend source exists and implements the current SDP application and SEP integration paths."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The durable bulk-payments definition was correct, but a historical Aid Assist/MoneyGram route was generalized into SDP architecture. Current SDP implements native SEP-10/24 and supports multiple receiver models without depending on Anchor Platform or a cash-out anchor.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-10/11 SDP matrices"
+        "https://developers.stellar.org/docs/platforms/stellar-disbursement-platform/admin-guide/design-and-architecture",
+        "https://github.com/stellar/stellar-disbursement-platform-backend/tree/03e44fbedceab188cb91c77a181d8c734ffbd822",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "A dated deployment's optional downstream cash-out path became a universal product dependency."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-pay-sdp-disbursement"

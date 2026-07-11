@@ -130,19 +130,37 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "SEP-1 = stellar.toml info/discovery file. SEP-10 = Stellar Web Authentication. SEP-12 = KYC API; SEP-24 = hosted/interactive deposit & withdrawal; SEP-6 = programmatic deposit & withdrawal. SEP-31 = cross-border payments API; SEP-38 = Anchor RFQ/quotes API.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation corroborates the numbered catalog and purposes."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched ecosystem registry corroborates SEP-1, SEP-6, SEP-10, SEP-12, SEP-24, SEP-31, and SEP-38 mappings."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The answer claimed its lifecycle statuses were verified against the stellar-protocol registry, but it mixed SEP-7's file-preamble value (Active) with SEP-8's registry value (Final). Current primary sources are internally inconsistent for both SEPs, and no official precedence rule was found. Because the question asks for numbers and purposes rather than lifecycle status, the honest correction removes the status column and records the conflict as dated, non-gating grader context.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575: GT-06 primary process 3222 and blind status process 3224",
-        "Independent blind reconciliation agreed on the source conflict and catalog defect, and rejected selecting the registry as an unsupported winner",
-        "Sibling sweep: q-sep-7-uri and q-sep-8-regulated-assets preserve durable mechanics and treat status as disputed/non-gating"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "Upstream source drift: individual SEP preambles and the ecosystem registry disagree for SEP-7 and SEP-8.",
-        "Eval authoring mixed values from different surfaces while claiming registry-only verification."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-sep-catalog-list"

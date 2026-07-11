@@ -40,11 +40,65 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-04-sac-stablecoins-issuance-fx accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://stellar.org/products-and-tools/wallet-sdk",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0012.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-asset-wallet-sdk-seps"
+    "origin": "raven-next q-asset-wallet-sdk-seps",
+    "corroboration": [
+      {
+        "claim": "It wraps client-side SEP-10 (auth), SEP-12 (KYC), SEP-24 (hosted deposit/withdraw), SEP-31 (cross-border), and SEP-38 (quotes).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/products-and-tools/wallet-sdk",
+            "observedAt": "2026-07-11",
+            "note": "The official Wallet SDK page identifies the supported anchor and wallet SEP workflows."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-10 source confirms web authentication."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0012.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-12 source confirms KYC/customer information."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-24 source confirms hosted deposit and withdrawal."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-31 source confirms cross-border payments."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-38 source confirms quotes/RFQ."
+          }
+        ]
+      }
+    ]
   }
 }

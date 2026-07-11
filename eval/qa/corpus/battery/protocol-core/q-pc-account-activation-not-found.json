@@ -66,16 +66,37 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Distinguishes the dated unsponsored minimum from CAP-0033 sponsored zero-balance creation.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/create-account",
+            "observedAt": "2026-07-11",
+            "note": "Official account-creation guidance distinguishes ordinary account funding requirements."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0033.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched CAP-0033 source defines sponsored reserves, including sponsored zero-starting-balance creation."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The keypair/nonexistent-payment core is correct, but the inherited answer turned the ordinary unsponsored 1 XLM minimum into a universal existence rule and omitted CAP-0033 sponsored zero-balance creation.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-29 primary 3276 and blind lock/report 3278; blind reviewer independently exposed the sponsored-path omission."
+        "https://developers.stellar.org/docs/build/guides/transactions/create-account",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0033.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "improvements/stellar-docs/sd-013-account-creation-merge-sponsorship-semantics.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-pc-account-activation-not-found"

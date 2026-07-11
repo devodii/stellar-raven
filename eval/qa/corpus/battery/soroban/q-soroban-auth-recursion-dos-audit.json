@@ -65,16 +65,44 @@
           }
         ],
         "note": "Legacy verdict: confirmed-with-versioned-id."
+      },
+      {
+        "claim": "Version-qualifies V2 versus V2.1 identifiers.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf",
+            "observedAt": "2026-07-11",
+            "note": "Fetched auditor-owned report records the V2/V2.1 finding identifiers and disposition."
+          },
+          {
+            "class": "D",
+            "ref": "https://sorobansecurity.com/report/28",
+            "observedAt": "2026-07-11",
+            "note": "Fetched independent security-portal record corroborates the version-qualified report history."
+          },
+          {
+            "class": "D",
+            "ref": "https://sorobansecurity.com/report/42",
+            "observedAt": "2026-07-11",
+            "note": "Fetched sibling security-portal record corroborates the changed identifier/disposition."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The exploit conclusion was sound, but the finding identifier changed between Veridise V2 and V2.1 and must be version-qualified.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-44 primary 3316 and blind 3324."
+        "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf",
+        "https://sorobansecurity.com/report/28",
+        "https://sorobansecurity.com/report/42",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "Eval-side report-version provenance omission."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-soroban-auth-recursion-dos-audit"

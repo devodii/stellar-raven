@@ -75,6 +75,33 @@ describe("QA corpus lint lanes", () => {
     ]));
   });
 
+  it("fails uncovered numeric key facts for migration-carried real-world cases", () => {
+    const kase = load("corroboration-missing.json");
+    kase.truth = { ...kase.truth, domain: "real-world", status: "confirmed", origin: "raven-next fixture" };
+    kase.golden = { ...kase.golden, keyFacts: ["Protocol 19 activated in 2022."] };
+    const findings = lintCorroboration([kase], {});
+    expect(findings).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        level: "error",
+        lane: "corroboration",
+        message: expect.stringContaining("numeric/version/date keyFact lacks")
+      })
+    ]));
+  });
+
+  it("keeps the heuristic negative-claim detector at warning level", () => {
+    const kase = load("corroboration-missing.json");
+    kase.truth = { ...kase.truth, status: "confirmed" };
+    kase.golden = { ...kase.golden, answer: "No compatible operation exists.", keyFacts: [] };
+    expect(lintCorroboration([kase], {})).toEqual([
+      expect.objectContaining({
+        level: "warn",
+        lane: "corroboration",
+        message: expect.stringContaining("possible negative claim")
+      })
+    ]);
+  });
+
   it("rejects non-manifest surfaces and reuses the emitted-text exclusion guard", () => {
     const findings = lintSurface([load("surface-hidden.json")], load("manifest.json"));
     expect(findings.map((item) => item.message).join("\n")).toMatch(/non-exposed surface id/);

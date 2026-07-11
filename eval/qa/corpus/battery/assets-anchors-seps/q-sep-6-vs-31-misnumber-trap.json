@@ -39,11 +39,51 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-6-vs-31-misnumber-trap"
+    "origin": "raven-next q-sep-6-vs-31-misnumber-trap",
+    "corroboration": [
+      {
+        "claim": "Corrects the premise: SEP-31 is the Cross-Border Payments API (anchor-to-anchor), NOT a wallet's hosted-UI deposit standard. Identifies SEP-24 as the hosted/interactive deposit & withdrawal standard for a wallet's user (with SEP-6 as the programmatic API).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "observedAt": "2026-07-11",
+            "note": "Official anchor documentation distinguishes programmatic, interactive, and cross-border flows."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0006.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-6 source defines programmatic deposit/withdrawal."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-24 source defines hosted interactive deposit/withdrawal."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-31 source defines cross-border sending-anchor to receiving-anchor payments."
+          }
+        ]
+      }
+    ]
   }
 }

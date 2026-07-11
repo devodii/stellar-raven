@@ -43,11 +43,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-45-constructor-verification-ids-events-cross-contract-versions accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://stellar.org/blog/developers/announcing-protocol-22",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0058.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-soroban-constructor-lifecycle"
+    "origin": "raven-next q-soroban-constructor-lifecycle",
+    "corroboration": [
+      {
+        "claim": "Constructor support was added at the protocol level via CAP-0058 (Protocol 22).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/announcing-protocol-22",
+            "observedAt": "2026-07-11",
+            "note": "Official Protocol 22 announcement identifies constructor support in the release."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0058.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched CAP-0058 source defines smart-contract constructors and its protocol assignment."
+          }
+        ]
+      }
+    ]
   }
 }

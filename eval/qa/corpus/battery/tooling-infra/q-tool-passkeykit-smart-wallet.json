@@ -96,19 +96,44 @@
           }
         ],
         "note": "Legacy verdict: confirmed-as-of-2026-07-11."
+      },
+      {
+        "claim": "Dates Smart Account Kit 0.4.2 and OpenZeppelin stellar-contracts v0.7.2 to their observed releases.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://docs.openzeppelin.com/stellar-contracts/accounts/smart-account",
+            "observedAt": "2026-07-11",
+            "note": "Official OpenZeppelin documentation corroborates the Stellar smart-account contract family."
+          },
+          {
+            "class": "B",
+            "ref": "https://raw.githubusercontent.com/kalepail/smart-account-kit/main/package.json",
+            "observedAt": "2026-07-11",
+            "note": "Fetched package source records Smart Account Kit version 0.4.2."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/OpenZeppelin/stellar-contracts/releases/tag/v0.7.2",
+            "observedAt": "2026-07-11",
+            "note": "Fetched source release page records OpenZeppelin stellar-contracts v0.7.2."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited migration direction was right, but it omitted Passkey Kit's explicit unaudited/demo/no-real-value warning, used a stale successor version, treated both kits as exposing identical primitives, and allowed OpenZeppelin audit scope to flow across the whole application stack.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-56 primary process 3394 and sealed blind process 3398 independently retained the successor direction and required the legacy safety warning, exact versioning, and audit-scope boundary.",
-        "Sibling sweep checked q-tool-passkey-wallet-recovery, q-tool-smart-wallet-repos-discovery, q-infra-secp256r1-passkeys, and q-soroban-add-signer-smart-wallet-howto.",
-        "The stale official smart-wallet guide routing is recorded separately in improvements/stellar-docs/sd-034-smart-wallet-passkey-kit-legacy-routing.md; sd-027 remains limited to LaunchTube submission/indexing migration."
+        "https://docs.openzeppelin.com/stellar-contracts/accounts/smart-account",
+        "https://raw.githubusercontent.com/kalepail/smart-account-kit/main/package.json",
+        "https://github.com/OpenZeppelin/stellar-contracts/releases/tag/v0.7.2",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "improvements/stellar-docs/sd-034-smart-wallet-passkey-kit-legacy-routing.md",
-        "Eval-side audit-scope and API-lineage overreach: a dependency's audit and broad signer vocabulary were promoted to the entire SDK/application stack."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-tool-passkeykit-smart-wallet"

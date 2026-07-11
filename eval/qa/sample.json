@@ -1,7 +1,7 @@
 {
   "$comment": "Deterministic stratified sample (N=30, by service) of the owned QA battery.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "eb90100ecb92deb9297b855b886ba1ae69f455cd7b56936218822a7c43b36859",
+  "corpusContentSha256": "8f6d4d870ecc086072c01e2c8c1407c7a367ca565334f70be4a49c491fc218a0",
   "counts": {
     "total": 30,
     "byCategory": {
@@ -151,12 +151,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-aas-list-token-on-exchanges-aggregators"
+        "origin": "raven-next q-aas-list-token-on-exchanges-aggregators",
+        "corroboration": [
+          {
+            "claim": "Explains technical prerequisites: issued asset, trustlines, home domain, valid SEP-1 stellar.toml metadata, and accessible logo/issuer information.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+                "observedAt": "2026-07-11",
+                "note": "Official SEP-1 integration guidance confirms stellar.toml asset metadata and discovery."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+                "observedAt": "2026-07-11",
+                "note": "The fetched SEP-1 source defines the stellar.toml fields and publication contract."
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -2026,12 +2052,38 @@
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+          "by": "P4 5B numeric corroboration backfill",
           "evidence": [
-            "solo://proj/49/scratchpad/truth-maintenance-20--575"
+            "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+          ],
+          "rootCause": [
+            "eval-authoring"
           ]
         },
-        "origin": "raven-next q-sep-38-quotes"
+        "origin": "raven-next q-sep-38-quotes",
+        "corroboration": [
+          {
+            "claim": "Names SEP-38 as the Anchor RFQ / quote API for pricing between assets.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+                "observedAt": "2026-07-11",
+                "note": "Official Stellar proposal documentation identifies the SEP catalog."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+                "observedAt": "2026-07-11",
+                "note": "Fetched SEP-38 source defines the Anchor RFQ API for asset prices and quotes."
+              }
+            ]
+          }
+        ]
       }
     },
     {

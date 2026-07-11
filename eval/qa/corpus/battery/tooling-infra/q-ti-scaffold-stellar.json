@@ -89,19 +89,38 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Dates the 0.0.25 registry and React/Svelte template examples to 2026-07-11 rather than making them permanent requirements.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tools/scaffold-stellar",
+            "observedAt": "2026-07-11",
+            "note": "Official documentation confirms Scaffold Stellar and its supported templates/workflow."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar-scaffold/cli/blob/main/crates/stellar-scaffold-cli/Cargo.toml",
+            "observedAt": "2026-07-11",
+            "note": "Fetched source manifest exists and records stellar-scaffold-cli version 0.0.25."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited full-stack distinction was sound, but it froze a local core-CLI version, blurred separate-plugin installation, and encoded an older React/layout/script view. GT-53 confirmed the current plugin, repositories, templates and contract-only boundary with dated registry evidence.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575, GT-53 primary 3372 and blind 3378. The blind parent and harvested child 3379 independently re-derived the scope that the primary's failed helper did not cover.",
-        "Registry/source checks dated 2026-07-11 found stellar-scaffold-cli 0.0.25 and React/Svelte official template sources; those values are not treated as timeless."
+        "https://developers.stellar.org/docs/tools/scaffold-stellar",
+        "https://github.com/stellar-scaffold/cli/blob/main/crates/stellar-scaffold-cli/Cargo.toml",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "Eval-side CLI/plugin freshness drift; stale-link/layout improvement candidate documented in the GT-53 audit pending a second authoring lane."
-      ],
-      "note": "GT-53 final state imported from process 3153; near-term re-verification retained by design."
+        "eval-authoring"
+      ]
     },
     "origin": "raven-next q-ti-scaffold-stellar"
   }

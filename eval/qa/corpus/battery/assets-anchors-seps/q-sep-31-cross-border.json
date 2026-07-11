@@ -39,11 +39,44 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-31-cross-border"
+    "origin": "raven-next q-sep-31-cross-border",
+    "corroboration": [
+      {
+        "claim": "Names SEP-31 as the Cross-Border Payments API — a sending anchor to a receiving anchor (anchor-to-anchor) flow. Contrasts SEP-24 as wallet↔anchor interactive (hosted) deposit/withdrawal for an end user, not anchor-to-anchor.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/anchors",
+            "observedAt": "2026-07-11",
+            "note": "Official anchor documentation distinguishes interactive deposit/withdrawal from cross-border anchor flows."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0024.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-24 source defines the hosted wallet-to-anchor flow."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0031.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-31 source defines the sending-anchor to receiving-anchor cross-border API."
+          }
+        ]
+      }
+    ]
   }
 }

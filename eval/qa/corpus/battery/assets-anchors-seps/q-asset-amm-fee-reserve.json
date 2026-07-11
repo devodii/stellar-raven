@@ -34,11 +34,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-03-classic-assets-clawback-trustlines-paths accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/liquidity-on-stellar-sdex-liquidity-pools",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0038.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-asset-amm-fee-reserve"
+    "origin": "raven-next q-asset-amm-fee-reserve",
+    "corroboration": [
+      {
+        "claim": "States a pool-share trustline consumes two base reserves (1.0 XLM).",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/liquidity-on-stellar-sdex-liquidity-pools",
+            "observedAt": "2026-07-11",
+            "note": "Official liquidity-pool documentation states that a pool-share trustline adds two base reserves, currently 1 XLM."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0038.md",
+            "observedAt": "2026-07-11",
+            "note": "The fetched CAP-0038 source defines the liquidity-pool trustline ledger entry and reserve treatment."
+          }
+        ]
+      }
+    ]
   }
 }

@@ -61,11 +61,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-41-bindings-target-dex-confidentiality-claims-deploy-porting accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/build/guides/tokens/custom-sac-admin",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0073.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sor-contract-trustlines-c-address"
+    "origin": "raven-next q-sor-contract-trustlines-c-address",
+    "corroboration": [
+      {
+        "claim": "Mentions G-address recipients still need a trustline and enough XLM/base reserve unless the SAC `trust` function creates the trustline under Protocol 26 with the address's authorization.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/tokens/custom-sac-admin",
+            "observedAt": "2026-07-11",
+            "note": "Official token guidance describes SAC trustline administration and address authorization."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0073.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched CAP-0073 source defines the Protocol 26 trustline-creation path and authorization semantics."
+          }
+        ]
+      }
+    ]
   }
 }

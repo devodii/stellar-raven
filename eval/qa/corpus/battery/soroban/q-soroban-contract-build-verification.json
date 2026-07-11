@@ -42,11 +42,44 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-45-constructor-verification-ids-events-cross-contract-versions accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0058.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-soroban-contract-build-verification"
+    "origin": "raven-next q-soroban-contract-build-verification",
+    "corroboration": [
+      {
+        "claim": "Verification works by building the WASM in CI and producing GitHub Attestations (SEP-55, e.g. the soroban-build-workflow) and/or by reproducibly rebuilding it and comparing bytes (SEP-58). The relevant standards are SEP-55 (Contract Build Verification, Draft) and SEP-58 (Contract Build Reproducibility for Verification, Draft).",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation provides the current SEP catalog/status context."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0055.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-55 source defines CI build verification and attestations."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0058.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-58 source defines reproducible contract builds and byte comparison."
+          }
+        ]
+      }
+    ]
   }
 }

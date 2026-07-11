@@ -84,18 +84,37 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "A $1B Soroswap TVL figure is supportable from current operator or independent TVL records.",
+        "verdict": "unverifiable",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://github.com/soroswap/docs",
+            "observedAt": "2026-07-11",
+            "note": "Fetched operator-owned documentation does not substantiate a $1B TVL figure."
+          },
+          {
+            "class": "F",
+            "ref": "https://api.llama.fi/protocol/soroswap",
+            "observedAt": "2026-07-11",
+            "note": "Direct current protocol-series fetch provides independent TVL observations far below $1B; it does not establish the claimed figure."
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The fact-check correctly rejects 'first AMM' and unsupported $1B TVL, but it promoted Soroswap's self-description as the first DEX aggregator into independently established chronology. The correction preserves the refutation and attributes the remaining marketing claim.",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "Solo scratchpad 575 GT-18 primary 3249 and blind 3252",
-        "Sibling sweep: q-defi-soroswap-what-is/content/similar and q-protocol-amm-cap-0038"
+        "https://github.com/soroswap/docs",
+        "https://api.llama.fi/protocol/soroswap",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "An operator superlative was retained as fact while correcting a neighboring false superlative.",
-        "improvements/stellar-light-scout/sls-015-searchprojects-description-editorial-capture.md"
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-edge-factcheck-soroswap-first-amm"

@@ -53,11 +53,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-41-bindings-target-dex-confidentiality-claims-deploy-porting accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/build/smart-contracts/overview",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sor-classic-dex-from-contract"
+    "origin": "raven-next q-sor-classic-dex-from-contract",
+    "corroboration": [
+      {
+        "claim": "Gives the practical design alternative: use SAC/SEP-41 token transfers and Soroban-native DEX/AMM contracts, or orchestrate classic and Soroban actions in separate transactions off-chain.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/smart-contracts/overview",
+            "observedAt": "2026-07-11",
+            "note": "Official smart-contract documentation distinguishes contract execution and token interactions."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-41 source defines the contract token interface used by custom tokens and SAC-compatible flows."
+          }
+        ]
+      }
+    ]
   }
 }

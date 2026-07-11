@@ -309,12 +309,8 @@ export function lintCorroboration(cases, register = {}) {
           const claim = String(row.claim ?? "").toLowerCase();
           return fragments.length > 0 && fragments.some((fragment) => claim.includes(fragment));
         });
-        // Migration-carried cases without claim rows remain visible debt rather
-        // than blocking the behavior-preserving cutover. Register invariants
-        // and disputed/unverifiable truth remain hard failures above.
         if (!covered) {
-          const level = String(kase.truth?.origin ?? "").startsWith("authored ") ? "error" : "warn";
-          findings.push(finding(level, "corroboration", kase.id, `numeric/version/date keyFact lacks a covering corroboration row: ${fact}`));
+          findings.push(finding("error", "corroboration", kase.id, `numeric/version/date keyFact lacks a covering corroboration row: ${fact}`));
         }
       }
     }

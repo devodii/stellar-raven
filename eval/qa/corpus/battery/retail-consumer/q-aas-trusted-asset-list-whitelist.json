@@ -52,11 +52,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0042.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-aas-trusted-asset-list-whitelist"
+    "origin": "raven-next q-aas-trusted-asset-list-whitelist",
+    "corroboration": [
+      {
+        "claim": "Explains wallets should evaluate issuer account, home domain, SEP-1 metadata, known issuer/project sources, liquidity, and user risk signals.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+            "observedAt": "2026-07-11",
+            "note": "Official guidance confirms SEP-1 stellar.toml as issuer and asset metadata."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0042.md",
+            "observedAt": "2026-07-11",
+            "note": "The fetched SEP-42 source defines ecosystem-wide asset-list conventions and evaluation inputs."
+          }
+        ]
+      }
+    ]
   }
 }

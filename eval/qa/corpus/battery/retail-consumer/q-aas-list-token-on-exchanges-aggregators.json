@@ -53,11 +53,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-aas-list-token-on-exchanges-aggregators"
+    "origin": "raven-next q-aas-list-token-on-exchanges-aggregators",
+    "corroboration": [
+      {
+        "claim": "Explains technical prerequisites: issued asset, trustlines, home domain, valid SEP-1 stellar.toml metadata, and accessible logo/issuer information.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/apps/example-application-tutorial/anchor-integration/sep1",
+            "observedAt": "2026-07-11",
+            "note": "Official SEP-1 integration guidance confirms stellar.toml asset metadata and discovery."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+            "observedAt": "2026-07-11",
+            "note": "The fetched SEP-1 source defines the stellar.toml fields and publication contract."
+          }
+        ]
+      }
+    ]
   }
 }

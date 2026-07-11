@@ -32,11 +32,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-05-sep-identity-auth-quotes-token-wallet accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-38-quotes"
+    "origin": "raven-next q-sep-38-quotes",
+    "corroboration": [
+      {
+        "claim": "Names SEP-38 as the Anchor RFQ / quote API for pricing between assets.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation identifies the SEP catalog."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0038.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-38 source defines the Anchor RFQ API for asset prices and quotes."
+          }
+        ]
+      }
+    ]
   }
 }

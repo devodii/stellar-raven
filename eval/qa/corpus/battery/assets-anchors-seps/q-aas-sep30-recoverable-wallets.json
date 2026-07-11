@@ -51,11 +51,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-01-asset-lifecycle-safety-metadata accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/build/apps/wallet/sep30",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0030.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-aas-sep30-recoverable-wallets"
+    "origin": "raven-next q-aas-sep30-recoverable-wallets",
+    "corroboration": [
+      {
+        "claim": "Names SEP-30 as Stellar's account recovery standard using recovery signer servers.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/apps/wallet/sep30",
+            "observedAt": "2026-07-11",
+            "note": "Official wallet documentation identifies SEP-30 and its recovery-signer-server flow."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0030.md",
+            "observedAt": "2026-07-11",
+            "note": "The fetched SEP-30 source defines recoverable wallets and recovery signer servers."
+          }
+        ]
+      }
+    ]
   }
 }

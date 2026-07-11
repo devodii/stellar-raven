@@ -37,18 +37,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "P4 conversions rework after independent Fable copy/quality review",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575",
-        "Preserved main's 2024-04-11 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-        "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0043.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
       ],
       "rootCause": [
-        "eval-authoring",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-43-web-wallet-api"
+    "origin": "raven-next q-sep-43-web-wallet-api",
+    "corroboration": [
+      {
+        "claim": "SEP-43 is 'Standard Web Wallet API Interface' — a standard interface (getAddress, signTransaction, signAuthEntry, signMessage, getNetwork) for web wallets so dapps integrate once. Does NOT claim SEP-43 is unpublished/nonexistent (the sep-0043.md file exists in stellar-protocol/ecosystem).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation identifies SEP specifications as the ecosystem standards surface."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0043.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched SEP-43 source exists and defines the Standard Web Wallet API Interface and methods."
+          }
+        ]
+      }
+    ]
   }
 }

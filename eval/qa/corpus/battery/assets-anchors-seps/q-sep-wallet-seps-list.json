@@ -40,11 +40,37 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-06-sep-deposit-regulation-catalog-clawback accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 5B numeric corroboration backfill",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "Sibling consistency sweep: checked the affected numeric/SEP/CAP mappings against related P4 5B cases and consistency-register members."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-sep-wallet-seps-list"
+    "origin": "raven-next q-sep-wallet-seps-list",
+    "corroboration": [
+      {
+        "claim": "Names SEP-1 (stellar.toml — anchor/asset discovery metadata). Names SEP-10 (web authentication — challenge/response to authenticate an account with an anchor). Names SEP-24 (interactive/hosted deposit & withdrawal) and/or SEP-6 (programmatic deposit & withdrawal).",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-ecosystem-proposals",
+            "observedAt": "2026-07-11",
+            "note": "Official Stellar proposal documentation corroborates the wallet-relevant SEP catalog."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/README.md",
+            "observedAt": "2026-07-11",
+            "note": "Fetched ecosystem registry corroborates SEP-1, SEP-6, SEP-10, and SEP-24 mappings."
+          }
+        ]
+      }
+    ]
   }
 }
