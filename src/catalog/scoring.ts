@@ -60,9 +60,11 @@
  *     stopword rescue, kind weight) over a gate-free replica of the vendor
  *     math, kept beside it the same way lever 4 double-scores rather than
  *     editing the vendor file. searchCatalogPage() (searchCatalog's engine)
- *     uses it ONLY to backfill a result page the gated tier left short —
- *     gated hits always rank first (hits carry tier: "gated" | "backfill"),
- *     so every ranking that worked before is byte-identical (see search.ts).
+ *     uses it ONLY to backfill a result page the gated tier left short. A
+ *     backfill hit ranks above a gated hit only when its ungated score is >=
+ *     TIER_INTERLEAVE_MARGIN times the gated hit's score. The drift guard in
+ *     test/scoring.test.ts proves the two scorers share a scale wherever the
+ *     gate passes (see search.ts).
  */
 import {
   normalizeSearchText,
@@ -257,8 +259,10 @@ export function scoreEntryWeighted(entry: WeightedScorableEntry, query: string):
 
 /**
  * Lever 5: the same pipeline over the gate-free vendor replica. ONLY for
- * backfilling a short result page (search.ts tier 2) — never lets an
- * ungated score compete with gated hits.
+ * backfilling a short result page (search.ts tier 2). Its score may compete
+ * across the seam only when it is >= TIER_INTERLEAVE_MARGIN times a gated
+ * hit's score; the drift guard proves the scores share a common scale where
+ * the gate passes.
  */
 export function scoreEntryWeightedUngated(
   entry: WeightedScorableEntry,

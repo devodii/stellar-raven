@@ -6,9 +6,8 @@
  *   type SearchHit = { id, service, kind, score, tier, description, signature? }
  *
  * (`tier` — todo 838 — is an additive metadata field on the hit, not a
- * contract change: ranking, membership, and every pre-existing field are
- * byte-identical. `searchCatalogPage` — todo 840 — is a NEW export beside the
- * frozen surface; `searchCatalog` is its thin `.hits` wrapper.)
+ * contract-shape change. `searchCatalogPage` — todo 840 — is a NEW export
+ * beside the frozen surface; `searchCatalog` is its thin `.hits` wrapper.)
  *
  * Pure functions, no I/O — importable from the Worker, vitest, and the eval
  * CLI alike. Everything in the manifest is exposed by construction (ADR-0003:
@@ -52,12 +51,9 @@ export type SearchHit = {
   /**
    * Which scorer produced this hit (todo 838): "gated" = tier 1, the vendor
    * scorer with its coverage gate; "backfill" = tier 2, the gate-free replica
-   * used only to fill a page tier 1 left short. The two scorers use different
-   * math, so `score` is comparable ONLY among hits of the same tier within
-   * one response — a backfill hit can carry a numerically larger score than
-   * the gated hits ranked above it (measured page: 37, 28, 15, 8, then a
-   * backfill 111 ranked last). Without this marker that page reads as a
-   * broken sort under a "higher is better" schema.
+   * used only to fill a page tier 1 left short. The drift guard in
+   * test/scoring.test.ts proves both paths produce the same score wherever
+   * the gate passes, so `score` is a common scale across the tier seam.
    */
   tier: "gated" | "backfill";
   description: string;
@@ -106,6 +102,15 @@ export type SearchPage = {
 
 export const DEFAULT_SEARCH_LIMIT = 10;
 export const MAX_SEARCH_LIMIT = 50;
+
+/**
+ * Required cross-tier score dominance before a backfill hit may outrank a
+ * gated hit. This is a structural, query-independent A/B-validated ranking
+ * constant, in the same class as the 0.75 kind weight and 0.4 keyword blend.
+ * The scoring drift guard proves gated scores are on the ungated scale, so
+ * the comparison is legitimate across the seam.
+ */
+export const TIER_INTERLEAVE_MARGIN = 1.6;
 
 /**
  * The valid `service` filter values, derived from the catalog itself (unique
@@ -382,6 +387,45 @@ function scoreCandidates(
   return scored;
 }
 
+type SelectedCandidate = { entry: CatalogEntry; score: number };
+type TieredCandidate = SelectedCandidate & { tier: SearchHit["tier"] };
+
+/**
+ * Stably reorder one already-selected mixed-tier page without changing its
+ * membership. In a single left-to-right pass over the backfill run, each
+ * backfill hit swaps left across consecutive adjacent gated hits while its
+ * score is at least TIER_INTERLEAVE_MARGIN times theirs. It stops at the
+ * first gated hit it does not dominate or at an earlier backfill hit. Thus
+ * order within each tier is preserved, and equality at the margin qualifies.
+ */
+function interleaveSelectedPage(
+  selected: SelectedCandidate[],
+  gatedCount: number
+): TieredCandidate[] {
+  const reordered: TieredCandidate[] = selected.map((candidate, index) => ({
+    ...candidate,
+    tier: index < gatedCount ? "gated" : "backfill"
+  }));
+  for (let index = gatedCount; index < reordered.length; index++) {
+    let cursor = index;
+    while (cursor > 0) {
+      const backfill = reordered[cursor]!;
+      const preceding = reordered[cursor - 1]!;
+      if (
+        backfill.tier !== "backfill" ||
+        preceding.tier !== "gated" ||
+        backfill.score < TIER_INTERLEAVE_MARGIN * preceding.score
+      ) {
+        break;
+      }
+      reordered[cursor - 1] = backfill;
+      reordered[cursor] = preceding;
+      cursor--;
+    }
+  }
+  return reordered;
+}
+
 /**
  * Ranked search over the catalog, with pagination facts. Pure; results
  * sorted by score desc, then id asc for determinism (within a tier — see
@@ -398,12 +442,13 @@ function scoreCandidates(
  * `limit` gate-passing candidates exist — measured: 58/122 extended-lane
  * questions, all >20 tokens, gated to ZERO) is the same pipeline re-run with
  * the coverage gate bypassed (scoring.ts lever 5) and its novel hits
- * appended strictly BELOW every tier-1 hit. Tier-2 hits never outrank or
- * displace a tier-1 hit, so a page mixing tiers is score-sorted within each
- * tier but not necessarily across the seam — every hit carries `tier` (todo
- * 838) so the seam is data, not a guessing game. The tier-2 page is drawn at
- * `limit + 10` so diversity quotas are computed over a wider slate before
- * the tier-1 duplicates are removed.
+ * appended to complete membership, then the fixed page is stably interleaved:
+ * a tier-2 hit never outranks a tier-1 hit unless its ungated score is >=
+ * TIER_INTERLEAVE_MARGIN times the gated hit's score. The drift guard in
+ * test/scoring.test.ts proves scoreEntryUngated equals scoreEntry wherever
+ * the gate passes, so hit.score is a common scale across the seam. The
+ * tier-2 page is drawn at `limit + 10` so diversity quotas are computed over
+ * a wider slate before the tier-1 duplicates are removed.
  *
  * `total`/`truncated` (todo 840): total counts distinct candidates the
  * consulted scorer tiers accepted (post-filter, pre-diversity/paging) —
@@ -433,13 +478,17 @@ export function searchCatalogPage(catalog: Catalog, opts: SearchOptions): Search
     selected = [...selected, ...rescue].slice(0, limit);
   }
 
-  const hits = selected.map(({ entry, score }, index) => {
+  // Membership is now final and sliced to `limit`. Reorder only this fixed
+  // page; total and truncated therefore retain their pre-interleave meaning.
+  const reordered = interleaveSelectedPage(selected, gatedCount);
+
+  const hits = reordered.map(({ entry, score, tier }) => {
     const hit: SearchHit = {
       id: entry.id,
       service: entry.service,
       kind: entry.kind,
       score,
-      tier: index < gatedCount ? "gated" : "backfill",
+      tier,
       description: entry.description
     };
     // Search-hit rendering mode: oversized output type blocks become stubs

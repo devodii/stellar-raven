@@ -14,6 +14,7 @@ import {
   renderSignature,
   COMPACT_OUTPUT_THRESHOLD,
   DEFAULT_SEARCH_LIMIT,
+  TIER_INTERLEAVE_MARGIN,
   type Catalog,
   type CatalogEntry,
   type SearchHit
@@ -267,29 +268,35 @@ describe("searchCatalog — tiered gate-rescue backfill (round 4, M1)", () => {
     }
   });
 
-  it("tier-2 hits never outrank a tier-1 hit on a mixed page", () => {
+  it("interleaves a backfill hit when the cross-tier margin is met", () => {
     // Extended-corpus mechanism check: this question passes the gate for
-    // only a handful of entries, so the page mixes tiers. Every gate-passing
-    // hit must precede every backfilled one, regardless of raw scores.
+    // only a handful of entries, so the page mixes tiers. The docs backfill
+    // hit overwhelmingly dominates the first gated hit on the common score
+    // scale and must therefore interleave above it.
     const query =
       "What does it take to become a Stellar anchor, including SEP and Anchor Platform " +
       "setup, licensing, liquidity or float, and on-ramp/off-ramp operating requirements?";
     const hits = searchCatalog(catalog, { query, limit: 5 });
     expect(hits).toHaveLength(5);
     const tiers = hits.map((h) => gatedScore(h.id, query) !== null);
-    expect(tiers[0], "top hit must be tier-1").toBe(true);
+    expect(tiers[0], "top hit must be the dominant backfill").toBe(false);
     expect(tiers).toContain(false); // page actually mixes tiers
     // The tier marker (todo 838) must agree with the recomputed ground truth.
     for (let i = 0; i < hits.length; i++) {
       expect(hits[i]!.tier).toBe(tiers[i] ? "gated" : "backfill");
     }
-    // Monotone partition: once a tier-2 hit appears, no tier-1 hit follows.
-    const seam = tiers.indexOf(false);
-    expect(tiers.slice(seam).every((t) => !t)).toBe(true);
-    // Tier-1 prefix carries unchanged tier-1 scores.
-    for (let i = 0; i < seam; i++) {
-      expect(gatedScore(hits[i]!.id, query)).toBe(hits[i]!.score);
-    }
+    expect(hits[0]!.id).toBe("stellarDocs.search_anchor_sep_docs");
+    expect(hits[1]!.tier).toBe("gated");
+    expect(hits[0]!.score).toBeGreaterThanOrEqual(
+      TIER_INTERLEAVE_MARGIN * hits[1]!.score
+    );
+    // The next backfill does not dominate the next gated hit and stays below
+    // it: the threshold is applied pairwise, not as a global score sort.
+    const nextBackfill = hits.findIndex((hit, index) => index > 0 && hit.tier === "backfill");
+    expect(nextBackfill).toBeGreaterThan(1);
+    expect(hits[nextBackfill]!.score).toBeLessThan(
+      TIER_INTERLEAVE_MARGIN * hits[nextBackfill - 1]!.score
+    );
   });
 });
 
@@ -338,9 +345,41 @@ describe("searchCatalogPage — tier marker + total/truncated (todos 838/840)", 
     expect(page.hits[0]!.id).toBe("lumenloop.alpha_handler");
     expect(page.hits[0]!.tier).toBe("gated");
     for (const hit of page.hits.slice(1)) expect(hit.tier).toBe("backfill");
+    // Strongest backfill is below the required margin, so the seam stays put.
+    expect(page.hits[1]!.score).toBeLessThan(
+      TIER_INTERLEAVE_MARGIN * page.hits[0]!.score
+    );
     // total = 1 gated + 6 novel ungated (every entry matches ≥1 token).
     expect(page.total).toBe(7);
     expect(page.truncated).toBe(true);
+  });
+
+  it("keeps page membership, total, and truncated fixed while interleaving", () => {
+    const query =
+      "What does it take to become a Stellar anchor, including SEP and Anchor Platform " +
+      "setup, licensing, liquidity or float, and on-ramp/off-ramp operating requirements?";
+    const page = searchCatalogPage(catalog, { query, limit: 5 });
+    // This is the pre-interleave selected page membership, asserted as a set:
+    // the candidate only changes its order.
+    expect(page.hits.map((hit) => hit.id).sort()).toEqual(
+      [
+        "scout.getRfps",
+        "scout.searchProjects",
+        "stellarDocs.search_anchor_sep_docs",
+        "stellarDocs.search_doc_titles",
+        "stellarDocs.search_docs_in_category"
+      ].sort()
+    );
+    expect(page.total).toBe(272);
+    expect(page.truncated).toBe(true);
+  });
+
+  it("is deterministic across repeated mixed-page interleaves", () => {
+    const opts = { query: LONG_QUERY, limit: 5 } as const;
+    const first = searchCatalogPage(tiny, opts);
+    for (let i = 0; i < 10; i++) {
+      expect(searchCatalogPage(tiny, opts)).toEqual(first);
+    }
   });
 
   it("searchCatalog is the thin .hits wrapper — identical page", () => {
