@@ -1,30 +1,30 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "c8d9610b900865eadec9561d9f4b6ac101bc5463fd0d9d0b4fc6b5dac69bc0a4",
+  "corpusContentSha256": "3c6218455dd8a632e312601263ded02fec2709d4db12bd2d57bb7cabe765b245",
   "counts": {
-    "total": 355,
+    "total": 379,
     "byCategory": {
       "assets-anchors-seps": 43,
       "compliance-rwa-payments": 34,
-      "defi-ecosystem": 42,
+      "defi-ecosystem": 50,
       "edge-behavior": 26,
-      "history-org-tokenomics": 13,
+      "history-org-tokenomics": 14,
       "protocol-core": 42,
       "retail-consumer": 10,
-      "scf-grants-builders": 30,
+      "scf-grants-builders": 38,
       "soroban": 64,
-      "tooling-infra": 51
+      "tooling-infra": 58
     },
     "byService": {
-      "lumenloop": 34,
+      "lumenloop": 35,
       "none": 7,
-      "scout": 87,
+      "scout": 110,
       "skills": 22,
       "stellarDocs": 205
     },
     "byFreshness": {
-      "live": 87,
+      "live": 111,
       "scheduled": 96,
       "stable": 172
     },
@@ -5704,6 +5704,101 @@
       }
     },
     {
+      "id": "q-defi-asset-whitespace-live",
+      "question": "Does the current Stellar index make the exact Asset category look crowded, funded, or underbuilt, and what does the overlapping RWA type view show separately?",
+      "surface": [
+        "scout.getClusters",
+        "scout.analyzeEcosystem"
+      ],
+      "golden": {
+        "answer": "Use the current exact Asset category row as the primary view and report its size, funded count/share, comparison set, generatedAt, and scope. If RWA is discussed, query getClusters({dimension:\"types\"}) and label it as a separate overlapping type view. Keep analyzeEcosystem in a separately labeled aggregate section, cite representative returned-project primary pages, and do not equate index whitespace with real-world absence.",
+        "keyFacts": [
+          "Uses the exact Asset category row as the primary comparison.",
+          "Labels any RWA type-cluster and analyzeEcosystem aggregate as separate overlapping views with their own denominators.",
+          "Reports raw size/funding evidence with scope/as-of and distinguishes index-relative whitespace from real-world market absence."
+        ],
+        "avoid": [
+          "Claims no Asset/RWA projects exist because one index category is small."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/clusters?dimension=category"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/analyze?dimension=categories"
+          },
+          {
+            "class": "A",
+            "ref": "https://spiko.io/"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Asset/RWA whitespace is a dated, index-relative comparison using raw size and funding rows.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/clusters?dimension=category",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=categories",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://spiko.io/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "A small index category proves real-world nonexistence.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://spiko.io/",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=categories",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://spiko.io/"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-ecosystem-asset-rwa-underbuilt-unfunded"
+      }
+    },
+    {
       "id": "q-defi-benji-franklin-templeton",
       "question": "What is Franklin Templeton's BENJI token on Stellar and what fund does it represent?",
       "surface": [
@@ -6111,6 +6206,286 @@
           ]
         },
         "origin": "raven-next q-defi-build-staking-for-own-token"
+      }
+    },
+    {
+      "id": "q-defi-category-funding-ratio-live",
+      "question": "Which current Stellar category has the highest SCF-funded share in the served index?",
+      "surface": [
+        "scout.getClusters",
+        "scout.analyzeEcosystem"
+      ],
+      "golden": {
+        "answer": "Use scout.getClusters({dimension:\"category\"}) as the primary ranking population, compute fundedCount/size only across comparable current rows, preserve ties, and show each numerator and denominator with generatedAt and scope. If analyzeEcosystem is also shown, report it as a separate population and disclose disagreement; never mix numerators and denominators across views.",
+        "keyFacts": [
+          "Ranks the current getClusters category population using fundedCount/size and preserves ties.",
+          "States scope, generatedAt, and small-denominator distortion; never mixes cluster and aggregate denominators.",
+          "Keeps historical index share distinct from absolute funding and from future grant probability."
+        ],
+        "avoid": [
+          "Names a category as permanently best-funded without showing current numerator and denominator."
+        ],
+        "notes": "Historical index share is not a prediction of future grant probability."
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/clusters?dimension=category"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/analyze?dimension=categories"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.analyzeEcosystem"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "A funded-share ranking is a dated calculation from comparable current numerator/denominator rows.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/clusters?dimension=category",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=categories",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.analyzeEcosystem",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "The archived highest-ratio category is permanently best-funded.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=categories",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.analyzeEcosystem"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-ecosystem-highest-scf-funded-ratio-category"
+      }
+    },
+    {
+      "id": "q-defi-category-saturation-live",
+      "question": "Which current Stellar project categories look most crowded and least crowded in the served index?",
+      "surface": [
+        "scout.getClusters"
+      ],
+      "golden": {
+        "answer": "Call the live category cluster analysis, identify the largest/highest-crowdedness and smallest/lowest-crowdedness returned categories, include raw sizes and funded counts from that response, explain the crowdedness formula, and cite generatedAt. Treat this as an index snapshot, not market truth.",
+        "keyFacts": [
+          "Uses live category clusters and reports both score and raw counts.",
+          "Explains the served crowdedness metric and index scope.",
+          "Includes generatedAt/as-of and avoids a timeless category ranking."
+        ],
+        "avoid": [
+          "Pins archived category counts as current ecosystem totals."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/clusters?dimension=category"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getClusters"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/ecosystem"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Cluster ranking must include current score, raw counts, formula, scope, and generatedAt.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/clusters?dimension=category",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getClusters",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/ecosystem",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Archived category counts are current ecosystem totals.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/clusters?dimension=category",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.getClusters",
+            "https://stellar.org/ecosystem"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-ecosystem-crowded-vs-underbuilt-category"
+      }
+    },
+    {
+      "id": "q-defi-cluster-rollup-live",
+      "question": "Give a current quantitative view of Stellar ecosystem clusters and the ecosystem-wide category/funding rollup.",
+      "surface": [
+        "scout.getClusters",
+        "scout.analyzeEcosystem"
+      ],
+      "golden": {
+        "answer": "Call getClusters and analyzeEcosystem({dimension:\"all\"}), or separate analyzeEcosystem category and funding calls. Present cluster metrics separately from ecosystem-wide category and funding totals, cite each generatedAt and scope, label SCF dollars as the service's reconstructed project-based total, and state that overlapping type clusters are not summable.",
+        "keyFacts": [
+          "Uses cluster analysis plus analyzeEcosystem all, or separate category and funding rollups.",
+          "Labels SCF dollars as a reconstructed project-based service total and keeps denominators separate.",
+          "Reports generatedAt/scope and states that overlapping type clusters are not summable."
+        ],
+        "avoid": [
+          "Merges cluster and rollup totals as though they share an identical population."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/clusters?dimension=category"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/analyze?dimension=categories"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.analyzeEcosystem"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/analyze?dimension=funding"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Clusters and ecosystem rollups are distinct dated views whose denominators must be stated.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/clusters?dimension=category",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=categories",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.analyzeEcosystem",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=funding",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "The two views can be summed as one identical population.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/analyze?dimension=categories",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.analyzeEcosystem"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "core-35 ecosystem-cluster-and-rollup"
       }
     },
     {
@@ -6539,6 +6914,100 @@
       }
     },
     {
+      "id": "q-defi-lending-landscape-live",
+      "question": "What lending and borrowing projects are represented in the current Stellar directory, and which returned projects have current SCF evidence?",
+      "surface": [
+        "scout.searchProjects"
+      ],
+      "golden": {
+        "answer": "Search the live project directory for lending/borrowing, cite returned project pages, and report SCF status only from current rows or linked SCF records. State query scope, pagination, and generated-at; do not freeze flagship rosters or award amounts.",
+        "keyFacts": [
+          "Uses current directory results for lending/borrowing and cites project pages.",
+          "Attributes SCF status to current returned evidence, not reputation.",
+          "States scope/pagination and as-of rather than pinning a roster or amounts."
+        ],
+        "avoid": [
+          "Repeats the archived flagship list or dollar awards as timeless facts."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/projects/search?q=lending"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/projects"
+          },
+          {
+            "class": "D",
+            "ref": "https://lumenloop.com/projects"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Current directory results, project links, SCF fields, scope, and as-of are the required basis.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/projects/search?q=lending",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/projects",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "D",
+                "ref": "https://lumenloop.com/projects",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "The archived flagship roster and award amounts remain timeless.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/projects/search?q=lending",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/projects",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://communityfund.stellar.org/projects"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-priorart-lending-scf-flagships"
+      }
+    },
+    {
       "id": "q-defi-liquid-staking-whitespace",
       "question": "What liquid staking / LST protocols are live on Stellar?",
       "surface": [
@@ -6959,6 +7428,98 @@
           ]
         },
         "origin": "raven-next q-defi-ondo-usdy"
+      }
+    },
+    {
+      "id": "q-defi-oracle-landscape-live",
+      "question": "Which oracle and price-feed projects are represented in the current Stellar directory, and what evidence makes any one a strong reference?",
+      "surface": [
+        "scout.searchProjects",
+        "scout.searchRepos"
+      ],
+      "golden": {
+        "answer": "Query current project and repository results for oracle/price-feed work, cite project and code URLs, and compare returned status, funding, activity, and code-verification evidence. Date the answer and avoid an eternal 'leader' claim.",
+        "keyFacts": [
+          "Uses current project and repository results for oracle/price-feed work.",
+          "Cites URLs and distinguishes directory status from code-quality evidence.",
+          "Dates any comparative judgment and explains its metric.",
+          "Names the comparison proxy and scopes any conclusion to among the current checked results, not a universal leader."
+        ],
+        "avoid": [
+          "Calls Reflector or another project permanently most established without current evidence."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/repos/search?q=oracle"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/reflector-network/reflector-contract"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.searchProjects"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "A current oracle comparison combines directory and code evidence with citations and as-of.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=oracle",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/reflector-network/reflector-contract",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.searchProjects",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "One oracle is permanently the most established.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=oracle",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://github.com/reflector-network/reflector-contract",
+            "catalog/manifest.json#scout.searchProjects"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-priorart-oracle-reflector-leader"
       }
     },
     {
@@ -7471,6 +8032,112 @@
       }
     },
     {
+      "id": "q-defi-rwa-treasury-funding-live",
+      "question": "Which current Stellar directory projects tokenize Treasuries or money-market assets, and what do current sources show about their funding provenance?",
+      "surface": [
+        "scout.searchProjects"
+      ],
+      "golden": {
+        "answer": "Search current RWA/Treasury directory rows, cite each project or issuer's primary page, and label SCF-funded versus institutional/other provenance only where current evidence supports it. Give scope and as-of; never infer 'not funded' from a missing flag.",
+        "keyFacts": [
+          "Uses current RWA/Treasury directory results and primary project links.",
+          "Reports funding provenance only when a current source supports it.",
+          "Qualifies missing funding data as unknown and dates the answer."
+        ],
+        "avoid": [
+          "Treats absence from one result page as proof that a project never received SCF support."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/projects/search?q=treasury"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/projects"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/ecosystem"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Current directory and primary sources are required for entity and funding attribution.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/projects/search?q=treasury",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/ecosystem",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Current SCF records are the source for affirmative award attribution.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/projects",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/projects/search?q=treasury",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Missing from one result proves never SCF-funded.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/projects",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/projects/search?q=treasury",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://communityfund.stellar.org/projects",
+            "https://stellar.org/ecosystem"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-priorart-rwa-treasuries-not-scf"
+      }
+    },
+    {
       "id": "q-defi-sdex-offer-lifecycle",
       "question": "After submitting Stellar Manage Buy/Sell offers, how do I track offer ids, fills, cancellations, and path-payment executions through the SDEX orderbook?",
       "surface": [
@@ -7902,6 +8569,96 @@
           ]
         },
         "origin": "raven-next q-defi-streaming-payments-prior-art"
+      }
+    },
+    {
+      "id": "q-defi-tooling-whitespace-live",
+      "question": "Does the current Stellar index make developer tooling look crowded or like whitespace, and what projects illustrate the result?",
+      "surface": [
+        "scout.getClusters",
+        "scout.searchProjects"
+      ],
+      "golden": {
+        "answer": "Use the exact Tooling category row as the primary current comparison, reporting raw size/funded evidence, examples, generatedAt, and scope. Any SDK/Indexer/Explorer type clusters must be separately labeled finer overlapping views. Corroborate existence claims with primary links for sampled returned projects and keep whitespace index-relative.",
+        "keyFacts": [
+          "Uses the exact Tooling category row as the primary answer.",
+          "Labels type-cluster detail separately and reports raw counts, examples, generatedAt, and scope.",
+          "Uses sampled returned-project primary links for existence claims and does not infer real-world absence."
+        ],
+        "avoid": [
+          "Claims developer tooling has no existing projects based on an index-relative whitespace label."
+        ]
+      },
+      "tags": {
+        "category": "defi-ecosystem",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/clusters?dimension=category"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/projects/search?q=developer%20tooling"
+          },
+          {
+            "class": "A",
+            "ref": "https://reflector.network/"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Tooling whitespace is a dated index-relative conclusion supported by cluster metrics and example projects.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/clusters?dimension=category",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/projects/search?q=developer%20tooling",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://reflector.network/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Index-relative whitespace means no tooling projects exist.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://reflector.network/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://reflector.network/"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "core-35 ecosystem-category-whitespace"
       }
     },
     {
@@ -12084,6 +12841,96 @@
           ]
         },
         "origin": "raven-next q-hist-unhcr-stellar-aid-assist"
+      }
+    },
+    {
+      "id": "q-history-ecosystem-index-freshness-live",
+      "question": "Before relying on Stellar ecosystem recommendations, how fresh is the served index and what collection counts does it report now?",
+      "surface": [
+        "scout.getStatus"
+      ],
+      "golden": {
+        "answer": "Call the live status endpoint, report generatedAt plus each relevant source's count and lastUpdatedAt, and explain collection-specific notes (including full-collection versus active-project denominators). Judge fitness relative to the requested use; never cite one global count or last-updated date for all sources.",
+        "keyFacts": [
+          "Uses live status generatedAt and per-source count/lastUpdatedAt.",
+          "Preserves collection-specific notes and denominator distinctions.",
+          "Assesses freshness for the intended use rather than declaring the whole index fresh/stale."
+        ],
+        "avoid": [
+          "Reports one archived project count or timestamp as the freshness of every collection."
+        ]
+      },
+      "tags": {
+        "category": "history-org-tokenomics",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/status"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getStatus"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/ecosystem"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Index freshness is per-source and requires current counts, lastUpdatedAt, notes, and use-relative interpretation.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/status",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getStatus",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/ecosystem",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "One archived project count/timestamp describes every collection.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/status",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.getStatus",
+            "https://stellar.org/ecosystem"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "core-35 ecosystem-index-freshness"
       }
     },
     {
@@ -19348,6 +20195,98 @@
       }
     },
     {
+      "id": "q-scf-blend-winners-live",
+      "question": "Who does the current event record list as winners of Stellar Hacks: Blend, and what did each build?",
+      "surface": [
+        "scout.getHackathon",
+        "scout.getHackathons"
+      ],
+      "golden": {
+        "answer": "Resolve the exact current Blend event slug through getHackathons before calling getHackathon. Report winner names/descriptions only from exact event detail, keep missing detail missing, and infer ordinal rank only from explicit placement fields—not array order.",
+        "keyFacts": [
+          "Resolves the exact event slug with getHackathons before retrieving detail.",
+          "Resolves and fetches the current event record.",
+          "Cites the event source and reports winner/project fields only when returned.",
+          "States generated-at and explicitly handles missing winner detail."
+        ],
+        "avoid": [
+          "Reconstructs a winner roster from the archived Boxy answer when the live record is empty or changed."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/hackathons"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getHackathon"
+          },
+          {
+            "class": "A",
+            "ref": "https://blend.capital/"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Winner answers must come from current event detail with source and generated-at, and missing detail stays missing.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getHackathon",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://blend.capital/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "The archived Blend winner roster may be reconstructed when live detail is absent.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.getHackathon",
+            "https://blend.capital/"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-hackathon-blend-winners"
+      }
+    },
+    {
       "id": "q-scf-build-award-cap",
       "question": "What is the maximum award amount under the SCF Build Award, and in what currency is it paid?",
       "surface": [
@@ -19518,6 +20457,196 @@
           ]
         },
         "origin": "raven-next q-scf-build-tracks"
+      }
+    },
+    {
+      "id": "q-scf-contract-verification-rfp-live",
+      "question": "Is there a currently open Stellar RFP for Soroban contract source verification, and what does the live brief ask builders to create?",
+      "surface": [
+        "scout.getRfps"
+      ],
+      "golden": {
+        "answer": "Query the live RFP set for contract source verification, report status and requirements only from the returned brief, cite its URL and official round verifyAt, and include asOf. If absent, say absent from the current served set rather than closed forever.",
+        "keyFacts": [
+          "Uses the current RFP result for status and requirements.",
+          "Cites the brief plus official-round verification URL.",
+          "Includes as-of and scopes absence to the served set."
+        ],
+        "avoid": [
+          "Calls the archived source-verification brief open without current status evidence."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/rfps?status=open"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/awards"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getRfps"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Current status and requirements require the live brief, official verify URL, and as-of.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/awards",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getRfps",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Archived open status remains valid without a current check.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://communityfund.stellar.org/awards",
+            "catalog/manifest.json#scout.getRfps"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "core-35 open-rfp-contract-source-verification"
+      }
+    },
+    {
+      "id": "q-scf-current-hackathons-compare-live",
+      "question": "Using current event data, compare the latest Stellar ZK hackathon with the recent agents/x402 hackathon.",
+      "surface": [
+        "scout.getHackathons",
+        "scout.compareHackathons"
+      ],
+      "golden": {
+        "answer": "Discover the current matching event slugs, compare them, and report dates, source, status, registered hackers and prize pools only as returned. Cite both event URLs and generatedAt; distinguish registered hackers from submissions and null from zero.",
+        "keyFacts": [
+          "Discovers current slugs before calling the comparison.",
+          "Reports sourced dates/status/hacker/prize fields with generatedAt.",
+          "Distinguishes hackers from submissions and unavailable from zero."
+        ],
+        "avoid": [
+          "Uses archived event totals or equates registered hackers with submissions."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/hackathons"
+          },
+          {
+            "class": "D",
+            "ref": "https://dorahacks.io/hackathon/stellar-hacks-zk/detail"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.compareHackathons"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/meetings/2026/04/23"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "A valid comparison resolves live slugs, sources each field, dates the response, and preserves field semantics.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "D",
+                "ref": "https://dorahacks.io/hackathon/stellar-hacks-zk/detail",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.compareHackathons",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/meetings/2026/04/23",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Archived totals remain current or hackers equal submissions.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.compareHackathons",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.compareHackathons",
+            "https://developers.stellar.org/meetings/2026/04/23"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "core-35 compare-current-hackathons"
       }
     },
     {
@@ -19895,6 +21024,108 @@
           ]
         },
         "origin": "raven-next q-scf-funding-by-category"
+      }
+    },
+    {
+      "id": "q-scf-hackathon-compare-live",
+      "question": "Using current event data, compare Stellar Hacks: KALE x Reflector and Stellar Hacks: Blend on submissions and winners.",
+      "surface": [
+        "scout.getHackathons",
+        "scout.compareHackathons",
+        "scout.getHackathon"
+      ],
+      "golden": {
+        "answer": "Resolve both current event slugs, call getHackathon detail for each, and compare hackathon.stats.totalSubmissions and hackathon.stats.winners (or explicit equivalent fields). Use compareHackathons only for fields it actually returns, distinguish null from zero, and cite generatedAt/scope.",
+        "keyFacts": [
+          "Resolves both current slugs and uses two getHackathon detail calls.",
+          "Compares explicit totalSubmissions and winners fields, treating null as unknown rather than zero.",
+          "Uses compareHackathons only for fields it returns and dates/scopes the result."
+        ],
+        "avoid": [
+          "Uses archived submission or winner counts as current when the live comparison differs or lacks them."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/hackathons"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.compareHackathons"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/ecosystem/the-story-of-kale"
+          },
+          {
+            "class": "A",
+            "ref": "https://blend.capital/"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The comparison requires resolved live slugs, sourced fields, generated-at, and null-versus-zero discipline.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.compareHackathons",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/ecosystem/the-story-of-kale",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://blend.capital/",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Archived event counts remain current indefinitely.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.compareHackathons",
+            "https://stellar.org/blog/ecosystem/the-story-of-kale",
+            "https://blend.capital/"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-hackathon-kale-vs-blend-counts"
       }
     },
     {
@@ -20294,6 +21525,98 @@
       }
     },
     {
+      "id": "q-scf-kale-winner-live",
+      "question": "Which project does the current event record list as first place at Stellar Hacks: KALE x Reflector?",
+      "surface": [
+        "scout.getHackathon",
+        "scout.getHackathons"
+      ],
+      "golden": {
+        "answer": "Resolve the exact current KALE x Reflector event slug through getHackathons, then retrieve detail. Name first place only when explicit ordinal or placementRank evidence supports it; otherwise report the winner set without inventing order.",
+        "keyFacts": [
+          "Uses getHackathons for exact-slug resolution before event detail.",
+          "Uses current event detail and source URL.",
+          "Reports first place only from explicit served ordering.",
+          "Includes generated-at and handles absent ordering without guessing."
+        ],
+        "avoid": [
+          "Pins the archived first-place project without current ordered-winner evidence."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/hackathons"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getHackathon"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/ecosystem/the-story-of-kale"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "First-place attribution requires current explicit winner ordering, source, and generated-at.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getHackathon",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/ecosystem/the-story-of-kale",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Archived first-place attribution remains valid without current ordering.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.getHackathon",
+            "https://stellar.org/blog/ecosystem/the-story-of-kale"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-hackathon-kale-reflector-1st"
+      }
+    },
+    {
       "id": "q-scf-nqg-voting",
       "question": "How does SCF community voting work — what is Neural Quorum Governance and who can vote?",
       "surface": [
@@ -20470,6 +21793,192 @@
           ]
         },
         "origin": "raven-next q-scf-open-rfps"
+      }
+    },
+    {
+      "id": "q-scf-open-rfps-live",
+      "question": "Which Stellar SCF RFPs or submission opportunities are open right now?",
+      "surface": [
+        "scout.getRfps"
+      ],
+      "golden": {
+        "answer": "Call the live open-RFP view, list only returned open rows, cite each application/brief URL, and include meta.scfRound.asOf, phase, deadline, and verifyAt when present. Distinguish curated briefs from a confirmed open SCF round.",
+        "keyFacts": [
+          "Uses the live open-RFP response and lists only returned open rows.",
+          "Includes source links and current round as-of/phase/deadline/verifyAt.",
+          "Distinguishes curated sponsor briefs from the official SCF submission round."
+        ],
+        "avoid": [
+          "Pins Q2 2026 RFP names or an SCF round without checking the live status metadata."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/rfps?status=open"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/awards"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.gitbook.io/scf-handbook/scf-awards/build-award/rfp-track"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Open opportunities must be returned live with source links and dated official-round metadata.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/awards",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.gitbook.io/scf-handbook/scf-awards/build-award/rfp-track",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "The archived Q2 RFP list and round remain current without verification.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/awards",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://communityfund.stellar.org/awards",
+            "https://stellar.gitbook.io/scf-handbook/scf-awards/build-award/rfp-track"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-funding-open-rfps-q2-2026"
+      }
+    },
+    {
+      "id": "q-scf-passkey-rfps-live",
+      "question": "Are any currently open Stellar RFPs relevant to smart accounts or passkeys, and how do the returned briefs differ?",
+      "surface": [
+        "scout.getRfps"
+      ],
+      "golden": {
+        "answer": "Fetch the full current open set with scout.getRfps({status:\"open\"}), then locally filter titles, descriptions, and technical requirements for related passkey and smart-account concepts. A q-filtered call may supplement but not replace the exhaustive open-set scan; cite deliverables and dated round metadata.",
+        "keyFacts": [
+          "Fetches the full open RFP set first, then locally filters related passkey/smart-account concepts.",
+          "Compares stated deliverables and cites each returned brief.",
+          "Includes round as-of/verifyAt and scopes an empty result to the source."
+        ],
+        "avoid": [
+          "Claims a remembered passkey brief is still open without current status evidence.",
+          "A narrow zero/one-hit query is not an exhaustive opportunity scan."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/rfps?status=open"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/awards"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getRfps"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Relevant briefs are selected from current open rows, compared by deliverables, cited, and dated.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/awards",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getRfps",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "An archived passkey brief is necessarily still open.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://communityfund.stellar.org/awards",
+            "catalog/manifest.json#scout.getRfps"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "boxy sl-funding-smart-account-passkey-rfps"
       }
     },
     {
@@ -20685,6 +22194,107 @@
           ]
         },
         "origin": "raven-next q-scf-rfp-tooling"
+      }
+    },
+    {
+      "id": "q-scf-rfps-hackathons-live",
+      "question": "What SCF RFPs and Stellar hackathons are open, active, or upcoming right now?",
+      "surface": [
+        "scout.getRfps",
+        "scout.getHackathons"
+      ],
+      "golden": {
+        "answer": "Query RFPs and hackathons independently, including separate getHackathons({status:\"active\"}) and getHackathons({status:\"upcoming\"}) calls. Date and cite both lanes. Only an ok empty data response supports scoped “none returned”; soft-empty or error is inconclusive.",
+        "keyFacts": [
+          "Queries RFP and hackathon lanes independently with current status filters.",
+          "Cites source URLs and reports generatedAt/asOf for both.",
+          "Handles empty results with scoped language and returned fallback channels.",
+          "Preserves ok-empty versus soft-empty/error distinctions; only ok-empty supports a scoped absence statement."
+        ],
+        "avoid": [
+          "Concludes no opportunity exists worldwide from a zero-row served response."
+        ]
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/rfps?status=open"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/hackathons?status=active"
+          },
+          {
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/awards"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/hackathons?status=upcoming"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The two opportunity lanes require independent current filters, citations, timestamps, and scoped empty handling.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/rfps?status=open",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons?status=active",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://communityfund.stellar.org/awards",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/hackathons?status=upcoming",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "A zero-row response proves no opportunity exists anywhere.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getHackathons",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://communityfund.stellar.org/awards",
+            "catalog/manifest.json#scout.getHackathons"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "core-35 rfps-and-hackathons"
       }
     },
     {
@@ -31918,6 +33528,86 @@
       }
     },
     {
+      "id": "q-tool-developer-leaderboard-live",
+      "question": "What currently appears near the top of Stellar's developer-activity leaderboard, and how should that ranking be interpreted?",
+      "surface": [
+        "scout.getLeaderboard"
+      ],
+      "golden": {
+        "answer": "Request an explicit sort/range, name current project rows with generatedAt, and explain that they are projects rather than people. Cite meta.source/meta.docs; include per-row GitHub fields only when returned. Do not require a project URL that this surface does not provide.",
+        "keyFacts": [
+          "Uses explicit leaderboard sort/range and current returned rows.",
+          "Names project rows and cites meta.source/meta.docs; includes per-row GitHub fields only as returned.",
+          "Explains that projects—not people—are ranked and the result is scope-dependent."
+        ],
+        "avoid": [
+          "Calls the returned project the ecosystem's permanently most active developer."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/leaderboard?sort=activity&range=30d&limit=3"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getLeaderboard"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Leaderboard answers require explicit metric/window, generatedAt, project-level evidence, and coverage caveats.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/leaderboard?sort=activity&range=30d&limit=3",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getLeaderboard",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "The leaderboard ranks individual developers or supplies a permanent ecosystem leader.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.getLeaderboard",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.getLeaderboard"
+          ],
+          "rootCause": [
+            "freshness-drift"
+          ]
+        },
+        "origin": "core-35 developer-activity-leaderboard"
+      }
+    },
+    {
       "id": "q-tool-flutter-mobile-sdk",
       "question": "What SDK should I use to build a Stellar wallet in Flutter, and is it official?",
       "surface": [
@@ -32713,6 +34403,208 @@
       }
     },
     {
+      "id": "q-tool-oracle-repo-live",
+      "question": "Which current Stellar oracle repositories are the best code references, and what evidence supports that choice?",
+      "surface": [
+        "scout.searchRepos"
+      ],
+      "golden": {
+        "answer": "Filter live searchRepos results for relevant oracle repositories, explicitly compare repoScore, and paginate before a global superlative or say “among the returned page.” Cite repository URLs and separate codeVerified/codeDepth, deployability, SDK status, and scan date; codeVerified is index scan evidence, not a security audit.",
+        "keyFacts": [
+          "Filters for relevance and explicitly compares repoScore rather than trusting response order.",
+          "Paginates before a global claim or scopes the conclusion to the checked page.",
+          "Keeps codeVerified/deployability/version signals distinct and does not treat them as a security audit."
+        ],
+        "avoid": [
+          "Recommends a deprecated repository solely because it led an archived three-row result."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/repos/search?q=oracle"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.searchRepos"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/reflector-network/reflector-contract"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Live oracle results expose repository and code-quality evidence.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=oracle",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.searchRepos",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "A primary repository URL permits direct inspection.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "https://github.com/reflector-network/reflector-contract",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=oracle",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "An archived low-score ordering is permanently authoritative.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=oracle",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.searchRepos",
+            "https://github.com/reflector-network/reflector-contract"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "boxy sl-code-soroban-oracle-least-bad"
+      }
+    },
+    {
+      "id": "q-tool-passkey-repo-live",
+      "question": "Using the live Stellar code index, which passkey or smart-wallet repositories are the strongest references now?",
+      "surface": [
+        "scout.searchRepos"
+      ],
+      "golden": {
+        "answer": "Filter current passkey-relevant searchRepos rows, explicitly compare repoScore, and paginate before a global superlative or say “among the checked results.” Cite repository URLs and keep codeVerified/deployability/version evidence distinct; none alone proves production or security quality.",
+        "keyFacts": [
+          "Filters relevant current rows and explicitly compares scores rather than trusting response order.",
+          "Paginates or scopes the superlative to checked results.",
+          "Does not infer production or security quality from deployability, score, or codeVerified alone."
+        ],
+        "avoid": [
+          "Declares a permanently best passkey repository from the archived corpus."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/repos/search?q=passkey"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.searchRepos"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/kalepail/soroban-passkey"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The answer must derive and date the ranking from the live code index.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=passkey",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.searchRepos",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Repository quality signals are distinct from popularity.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.searchRepos",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/kalepail/soroban-passkey",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "An archived repository is permanently the best reference.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=passkey",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.searchRepos",
+            "https://github.com/kalepail/soroban-passkey"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "boxy sl-code-passkey-wallet-top-repo"
+      }
+    },
+    {
       "id": "q-tool-passkey-wallet-recovery",
       "question": "If a user loses a passkey for a Stellar smart wallet, what recovery patterns exist (backup signers, policy signers, multi-signer design)?",
       "surface": [
@@ -33182,6 +35074,129 @@
       }
     },
     {
+      "id": "q-tool-sep41-status-live",
+      "question": "What currently defines Stellar's smart-contract token interface, and how should SEP-41's status be described now?",
+      "surface": [
+        "scout.searchResearch",
+        "stellarDocs.search_asset_token_docs"
+      ],
+      "golden": {
+        "answer": "Retrieve current SEP-41 and official token-interface documentation, cite both, describe the interface, and report the current preamble status/version/update date with an as-of. As observed 2026-07-11, the official preamble says Draft, version 0.4.1, updated 2025-08-28; re-check rather than trusting the archive.",
+        "keyFacts": [
+          "Identifies SEP-41 as a token interface rather than the Stellar Asset Contract itself.",
+          "Uses the current SEP/spec plus official token-interface documentation.",
+          "Dates and sources the current standards status."
+        ],
+        "avoid": [
+          "Do not state an archival status without checking the current official standard; a currently sourced Draft answer is allowed."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "real-world",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tokens/token-interface"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/research?q=SEP-41&source=sep"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "SEP-41 specifies the contract token interface used by SAC and compatible contract tokens.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tokens/token-interface",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Current status must be read from the live standard rather than the archive.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/research?q=SEP-41&source=sep",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "SEP-41 is necessarily still draft because Boxy called it draft.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "As observed 2026-07-11, the official SEP-41 preamble says Draft, version 0.4.1, updated 2025-08-28.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tokens/token-interface",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/research?q=SEP-41&source=sep",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "https://developers.stellar.org/docs/tokens/token-interface",
+            "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0041.md"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "boxy sl-research-sep41-soroban-token-draft"
+      }
+    },
+    {
       "id": "q-tool-skill-detail-install",
       "question": "Show me the full install doc and metadata for the Stellar 'soroban' agent skill — what it covers and how to install it.",
       "surface": [
@@ -33409,6 +35424,189 @@
           ]
         },
         "origin": "raven-next q-tool-smart-wallet-repos-discovery"
+      }
+    },
+    {
+      "id": "q-tool-soroban-auth-audit-live",
+      "question": "What do the currently indexed primary audits say about Soroban authorization recursion or reentrancy risk?",
+      "surface": [
+        "scout.searchResearch"
+      ],
+      "golden": {
+        "answer": "Search the live audit index and cite the Veridise audit section. Report the two-part disposition: authorization recursion/DoS was framed as an initially Critical candidate, then investigated and placed under Invalid Issues because error propagation makes work linear in trackers and the attack costly. Date the result and do not present it as an active confirmed vulnerability.",
+        "keyFacts": [
+          "Uses searchResearch with the audit filter and cites the Veridise primary audit.",
+          "Reports both the initially Critical candidate framing and the final Invalid/Investigated disposition.",
+          "Explains the stated invalidation rationale and separates historical audit text from present risk."
+        ],
+        "avoid": [
+          "Calls it a confirmed active critical bug while omitting the Invalid Issues disposition.",
+          "Claims it remains unfixed merely because no fix hash is listed.",
+          "Reframes it as generic EVM reentrancy instead of the audited Soroban authorization-recursion issue."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "real-world",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/research?q=authorization%20recursion&source=audit"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.searchResearch"
+          },
+          {
+            "class": "A",
+            "ref": "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The audit framed authorization recursion/DoS as an initially Critical candidate and ultimately classified it Invalid/Investigated.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf",
+                "observedAt": "2026-07-11",
+                "note": "Invalid Issues section and Why Invalid rationale."
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/research?q=authorization%20recursion&source=audit",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "This is a confirmed active unresolved critical vulnerability.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/research?q=authorization%20recursion&source=audit",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.searchResearch",
+            "https://veridise.com/wp-content/uploads/2025/02/VAR_Stellar_Soroban.pdf"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "boxy sl-research-soroban-auth-recursion-dos"
+      }
+    },
+    {
+      "id": "q-tool-taxonomy-dispatch-live",
+      "question": "What project categories and project-tag vocabulary does the live curated knowledge base expose?",
+      "surface": [
+        "lumenloop.get_categories",
+        "lumenloop.get_project_tags_vocabulary"
+      ],
+      "golden": {
+        "answer": "Call both dispatch-backed vocabulary operations, report their current counts and representative exact returned values, and state each vocabulary's distinct scope. Include an as-of; do not invent or merge category and tag strings.",
+        "keyFacts": [
+          "Calls both category and project-tag vocabulary operations.",
+          "Reports current exact values/counts and keeps their scopes distinct.",
+          "Includes an as-of and does not fabricate taxonomy values."
+        ],
+        "avoid": [
+          "Substitutes remembered taxonomy labels for the live controlled vocabularies."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "lumenloop",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://api.lumenloop.com/v1/tools/get_categories"
+          },
+          {
+            "class": "C",
+            "ref": "https://api.lumenloop.com/v1/tools/get_project_tags_vocabulary"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#lumenloop.get_categories"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "The two live operations expose distinct controlled vocabularies with exact values and counts.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://api.lumenloop.com/v1/tools/get_categories",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "C",
+                "ref": "https://api.lumenloop.com/v1/tools/get_project_tags_vocabulary",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#lumenloop.get_categories",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Remembered taxonomy labels may replace the controlled vocabulary.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#lumenloop.get_categories",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#lumenloop.get_categories"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "core-35 ecosystem-taxonomy-dispatch"
       }
     },
     {
@@ -33660,6 +35858,97 @@
           ]
         },
         "origin": "raven-next q-tool-which-sdk-comparison"
+      }
+    },
+    {
+      "id": "q-tool-zk-repo-live",
+      "question": "What are the strongest current Stellar ZK reference repositories, and which returned entries have verified hackathon or deployable-code evidence?",
+      "surface": [
+        "scout.searchRepos"
+      ],
+      "golden": {
+        "answer": "Filter live searchRepos rows for Stellar relevance, explicitly sort checked rows by repoScore, and paginate before a global superlative or scope the result to the checked page. Treat hackathonWinner as an index-relative marker unless exact event evidence corroborates it, and clarify that codeVerified is scan evidence rather than a security audit.",
+        "keyFacts": [
+          "Filters for Stellar relevance and explicitly sorts checked rows by repoScore.",
+          "Paginates before a global claim or scopes it to the checked page.",
+          "Keeps hackathonWinner index-relative without exact event evidence and treats codeVerified as scan—not audit—evidence."
+        ],
+        "avoid": [
+          "Treats X-Ray Games or any other archived result as an eternal winner."
+        ]
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-11",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/repos/search?q=zero-knowledge"
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.searchRepos"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Current ZK repository results carry distinct ranking and verification fields.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=zero-knowledge",
+                "observedAt": "2026-07-11"
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#scout.searchRepos",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "Hackathon resources link concrete Stellar verifier implementations.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=zero-knowledge",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          },
+          {
+            "claim": "One archived ZK repository remains permanently top-ranked.",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search?q=zero-knowledge",
+                "observedAt": "2026-07-11"
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-11",
+          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "evidence": [
+            "solo://proj/49/process/3414",
+            "solo://proj/49/process/3420",
+            "catalog/manifest.json#scout.searchRepos"
+          ],
+          "rootCause": [
+            "eval-authoring"
+          ]
+        },
+        "origin": "boxy sl-code-zk-xray-games-top"
       }
     },
     {

@@ -4589,6 +4589,485 @@
         "q-zk-verification-resource-budget"
       ],
       "reason": "Production failure mode that local unlimited execution hides."
+    },
+    {
+      "sourceId": "sl-priorart-lending-scf-flagships",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-lending-landscape-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-priorart-oracle-reflector-leader",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-oracle-landscape-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-priorart-rwa-treasuries-not-scf",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-rwa-treasury-funding-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-code-passkey-wallet-top-repo",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-passkey-repo-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-code-zk-xray-games-top",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-zk-repo-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-code-soroban-oracle-least-bad",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-oracle-repo-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-hackathon-blend-winners",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-blend-winners-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-hackathon-kale-reflector-1st",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-kale-winner-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-hackathon-kale-vs-blend-counts",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-hackathon-compare-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-funding-open-rfps-q2-2026",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-open-rfps-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-funding-smart-account-passkey-rfps",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-passkey-rfps-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-funding-hummingbot-kelp-closed",
+      "source": "boxy",
+      "disposition": "retire",
+      "reason": "Narrow historically closed RFP snapshot; broader live RFP behavior covers the durable failure mode."
+    },
+    {
+      "sourceId": "sl-ecosystem-crowded-vs-underbuilt-category",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-category-saturation-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-ecosystem-highest-scf-funded-ratio-category",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-category-funding-ratio-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-ecosystem-asset-rwa-underbuilt-unfunded",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-asset-whitespace-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-builders-pedro-hackathon-winner",
+      "source": "boxy",
+      "disposition": "retire",
+      "reason": "Single-person/location roster facts freeze quickly and add less coverage than selected live directory behaviors."
+    },
+    {
+      "sourceId": "sl-builders-kenya-location",
+      "source": "boxy",
+      "disposition": "retire",
+      "reason": "Single-person/location roster facts freeze quickly and add less coverage than selected live directory behaviors."
+    },
+    {
+      "sourceId": "sl-builders-kale-pau-koh-top-kale",
+      "source": "boxy",
+      "disposition": "retire",
+      "reason": "Single-person/location roster facts freeze quickly and add less coverage than selected live directory behaviors."
+    },
+    {
+      "sourceId": "sl-research-x402-stellar-live",
+      "source": "boxy",
+      "disposition": "retire",
+      "reason": "Agentic-payment feasibility is covered elsewhere; no category slot in H1's 5/6/5 allocation."
+    },
+    {
+      "sourceId": "sl-research-soroban-auth-recursion-dos",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-soroban-auth-audit-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "sl-research-sep41-soroban-token-draft",
+      "source": "boxy",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-sep41-status-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "protocol-trustline",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Stable protocol/asset topic already represented in the owned battery; no distinct H1 live-orchestration failure mode."
+    },
+    {
+      "sourceId": "standards-anchor-deposit",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "standards item did not outrank selected orchestration/meta cases within H1's binding category quota."
+    },
+    {
+      "sourceId": "zk-groth16",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "soroban-counter",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "setup-scaffold-contract",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "official-docs-current-contract-scaffold",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "dapp-freighter",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "dApp implementation topic, not selected for the H1 meta/tool surface."
+    },
+    {
+      "sourceId": "data-rpc-vs-horizon",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Chain-data how-to is already covered and is outside this harvest allocation."
+    },
+    {
+      "sourceId": "data-storage-ttl",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Chain-data how-to is already covered and is outside this harvest allocation."
+    },
+    {
+      "sourceId": "assets-sac-usdc",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Stable protocol/asset topic already represented in the owned battery; no distinct H1 live-orchestration failure mode."
+    },
+    {
+      "sourceId": "assets-sac-vs-openzeppelin-contract-token",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Stable protocol/asset topic already represented in the owned battery; no distinct H1 live-orchestration failure mode."
+    },
+    {
+      "sourceId": "standards-sep41-interface-not-sac",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Stable protocol/asset topic already represented in the owned battery; no distinct H1 live-orchestration failure mode."
+    },
+    {
+      "sourceId": "standards-contract-source-verification",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "dapp-passkey-smart-account",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "dApp implementation topic, not selected for the H1 meta/tool surface."
+    },
+    {
+      "sourceId": "agentic-payments-x402",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Agentic-payment feasibility is covered elsewhere; no category slot in H1's 5/6/5 allocation."
+    },
+    {
+      "sourceId": "ecosystem-index-freshness",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-history-ecosystem-index-freshness-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "wallet-infra-landscape",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "ecosystem-map item did not outrank selected orchestration/meta cases within H1's binding category quota."
+    },
+    {
+      "sourceId": "rfps-and-hackathons",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-rfps-hackathons-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "active-zk-hackathon",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "open-rfp-contract-source-verification",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-contract-verification-rfp-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "compare-current-hackathons",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-scf-current-hackathons-compare-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "ecosystem-category-whitespace",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-tooling-whitespace-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "ecosystem-project-dossier-soroswap",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Near-sibling Soroswap/content-audit coverage or composition demand exceeds the two-case DeFi allocation."
+    },
+    {
+      "sourceId": "ecosystem-content-about-soroswap",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Near-sibling Soroswap/content-audit coverage or composition demand exceeds the two-case DeFi allocation."
+    },
+    {
+      "sourceId": "ecosystem-taxonomy-dispatch",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-taxonomy-dispatch-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "developer-activity-leaderboard",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-tool-developer-leaderboard-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "prior-art-streaming-payments",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Useful but displaced by higher-value quantitative orchestration cases within the binding allocation."
+    },
+    {
+      "sourceId": "content-audit-soroswap",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Near-sibling Soroswap/content-audit coverage or composition demand exceeds the two-case DeFi allocation."
+    },
+    {
+      "sourceId": "content-audit-openzeppelin-stellar",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Near-sibling Soroswap/content-audit coverage or composition demand exceeds the two-case DeFi allocation."
+    },
+    {
+      "sourceId": "web-extract-openzeppelin-primary",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Near-sibling Soroswap/content-audit coverage or composition demand exceeds the two-case DeFi allocation."
+    },
+    {
+      "sourceId": "perplexity-research-protocol-25-zk",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Protocol/Soroban implementation topic belongs to H2 or gap-ops, not this orchestration/meta allocation."
+    },
+    {
+      "sourceId": "prior-art-similar-and-builders",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Useful but displaced by higher-value quantitative orchestration cases within the binding allocation."
+    },
+    {
+      "sourceId": "ecosystem-cluster-and-rollup",
+      "source": "core-35",
+      "disposition": "redefine",
+      "destination": [
+        "q-defi-cluster-rollup-live"
+      ],
+      "reason": "Selected for behavioral live redefinition; archive point facts are not pinned."
+    },
+    {
+      "sourceId": "assets-issuance-flags",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Stable protocol/asset topic already represented in the owned battery; no distinct H1 live-orchestration failure mode."
+    },
+    {
+      "sourceId": "data-rpc-methods",
+      "source": "core-35",
+      "disposition": "retire",
+      "reason": "Chain-data how-to is already covered and is outside this harvest allocation."
+    },
+    {
+      "sourceId": "dapp-smart-account-kit-passkey-kit-lineage",
+      "source": "flue",
+      "disposition": "retire",
+      "reason": "Outside the orchestration/meta harvest; better handled by the dApp/passkey technical lane."
     }
-  ]
+  ],
+  "expectedSourceIds": {
+    "boxy": [
+      "sl-priorart-lending-scf-flagships",
+      "sl-priorart-oracle-reflector-leader",
+      "sl-priorart-rwa-treasuries-not-scf",
+      "sl-code-passkey-wallet-top-repo",
+      "sl-code-zk-xray-games-top",
+      "sl-code-soroban-oracle-least-bad",
+      "sl-hackathon-blend-winners",
+      "sl-hackathon-kale-reflector-1st",
+      "sl-hackathon-kale-vs-blend-counts",
+      "sl-funding-open-rfps-q2-2026",
+      "sl-funding-smart-account-passkey-rfps",
+      "sl-funding-hummingbot-kelp-closed",
+      "sl-ecosystem-crowded-vs-underbuilt-category",
+      "sl-ecosystem-highest-scf-funded-ratio-category",
+      "sl-ecosystem-asset-rwa-underbuilt-unfunded",
+      "sl-builders-pedro-hackathon-winner",
+      "sl-builders-kenya-location",
+      "sl-builders-kale-pau-koh-top-kale",
+      "sl-research-x402-stellar-live",
+      "sl-research-soroban-auth-recursion-dos",
+      "sl-research-sep41-soroban-token-draft"
+    ],
+    "core-35": [
+      "protocol-trustline",
+      "standards-anchor-deposit",
+      "zk-groth16",
+      "soroban-counter",
+      "setup-scaffold-contract",
+      "official-docs-current-contract-scaffold",
+      "dapp-freighter",
+      "data-rpc-vs-horizon",
+      "data-storage-ttl",
+      "assets-sac-usdc",
+      "assets-sac-vs-openzeppelin-contract-token",
+      "standards-sep41-interface-not-sac",
+      "standards-contract-source-verification",
+      "dapp-passkey-smart-account",
+      "agentic-payments-x402",
+      "ecosystem-index-freshness",
+      "wallet-infra-landscape",
+      "rfps-and-hackathons",
+      "active-zk-hackathon",
+      "open-rfp-contract-source-verification",
+      "compare-current-hackathons",
+      "ecosystem-category-whitespace",
+      "ecosystem-project-dossier-soroswap",
+      "ecosystem-content-about-soroswap",
+      "ecosystem-taxonomy-dispatch",
+      "developer-activity-leaderboard",
+      "prior-art-streaming-payments",
+      "content-audit-soroswap",
+      "content-audit-openzeppelin-stellar",
+      "web-extract-openzeppelin-primary",
+      "perplexity-research-protocol-25-zk",
+      "prior-art-similar-and-builders",
+      "ecosystem-cluster-and-rollup",
+      "assets-issuance-flags",
+      "data-rpc-methods"
+    ],
+    "flue": [
+      "dapp-smart-account-kit-passkey-kit-lineage"
+    ]
+  }
 }
