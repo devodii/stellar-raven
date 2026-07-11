@@ -1,0 +1,73 @@
+---
+id: sls-023
+service: stellar-light-scout
+status: verified
+discovered: 2026-07-10
+evidence:
+  - live searchProjects query for real world asset returned 51 rows
+  - only 4 rows in that response were marked Verified (Community)
+  - DTCC entity status is Live while its own description says Stellar availability is expected in H1 2027
+  - Solo scratchpad 575 GT-11 primary process 3231
+  - GT-17 recurrence: live WisdomTree GOLD/EQTY, Figure YLDS, and Etherfuse assets were absent from a three-product overview derived from broad discovery
+  - GT-18 recurrence: CRDT required issuer-primary legal class, transfer-agent record priority, eligibility/controls, exact issuer/SAC, and multichain launch scope not represented by a project-level row
+---
+
+## Finding
+
+Scout's broad RWA discovery does not separate entity/project status from the
+deployment status of a particular product on Stellar. A live "real world
+asset" search returned 51 rows spanning issued products, stablecoins, tooling,
+RWA-adjacent projects, planned integrations, and unverified records. Only four
+rows were marked Verified (Community) in that response.
+
+DTCC is the clearest failure mode: its entity/project row is Live, while its
+description says the DTC tokenization connection to Stellar is planned for H1
+2027. A consumer can therefore turn a live organization into a false claim of
+a currently live Stellar-issued RWA.
+
+## Evidence
+
+The read-only search was run on 2026-07-10:
+
+    scout.searchProjects({ q: "real world asset" })
+
+Named primary/operator checks independently confirmed several currently live
+products, including BENJI/FOBXX, WisdomTree funds, USDY, YLDS, Etherfuse
+Stablebonds, and Spiko/Amundi funds. The same checks confirmed DTCC as planned,
+not live on Stellar.
+
+GT-17 independently demonstrated the inverse failure mode: a broad project
+record does not expose enough product-level detail to recover current
+WisdomTree GOLD/EQTY, Figure YLDS, and six Etherfuse Stablebond assets. Provider
+metadata and read-only Horizon checks confirmed those assets on 2026-07-10.
+The missing product model can therefore cause both false-live claims and
+material under-enumeration.
+
+GT-18 reproduced the semantic gap for WisdomTree CRDT. A project-level entry
+did not carry the fund/share legal class, transfer-agent record priority,
+whitelisting and clawback controls, Ethereum-plus-Stellar launch scope, or the
+exact Stellar issuer/SAC. Those fields are necessary to distinguish a live
+regulated mutual-fund share from a stablecoin or generic RWA project.
+
+Directory presence, entity status, and broad category membership are discovery
+signals only. They do not prove that a named product is issued, transferable,
+or available on Stellar today.
+
+## Recommendation
+
+Add product-level deployment records or fields distinct from entity status:
+
+- product name and issuer;
+- network;
+- announced, planned, testnet, or live state;
+- launch/target date and asOf;
+- primary evidence URL;
+- verification level.
+- exact code+issuer/SAC identity where a public asset can be verified;
+- product class distinct from the organization's broad category.
+- legal/record hierarchy and transfer restrictions for regulated products.
+
+Answer-oriented summaries should expose the product state and verification
+level. Add a regression query for "real world asset": DTCC must be labeled
+planned H1 2027, while verified live products should be distinguishable from
+tooling, stablecoins, and unverified candidates.

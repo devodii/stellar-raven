@@ -15,6 +15,8 @@ recurrences:
     evidence: improvements probe re-hit; state-archival page still contains both "Contract Data Automatic Restoration" and the underqualified "will fail immediately" wording
   - date: 2026-07-09
     evidence: `npm run improvements:probes` re-hit; state-archival page still returns status 200 and contains both "Contract Data Automatic Restoration" and the underqualified "will fail immediately" wording
+  - date: 2026-07-11
+    evidence: GT-42 primary/blind independently confirmed current normal P23 simulation uses archivedSorobanEntries with restorePreamble nil and one submitted invoke, while adjacent docs still imply separate restore/retry
 probe:
   type: http-text
   url: https://developers.stellar.org/docs/learn/fundamentals/contract-development/storage/state-archival

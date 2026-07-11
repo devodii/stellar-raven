@@ -8,6 +8,7 @@ evidence:
   - messari.io/report/state-of-stellar-q1-2026 (the written report, pub 2026-04-29) + Messari interview youtube.com/watch?v=t0agtgLajhg (2026-06-04)
   - Solo project 49, todo 829 (consistency sweep + golden-truth resolution), scratchpad 521
   - live re-verified 2026-07-06 (eval round todo 846): both divergent sources still live in the index — av 2207 (interview: $2.8B RWA, 1,700 devs) vs article 5945 (written report: $2B RWA, 4,400+ devs) — so the misattribution mechanism persists; the lumenloop.com editorial pages themselves were not re-fetched this round
+  - GT-20 recurrence 2026-07-10: live RWA search mixed SDF Q1, Allium raw/adjusted transfer volumes, and later ~$3B corpus summaries without machine-readable metric taxonomy/provenance
 ---
 
 ## Finding
@@ -53,3 +54,13 @@ as such, since interviews carry later data than the publication they
 promote. Consumer-side, this gateway's goldens now carry the corrected
 attributions and instruct graders not to fail answers that repeat the
 corpus's own misattribution (eval/qa/golden-overrides.json, three entries).
+
+GT-20 reproduced the broader mechanism. Lumenloop search could surface the
+SDF Q1 payment-volume snapshot, a later ~$3B RWA summary, and related reporting,
+but did not expose enough structured metadata to prevent market cap, supply,
+distributed/represented value, payment volume, raw/adjusted transfer volume,
+and TVL from being treated as one comparable series.
+
+Add machine-readable `metricName`, `metricKind` (stock/flow), period,
+raw/adjusted methodology, inclusion/exclusion scope, original source URL,
+source publication date, and data-as-of fields to metric-bearing content.

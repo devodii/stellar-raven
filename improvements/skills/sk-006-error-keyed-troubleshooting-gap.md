@@ -13,6 +13,8 @@ evidence:
 recurrences:
   - date: 2026-07-09
     evidence: current upstream smart-contracts/development.md still has zero verbatim "No such file or directory" rows, leaving the missing-wasm/wrong-workspace failure ungrounded
+  - date: 2026-07-10
+    evidence: GT-41 reproduced distinct no-contract-context, non-root auth, event-testutils, ledger-testutils, and Bad-union-switch failures that remain absent from error-keyed troubleshooting
 probe:
   type: http-text
   url: https://raw.githubusercontent.com/stellar/stellar-dev-skill/main/skills/smart-contracts/development.md

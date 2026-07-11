@@ -12,6 +12,8 @@ evidence:
 recurrences:
   - date: 2026-07-09
     evidence: POST search_content_semantic for Bhopal/Jabalpur Build On Stellar returned ids 1597/1598 with June 27 structured timestamps and July 27 summary prose
+  - date: 2026-07-10
+    evidence: GT-39 independently found the Jaipur Builders Camp structured title/date aligned to the direct Luma record while generated summary/slug retained the stale Goa identity
 probe:
   type: http-text
   url: https://api.lumenloop.com/v1/tools/search_content_semantic
@@ -38,6 +40,11 @@ summarizer date-extraction slip (day/month transposition against a source
 that said 27 June). 2 of the ~14 India event rows probed this round are
 affected; not yet observed elsewhere, so prevalence beyond this cluster
 is unknown.
+
+GT-39 independently reproduced the same root class on a third India event:
+the structured record and direct Luma page identify Jaipur, August 14–18,
+2026, while generated summary/slug material still identifies Goa. This
+extends the defect from date prose alone to event identity/location.
 
 ## Evidence
 

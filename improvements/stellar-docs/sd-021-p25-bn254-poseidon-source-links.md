@@ -1,0 +1,26 @@
+---
+id: sd-021
+service: stellar-docs
+status: verified
+discovered: 2026-07-11
+evidence:
+  - Software Versions P25 BN254 item links CAP-79 instead of CAP-74
+  - ZK docs blur host permutation names with higher-level Poseidon hash APIs
+  - pinned soroban-sdk 25 BN254 and hazmat Poseidon compile probes passed
+  - shipped env.json uses Symbol field selector while checked-in CAP-75 says U32Val
+  - Solo scratchpad 575 GT-43 primary 3311 and blind 3320
+---
+
+## Finding
+
+Current official P25/ZK documentation links the wrong CAP for BN254 and does
+not distinguish host permutation functions, feature-gated raw SDK APIs, and
+the separate high-level `soroban-poseidon` hash crate. This helped create the
+false claim that SDK v25 lacked BN254 wrappers.
+
+## Recommendation
+
+Link P25 BN254 to CAP-0074, document the P25+ typed BN254 wrapper surface, name
+raw `poseidon_permutation`/`poseidon2_permutation` behind `hazmat-crypto`, and
+separately show higher-level hash APIs. Flag the CAP-0075 field-selector/source
+conflict until the protocol spec is reconciled.

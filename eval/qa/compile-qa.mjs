@@ -198,6 +198,20 @@ function main() {
     if (!Array.isArray(o.corroboration) || o.corroboration.length === 0) {
       missing.push("corroboration (non-empty array — the multi-source verification matrix per .claude/skills/golden-truth; the aggregator never corroborates itself)");
     }
+    if (o.tags !== undefined) {
+      if (o.tags === null || typeof o.tags !== "object" || Array.isArray(o.tags)) {
+        missing.push("tags (object when present)");
+      } else {
+        const unsupported = Object.keys(o.tags).filter((key) => !["freshness", "freshnessHorizon"].includes(key));
+        if (unsupported.length > 0) missing.push(`tags (unsupported keys: ${unsupported.join(", ")})`);
+        if (o.tags.freshness !== undefined && typeof o.tags.freshness !== "boolean") {
+          missing.push("tags.freshness (boolean)");
+        }
+        if (o.tags.freshnessHorizon !== undefined && (typeof o.tags.freshnessHorizon !== "string" || o.tags.freshnessHorizon.trim() === "")) {
+          missing.push("tags.freshnessHorizon (non-empty string)");
+        }
+      }
+    }
     if (missing.length > 0) {
       throw new Error(`golden-overrides.json entry "${id}" is missing ${missing.join("; ")}`);
     }
@@ -207,6 +221,7 @@ function main() {
     const o = overrides[c.id];
     if (!o) continue;
     for (const [k, v] of Object.entries(o.golden ?? {})) c.golden[k] = v;
+    for (const [k, v] of Object.entries(o.tags ?? {})) c.tags[k] = v;
     const notes = applyGraderNotesOverride(c.graderNotes, o, c.id);
     c.graderNotes = notes.effective;
     if (notes.history.length > 0) c.graderNotesHistory = notes.history;

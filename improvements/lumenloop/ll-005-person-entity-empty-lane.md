@@ -8,6 +8,10 @@ evidence:
   - control probe same session: {entity:"Stellar Development Foundation", entity_type:"organization"} → full groups (3/3/3/3/3)
   - Solo project 49, todo 825 (skills-harvest verification pass)
   - live re-verified 2026-07-06 (eval round todo 846): person probe (Denelle Dixon) still ok:true with all 5 groups empty while the organization control returns 5/5/5/5/5 — silent person-lane emptiness unchanged
+  - live re-verified 2026-07-10 during GT-35: Tyler van der Hoeven exact person, exact any-type, and Tyler person probes returned all-empty groups; kalepail returned one record misclassified as project
+recurrences:
+  - date: 2026-07-10
+    evidence: GT-35 primary/blind exact-person probes reproduced silent emptiness for Tyler van der Hoeven and a kalepail person/project classification mismatch
 ---
 
 ## Finding

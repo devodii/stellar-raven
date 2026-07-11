@@ -9,6 +9,7 @@ evidence:
   - live verification 2026-07-06: get_doc_page_sections full-content read, Algolia term probes, full read of the agentic-payments skill, lumenloop title/summary probes — all zero AP2/ACP content
   - Solo project 49, todo 846
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2565
+  - 2026-07-10 GT-12 primary plus blind review corrected the comparison taxonomy: x402 and MPP are general/external protocols with Stellar implementations; MPP includes charge as well as session/channel; AP2 x402 composition is optional; ACP is a beta commerce layer
 recurrences:
   - date: 2026-07-09
     evidence: durable reviewed row `eval/qa/reviewed/2026-07-09-improvements-evidence.md` case `q-defi-agentic-payment-standards-compare` was partial with no wrong claims and one missing fact — it still could not ground AP2/ACP as general coordination standards from the catalog. The controlled Algolia harness now uses token-boundary matching for AP2, Agentic Commerce Protocol, and ACP; generic x402/MPP meetings and the negative mutation `SNAP2 upgrade notes` both miss.
@@ -68,13 +69,22 @@ the full record.
 ## Recommendation
 
 Cheapest fix: a short "x402/MPP vs the broader agent-payments landscape"
-subsection on the agentic-payments overview page — three sentences suffice:
-AP2 (Google) is a coordination/mandate layer that can route settlement
-through x402 rails; ACP is a general agent-commerce protocol; x402/MPP are
-the Stellar-settled pair. That one subsection converts an unanswerable
-comparison into an indexed answer. Secondary (lumenloop, noted here since the
-gap spans both corpora): no article or research summary mentions AP2 or ACP —
-a landscape explainer would fill the same hole on the editorial side.
+subsection on the agentic-payments overview page. It should use a layered
+taxonomy rather than calling x402/MPP "Stellar standards":
+
+- x402 and MPP are general/external payment protocols with documented Stellar
+  schemes/methods that use SEP-41 tokens;
+- MPP includes one-time charge plus session/channel behavior, not streaming
+  alone;
+- AP2 is an emerging mandate/authorization layer whose x402 composition is
+  optional, not a universal settlement route; and
+- ACP is a beta commerce/checkout interaction protocol, not a settlement rail.
+
+That compact subsection converts an unanswerable comparison into an indexed
+answer without implying that all four belong to one standards body or layer.
+Secondary (lumenloop, noted here since the gap spans both corpora): no article
+or research summary mentions AP2 or ACP — a current landscape explainer would
+fill the same hole on the editorial side.
 Consumer-side workaround: none from grounded retrieval; an agent can state
 the general characterization from parametric knowledge without fabricating,
 but corpus-faithful agents will keep punting until the docs say it.

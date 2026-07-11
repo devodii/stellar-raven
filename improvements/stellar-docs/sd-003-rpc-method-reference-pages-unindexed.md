@@ -15,6 +15,8 @@ evidence:
 recurrences:
   - date: 2026-07-10
     evidence: architecture A/B todo 903 — both QA arms answered q-ti-rpc-gettransactions-pagination-xdr only partially; a fresh live execute re-check still returned soft-empty for the generated getTransactions method page, while the targeted admin query surfaced 200/default-50 and API-reference phrasing did not
+  - date: 2026-07-10
+    evidence: GT-30 blind process 3279 — indexed discovery did not reliably expose the exact getTransaction versus sendTransaction status contracts; direct method/source retrieval was required to correct PENDING attribution
 ---
 
 ## Finding

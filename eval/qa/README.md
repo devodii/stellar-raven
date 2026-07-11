@@ -84,20 +84,22 @@ follow the spirit, not the format).
 ```
 
 Battery counts (from 538 corpus cases): **469 kept** — 277 stellarDocs / 119 scout /
-63 lumenloop / 10 none-traps; 118 freshness-sensitive; 30 traps total (10 decline-family +
+63 lumenloop / 10 none-traps; 241 freshness-sensitive; 30 traps total (10 decline-family +
 20 in-catalog governance). **69 dropped**: 47 perplexity + 4 parallel (general-web), 14 none-traps
 beyond the kept quota, 4 raven-agent-specific traps (its brand, its Airtable tool, its web-fetch
 SSRF case). Every drop is listed in `cases.json → skipped` with its reason. Golden confidence:
 356 high / 111 medium / 2 low (corpus curator's own rating — medium means "spot-check before
-relying on as stable ground truth"). Freshness horizons (stated on exactly the 118
-freshness-sensitive cases): 42 quarterly / 29 weekly / 19 protocol-release / 13 docs-release /
-10 monthly / 2 yearly / 1 each annual, realtime, scf-round.
+relying on as stable ground truth"). Freshness horizons (stated on exactly the 241
+freshness-sensitive cases): 62 quarterly / 36 weekly / 39 protocol-release / 59 docs-release /
+25 monthly / 7 realtime / 4 package-release / 4 config-release / 2 yearly / 2 scf-round /
+1 annual.
 
 **Golden overrides (`golden-overrides.json`).** The vendored corpus is a verbatim read-only
 snapshot (`eval/corpus/PROVENANCE.md`), so live-verified golden corrections land in
 `eval/qa/golden-overrides.json` — a hand-authored, committed, load-time supplement (same
 pattern as the routing overlay). `compile-qa.mjs` applies each entry after case assembly:
-per-field replacement of `golden` subfields; exact-match, non-overlapping
+per-field replacement of `golden` subfields; optional, validated overrides of only
+`tags.freshness` and `tags.freshnessHorizon`; exact-match, non-overlapping
 `graderNotesReplacements` resolved against the original inherited
 sentences that later evidence invalidated; plus `graderNotesAppend` for dated context. Replacements
 fail unless the inherited span occurs exactly once. The effective judge-facing `graderNotes` is
@@ -105,8 +107,8 @@ unambiguous while `graderNotesHistory` preserves each inherited/effective pair i
 and the hand-authored override remains the durable audit source. Applied ids are recorded in
 `cases.json → overrides`; stale ids warn at compile time.
 
-**Gospel changes go through the golden-truth skill.** Any change to golden *content*
-(`answer`/`keyFacts`/`avoid`/`sources`/`graderNotes`) follows
+**Gospel changes go through the golden-truth skill.** Any change to golden *content or truth
+metadata* (`answer`/`keyFacts`/`avoid`/`sources`/`graderNotes`/freshness tags) follows
 `.claude/skills/golden-truth/SKILL.md`: classify the truth domain (real-world vs
 corpus-grounded vs freshness), triangulate across independent source classes (primary docs,
 source code, live services, general-web research via perplexity/parallel, docs index — the
@@ -514,7 +516,7 @@ counter-pressure fixtures plus the todo-865 untagged transcript-evidence negativ
   partial/correct flips happen. Compare variants on the same sample and read `wrong` counts (most
   stable) before `correct` counts. Re-judging a run is cheap (`rows[].answer` is saved; feed back
   through `judgeCase`).
-- **Freshness drift.** 118 cases are freshness-sensitive and the golden snapshot ages (corpus
+- **Freshness drift.** 238 cases are freshness-sensitive and the golden snapshot ages (corpus
   answered ~2026-06). The judge tolerates sourced drift, but goldens for live-data questions
   (rosters, counts, vocab lists) can genuinely disagree with today's services — the smoke run
   already hit one (live `get_regions` free-text values vs the golden's controlled-vocabulary
