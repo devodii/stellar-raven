@@ -470,15 +470,35 @@ function git(args) {
   return execFileSync("git", args, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
 }
 
+function eventPayload() {
+  const file = process.env.GITHUB_EVENT_PATH;
+  if (!file || !existsSync(file)) return {};
+  try { return JSON.parse(readFileSync(file, "utf8")); } catch { return {}; }
+}
+
 function ciSinceRef() {
   if (!process.env.CI) return undefined;
+  // Pull request: diff against the merge-base with the target branch.
   if (process.env.GITHUB_BASE_SHA) return git(["merge-base", "HEAD", process.env.GITHUB_BASE_SHA]);
+  const baseSha = eventPayload().pull_request?.base?.sha;
+  if (baseSha) { try { return git(["merge-base", "HEAD", baseSha]); } catch { /* fall through */ } }
   if (process.env.GITHUB_BASE_REF) {
     for (const ref of [`origin/${process.env.GITHUB_BASE_REF}`, process.env.GITHUB_BASE_REF]) {
       try { return git(["merge-base", "HEAD", ref]); } catch { /* try the next CI ref */ }
     }
   }
+  // Push: diff against the pushed range's parent (`before`). Zero-SHA means a
+  // brand-new ref with no prior state — no base to diff, skip cleanly.
+  const before = eventPayload().before;
+  if (before && !/^0+$/.test(before)) {
+    try { return git(["merge-base", "HEAD", before]); } catch { /* fall through */ }
+  }
   return undefined;
+}
+
+export function isPullRequestCI(env = process.env) {
+  return Boolean(env.CI) &&
+    (env.GITHUB_EVENT_NAME === "pull_request" || Boolean(env.GITHUB_BASE_REF));
 }
 
 function loadCasesAtRef(ref, corpusDir) {
@@ -524,11 +544,13 @@ function main() {
   const registerPath = path.resolve(options.register ?? DEFAULTS.registerPath);
   const ledgerPath = path.resolve(options.ledger ?? DEFAULTS.ledgerPath);
   const since = options.since ?? ciSinceRef();
-  if (process.env.CI && !since) {
-    // Fail closed: in CI the gospel lane is a required guard, so an
-    // unresolvable base ref is an error, never a silent skip.
+  if (isPullRequestCI(process.env) && !since) {
+    // Fail closed for PRs only: the gospel lane is a required PR gate, so an
+    // unresolvable base ref there is an error, never a silent skip. Push events
+    // resolve their base from `before` (below); if that is unavailable the lane
+    // skips with a NOTE rather than failing an otherwise-valid push.
     console.error(
-      "[lint-corpus] ERROR [gospel] no base ref in CI — set GITHUB_BASE_SHA/GITHUB_BASE_REF or pass --since <ref>"
+      "[lint-corpus] ERROR [gospel] no base ref for PR CI — set GITHUB_BASE_REF or pass --since <ref>"
     );
     process.exitCode = 1;
     return;

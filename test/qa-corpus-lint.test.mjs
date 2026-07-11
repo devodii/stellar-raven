@@ -3,6 +3,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  isPullRequestCI,
   lintCorroboration,
   lintGospelChanges,
   lintStale,
@@ -116,5 +117,15 @@ describe("QA corpus lint lanes", () => {
     const changed = updateRegister(register, new Map([["q-fixture-gospel", "bbb"]]), { date: "2026-07-12" });
     expect(changed.reopened).toEqual(["storage"]);
     expect(register.clusters[0].verdict).toBe("reopen");
+  });
+
+  // Regression: the gospel gate must fail-closed only for PRs. A push to a
+  // branch (no PR base ref) resolves its base from the event `before` SHA and
+  // must not be treated as a PR, or CI on every push to main errors out.
+  it("treats push CI as non-PR so it does not fail closed without a PR base", () => {
+    expect(isPullRequestCI({ CI: "true", GITHUB_EVENT_NAME: "push" })).toBe(false);
+    expect(isPullRequestCI({ CI: "true", GITHUB_EVENT_NAME: "pull_request" })).toBe(true);
+    expect(isPullRequestCI({ CI: "true", GITHUB_BASE_REF: "main" })).toBe(true);
+    expect(isPullRequestCI({})).toBe(false);
   });
 });
