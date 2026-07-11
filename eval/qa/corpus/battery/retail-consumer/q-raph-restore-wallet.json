@@ -1,0 +1,74 @@
+{
+  "id": "q-raph-restore-wallet",
+  "question": "Can I restore my Stellar wallet in another app with my recovery phrase or secret key?",
+  "surface": [
+    "stellarDocs.search_wallet_dapp_docs"
+  ],
+  "golden": {
+    "answer": "It depends on the wallet's documented import format. A secret key controls the corresponding Stellar account, but recovery phrases can be wallet-specific or use different wallet-specific account-derivation paths, so a phrase from one wallet is not automatically safe to import into another. Use only the target wallet's official recovery instructions, verify the app publisher, and never enter a recovery phrase or secret key into a support chat, website link, or someone else's form. If you still have access, verify the receiving account address before moving funds.",
+    "keyFacts": [
+      "Separates a Stellar secret key from wallet-specific recovery-phrase compatibility.",
+      "Requires official wallet recovery instructions and credential safety."
+    ],
+    "avoid": [
+      "Do NOT promise every wallet accepts every recovery phrase.",
+      "Do NOT advise sending a recovery phrase to support."
+    ],
+    "notes": "No product-specific compatibility promise."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "scheduled"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "reverifyBy": "2026-10-01",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/freighter"
+      },
+      {
+        "class": "D",
+        "ref": "https://stellar.org/blog/developers/key-management-101"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Key-management/recovery designs constrain recovery options and wallet import formats are product-specific.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/freighter",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://stellar.org/blog/developers/key-management-101",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/freighter",
+        "https://stellar.org/blog/developers/key-management-101"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph wallet-restore-from-phrase-or-secret-key"
+  }
+}

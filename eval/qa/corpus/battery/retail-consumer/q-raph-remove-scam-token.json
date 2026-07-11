@@ -1,0 +1,107 @@
+{
+  "id": "q-raph-remove-scam-token",
+  "question": "How do I tell a fake Stellar token from the real one, and can I remove it?",
+  "surface": [
+    "stellarDocs.search_asset_token_docs"
+  ],
+  "golden": {
+    "answer": "On Stellar, an issued asset is identified by both its code and issuer, so matching a ticker or logo is not enough. Get the official issuer from the legitimate project's own site or documentation, then compare it with the wallet/explorer entry before adding a trustline or trading. To delete an on-ledger trustline, first cancel offers or pool references and reduce its balance and liabilities to zero, then submit `ChangeTrust` with limit 0 through a trusted wallet or tool. Hiding an asset is only a wallet-display action, and an unclaimed claimable balance is not itself a trustline. Do not sign unfamiliar links or dispose of a balance to a random address; returning an issued balance to its exact issuer may burn it but can still be blocked by authorization or account state.",
+    "keyFacts": [
+      "Uses code plus issuer as the asset identity check.",
+      "Qualifies removal on zero balance/no liabilities and wallet support."
+    ],
+    "avoid": [
+      "Do NOT identify an asset by ticker alone.",
+      "Do NOT promise any trustline can be removed while it has balance/liabilities.",
+      "Do NOT equate hiding an asset with deleting its trustline or promise return-to-issuer always succeeds."
+    ],
+    "notes": "Safety advice, not an assertion that a specific asset is fraudulent."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "scheduled",
+    "trap": "scam-check"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "reverifyBy": "2026-10-01",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts"
+      },
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/basic-payment-app/blob/main/src/lib/stellar/transactions.js"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "An issued asset is identified by code plus issuer, with issuer metadata discoverable through SEP-1.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      },
+      {
+        "claim": "Deleting a trustline uses ChangeTrust limit 0 after balance and liabilities are cleared; hiding an asset is not the same operation.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/basic-payment-app/blob/main/src/lib/stellar/transactions.js",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+        "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations",
+        "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+        "https://github.com/stellar/basic-payment-app/blob/main/src/lib/stellar/transactions.js",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph scam-token-detect-and-remove-trustline"
+  }
+}

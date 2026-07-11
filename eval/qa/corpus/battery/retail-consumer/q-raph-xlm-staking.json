@@ -1,0 +1,110 @@
+{
+  "id": "q-raph-xlm-staking",
+  "question": "Can I stake my XLM for passive income, and are there plans for native staking?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "Stellar does not use proof-of-stake, so holding XLM does not natively stake it or earn protocol staking rewards. If a third party advertises 'XLM staking,' it is offering its own product, not activating a native network feature; investigate its custody, lockup, withdrawal, counterparty, and scam risks independently. Never send a secret key or funds to a promoter just to 'activate' staking. As of 2026-07-11, current Protocol 27 materials and a live sweep of the official accepted and proposed CAP repository show no native-staking or validator-reward proposal. That is a dated record claim, not a promise that future governance can never change.",
+    "keyFacts": [
+      "States that Stellar has no native proof-of-stake reward for holding XLM.",
+      "Distinguishes a third-party yield product from native staking."
+    ],
+    "avoid": [
+      "Do NOT say SDF runs an official staking program.",
+      "Do NOT call every third-party yield product native staking.",
+      "Do NOT say native staking will never exist or present an undated absence-of-plans claim."
+    ],
+    "notes": "Negative/status claim requires blind re-derivation before landing."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "scheduled",
+    "trap": "cant-do"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "reverifyBy": "2026-10-01",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-consensus-protocol"
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/ecosystem/the-hidden-risks-of-proof-of-stake"
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/foundation-news/stellar-zipper-protocol-27-upgrade-guide"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-protocol",
+        "note": "Repository sweep pinned to commit fbf05c9d3220b711e181577e7dca19844c765c3c."
+      },
+      {
+        "class": "D",
+        "ref": "https://www.ftc.gov/media/cryptocurrency-scams",
+        "note": "Independent consumer-protection source for third-party yield/scam risk; it does not establish Stellar protocol status."
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Stellar consensus is federated Byzantine agreement rather than proof of stake, so holding XLM does not earn native validator rewards.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-consensus-protocol",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/ecosystem/the-hidden-risks-of-proof-of-stake",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      },
+      {
+        "claim": "No native-staking or validator-reward CAP was present in the official accepted/proposed repository sweep as of 2026-07-11.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/foundation-news/stellar-zipper-protocol-27-upgrade-guide",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol",
+            "observedAt": "2026-07-11",
+            "note": "Live repository sweep pinned to commit fbf05c9d3220b711e181577e7dca19844c765c3c; source-relative absence claim, not a claim about all future governance."
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-consensus-protocol",
+        "https://stellar.org/blog/ecosystem/the-hidden-risks-of-proof-of-stake",
+        "https://stellar.org/blog/foundation-news/stellar-zipper-protocol-27-upgrade-guide",
+        "https://github.com/stellar/stellar-protocol",
+        "https://www.ftc.gov/media/cryptocurrency-scams"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph xlm-native-staking-not-supported"
+  }
+}

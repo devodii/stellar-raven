@@ -1,0 +1,73 @@
+{
+  "id": "q-jutsu-what-is-a-memo",
+  "question": "What is a Stellar memo?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "A memo is a small optional field attached to a Stellar transaction. It can carry text, an ID, a hash, or a return hash; the common consumer use is an exchange or other pooled service telling you which memo to include so it can credit your account. A memo is not a password and does not prove who owns an address. Use exactly the type and value supplied by the receiving service.",
+    "keyFacts": [
+      "Defines a memo as transaction metadata with several types.",
+      "Explains the pooled-service crediting use and exact supplied value."
+    ],
+    "avoid": [
+      "Do NOT call a memo a password or private key.",
+      "Do NOT tell users to invent a memo for an exchange deposit."
+    ],
+    "notes": "Authentic Jutsu phrasing: questions.jsonl message 2025-09-12T03:05:59.501Z."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable"
+  },
+  "truth": {
+    "domain": "real-world",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
+      },
+      {
+        "class": "D",
+        "ref": "https://stellar.org/blog/developers/fixing-memo-less-payments"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Stellar supports memo types and pooled services use memos to identify a customer deposit.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://stellar.org/blog/developers/fixing-memo-less-payments",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "eval/corpus/PROVENANCE.md (privacy-purged Jutsu lineage; raw phrasing unavailable)",
+        "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+        "https://stellar.org/blog/developers/fixing-memo-less-payments"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "authored 2026-07 (jutsu phrasing)"
+  }
+}

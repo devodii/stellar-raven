@@ -1,0 +1,72 @@
+{
+  "id": "q-raph-xlm-network-role",
+  "question": "What's XLM actually for—is it just gas like ETH?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "XLM is Stellar's native asset. It pays network fees and is part of account-reserve mechanics; it can also be sent and traded. Calling it 'gas' is a rough analogy for the fee role, but it misses the reserve role and does not make XLM identical to Ethereum's fee model. Unlike a typical issued Stellar token such as a stablecoin, XLM has no issuer or trustline requirement.",
+    "keyFacts": [
+      "Names XLM's fee and reserve roles.",
+      "Distinguishes native XLM from issuer-specific trustline assets."
+    ],
+    "avoid": [
+      "Do NOT say XLM requires a trustline or issuer.",
+      "Do NOT claim the gas analogy makes the two networks economically identical."
+    ],
+    "notes": "Stable conceptual comparison."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable"
+  },
+  "truth": {
+    "domain": "real-world",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "XLM is native and issued non-XLM assets are account/issuer/trustline objects.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+        "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph xlm-native-asset-purpose-vs-gas"
+  }
+}

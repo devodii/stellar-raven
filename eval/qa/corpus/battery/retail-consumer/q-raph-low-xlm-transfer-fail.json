@@ -1,0 +1,106 @@
+{
+  "id": "q-raph-low-xlm-transfer-fail",
+  "question": "My Stellar send/swap keeps failing because my XLM is low. Is my money stuck?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "Usually the account needs to retain enough XLM for its minimum balance/reserves and to pay the transaction fee, so spending every last lumen can make a transaction fail. Check the operation error, your available XLM after reserves, and whether new trustlines or other ledger entries would require more reserve. A failed transaction normally leaves the original balance in the account; do not send recovery fees to someone who claims it is 'stuck.' Exact reserve settings can change, so use current wallet/network information rather than a memorized number. To free XLM, cancel eligible offers, clear liabilities, and remove zero-balance trustlines or other unnecessary subentries; if you intend to close the account, `AccountMerge` can transfer the remainder only after its blocking subentries and sponsorship conditions are cleared. Do not assume “balance minus 1 XLM” is universally spendable.",
+    "keyFacts": [
+      "Explains reserves and fees as reasons low-XLM operations fail.",
+      "Says a failed transaction does not normally transfer the intended funds.",
+      "Explains that eligible subentry cleanup lowers reserve and that Account Merge is a conditional account-closing path."
+    ],
+    "avoid": [
+      "Do NOT quote a timeless exact minimum balance.",
+      "Do NOT tell the user to pay a stranger to unlock the wallet."
+    ],
+    "notes": "Avoids a volatile numeric reserve."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts"
+      },
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x"
+      },
+      {
+        "class": "C",
+        "ref": "https://horizon.stellar.org/ledgers?order=desc&limit=1"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "The account minimum-balance formula is based on the live base reserve and account subentries.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x",
+            "observedAt": "2026-07-11",
+            "note": "Account and trustline ledger structures support the subentry mechanics."
+          },
+          {
+            "class": "C",
+            "ref": "https://horizon.stellar.org/ledgers?order=desc&limit=1",
+            "observedAt": "2026-07-11",
+            "note": "Live mainnet ledger probe used for the dated reserve setting; the golden deliberately does not pin the value."
+          }
+        ]
+      },
+      {
+        "claim": "Eligible subentry cleanup can lower reserve, while Account Merge is conditional on clearing blocking subentries and sponsorship state.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+        "https://developers.stellar.org/docs/learn/fundamentals/transactions/list-of-operations",
+        "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x",
+        "https://horizon.stellar.org/ledgers?order=desc&limit=1"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph min-balance-reserve-transfer-fail"
+  }
+}

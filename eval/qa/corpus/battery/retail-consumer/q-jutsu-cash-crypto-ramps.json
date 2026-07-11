@@ -1,0 +1,75 @@
+{
+  "id": "q-jutsu-cash-crypto-ramps",
+  "question": "How many cash to crypto ramps are supported?",
+  "surface": [
+    "stellarDocs.search_anchor_sep_docs",
+    "scout.searchProjects"
+  ],
+  "golden": {
+    "answer": "There is not one durable network-wide number to quote: on/off-ramp availability changes by country, provider, asset, compliance status, and whether you mean cash-in, cash-out, or both. Start with the country and payment method you need, then look for a current regulated provider or anchor that explicitly supports your corridor and the Stellar asset you plan to use. Before sending funds, verify its current availability, identity checks, fees, limits, and deposit instructions.",
+    "keyFacts": [
+      "Rejects an unqualified durable count.",
+      "Explains that availability is corridor- and provider-specific."
+    ],
+    "avoid": [
+      "Do NOT invent a current network-wide ramp count.",
+      "Do NOT promise a provider supports a country without a current source."
+    ],
+    "notes": "Authentic Jutsu phrasing: questions.jsonl message 2025-08-18T15:32:04.282Z; deliberately behavioral/live rather than a brittle inventory count."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "scout",
+    "freshness": "live"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/platforms/anchor-platform"
+      },
+      {
+        "class": "D",
+        "ref": "https://stellar.org/"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Ramp availability is provided through real-world entities and can vary by location and support status.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/platforms/anchor-platform",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://stellar.org/",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "eval/corpus/PROVENANCE.md (privacy-purged Jutsu lineage; raw phrasing unavailable)",
+        "https://developers.stellar.org/platforms/anchor-platform",
+        "https://stellar.org/"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "authored 2026-07 (jutsu phrasing)"
+  }
+}

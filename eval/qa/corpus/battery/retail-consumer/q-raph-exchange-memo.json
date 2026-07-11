@@ -1,0 +1,75 @@
+{
+  "id": "q-raph-exchange-memo",
+  "question": "I'm sending XLM to an exchange. It gave me one Stellar address plus a memo—what exactly do I put where?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs",
+    "stellarDocs.search_wallet_dapp_docs"
+  ],
+  "golden": {
+    "answer": "Use the exchange's deposit address as the destination and copy the memo exactly as the exchange supplied it. A pooled exchange address uses the memo to credit your individual account; it is not an optional message. Check the asset, network, address, memo type/value, and the exchange's minimum-deposit instructions before sending. Send a small test only if the exchange permits it.",
+    "keyFacts": [
+      "Uses the exchange-supplied destination and exact memo.",
+      "Explains that a pooled address needs the memo to credit the individual customer."
+    ],
+    "avoid": [
+      "Do NOT invent a memo or put the memo into the destination-address field.",
+      "Do NOT say a required exchange memo is optional."
+    ],
+    "notes": "Exchange-specific deposit instructions control memo type and minimums."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
+      },
+      {
+        "class": "D",
+        "ref": "https://stellar.org/blog/developers/fixing-memo-less-payments"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "A memo differentiates a customer at a pooled destination and required exchange instructions must be followed.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+            "observedAt": "2026-07-11",
+            "note": "Primary documentation explains pooled-account memo use."
+          },
+          {
+            "class": "D",
+            "ref": "https://stellar.org/blog/developers/fixing-memo-less-payments",
+            "observedAt": "2026-07-11",
+            "note": "Live web verification independently confirms memo-less exchange deposits are a real failure mode."
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+        "https://stellar.org/blog/developers/fixing-memo-less-payments"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph memo-types-exchange-deposit"
+  }
+}

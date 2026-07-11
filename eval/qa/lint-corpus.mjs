@@ -39,7 +39,7 @@ const LEDGER_SOURCE_COUNTS = {
   "battery-2026-07": 469,
   boxy: 21,
   kaan: 49,
-  raph: 55,
+  raph: 90,
   "core-35": 35,
   flue: 1
 };

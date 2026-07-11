@@ -1,0 +1,74 @@
+{
+  "id": "q-raph-remittance-path-payment",
+  "question": "How can someone send money abroad on Stellar if I need one currency and they have another?",
+  "surface": [
+    "stellarDocs.search_anchor_sep_docs",
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "A typical flow uses on/off-ramp providers for local money at each end and, where liquidity exists, a Stellar path payment to exchange the sender's asset for the recipient's asset in one atomic transaction. The sender should verify the provider, recipient details, exchange rate, total fees, limits, and delivery timing before authorizing it. Stellar can settle the on-chain leg, but it does not eliminate provider, FX, compliance, or cash-out risk.",
+    "keyFacts": [
+      "Describes anchor/on-off-ramp endpoints plus a path payment where liquidity exists.",
+      "States that the on-chain payment is atomic but provider and FX conditions remain."
+    ],
+    "avoid": [
+      "Do NOT guarantee lower cost or faster delivery than every bank/remittance route.",
+      "Do NOT imply Stellar alone converts money to cash without a provider."
+    ],
+    "notes": "No fixed corridor or rate claim."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable"
+  },
+  "truth": {
+    "domain": "real-world",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/path-payments"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-core/blob/master/src/transactions/PathPaymentStrictReceiveOpFrame.cpp"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Path payments exchange a sent asset for a received asset through available offers/pools and settle atomically.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/path-payments",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-core/blob/master/src/transactions/PathPaymentStrictReceiveOpFrame.cpp",
+            "observedAt": "2026-07-11",
+            "note": "Protocol source confirms transaction operation semantics."
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/transactions/path-payments",
+        "https://github.com/stellar/stellar-core/blob/master/src/transactions/PathPaymentStrictReceiveOpFrame.cpp"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph remittance-end-to-end-vs-banks"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "q-raph-usdc-onto-stellar",
+  "question": "I have USDC on Ethereum or an exchange. How do I get the right USDC into my Stellar wallet?",
+  "surface": [
+    "stellarDocs.search_asset_token_docs",
+    "stellarDocs.search_anchor_sep_docs"
+  ],
+  "golden": {
+    "answer": "First use a provider or exchange that explicitly supports a Stellar-network USDC withdrawal/deposit route; an ERC-20 transfer to a Stellar address will not arrive as a Stellar payment. In your Stellar wallet, add the trustline for the exact issuer asset that the provider supports, then follow that provider's network, address, memo/muxed-address, fee, and minimum instructions. Verify the issuer from the provider and an official source—asset code alone is not identity—and test carefully if the provider allows it.",
+    "keyFacts": [
+      "Distinguishes Ethereum ERC-20 USDC from a Stellar-network withdrawal.",
+      "Requires the exact supported issuer asset and trustline."
+    ],
+    "avoid": [
+      "Do NOT tell the user to send ERC-20 USDC directly to a Stellar address.",
+      "Do NOT identify an asset only by the USDC code."
+    ],
+    "notes": "Provider route and issuer are live facts."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "live"
+  },
+  "truth": {
+    "domain": "real-world",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Stellar issued assets are issuer-specific and require a trustline; sending an Ethereum ERC-20 is a separate network action.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+        "https://github.com/stellar/stellar-xdr/blob/curr/Stellar-ledger-entries.x"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph move-usdc-onto-stellar-from-ethereum-or-exchange"
+  }
+}

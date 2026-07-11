@@ -1,0 +1,100 @@
+{
+  "id": "q-raph-missing-exchange-memo",
+  "question": "I sent XLM to an exchange and forgot the memo. Did I just lose it?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "Do not assume it is lost. The confirmed transaction cannot be edited to append a memo or reversed by Stellar/SDF, and the exchange—not Stellar—has to identify and credit a memo-less deposit to its pooled address. Open that exchange's deposit-recovery/support flow promptly and provide the transaction hash, asset, amount, destination, time, and the account details it requests. Do not send another transaction or share a secret key. Whether recovery is possible, how long it takes, and any fee are exchange-specific.",
+    "keyFacts": [
+      "Recovery is an exchange support/accounting process, not a network reversal.",
+      "Names the transaction hash and deposit details as useful recovery evidence."
+    ],
+    "avoid": [
+      "Do NOT promise recovery or claim the Stellar network can reverse the payment.",
+      "Do NOT advise sharing a secret key."
+    ],
+    "notes": "No trap: recovery policies vary by custodian."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "scheduled"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "reverifyBy": "2026-10-01",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/developers/fixing-memo-less-payments"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md"
+      },
+      {
+        "class": "A",
+        "ref": "https://support.kraken.com/articles/crypto-assets-deposit-recovery"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Pooled-account memo mechanics prevent automatic attribution, and a confirmed transaction cannot be edited into a memo-bearing transaction.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      },
+      {
+        "claim": "Custodial deposit recovery is provider-specific and may be unavailable or fee-bearing.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/fixing-memo-less-payments",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://support.kraken.com/articles/crypto-assets-deposit-recovery",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+        "https://stellar.org/blog/developers/fixing-memo-less-payments",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0029.md",
+        "https://support.kraken.com/articles/crypto-assets-deposit-recovery"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph memoless-exchange-deposit-recovery"
+  }
+}

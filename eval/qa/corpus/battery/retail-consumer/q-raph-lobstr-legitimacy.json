@@ -1,0 +1,105 @@
+{
+  "id": "q-raph-lobstr-legitimacy",
+  "question": "Is LOBSTR legit, and where does my recovery phrase live?",
+  "surface": [
+    "stellarDocs.search_wallet_dapp_docs"
+  ],
+  "golden": {
+    "answer": "LOBSTR is a real, currently maintained third-party wallet operated under the Ultra Stellar identity, with a current official Apple app listing as of 2026-07-11; that establishes the provider/publisher, not risk-free safety or SDF endorsement. Current LOBSTR documentation says keys for current or migrated accounts are encrypted with user-password participation and stored locally/on-device, while accounts created before 2020-09-01 that were never migrated are a documented exception. Its 12-word Recovery Phrase (or older wallet-specific 10-word Recovery Code) must be kept private/offline; LOBSTR says it cannot reconstruct users’ phrase, code, secret, or password. Install only from links reached through `lobstr.co`, verify the app publisher, and use 2FA plus multisig or hardware signing when the threat model warrants it.",
+    "keyFacts": [
+      "Identifies LOBSTR as an active Ultra Stellar third-party wallet as of 2026-07-11 without treating that as a security guarantee or SDF endorsement.",
+      "Attributes local/on-device storage to current LOBSTR documentation and preserves the pre-2020 unmigrated-account exception.",
+      "States that recovery credentials must never be shared and cannot be reconstructed by support according to current documentation."
+    ],
+    "avoid": [
+      "Do NOT say a wallet provider or SDF can recover a secret phrase you lost.",
+      "Do NOT claim the LOBSTR brand name makes any download link or support contact safe.",
+      "Do NOT say app-store presence or popularity proves cryptographic safety.",
+      "Do NOT make an era-independent claim that every LOBSTR key was always stored only locally or only server-side."
+    ],
+    "notes": "Status phrased to avoid turning a dated product assessment into a permanent guarantee."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "scheduled",
+    "trap": "scam-check"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "reverifyBy": "2026-10-01",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://lobstr.freshdesk.com/support/solutions/articles/151000001271-where-can-i-find-my-secret-key-"
+      },
+      {
+        "class": "A",
+        "ref": "https://lobstr.freshdesk.com/support/solutions/articles/151000001291-how-to-restore-my-secret-key-"
+      },
+      {
+        "class": "A",
+        "ref": "https://ultrastellar.com/"
+      },
+      {
+        "class": "D",
+        "ref": "https://apps.apple.com/us/app/lobstr-wallet-buy-xlm-xrp/id1404357892"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "LOBSTR is an active Ultra Stellar product with a current official publisher footprint as of 2026-07-11.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://ultrastellar.com/",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://apps.apple.com/us/app/lobstr-wallet-buy-xlm-xrp/id1404357892",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      },
+      {
+        "claim": "LOBSTR live documentation states current/migrated key material is encrypted with password participation and stored locally/on-device, with a pre-2020 unmigrated-account exception.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://lobstr.freshdesk.com/support/solutions/articles/151000001271-where-can-i-find-my-secret-key-",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://lobstr.freshdesk.com/support/solutions/articles/151000001291-how-to-restore-my-secret-key-",
+            "observedAt": "2026-07-11",
+            "note": "Owner documentation only; no independent reproducible binary audit was found, so this is not encoded as an audited implementation claim."
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://lobstr.freshdesk.com/support/solutions/articles/151000001271-where-can-i-find-my-secret-key-",
+        "https://lobstr.freshdesk.com/support/solutions/articles/151000001291-how-to-restore-my-secret-key-",
+        "https://ultrastellar.com/",
+        "https://apps.apple.com/us/app/lobstr-wallet-buy-xlm-xrp/id1404357892"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph wallet-lobstr-legitimacy-recovery-storage"
+  }
+}

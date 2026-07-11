@@ -1,0 +1,109 @@
+{
+  "id": "q-raph-scam-spam-tokens",
+  "question": "Why can scam tokens and weird claimable balances reach my Stellar wallet at all?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "Stellar is an open network, so someone can create an asset or a claimable balance without first getting your approval. Receiving a reference to an asset is not the same as safely holding, trusting, or endorsing it: non-XLM assets generally need a trustline before they can be held, and a claimable balance still has its own claim conditions. Judge an asset by its issuer and independent official information, not its code, logo, or a message sent with it.",
+    "keyFacts": [
+      "Explains the open-network premise without calling every unsolicited asset fraudulent.",
+      "States the trustline distinction for non-XLM assets."
+    ],
+    "avoid": [
+      "Do NOT say unsolicited entries let the sender spend the recipient's funds.",
+      "Do NOT assert every unsolicited asset is fraudulent."
+    ],
+    "notes": "Avoid claims are deliberately narrow."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable",
+    "trap": "scam-check"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts"
+      },
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/claimable-balances"
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0023.md"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Non-XLM direct holding requires a trustline, while claimable balances are separately targetable ledger entries.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/claimable-balances",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0023.md",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      },
+      {
+        "claim": "Open issuance and metadata do not make every unsolicited asset fraudulent; issuer provenance still needs verification.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts",
+        "https://developers.stellar.org/docs/build/guides/transactions/claimable-balances",
+        "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0023.md",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0001.md"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph scam-claimable-balance-open-network"
+  }
+}

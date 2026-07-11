@@ -1,0 +1,99 @@
+{
+  "id": "q-raph-unsolicited-airdrop",
+  "question": "A random token/claimable balance showed up in my Stellar wallet. Is it safe to claim?",
+  "surface": [
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "Treat an unsolicited token or claim as untrusted. A claimable balance is a real Stellar ledger mechanism, but that does not prove the asset or any linked offer is legitimate. Do not use the unsolicited link, connect or sign an opaque transaction, pay the sender or an external “unlock” or “rectification” charge, or reveal a recovery phrase because of a message or token name. A legitimate on-ledger claim still has the wallet-displayed network fee and, for a newly created non-native trustline, a reserve effect. Verify the issuer and the claimed benefit through an official source you find independently; if you do not need it, leave it alone and use your wallet's reporting/hiding tools if available.",
+    "keyFacts": [
+      "Distinguishes the real claimable-balance mechanism from the legitimacy of an unsolicited offer.",
+      "Tells the user not to sign, pay, or disclose credentials because of it."
+    ],
+    "avoid": [
+      "Do NOT call every claimable balance a scam.",
+      "Do NOT say an unsolicited asset proves the sender can access the wallet."
+    ],
+    "notes": "Safety case: the trap is an absolute scam claim, not careful risk guidance."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable",
+    "trap": "scam-check"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/claimable-balances"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0023.md"
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+      },
+      {
+        "class": "D",
+        "ref": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Claimable balances are a genuine protocol feature with passive claimant and predicate mechanics.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/claimable-balances",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0023.md",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      },
+      {
+        "claim": "Unsolicited links, opaque signatures, credential requests, and external unlock charges are phishing signals without proving every claimable balance fraudulent.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/transactions/claimable-balances",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0023.md",
+        "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+        "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph scam-unsolicited-airdrop-claimable-balance"
+  }
+}

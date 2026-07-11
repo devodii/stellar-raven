@@ -4999,6 +4999,612 @@
       "reason": "Chain-data how-to is already covered and is outside this harvest allocation."
     },
     {
+      "sourceId": "account-funding-minimum-balance",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "volatile numeric/reserve question; existing coverage and no H3 slot"
+    },
+    {
+      "sourceId": "active-zk-hackathon",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "agentic-payments-x402",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "amm-liquidity-pool-provide-fees",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "DeFi lane"
+    },
+    {
+      "sourceId": "anchor-asset-backing-counterparty-trust",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "asset/regulated-issuer depth belongs assets lane"
+    },
+    {
+      "sourceId": "asset-clawback-vs-revocation-chargeback",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "assets/compliance lane"
+    },
+    {
+      "sourceId": "assets-issuance-flags",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "assets-sac-usdc",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "assets-sac-vs-openzeppelin-contract-token",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "become-stellar-anchor-business",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "business/onboarding scope, not consumer flow"
+    },
+    {
+      "sourceId": "buy-xlm-where-best-rates-fees",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-buy-xlm-safely"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "claimable-balance-claim-and-safety",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-claimable-balance-safety"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "compare-current-hackathons",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "content-audit-openzeppelin-stellar",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "content-audit-soroswap",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "cross-border-anchor-settlement-path-payment",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "near-sibling of row 45"
+    },
+    {
+      "sourceId": "cross-chain-bridge-btc-eth-into-stellar",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "assets/interoperability lane"
+    },
+    {
+      "sourceId": "dapp-freighter",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "dapp-passkey-smart-account",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "data-rpc-methods",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "data-rpc-vs-horizon",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "data-storage-ttl",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "defi-yield-risk-impermanent-loss-principal",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "DeFi lane"
+    },
+    {
+      "sourceId": "developer-activity-leaderboard",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "ecosystem-category-whitespace",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "ecosystem-cluster-and-rollup",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "ecosystem-content-about-soroswap",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "ecosystem-index-freshness",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "ecosystem-project-dossier-soroswap",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "ecosystem-taxonomy-dispatch",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "fees-dynamic-surge-pricing",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol-core lane"
+    },
+    {
+      "sourceId": "fees-why-low-antispam-purpose",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol-core lane"
+    },
+    {
+      "sourceId": "find-all-anchors-and-assets-directory",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "live directory/inventory question; duplicate live discovery scope"
+    },
+    {
+      "sourceId": "getting-started-stellar-builder-stack",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "developer onboarding lane"
+    },
+    {
+      "sourceId": "hardware-wallet-key-custody-threshold",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-hardware-wallet"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "issue-custom-asset-cost-purpose",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "asset issuer lane"
+    },
+    {
+      "sourceId": "ledger-transparency-finality-non-repudiation",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol/privacy-compliance lane"
+    },
+    {
+      "sourceId": "memo-types-exchange-deposit",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-exchange-memo"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "memoless-exchange-deposit-recovery",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-missing-exchange-memo"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "merchant-accept-crypto-payments-compliant",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-merchant-payments"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "min-balance-reserve-transfer-fail",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-low-xlm-transfer-fail"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "move-usdc-onto-stellar-from-ethereum-or-exchange",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-usdc-onto-stellar"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "network-metrics-explorers-dashboards",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "data/tooling lane"
+    },
+    {
+      "sourceId": "node-ops-run-validator-fullnode",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "non-retail node-ops; owned by other lane"
+    },
+    {
+      "sourceId": "official-docs-current-contract-scaffold",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "offramp-xlm-usdc-to-bank-fiat",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-offramp-xlm-usdc"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "open-rfp-contract-source-verification",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "path-payment-cross-currency-settlement",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "overlaps row 45 and existing path-payment retail case"
+    },
+    {
+      "sourceId": "perplexity-research-protocol-25-zk",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "prior-art-similar-and-builders",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "prior-art-streaming-payments",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "protocol-trustline",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "real-world-stellar-apps-usable-today",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "live ecosystem directory question, other lane"
+    },
+    {
+      "sourceId": "remittance-end-to-end-vs-banks",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-remittance-path-payment"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "rfps-and-hackathons",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "scam-claimable-balance-open-network",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-scam-spam-tokens"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "scam-stellar-phishing-pending-claim",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-phishing-pending-claim"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "scam-token-detect-and-remove-trustline",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-remove-scam-token"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "scam-unsolicited-airdrop-claimable-balance",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-unsolicited-airdrop"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "scp-consensus-security-no-mining-staking",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol-core lane"
+    },
+    {
+      "sourceId": "secret-key-storage-and-hash-recovery",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-secret-key-hash-recovery"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "setup-scaffold-contract",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "soroban-counter",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "standards-anchor-deposit",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "standards-contract-source-verification",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "standards-sep41-interface-not-sac",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "stellar-decentralization-scp-tier1",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol-core lane"
+    },
+    {
+      "sourceId": "stellar-news-sources-and-learning",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "generic learning resources, low distinctness"
+    },
+    {
+      "sourceId": "tax-xlm-disposal-capital-gains",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "jurisdiction-specific tax advice needs a separately sourced tax lane"
+    },
+    {
+      "sourceId": "token-fundraising-ico-acquire-trade",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "token issuance/compliance lane"
+    },
+    {
+      "sourceId": "trustline-add-in-wallet-reserve",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "duplicate of core trustline and existing battery wallet-trustline coverage"
+    },
+    {
+      "sourceId": "validator-incentive-no-rewards",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol/node-ops, non-H3 lane"
+    },
+    {
+      "sourceId": "wallet-choice-noncustodial-vs-exchange",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "generic preference; H3 self-custody flow is more actionable"
+    },
+    {
+      "sourceId": "wallet-infra-landscape",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "wallet-lobstr-legitimacy-recovery-storage",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-lobstr-legitimacy"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "wallet-restore-from-phrase-or-secret-key",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-restore-wallet"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "wallet-send-fails-no-trustline",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "overlaps core trustline and existing retail send failure coverage"
+    },
+    {
+      "sourceId": "wallet-stolen-funds-recovery",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-stolen-wallet-recovery"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "wallet-withdraw-exchange-to-self-custody",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-withdraw-exchange-self-custody"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "wallets-hold-swap-send-usdc",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "volatile product list; existing wallet coverage"
+    },
+    {
+      "sourceId": "web-extract-openzeppelin-primary",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
+      "sourceId": "why-banks-adopt-stellar-xlm-bridge",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "institutional/protocol lane"
+    },
+    {
+      "sourceId": "xlm-bridge-currency-path-payment",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "overlaps retained path-payment retail case"
+    },
+    {
+      "sourceId": "xlm-explained-simply-non-technical",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-xlm-simple"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "xlm-native-asset-purpose-vs-gas",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-xlm-network-role"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "xlm-native-staking-not-supported",
+      "source": "raph",
+      "disposition": "redefine",
+      "destination": [
+        "q-raph-xlm-staking"
+      ],
+      "reason": "Redefined as the reviewed H3 retail/consumer case."
+    },
+    {
+      "sourceId": "xlm-supply-burn-inflation-tokenomics",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "tokenomics lane"
+    },
+    {
+      "sourceId": "xlm-token-value-network-function",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "speculation/price framing; no safe retail slot"
+    },
+    {
+      "sourceId": "xlm-vs-xrp-tech-decentralization-usecases",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "protocol comparison, non-H3 lane"
+    },
+    {
+      "sourceId": "zk-groth16",
+      "source": "raph",
+      "disposition": "retire",
+      "reason": "Covered by the independently landed core-35 duplicate (core-35 duplicate); no separate H3 case needed."
+    },
+    {
       "sourceId": "dapp-smart-account-kit-passkey-kit-lineage",
       "source": "flue",
       "disposition": "retire",
@@ -5065,6 +5671,98 @@
       "ecosystem-cluster-and-rollup",
       "assets-issuance-flags",
       "data-rpc-methods"
+    ],
+    "raph": [
+      "account-funding-minimum-balance",
+      "active-zk-hackathon",
+      "agentic-payments-x402",
+      "amm-liquidity-pool-provide-fees",
+      "anchor-asset-backing-counterparty-trust",
+      "asset-clawback-vs-revocation-chargeback",
+      "assets-issuance-flags",
+      "assets-sac-usdc",
+      "assets-sac-vs-openzeppelin-contract-token",
+      "become-stellar-anchor-business",
+      "buy-xlm-where-best-rates-fees",
+      "claimable-balance-claim-and-safety",
+      "compare-current-hackathons",
+      "content-audit-openzeppelin-stellar",
+      "content-audit-soroswap",
+      "cross-border-anchor-settlement-path-payment",
+      "cross-chain-bridge-btc-eth-into-stellar",
+      "dapp-freighter",
+      "dapp-passkey-smart-account",
+      "data-rpc-methods",
+      "data-rpc-vs-horizon",
+      "data-storage-ttl",
+      "defi-yield-risk-impermanent-loss-principal",
+      "developer-activity-leaderboard",
+      "ecosystem-category-whitespace",
+      "ecosystem-cluster-and-rollup",
+      "ecosystem-content-about-soroswap",
+      "ecosystem-index-freshness",
+      "ecosystem-project-dossier-soroswap",
+      "ecosystem-taxonomy-dispatch",
+      "fees-dynamic-surge-pricing",
+      "fees-why-low-antispam-purpose",
+      "find-all-anchors-and-assets-directory",
+      "getting-started-stellar-builder-stack",
+      "hardware-wallet-key-custody-threshold",
+      "issue-custom-asset-cost-purpose",
+      "ledger-transparency-finality-non-repudiation",
+      "memo-types-exchange-deposit",
+      "memoless-exchange-deposit-recovery",
+      "merchant-accept-crypto-payments-compliant",
+      "min-balance-reserve-transfer-fail",
+      "move-usdc-onto-stellar-from-ethereum-or-exchange",
+      "network-metrics-explorers-dashboards",
+      "node-ops-run-validator-fullnode",
+      "official-docs-current-contract-scaffold",
+      "offramp-xlm-usdc-to-bank-fiat",
+      "open-rfp-contract-source-verification",
+      "path-payment-cross-currency-settlement",
+      "perplexity-research-protocol-25-zk",
+      "prior-art-similar-and-builders",
+      "prior-art-streaming-payments",
+      "protocol-trustline",
+      "real-world-stellar-apps-usable-today",
+      "remittance-end-to-end-vs-banks",
+      "rfps-and-hackathons",
+      "scam-claimable-balance-open-network",
+      "scam-stellar-phishing-pending-claim",
+      "scam-token-detect-and-remove-trustline",
+      "scam-unsolicited-airdrop-claimable-balance",
+      "scp-consensus-security-no-mining-staking",
+      "secret-key-storage-and-hash-recovery",
+      "setup-scaffold-contract",
+      "soroban-counter",
+      "standards-anchor-deposit",
+      "standards-contract-source-verification",
+      "standards-sep41-interface-not-sac",
+      "stellar-decentralization-scp-tier1",
+      "stellar-news-sources-and-learning",
+      "tax-xlm-disposal-capital-gains",
+      "token-fundraising-ico-acquire-trade",
+      "trustline-add-in-wallet-reserve",
+      "validator-incentive-no-rewards",
+      "wallet-choice-noncustodial-vs-exchange",
+      "wallet-infra-landscape",
+      "wallet-lobstr-legitimacy-recovery-storage",
+      "wallet-restore-from-phrase-or-secret-key",
+      "wallet-send-fails-no-trustline",
+      "wallet-stolen-funds-recovery",
+      "wallet-withdraw-exchange-to-self-custody",
+      "wallets-hold-swap-send-usdc",
+      "web-extract-openzeppelin-primary",
+      "why-banks-adopt-stellar-xlm-bridge",
+      "xlm-bridge-currency-path-payment",
+      "xlm-explained-simply-non-technical",
+      "xlm-native-asset-purpose-vs-gas",
+      "xlm-native-staking-not-supported",
+      "xlm-supply-burn-inflation-tokenomics",
+      "xlm-token-value-network-function",
+      "xlm-vs-xrp-tech-decentralization-usecases",
+      "zk-groth16"
     ],
     "flue": [
       "dapp-smart-account-kit-passkey-kit-lineage"

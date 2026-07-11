@@ -1,0 +1,74 @@
+{
+  "id": "q-jutsu-check-account-history",
+  "question": "How do I look up Stellar account balances and transaction history?",
+  "surface": [
+    "stellarDocs.search_rpc_horizon_data_docs",
+    "stellarDocs.search_sdk_cli_tools_docs"
+  ],
+  "golden": {
+    "answer": "Use a reputable Stellar block explorer for a quick public view, or query the account and transaction endpoints through a trusted Horizon/RPC provider if you are building something. Search by the public account address or transaction hash—never by a secret key. Check the network (mainnet versus testnet) and remember that on-chain history is public, so do not post more personal context alongside an address than you intend to reveal.",
+    "keyFacts": [
+      "Uses public address/transaction hash, never a secret key.",
+      "Calls out correct network selection and public on-chain history."
+    ],
+    "avoid": [
+      "Do NOT request a secret key to look up an account.",
+      "Do NOT claim blockchain transaction history is private by default."
+    ],
+    "notes": "Authentic Jutsu phrasing: questions.jsonl message 2025-09-12T03:04:29.317Z."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "stable"
+  },
+  "truth": {
+    "domain": "real-world",
+    "status": "confirmed",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-account"
+      },
+      {
+        "class": "B",
+        "ref": "https://github.com/stellar/go/blob/master/clients/horizonclient/client.go"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Account/transaction data are retrieved from public identifiers through Stellar data APIs, not a secret key.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-account",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/go/blob/master/clients/horizonclient/client.go",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "eval/corpus/PROVENANCE.md (privacy-purged Jutsu lineage; raw phrasing unavailable)",
+        "https://developers.stellar.org/docs/data/apis/horizon/api-reference/retrieve-an-account",
+        "https://github.com/stellar/go/blob/master/clients/horizonclient/client.go"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "authored 2026-07 (jutsu phrasing)"
+  }
+}

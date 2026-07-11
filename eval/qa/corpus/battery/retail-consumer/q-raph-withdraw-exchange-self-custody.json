@@ -1,0 +1,75 @@
+{
+  "id": "q-raph-withdraw-exchange-self-custody",
+  "question": "How do I move my XLM from an exchange into my own wallet without messing it up?",
+  "surface": [
+    "stellarDocs.search_wallet_dapp_docs",
+    "stellarDocs.search_protocol_concepts_docs"
+  ],
+  "golden": {
+    "answer": "Create or open a self-custody Stellar wallet, back up its recovery material privately, and copy its public Stellar address from the wallet. At the exchange choose the Stellar/XLM withdrawal network, paste that public address, and confirm whether the destination wallet needs no memo (normally a personal address) before withdrawing. Check the network, address, asset, withdrawal fee, and minimum, then use a small test only if it makes sense for the fees. Never paste a secret key into an exchange or website.",
+    "keyFacts": [
+      "Uses the wallet public address and the exchange's Stellar/XLM withdrawal network.",
+      "Keeps the wallet secret/recovery material private."
+    ],
+    "avoid": [
+      "Do NOT tell the user to give an exchange their secret key.",
+      "Do NOT copy an exchange deposit memo into a personal-wallet withdrawal by default."
+    ],
+    "notes": "Wallet and exchange UIs vary."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "scheduled"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "reverifyBy": "2026-10-01",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
+      },
+      {
+        "class": "D",
+        "ref": "https://stellar.org/blog/developers/key-management-101"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Personal custody relies on private key material, while pooled destinations may require memos.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://stellar.org/blog/developers/key-management-101",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+        "https://stellar.org/blog/developers/key-management-101"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph wallet-withdraw-exchange-to-self-custody"
+  }
+}

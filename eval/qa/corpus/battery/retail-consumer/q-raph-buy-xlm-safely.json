@@ -1,0 +1,74 @@
+{
+  "id": "q-raph-buy-xlm-safely",
+  "question": "Where can I buy XLM with the lowest fees?",
+  "surface": [
+    "stellarDocs.search_anchor_sep_docs",
+    "stellarDocs.search_wallet_dapp_docs"
+  ],
+  "golden": {
+    "answer": "There is no universal cheapest place to buy XLM: availability, spreads, withdrawal fees, payment method, identity checks, and local regulation vary by country and change often. Compare regulated providers that serve your location using the all-in quote for your amount, then verify the exact Stellar withdrawal network and any memo requirement before buying. Treat unsolicited 'discount XLM' offers as a red flag; never choose a provider from a DM alone.",
+    "keyFacts": [
+      "Rejects a timeless single cheapest-provider recommendation.",
+      "Uses all-in cost and network/memo checks as comparison criteria."
+    ],
+    "avoid": [
+      "Do NOT name a provider as universally cheapest or available everywhere.",
+      "Do NOT treat a social-media offer as a trusted on-ramp."
+    ],
+    "notes": "Consumer comparison, not investment advice."
+  },
+  "tags": {
+    "category": "retail-consumer",
+    "service": "stellarDocs",
+    "freshness": "live"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-11",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
+      },
+      {
+        "class": "D",
+        "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Provider availability and exchange deposit requirements are provider-specific; unsolicited bargain offers are a scam risk.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "D",
+            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-11",
+      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "evidence": [
+        "solo://proj/49/process/3415",
+        "solo://proj/49/process/3419",
+        "scratchpad/p4/h3-raph/fable-voice-review.md",
+        "scratchpad/p4/h3-raph-blind/reconciliation.md",
+        "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
+        "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+      ],
+      "rootCause": [
+        "eval-authoring"
+      ]
+    },
+    "origin": "raph buy-xlm-where-best-rates-fees"
+  }
+}
