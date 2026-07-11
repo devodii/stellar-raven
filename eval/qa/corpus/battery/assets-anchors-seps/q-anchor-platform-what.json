@@ -8,7 +8,8 @@
     "answer": "- The **Anchor Platform** is **SDF's (Java) toolset/backend** for building and running a SEP-compliant anchor (on/off-ramp) service — the fastest way to go live without re-implementing the SEP endpoints [1][2].\n- It implements the anchor SEP set: **SEP-1, SEP-6, SEP-10, SEP-12, SEP-24, SEP-31, SEP-38** (and SEP-45 for contract-account auth) [1].\n- It is **anchor-operator backend infrastructure**, not a consumer app — distinct from the (TypeScript) **Wallet SDK**, which is the wallet-side client counterpart [1].",
     "keyFacts": [
       "The Anchor Platform is SDF's (Java) backend/toolset for deploying a SEP-compliant anchor (on/off-ramp) service.",
-      "It implements the anchor SEP set: SEP-1, SEP-6, SEP-10, SEP-12, SEP-24, SEP-31, and SEP-38 (plus SEP-45)."
+      "It implements the anchor SEP set: SEP-1, SEP-6, SEP-10, SEP-12, SEP-24, SEP-31, and SEP-38 (plus SEP-45).",
+      "Surfaces the canonical SDF repos: stellar/anchor-platform, stellar/typescript-wallet-sdk, and stellar/stellar-disbursement-platform-backend."
     ],
     "avoid": [
       "Do NOT misnumber the SEPs the Anchor Platform implements.",
@@ -38,11 +39,35 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-02-anchor-discovery-platform-disbursement accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "solo://proj/49/scratchpad/truth-maintenance-20--575",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-anchor-platform-repo-discovery",
+        "https://github.com/stellar/anchor-platform",
+        "https://github.com/stellar/stellar-disbursement-platform-backend"
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-anchor-platform-what"
+    "origin": "raven-next q-anchor-platform-what",
+    "corroboration": [
+      {
+        "claim": "Surfaces the canonical SDF repos: stellar/anchor-platform, stellar/typescript-wallet-sdk, and stellar/stellar-disbursement-platform-backend.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/anchor-platform",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-disbursement-platform-backend",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ]
   }
 }

@@ -8,7 +8,8 @@
     "answer": "A Soroban upgrade **replaces the Wasm but keeps all existing storage** (and the same contract address).\nSo the new code must remain compatible with the data already on the ledger: [sdf]\n\n- **Keep the same storage keys and value types/layout** for existing entries. The host deserializes\n  stored values using the **new** code's type definitions, so renaming a key or changing a value's type\n  without migration leaves old data **stranded or mis-decoded (a trap)**. [oz]\n- **Migrate explicitly** when the schema changes. OZ documents three patterns: eager `migrate()` for\n  bounded instance data (guarded by a stored **schema-version** flag), **lazy/versioned** conversion on\n  read for unbounded persistent data, and a **plan-ahead enum wrapper**. Run migration atomically with\n  the upgrade via an **`Upgrader`** contract (the new impl only takes effect after the current call).\n  [oz]\n- The **contract address is preserved**, so external callers/integrations keep working. [sdf]\n\nTraps: claiming the upgrade wipes storage / starts state fresh; or importing the EVM proxy\n**storage-slot-collision** model — Soroban addresses storage by **named keys**, not slot indices.",
     "keyFacts": [
       "Because storage survives an upgrade, the new code must keep the same storage keys and value types/layout for existing entries (or migrate them explicitly).",
-      "Changing a storage key's name/type without migration leaves the old data stranded / mis-decoded."
+      "Changing a storage key's name/type without migration leaves the old data stranded / mis-decoded.",
+      "Soroban supports in-place Wasm replacement: upload the new Wasm, then have the contract call `env.deployer().update_current_contract_wasm(new_wasm_hash)` to swap its code while keeping the same address and storage."
     ],
     "avoid": [
       "Do NOT claim upgrading wipes storage / starts state fresh.",
@@ -38,11 +39,48 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-48-token-ttl-tests-upgrades-vulns-wasm-x402-zk accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "solo://proj/49/scratchpad/truth-maintenance-20--575",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-soroban-upgrade-wasm",
+        "https://developers.stellar.org/docs/build/guides/conventions/upgrading-contracts",
+        "https://github.com/stellar/rs-soroban-sdk/blob/main/soroban-sdk/src/deploy.rs",
+        "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0049.md",
+        "https://github.com/stellar/soroban-examples/tree/main/upgradeable_contract",
+        "Solo scratchpad 575 GT-48 primary 3333 and blind 3342; blind verified the two compiled sources returned 404 and current replacements were reachable."
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-soroban-upgradeable-storage-compat"
+    "origin": "raven-next q-soroban-upgradeable-storage-compat",
+    "corroboration": [
+      {
+        "claim": "Soroban supports in-place Wasm replacement: upload the new Wasm, then have the contract call `env.deployer().update_current_contract_wasm(new_wasm_hash)` to swap its code while keeping the same address and storage.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/conventions/upgrading-contracts",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/rs-soroban-sdk/blob/main/soroban-sdk/src/deploy.rs",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0049.md",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/soroban-examples/tree/main/upgradeable_contract",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ]
   }
 }

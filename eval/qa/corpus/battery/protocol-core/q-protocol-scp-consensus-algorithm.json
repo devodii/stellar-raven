@@ -9,7 +9,8 @@
     "keyFacts": [
       "Names the Stellar Consensus Protocol (SCP) as Stellar's consensus mechanism.",
       "States SCP is a construction of Federated Byzantine Agreement (FBA).",
-      "Explains FBA reaches agreement via user-defined quorum sets / trusted nodes, NOT mining hashpower (PoW) or staked capital (PoS)."
+      "Explains FBA reaches agreement via user-defined quorum sets / trusted nodes, NOT mining hashpower (PoW) or staked capital (PoS).",
+      "States stellar-core is the reference C++ implementation of SCP and the Stellar protocol that validators run to reach consensus and apply ledgers."
     ],
     "avoid": [
       "Do NOT claim Stellar uses Proof-of-Work or mining.",
@@ -40,11 +41,35 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-33-passphrases-operations-parallel-passkeys-consensus accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "solo://proj/49/scratchpad/truth-maintenance-20--575",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-protocol-stellar-core-what-is",
+        "https://github.com/stellar/stellar-core",
+        "https://developers.stellar.org/docs/networks/software-versions"
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-protocol-scp-consensus-algorithm"
+    "origin": "raven-next q-protocol-scp-consensus-algorithm",
+    "corroboration": [
+      {
+        "claim": "States stellar-core is the reference C++ implementation of SCP and the Stellar protocol that validators run to reach consensus and apply ledgers.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-core",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/networks/software-versions",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ]
   }
 }

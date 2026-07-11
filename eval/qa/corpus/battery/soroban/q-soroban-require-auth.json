@@ -9,7 +9,8 @@
     "answer": "Call `address.require_auth()` or `address.require_auth_for_args(args)` for the Address whose authority is required. `require_auth_for_args` binds the authorization entry to the explicit deterministic argument vector you provide; it is not limited to a predefined subset of function arguments. For classic-account credentials the host validates the credential/signature path. For a contract/custom-account address, the host invokes that account contract's `__check_auth`. Soroban address authorization entries use their own nonce and ledger expiration; do not conflate that with the transaction source account's sequence number. A directly invoking contract address is implicitly authorized for its direct call. Tests may mock auth, but production checks must not.",
     "keyFacts": [
       "Explains explicit-argument binding and the classic-host versus custom-account __check_auth paths.",
-      "Distinguishes Soroban auth nonce/expiration, source-account sequence, and direct-invoker implicit authorization."
+      "Distinguishes Soroban auth nonce/expiration, source-account sequence, and direct-invoker implicit authorization.",
+      "Separates authentication, authorization, and business policy."
     ],
     "avoid": [
       "Do NOT use msg.sender/tx.origin or reduce auth to the transaction source account.",
@@ -66,16 +67,36 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Separates authentication, authorization, and business policy.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/contract-development/authorization",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0046-11.md",
+            "observedAt": "2026-07-11"
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited answer blurred classic-account host credential verification with custom-account check_auth, described require_auth_for_args as a subset operation, and conflated Soroban address nonce/expiration with source-account sequence.",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "Solo scratchpad 575 GT-46 primary 3326 and blind 3329 agreed on the classic/custom distinction; blind supplied exact args, nonce, and direct-invoker precision."
+        "Solo scratchpad 575 GT-46 primary 3326 and blind 3329 agreed on the classic/custom distinction; blind supplied exact args, nonce, and direct-invoker precision.",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-soroban-auth-vs-authn",
+        "https://developers.stellar.org/docs/learn/fundamentals/contract-development/authorization",
+        "https://github.com/stellar/stellar-protocol/blob/master/core/cap-0046-11.md",
+        "Solo scratchpad 575 GT-44 processes 3316/3324."
       ],
       "rootCause": [
-        "Eval-side auth summary compressed multiple credential paths and replay counters into one signature-check story."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-soroban-require-auth"

@@ -10,7 +10,8 @@
     "answer": "- A **trustline** is an explicit **opt-in** (created with **`ChangeTrust`**) for an account to hold a specific non-native asset from a given issuer; it records the holder's balance and limit for that `(asset_code, issuer)` [1].\n- **Without a trustline, payments of that asset fail/bounce** — the account cannot receive an asset it has not trusted [1].\n- A trustline raises the account's minimum balance by **one base reserve (0.5 XLM)** — this is a held minimum, not a spent fee [2]. **Pool-share (AMM) trustlines cost two base reserves (1.0 XLM)**.\n- **XLM (native) needs no trustline**; only non-native assets require one [1].",
     "keyFacts": [
       "A trustline is an explicit opt-in (via ChangeTrust) for an account to hold a specific non-native asset from an issuer.",
-      "Without a trustline, payments of that asset fail/bounce."
+      "Without a trustline, payments of that asset fail/bounce.",
+      "States the account must keep enough XLM for the extra base reserve each trustline requires."
     ],
     "avoid": [
       "Do NOT claim assets can be received without any trustline (like ERC-20 on Ethereum).",
@@ -40,11 +41,29 @@
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "GT-04-sac-stablecoins-issuance-fx accepted in Solo scratchpad 575 rev 291",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "solo://proj/49/scratchpad/truth-maintenance-20--575"
+        "solo://proj/49/scratchpad/truth-maintenance-20--575",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-asset-establish-trustline-howto",
+        "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts#trustlines"
+      ],
+      "rootCause": [
+        "eval-authoring"
       ]
     },
-    "origin": "raven-next q-asset-trustline-basics"
+    "origin": "raven-next q-asset-trustline-basics",
+    "corroboration": [
+      {
+        "claim": "States the account must keep enough XLM for the extra base reserve each trustline requires.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-data-structures/accounts#trustlines",
+            "observedAt": "2026-07-11"
+          }
+        ]
+      }
+    ]
   }
 }

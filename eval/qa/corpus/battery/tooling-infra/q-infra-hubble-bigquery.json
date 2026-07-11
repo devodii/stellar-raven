@@ -10,7 +10,8 @@
     "answer": "Hubble is SDF's public, read-only Stellar historical analytics dataset in BigQuery. The canonical project/dataset path is `crypto-stellar.crypto_stellar`, usable from the BigQuery UI, SDKs, SQL tools, and Looker-style analytics. It is for bulk historical queries, not transaction submission or low-latency current-state reads. Current docs describe intraday batch updates but no guaranteed same-day cadence, so date exact table/schema/freshness claims and do not call it real time.",
     "keyFacts": [
       "Names the public BigQuery dataset path and historical analytics workload.",
-      "Rejects real-time/submission use and qualifies cadence/schema freshness."
+      "Rejects real-time/submission use and qualifies cadence/schema freshness.",
+      "Separates current/recent RPC, historical SQL Hubble, and curated indexer workloads."
     ],
     "avoid": [
       "Do NOT describe Hubble as RPC, a wallet, or a real-time guaranteed feed.",
@@ -69,16 +70,48 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Separates current/recent RPC, historical SQL Hubble, and curated indexer workloads.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/apis/rpc",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/configuring",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/data-lake-integration",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/analytics/hubble",
+            "observedAt": "2026-07-11"
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The core dataset identity was correct but exact cadence/schema claims were treated as timeless and could imply real-time freshness.",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "Solo scratchpad 575 GT-49 primary 3335 and blind 3341."
+        "Solo scratchpad 575 GT-49 primary 3335 and blind 3341.",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-infra-hubble-vs-rpc-layer",
+        "https://developers.stellar.org/docs/data/apis/rpc",
+        "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/configuring",
+        "https://developers.stellar.org/docs/data/apis/rpc/admin-guide/data-lake-integration",
+        "https://developers.stellar.org/docs/data/analytics/hubble",
+        "Solo scratchpad 575 GT-49 primary 3335 and blind 3341; deduped to sd-023."
       ],
       "rootCause": [
-        "Hosted dataset cadence/schema freshness was not encoded."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-infra-hubble-bigquery"

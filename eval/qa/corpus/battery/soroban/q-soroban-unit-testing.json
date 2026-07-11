@@ -8,7 +8,8 @@
     "answer": "Write ordinary Rust tests with the matching `soroban-sdk` dev dependency and its `testutils` feature. Create `Env::default()`, register the contract (including constructor args), create the generated client, invoke methods, and assert results/errors/events/storage. `env.mock_all_auths()` makes every `require_auth` succeed; use `mock_auths(...)`, negative paths, and/or `env.auths()` assertions when you need to prove the expected authorization tree. Blanket mocking alone can hide a missing `require_auth`. These are native in-process unit tests; RPC/Testnet integration is a separate layer.",
     "keyFacts": [
       "Uses Env/testutils, registration, generated client, invocation, and assertions.",
-      "Distinguishes blanket auth mocking from specific/negative/auth-tree verification."
+      "Distinguishes blanket auth mocking from specific/negative/auth-tree verification.",
+      "Uses true negative auth paths and exact failure assertions."
     ],
     "avoid": [
       "Do NOT claim unit tests require Testnet/RPC deployment.",
@@ -67,16 +68,36 @@
             "note": "verbatim legacy evidence descriptor imported at migration"
           }
         ]
+      },
+      {
+        "claim": "Uses true negative auth paths and exact failure assertions.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/testing/integration-tests",
+            "observedAt": "2026-07-11"
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/rs-soroban-sdk",
+            "observedAt": "2026-07-11"
+          }
+        ]
       }
     ],
     "verified": {
       "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The inherited unit-test workflow was broadly right but described an imprecise simulated-host model and could make blanket mock_all_auths tests look sufficient to prove authorization.",
+      "by": "P4 Lane R absorb triage",
       "evidence": [
-        "Solo scratchpad 575 GT-48 primary 3333 and pre-read-locked blind 3342; independent agreement on precision correction."
+        "Solo scratchpad 575 GT-48 primary 3333 and pre-read-locked blind 3342; independent agreement on precision correction.",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585#lane-r-q-sor-testing-negative-auth-events",
+        "https://developers.stellar.org/docs/build/guides/testing/integration-tests",
+        "https://github.com/stellar/rs-soroban-sdk",
+        "Solo scratchpad 575 GT-43 processes 3311/3320."
       ],
       "rootCause": [
-        "Eval-side testing shorthand blurred native in-process host testing and meaningful authorization assertions."
+        "eval-authoring"
       ]
     },
     "origin": "raven-next q-soroban-unit-testing"
