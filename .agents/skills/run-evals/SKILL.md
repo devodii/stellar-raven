@@ -241,7 +241,9 @@ Known judge failure modes (from `eval/qa/README.md`):
   input is variance: record it monitor-only, don't chase it. Read `wrong` counts before
   `correct` counts; compare variants only on the
   same sample; re-judging is cheap (`rows[].answer` is saved — feed back through `judgeCase`:
-  `judgeCase({ ...caseFromCasesFile, candidateAnswer: row.answer, transcript: row.transcript })`).
+  `judgeCase({ ...caseFromCasesFile, candidateAnswer: row.answer, transcript: row.transcript })`,
+  or use `eval/qa/re-judge.mjs <results> --ids a,b` / `--flips-vs <baseline-results>` to persist
+  an identity- and tuple-guarded machine-readable re-judge artifact).
   Never cross-compare runs judged under different rubric/pack versions without a re-judge
   (`JUDGE_RUBRIC` in `judge.mjs` is the current version; verdicts carry
   `{rubric, packVersion, promptSha256}` stamps). The comparability rules and the committed

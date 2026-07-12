@@ -221,6 +221,22 @@ flip) were 12C/14P/4W, 10C, and 2C — 5 confirmed stable gains and 2 confirmed 
 baseline headline. The super-corpus baseline above remains the baseline of record; the tier-interleave
 round is a checkpoint, not a re-baseline.
 
+The canonical live-data lane moved to the frozen 15-case `live-data-canonical-v3` contract on
+2026-07-12 (the v2 ten carried byte-identical under an independent projection digest, plus five
+behavioral additions). Its baseline of record is
+[`reviewed/2026-07-12-live-v3-baseline.md`](./reviewed/2026-07-12-live-v3-baseline.md)
+(stamp `2026-07-12T08-04-12-variantA.json`: raw 11C/3P/1W, reviewed 12C/2P/1W; carried-ten
+reviewed 9C/1P). v3 aggregates are 15-case-denominated and never compared to v2's 10-case
+aggregates; per-id comparison stays valid for the carried ten. A 2×3 answering-model A/B
+(Opus 4.8 / Fable 5 / Sonnet-5 control, two replicates each, blind cross-vendor adjudication)
+is recorded in
+[`reviewed/2026-07-12-answering-model-ab.md`](./reviewed/2026-07-12-answering-model-ab.md) —
+verdict inconclusive: zero strict adjudicated recoveries for either stronger arm, so the
+persistent partial mass is not simply answering-model-bound and no default-model change follows.
+Re-judges now persist as machine-readable artifacts: `eval/qa/re-judge.mjs <results> --ids a,b`
+or `--flips-vs <baseline-results>` re-judges identical saved input behind casesSha256 identity
+and rubric/pack tuple guards, writing `results/<stamp>-rejudge.json`.
+
 ## Known limitations
 
 - **Judge variance.** One Sonnet call per grade, temperature not pinned; apply the noise floor
