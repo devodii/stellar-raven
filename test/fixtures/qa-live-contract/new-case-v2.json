@@ -1,0 +1,28 @@
+{
+  "$comment": "Fixture live contract adds one case.",
+  "contract": "live-fixture-v2",
+  "membership": ["q-live-fixture-a", "q-live-fixture-b"],
+  "contractProvenance": {
+    "membership": "Fixture membership adds q-live-fixture-b.",
+    "content": "Added q-live-fixture-b after live-contract review.",
+    "caseContentDigest": "sha256(JSON.stringify(cases))=b7ee7e28ceb04a92c99266c5803e76af632056ad667a90604bcf22a7f0ef087a"
+  },
+  "cases": [
+    {
+      "id": "q-live-fixture-a",
+      "question": "What does the live fixture service report right now?",
+      "surface": ["scout.getRfps"],
+      "golden": {"answer": "A grounded answer queries the live fixture service and reports the result with as-of framing.", "keyFacts": ["Uses a live query rather than memory."], "avoid": ["Do NOT invent a result without querying live data."]},
+      "tags": {"category": "edge-behavior", "service": "scout", "freshness": "live"},
+      "truth": {"domain": "mixed", "status": "confirmed", "asOf": "2026-07-11", "sources": [{"class": "D", "ref": "fixture://live-a"}], "verified": {"date": "2026-07-11", "by": "fixture", "evidence": ["fixture://verified-a"]}, "origin": "authored fixture a"}
+    },
+    {
+      "id": "q-live-fixture-b",
+      "question": "Which live fixture result is available now?",
+      "surface": ["scout.getRfps"],
+      "golden": {"answer": "A grounded answer queries the live fixture service and reports the returned result with an as-of date.", "keyFacts": ["Handles a quiet live result honestly."], "avoid": ["Do NOT invent a result without querying live data."]},
+      "tags": {"category": "edge-behavior", "service": "scout", "freshness": "live"},
+      "truth": {"domain": "mixed", "status": "confirmed", "asOf": "2026-07-11", "sources": [{"class": "D", "ref": "fixture://live-b"}], "verified": {"date": "2026-07-11", "by": "fixture", "evidence": ["fixture://verified-b"], "rootCause": ["fixture-addition"]}, "origin": "authored fixture b"}
+    }
+  ]
+}

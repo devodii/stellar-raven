@@ -1,0 +1,27 @@
+{
+  "$comment": "Fixture live contract baseline.",
+  "contract": "live-fixture-v1",
+  "membership": ["q-live-fixture-a"],
+  "contractProvenance": {
+    "membership": "Fixture baseline membership.",
+    "content": "Fixture baseline content.",
+    "caseContentDigest": "sha256(JSON.stringify(cases))=c9bb97ccbbe3da494255cfccb44331d4d12ee97ed23fffae43298d100920b4ba"
+  },
+  "cases": [{
+    "id": "q-live-fixture-a",
+    "question": "What does the live fixture service report right now?",
+    "surface": ["scout.getRfps"],
+    "golden": {
+      "answer": "A grounded answer queries the live fixture service and reports the result with as-of framing.",
+      "keyFacts": ["Uses a live query rather than memory."],
+      "avoid": ["Do NOT invent a result without querying live data."]
+    },
+    "tags": {"category": "edge-behavior", "service": "scout", "freshness": "live"},
+    "truth": {
+      "domain": "mixed", "status": "confirmed", "asOf": "2026-07-11",
+      "sources": [{"class": "D", "ref": "fixture://live-a"}],
+      "verified": {"date": "2026-07-11", "by": "fixture", "evidence": ["fixture://verified-a"]},
+      "origin": "authored fixture a"
+    }
+  }]
+}

@@ -70,6 +70,10 @@ jobs:
       # not an offline CI step — see .agents/skills/run-evals/SKILL.md.)
       - run: npm run eval:selftest
       - run: npm run eval:qa:lint -- --stale
+      - name: lint frozen canonical live contract
+        run: |
+          BASE="$(node -e 'const event = process.env.GITHUB_EVENT_PATH ? JSON.parse(require("node:fs").readFileSync(process.env.GITHUB_EVENT_PATH, "utf8")) : {}; process.stdout.write(event.pull_request?.base?.sha ?? event.before ?? "HEAD^")')"
+          node eval/qa/lint-corpus.mjs --live-contract eval/qa/corpus/live/live-cases.json --since "$(git merge-base HEAD "$BASE")"
       - run: npm run improvements:lint
       - run: npm run eval:routing -- --gate
       # Generated artifacts must match their sources exactly (they are rebuilt,

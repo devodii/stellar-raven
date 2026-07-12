@@ -4,14 +4,17 @@
  *
  * The module exports the individual lanes for fixture tests. The CLI reads the
  * real corpus and enables diff-aware gospel checks with --since <ref> (or the
- * CI merge base), coverage reporting with --coverage, and the due-date gate
+ * CI merge base), frozen live-contract validation with --live-contract <path>
+ * --since <ref>, coverage reporting with --coverage, and the due-date gate
  * with --stale.
  */
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { assertNoNonExposedRefs } from "../../scripts/build-catalog.mjs";
+import { QA_CATEGORIES, QA_SERVICES } from "./lib.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const DEFAULTS = {
@@ -73,6 +76,19 @@ const AVOID_PATTERNS = [
 const JUDGE_BLIND_RE = /\b(corpus|reviewer|golden|source data|cited records?|catalog|directory|transcripts?)\b/i;
 const NUMERIC_RE = /(?:\$\s*\d|\b\d+(?:\.\d+)?\s*(?:%|bps?|ms|seconds?|minutes?|hours?|days?|weeks?|months?|years?|xlm|usdc|usd|million|billion|k|m|b)\b|\b(?:v|version\s*)\d+(?:\.\d+)*\b|\b(?:protocol|cap-|sep-)\s*\d+\b|\b20\d{2}-\d{2}(?:-\d{2})?\b)/i;
 const NEGATIVE_RE = /\b(?:no|none|not|never|without|cannot|can't|doesn't|isn't|aren't|unavailable|absent)\b/i;
+const LIVE_CONTRACT_VERSION_RE = /-v(\d+)$/;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const SOURCE_CLASSES = new Set(["A", "B", "C", "D", "E", "F"]);
+const FRESHNESS = new Set(["stable", "scheduled", "live"]);
+const TRAPS = new Set([
+  "out-of-scope", "injection", "paid-bait", "fabrication-bait", "scam-check",
+  "speculation", "cant-do", "ambiguous", "governance"
+]);
+const TRUTH_DOMAINS = new Set(["real-world", "corpus-grounded", "mixed"]);
+const TRUTH_STATUSES = new Set(["confirmed", "disputed", "unverifiable", "mixed"]);
+const CORROBORATION_VERDICTS = new Set([
+  "confirmed", "confirmed-as-of", "disputed", "unverifiable", "corpus-only", "contradicted"
+]);
 
 function finding(level, lane, id, message) {
   return { level, lane, id: id ?? "-", message };
@@ -451,6 +467,136 @@ export function lintLedger(cases, ledger, enforceCompleteness = false) {
   return findings;
 }
 
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function contractDigest(cases) {
+  return createHash("sha256").update(JSON.stringify(cases)).digest("hex");
+}
+
+function declaredDigest(contract) {
+  const value = contract?.contractProvenance?.caseContentDigest;
+  const match = typeof value === "string" && /^sha256\(JSON\.stringify\(cases\)\)=([a-f0-9]{64})$/.exec(value);
+  return match?.[1];
+}
+
+function contractVersion(contract) {
+  const match = LIVE_CONTRACT_VERSION_RE.exec(String(contract?.contract ?? ""));
+  return match && Number(match[1]) > 0 ? Number(match[1]) : undefined;
+}
+
+function liveCaseSchemaFindings(kase) {
+  const findings = [];
+  const id = kase?.id ?? "-";
+  const error = (message) => findings.push(finding("error", "live-schema", id, message));
+  if (!kase || typeof kase !== "object" || Array.isArray(kase)) {
+    error("case must be an object");
+    return findings;
+  }
+  if (!isNonEmptyString(kase.id) || !/^q-[a-z0-9-]+$/.test(kase.id)) error("id must be a q-* kebab id");
+  if (!isNonEmptyString(kase.question)) error("question is required");
+  if (!Array.isArray(kase.surface) || !kase.surface.every(isNonEmptyString)) error("surface must be a string array");
+  if (!QA_CATEGORIES.has(kase.tags?.category)) error(`unknown category ${kase.tags?.category}`);
+  if (!QA_SERVICES.has(kase.tags?.service)) error(`unknown service ${kase.tags?.service}`);
+  if (!FRESHNESS.has(kase.tags?.freshness)) error(`unknown freshness ${kase.tags?.freshness}`);
+  if (kase.tags?.freshness !== "live") error("live contracts require tags.freshness live");
+  if (kase.tags?.service !== "none" && kase.surface?.length === 0) error("surface is required unless service is none");
+  if (kase.tags?.trap !== undefined && !TRAPS.has(kase.tags.trap)) error(`unknown trap ${kase.tags.trap}`);
+  if (!isNonEmptyString(kase.golden?.answer)) error("golden.answer is required");
+  if (!validStringArray(kase.golden?.keyFacts)) error("golden.keyFacts must be a non-empty string array");
+  if (!Array.isArray(kase.golden?.avoid) || !kase.golden.avoid.every(isNonEmptyString)) error("golden.avoid must be a string array");
+  if (kase.golden?.notes !== undefined && typeof kase.golden.notes !== "string") error("golden.notes must be a string");
+  if (!TRUTH_DOMAINS.has(kase.truth?.domain)) error(`unknown truth.domain ${kase.truth?.domain}`);
+  if (!TRUTH_STATUSES.has(kase.truth?.status)) error(`unknown truth.status ${kase.truth?.status}`);
+  if (!DATE_RE.test(kase.truth?.asOf ?? "")) error("live cases require truth.asOf as YYYY-MM-DD");
+  if (!Array.isArray(kase.truth?.sources) || kase.truth.sources.length === 0 || !kase.truth.sources.every((source) =>
+    source && typeof source === "object" && SOURCE_CLASSES.has(source.class) && isNonEmptyString(source.ref)
+  )) error("truth.sources must be a non-empty class A-F evidence array");
+  if (!isNonEmptyString(kase.truth?.origin)) error("truth.origin is required");
+  if (!DATE_RE.test(kase.truth?.verified?.date ?? "") || !isNonEmptyString(kase.truth?.verified?.by)) {
+    error("truth.verified requires date and by");
+  }
+  if (!validStringArray(kase.truth?.verified?.evidence)) error("truth.verified.evidence must be a non-empty string array");
+  for (const [index, row] of (kase.truth?.corroboration ?? []).entries()) {
+    if (!isNonEmptyString(row?.claim) || !CORROBORATION_VERDICTS.has(row?.verdict)) {
+      error(`truth.corroboration[${index}] has an invalid claim or verdict`);
+      continue;
+    }
+    if (!Array.isArray(row.evidence) || row.evidence.length === 0 || !row.evidence.every((source) =>
+      source && typeof source === "object" && SOURCE_CLASSES.has(source.class) && isNonEmptyString(source.ref)
+    )) error(`truth.corroboration[${index}].evidence must be a non-empty class A-F evidence array`);
+  }
+  return findings;
+}
+
+function liveBehavioralGoldenFindings(cases) {
+  const findings = [];
+  for (const kase of cases) {
+    const judgeFacing = [kase.question, kase.golden?.answer, ...(kase.golden?.keyFacts ?? []), ...(kase.golden?.avoid ?? [])]
+      .filter(isNonEmptyString)
+      .join(" ");
+    if (!/\b(?:live|as[- ]of|current(?:ly)?|right now|latest|most recent|ground(?:ed|ing)?|quer(?:y|ied)|behavior)\b/i.test(judgeFacing)) {
+      findings.push(finding("error", "live-behavior", kase.id, "live behavioral golden must require live grounding or currency framing"));
+    }
+    // Live goldens may preserve dated examples when they explicitly frame them
+    // as snapshots. What they may not do is turn a volatile value into the
+    // judge's timeless target (for example, “the current price is $0.42”).
+    const volatileClaim = /\b(?:current(?:ly)?|right now|today|latest|most recent|open now)\b[^.!?]{0,160}(?:\$\s*\d|\b\d+(?:\.\d+)?\s*(?:%|bps?|ms|seconds?|minutes?|hours?|days?|weeks?|months?|years?|xlm|usdc|usd|million|billion|k|m|b)\b|\b(?:v|version\s*)\d+(?:\.\d+)*\b|\b(?:protocol|cap-|sep-)\s*\d+\b|\b20\d{2}-\d{2}(?:-\d{2})?\b)/i;
+    const snapshotCaveat = /\b(?:as[- ]of|snapshot|historical|will change|will rotate|at run time|grade (?:the )?behavior)\b/i;
+    if (volatileClaim.test(judgeFacing) && !snapshotCaveat.test(judgeFacing)) {
+      findings.push(finding("error", "live-behavior", kase.id, "live behavioral golden pins a volatile numeric/version/date value without a snapshot caveat"));
+    }
+  }
+  return findings;
+}
+
+export function lintLiveContract(contract, previousContract) {
+  const findings = [];
+  const cases = Array.isArray(contract?.cases) ? contract.cases : [];
+  if (!contract || typeof contract !== "object" || Array.isArray(contract)) {
+    return [finding("error", "live-contract", "-", "live contract must be an object")];
+  }
+  if (!isNonEmptyString(contract.contract) || contractVersion(contract) === undefined) {
+    findings.push(finding("error", "live-contract", "-", "contract must end with a positive -vN version"));
+  }
+  if (!isNonEmptyString(contract.$comment)) findings.push(finding("error", "live-contract", "-", "$comment must be a non-empty provenance note"));
+  if (!Array.isArray(contract.membership) || contract.membership.length === 0 || !contract.membership.every(isNonEmptyString)) {
+    findings.push(finding("error", "live-contract", "-", "membership must be a non-empty string array"));
+  }
+  if (!Array.isArray(contract.cases) || contract.cases.length === 0) {
+    findings.push(finding("error", "live-contract", "-", "cases must be a non-empty array"));
+  }
+  const ids = cases.map((kase) => kase?.id);
+  if (!same(contract.membership, ids)) findings.push(finding("error", "live-contract", "-", "membership must exactly equal ordered case ids"));
+  if (new Set(ids).size !== ids.length) findings.push(finding("error", "live-contract", "-", "case ids must be unique"));
+  const provenance = contract.contractProvenance;
+  for (const field of ["membership", "content", "caseContentDigest"]) {
+    if (!isNonEmptyString(provenance?.[field])) {
+      findings.push(finding("error", "live-contract", "-", `contractProvenance.${field} must be a non-empty provenance note`));
+    }
+  }
+  const digest = declaredDigest(contract);
+  if (!digest) findings.push(finding("error", "live-contract", "-", "contractProvenance.caseContentDigest must be sha256(JSON.stringify(cases))=<hex>"));
+  else if (digest !== contractDigest(cases)) findings.push(finding("error", "live-contract", "-", "contractProvenance.caseContentDigest does not match case content"));
+  for (const kase of cases) findings.push(...liveCaseSchemaFindings(kase));
+  findings.push(...lintCorroboration(cases, {}), ...liveBehavioralGoldenFindings(cases));
+
+  if (!previousContract) return findings;
+  const previousCases = Array.isArray(previousContract.cases) ? previousContract.cases : [];
+  const contentChanged = contractDigest(cases) !== contractDigest(previousCases);
+  if (contentChanged) {
+    if (contractVersion(contract) === undefined || contractVersion(previousContract) === undefined || contractVersion(contract) <= contractVersion(previousContract)) {
+      findings.push(finding("error", "live-contract", "-", "case content changed without a contract-version bump"));
+    }
+    if (!isNonEmptyString(provenance?.content) || provenance.content === previousContract.contractProvenance?.content) {
+      findings.push(finding("error", "live-contract", "-", "case content changed without a new contractProvenance.content note"));
+    }
+  }
+  findings.push(...lintGospelChanges(cases, previousCases));
+  return findings;
+}
+
 function parseArgs(argv) {
   const options = { coverage: false, enforceFloors: false, stale: false };
   for (let index = 0; index < argv.length; index++) {
@@ -458,9 +604,10 @@ function parseArgs(argv) {
     if (arg === "--coverage") options.coverage = true;
     else if (arg === "--enforce-floors") { options.coverage = true; options.enforceFloors = true; }
     else if (arg === "--stale") options.stale = true;
-    else if (["--since", "--corpus", "--manifest", "--register", "--ledger", "--today"].includes(arg)) {
+    else if (["--since", "--corpus", "--manifest", "--register", "--ledger", "--today", "--live-contract"].includes(arg)) {
       if (!argv[index + 1]) throw new Error(`${arg} requires a value`);
-      options[arg.slice(2)] = argv[++index];
+      const option = arg === "--live-contract" ? "liveContract" : arg.slice(2);
+      options[option] = argv[++index];
     } else throw new Error(`unknown argument: ${arg}`);
   }
   return options;
@@ -512,6 +659,18 @@ function loadCasesAtRef(ref, corpusDir) {
   return files.sort().map((file) => JSON.parse(git(["show", `${ref}:${file}`])));
 }
 
+function loadLiveContractAtRef(ref, contractPath) {
+  const relativePath = path.relative(ROOT, contractPath).split(path.sep).join("/");
+  if (relativePath.startsWith("../")) throw new Error(`live contract must be inside the repository: ${contractPath}`);
+  try {
+    return JSON.parse(git(["show", `${ref}:${relativePath}`]));
+  } catch (error) {
+    // An exact path is deliberate: a rename cannot silently become a fresh
+    // contract, because that would evade the carried-case gospel comparison.
+    throw new Error(`prior live contract is absent or renamed at ${ref}: ${relativePath}`);
+  }
+}
+
 function printFindings(findings) {
   const ordered = [...findings].sort((a, b) =>
     a.level.localeCompare(b.level) || a.lane.localeCompare(b.lane) || a.id.localeCompare(b.id) || a.message.localeCompare(b.message)
@@ -539,11 +698,18 @@ export function runLint({ cases, manifest, register = {}, ledger, previousCases,
 
 function main() {
   const options = parseArgs(process.argv.slice(2));
+  const since = options.since ?? ciSinceRef();
+  if (options.liveContract) {
+    if (!since) throw new Error("live-contract mode requires --since <ref>");
+    const contractPath = path.resolve(options.liveContract);
+    const findings = lintLiveContract(json(contractPath), loadLiveContractAtRef(since, contractPath));
+    process.exitCode = printFindings(findings) > 0 ? 1 : 0;
+    return;
+  }
   const corpusDir = path.resolve(options.corpus ?? DEFAULTS.corpusDir);
   const manifestPath = path.resolve(options.manifest ?? DEFAULTS.manifestPath);
   const registerPath = path.resolve(options.register ?? DEFAULTS.registerPath);
   const ledgerPath = path.resolve(options.ledger ?? DEFAULTS.ledgerPath);
-  const since = options.since ?? ciSinceRef();
   if (isPullRequestCI(process.env) && !since) {
     // Fail closed for PRs only: the gospel lane is a required PR gate, so an
     // unresolvable base ref there is an error, never a silent skip. Push events
