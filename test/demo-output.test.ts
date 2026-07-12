@@ -10,7 +10,6 @@ describe("isMeaningfulDemoOutput", () => {
   it("does not count liveness-only frames as fallback-suppressing output", () => {
     expect(isMeaningfulDemoOutput({ type: "ready" })).toBe(false);
     expect(isMeaningfulDemoOutput({ type: "thinking", text: "reasoning tail" })).toBe(false);
-    expect(isMeaningfulDemoOutput({ type: "step", index: 1 })).toBe(false);
     expect(isMeaningfulDemoOutput({ type: "done", reason: "stop" })).toBe(false);
     expect(isMeaningfulDemoOutput({ type: "error", message: "provider failed" })).toBe(false);
   });

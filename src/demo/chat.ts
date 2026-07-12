@@ -308,8 +308,10 @@ async function runTurn(
               attemptEmit({ type: "thinking", text: part.text });
               break;
             case "start-step":
+              // Round boundaries are telemetry only (`steps` in demo-chat) —
+              // deliberately no frame: numbered step dividers taught a false
+              // fixed-pipeline mental model for what is a free-form tool loop.
               steps += 1;
-              attemptEmit({ type: "step", index: steps });
               break;
             case "tool-error":
               // A call that never reached our execute (e.g. invalid input) —

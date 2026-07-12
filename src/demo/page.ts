@@ -100,9 +100,6 @@ font-size:12px;color:var(--dim)}
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);
 animation:pulsebeat 1.2s ease-in-out infinite}
 @keyframes pulsebeat{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
-.stepline{display:flex;align-items:center;gap:12px;margin:20px 0;font-family:var(--mono);
-  font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ash)}
-.stepline::before,.stepline::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* ---- tool trace cards ---- */
 details.tcard{margin:12px 0;border:1px solid var(--line-2);border-radius:12px;
@@ -511,10 +508,6 @@ const DEMO_SCRIPT = `
     } else if (f.type === "tool-result") {
       fillCard(f);
       showPulse("model reasoning over the result");
-    } else if (f.type === "step") {
-      hidePulse();
-      log.appendChild(text("div", "stepline", "step " + f.index));
-      showPulse("model reasoning");
     } else if (f.type === "done") {
       turnDone = true;
       hidePulse();
@@ -617,7 +610,7 @@ const DEMO_SCRIPT = `
 // hard-coded (Web Crypto is async, and these headers are a sync module const);
 // test/demo-page.test.ts recomputes it from the rendered page, so an edit to
 // DEMO_SCRIPT fails the suite with the new value to paste here.
-const DEMO_SCRIPT_SHA256 = "sha256-pSilD4zwrNz+0rctCOprryCke6zESCHVmIzC14aPK0M=";
+const DEMO_SCRIPT_SHA256 = "sha256-TKCP6Ujru4mp8JDXpahpOyq3ZK5EfkJw4IcqWqYpVGI=";
 
 export const DEMO_PAGE_HEADERS: Record<string, string> = {
   "content-type": "text/html; charset=utf-8",
@@ -702,7 +695,6 @@ function sampleTrace(): string {
   ).join("");
   return (
     `<div class="msg user">${esc(SAMPLE_USER)}</div>` +
-    `<div class="stepline">step 1</div>` +
     `<details class="tcard" open><summary><span class="tw">search</span>` +
     `<span class="tlabel">${esc(JSON.stringify(SAMPLE_QUERY))}</span>` +
     `<span class="st ok">ok</span></summary><div class="tcard-body">` +
@@ -710,14 +702,12 @@ function sampleTrace(): string {
     `<ol class="hits">${hits}</ol>` +
     `<div class="hmeta">4 of 47 matches &middot; truncated &mdash; more matched than shown</div>` +
     `</div></details>` +
-    `<div class="stepline">step 2</div>` +
     `<details class="tcard" open><summary><span class="tw">execute</span>` +
     `<span class="tlabel">sandboxed JavaScript</span>` +
     `<span class="st ok">ok</span></summary><div class="tcard-body">` +
     `<pre class="code">${esc(SAMPLE_CODE)}</pre>` +
     `<div class="osec"><div class="oh">result</div><pre>${esc(SAMPLE_RESULT)}</pre></div>` +
     `</div></details>` +
-    `<div class="stepline">step 3</div>` +
     `<div class="msg assistant md"><p class="mdp">${staticInlineCode(SAMPLE_ANSWER)}</p></div>`
   );
 }
@@ -728,7 +718,7 @@ function sampleTrace(): string {
 
 const EXPLAINER =
   "Ask a question about Stellar and Raven will search across docs, ecosystem data, " +
-  "and bundled playbooks, run a focused lookup, then answer from what it found. " +
+  "and bundled playbooks, run focused lookups, then answer from what it found. " +
   "The playground shows the live trace, so you can see the sources behind each " +
   "answer before connecting your own agent.";
 const DEMO_TITLE = "Playground · Stellar Raven";
@@ -803,7 +793,7 @@ function chatBody(): string {
   return (
     `<main class="play pwrap">` +
     `<p class="fineprint"><b>Live trace.</b> Ask about Stellar and Raven will search its ` +
-    `connected sources, run a focused lookup, and summarize what it found. The cards below ` +
+    `connected sources, run focused lookups, and summarize what it found. The cards below ` +
     `show the real work behind the answer, using the same core tools available to agents ` +
     `through <code>/mcp</code>.</p>` +
     `<div id="log" aria-live="polite"></div>` +

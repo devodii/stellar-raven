@@ -18,7 +18,6 @@ describe("encodeFrame", () => {
       { type: "tool-start", id: "call_1", tool: "search", input: { query: "trustlines" } },
       { type: "tool-result", id: "call_1", tool: "search", ok: true, output: { hits: [] } },
       { type: "tool-result", id: "call_2", tool: "execute", ok: false, output: { message: "boom" } },
-      { type: "step", index: 3 },
       { type: "done", reason: "stop" },
       { type: "error", message: "budget exceeded" }
     ];

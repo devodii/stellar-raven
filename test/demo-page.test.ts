@@ -76,6 +76,10 @@ describe("demo page states", () => {
     expect(lockedHtml).not.toContain("<script>");
     expect(lockedHtml).not.toContain("Watch an agent");
     expect(lockedHtml).not.toContain('class="flow"');
+    // No numbered step dividers: they taught a false fixed-pipeline mental
+    // model for what is a free-form tool loop (search/execute interleave).
+    expect(lockedHtml).not.toContain("stepline");
+    expect(lockedHtml).not.toContain("step 1");
   });
 
   it("authenticated: composer + trace client wired to /playground/chat", () => {
@@ -88,10 +92,11 @@ describe("demo page states", () => {
     expect(chatHtml).toContain("connect an MCP client to <code>/mcp</code>");
     expect(chatHtml).toContain("backdrop-filter:none");
     expect(chatHtml).not.toContain('class="flow"');
-    for (const t of ["token", "tool-start", "tool-result", "step", "done", "error"]) {
+    for (const t of ["token", "tool-start", "tool-result", "done", "error"]) {
       expect(chatHtml).toContain(`"${t}"`);
     }
     expect(chatHtml).toContain("stalled"); // the no-result-by-done state
+    expect(chatHtml).not.toContain("stepline"); // no step dividers in the live trace either
   });
 
   it("keeps demo-facing copy free of transport and envelope jargon", () => {

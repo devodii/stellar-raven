@@ -15,7 +15,6 @@ export type DemoFrame =
   | { type: "thinking"; text: string }
   | { type: "tool-start"; id: string; tool: "search" | "execute"; input: unknown }
   | { type: "tool-result"; id: string; tool: "search" | "execute"; ok: boolean; output: unknown }
-  | { type: "step"; index: number }
   | { type: "done"; reason: string }
   | { type: "error"; message: string };
 
