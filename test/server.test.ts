@@ -29,7 +29,14 @@ vi.mock("cloudflare:workers", () => ({
 }));
 vi.mock("@cloudflare/workers-oauth-provider", () => ({
   default: class OAuthProvider {
-    fetch(): Response {
+    fetch(request: Request): Response {
+      const url = new URL(request.url);
+      if (url.pathname === "/mcp" && request.method === "OPTIONS") {
+        return new Response(null, { status: 204 });
+      }
+      if (url.pathname === "/mcp") {
+        return new Response(null, { status: 401 });
+      }
       return new Response(null, { status: 404 });
     }
   }
@@ -143,6 +150,125 @@ describe("artifact owner resolution", () => {
       "stellar-raven.example"
     );
     expect(resolveArtifactOwner(undefined, gateFired)).toBeUndefined();
+  });
+});
+
+function workerContext(props?: Record<string, unknown>): ExecutionContext {
+  return {
+    waitUntil() {},
+    passThroughOnException() {},
+    props
+  } as unknown as ExecutionContext;
+}
+
+function serverEnv(overrides: Record<string, unknown> = {}): Env {
+  return {
+    MCP_SERVER_SECRET: "unit-test-server-secret",
+    MCP_ADMIN_TOKEN: "unit-test-admin-token",
+    ...overrides
+  } as unknown as Env;
+}
+
+function mcpRequestEvents(spy: { mock: { calls: unknown[][] } }): Record<string, unknown>[] {
+  return spy.mock.calls
+    .map((call: unknown[]) => call[0])
+    .filter((line: unknown): line is string => typeof line === "string")
+    .map((line: string) => JSON.parse(line) as Record<string, unknown>)
+    .filter((event: Record<string, unknown>) => event.evt === "mcp_request");
+}
+
+describe("MCP request event contract", () => {
+  it("emits one OAuth event from authenticated props and treats old grants as client-unknown", async () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const { mcpHandler } = await import("../src/server");
+    const subject = "a".repeat(64);
+    const response = await mcpHandler.fetch(
+      new Request("https://mcp.test/mcp", { headers: { "cf-ray": "abc123-ATL" } }),
+      serverEnv(),
+      workerContext({ subject, scopes: ["mcp"] })
+    );
+
+    expect(response.status).toBe(404);
+    const events = mcpRequestEvents(spy);
+    expect(events).toHaveLength(1);
+    expect(events[0]).toMatchObject({
+      accessMode: "oauth",
+      subjectHash: expect.stringMatching(/^[a-f0-9]{16}$/),
+      clientHash: null,
+      rayId: "abc123",
+      method: "GET",
+      status: 404,
+      requestId: expect.any(String)
+    });
+    expect(JSON.stringify(events[0])).not.toContain(subject);
+    spy.mockRestore();
+  });
+
+  it("emits exactly one event for admin and dev-bypass requests", async () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const { default: worker } = await import("../src/server");
+
+    await worker.fetch(
+      new Request("https://mcp.test/mcp", {
+        headers: { authorization: "Bearer unit-test-admin-token" }
+      }),
+      serverEnv(),
+      workerContext()
+    );
+    expect(mcpRequestEvents(spy)).toHaveLength(1);
+    expect(mcpRequestEvents(spy)[0]).toMatchObject({
+      accessMode: "admin",
+      subjectHash: null,
+      clientHash: null
+    });
+
+    spy.mockClear();
+    await worker.fetch(
+      new Request("http://localhost/mcp"),
+      serverEnv({ DEV_ALLOW_UNAUTHENTICATED: "true" }),
+      workerContext()
+    );
+    expect(mcpRequestEvents(spy)).toHaveLength(1);
+    expect(mcpRequestEvents(spy)[0]).toMatchObject({
+      accessMode: "dev-bypass",
+      subjectHash: null,
+      clientHash: null
+    });
+    spy.mockRestore();
+  });
+
+  it("logs rejected bearer traffic without identity keys and ignores OPTIONS preflight", async () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const { default: worker } = await import("../src/server");
+
+    const rejected = await worker.fetch(
+      new Request("https://mcp.test/mcp", {
+        headers: { authorization: "Bearer wrong-admin-token", "cf-ray": "reject123-IAD" }
+      }),
+      serverEnv(),
+      workerContext()
+    );
+    expect(rejected.status).toBe(401);
+    const [event] = mcpRequestEvents(spy);
+    expect(event).toEqual({
+      evt: "mcp_request",
+      accessMode: "oauth-rejected",
+      method: "GET",
+      status: 401,
+      rayId: "reject123"
+    });
+    expect(event).not.toHaveProperty("subjectHash");
+    expect(event).not.toHaveProperty("clientHash");
+
+    spy.mockClear();
+    const preflight = await worker.fetch(
+      new Request("https://mcp.test/mcp", { method: "OPTIONS" }),
+      serverEnv(),
+      workerContext()
+    );
+    expect(preflight.status).toBe(204);
+    expect(mcpRequestEvents(spy)).toEqual([]);
+    spy.mockRestore();
   });
 });
 

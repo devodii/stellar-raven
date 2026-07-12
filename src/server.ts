@@ -16,7 +16,7 @@
  *     only on a loopback hostname (a deployed var is inert on the public domain).
  */
 import OAuthProvider from "@cloudflare/workers-oauth-provider";
-import { createMcpHandler, getMcpAuthContext } from "agents/mcp";
+import { createMcpHandler } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerTools, SERVER_INSTRUCTIONS } from "./mcp/tools";
 import type { ExecuteRunner } from "./executor/run";
@@ -32,6 +32,12 @@ import { demoLoginRedirect } from "./auth/workos";
 import { verifyDemoCookie } from "./demo/auth";
 import { DEMO_PAGE_HEADERS, demoPage } from "./demo/page";
 import { logEvent } from "./observability";
+import {
+  authSubjectFromProps,
+  buildMcpRequestObservability,
+  normalizeRayId,
+  type McpAuthMode
+} from "./observability-request";
 
 const SERVER_INFO = { name: "stellar-raven-codemode", version: "0.1.0" };
 const DEV_LOCAL_ARTIFACT_OWNER = "dev-local";
@@ -51,11 +57,6 @@ async function getRunner(env: Env): Promise<ExecuteRunner> {
   return cachedRunner;
 }
 
-function oauthArtifactOwner(): string | undefined {
-  const subject = getMcpAuthContext()?.props.subject;
-  return typeof subject === "string" && subject.length > 0 ? subject : undefined;
-}
-
 export function resolveArtifactOwner(
   oauthSubject: string | undefined,
   devBypassFired: boolean
@@ -67,30 +68,55 @@ export function resolveArtifactOwner(
 // Stateless: fresh McpServer per request (research/codemode.md §6). Used
 // both as the provider's /mcp apiHandler (token already validated there)
 // and directly for the two bypasses.
-const mcpHandler = {
+export const mcpHandler = {
   async fetch(
     request: Request,
     env: Env,
     ctx: ExecutionContext,
-    opts: { devBypassFired?: boolean } = {}
+    opts: { devBypassFired?: boolean; authMode?: McpAuthMode } = {}
   ): Promise<Response> {
     // instructions surfaces in the client's system prompt at initialize time
     // (per-session, unlike tool descriptions which models skim once) — the
     // workflow + result-envelope contract lives there too.
     const server = new McpServer(SERVER_INFO, { instructions: SERVER_INSTRUCTIONS });
     const requestId = crypto.randomUUID();
-    const rayId = request.headers.get("cf-ray") ?? undefined;
+    const authMode = opts.authMode ?? "oauth";
+    const authProps = (ctx as ExecutionContext & { props?: unknown }).props;
+    const requestTelemetry = await buildMcpRequestObservability({
+      accessMode: authMode,
+      props: authProps,
+      rayId: request.headers.get("cf-ray"),
+      serverSecret: env.MCP_SERVER_SECRET
+    });
+    const oauthSubject = authSubjectFromProps(authProps);
     const runner = await getRunner(env);
     registerTools(server, {
       runExecute: (code, callContext) => runner(code, callContext),
       executeContext: () => ({
-        artifactOwner: resolveArtifactOwner(oauthArtifactOwner(), opts.devBypassFired === true),
+        artifactOwner: resolveArtifactOwner(oauthSubject, opts.devBypassFired === true),
         requestId,
-        rayId
+        rayId: requestTelemetry.rayId ?? undefined
       }),
       modelBoundaryMaxTokens: modelBoundaryMaxTokensFromEnv(env as unknown as Record<string, unknown>)
     });
-    return createMcpHandler(server, { route: "/mcp" })(request, env, ctx);
+    try {
+      const response = await createMcpHandler(server, { route: "/mcp" })(request, env, ctx);
+      logEvent("mcp_request", {
+        ...requestTelemetry,
+        requestId,
+        method: request.method,
+        status: response.status
+      });
+      return response;
+    } catch (error) {
+      logEvent("mcp_request", {
+        ...requestTelemetry,
+        requestId,
+        method: request.method,
+        status: 500
+      });
+      throw error;
+    }
   }
 };
 
@@ -171,12 +197,10 @@ export default {
     // Bypasses skip the provider entirely and hit the MCP handler directly.
     if (isMcpPath(url)) {
       if (await isAdminAuthorized(request, env)) {
-        logEvent("mcp_request", { auth: "admin", method: request.method });
-        return mcpHandler.fetch(request, env, ctx);
+        return mcpHandler.fetch(request, env, ctx, { authMode: "admin" });
       }
       if (allowDevUnauthenticated(env, url.hostname)) {
-        logEvent("mcp_request", { auth: "dev-bypass", method: request.method });
-        return mcpHandler.fetch(request, env, ctx, { devBypassFired: true });
+        return mcpHandler.fetch(request, env, ctx, { devBypassFired: true, authMode: "dev-bypass" });
       }
     }
 
@@ -196,9 +220,15 @@ export default {
     // .well-known docs, and the defaultHandler (/, /health, /authorize,
     // /callback, 404) — belongs to the provider.
     const response = await oauthProvider.fetch(request, env, ctx);
-    if (isMcpPath(url)) {
-      // 401 = rejected token/anonymous; anything else = OAuth-authenticated.
-      logEvent("mcp_request", { auth: "oauth", method: request.method, status: response.status });
+    if (isMcpPath(url) && response.status === 401) {
+      // A failed admin-token check also lands here by design; never hash or
+      // otherwise derive identity from a rejected bearer token.
+      logEvent("mcp_request", {
+        accessMode: "oauth-rejected",
+        method: request.method,
+        status: response.status,
+        rayId: normalizeRayId(request.headers.get("cf-ray"))
+      });
     }
     return response;
   }

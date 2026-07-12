@@ -74,6 +74,17 @@ descriptions. The micro-map is generated from `scripts/catalog-data/workflow-arc
 by `scripts/build-micro-map.mjs`; it orients agents to the Lumenloop, Scout, Stellar Docs,
 and skills families without adding per-operation cards or changing the catalog shape.
 
+Every handled `/mcp` invocation emits one `mcp_request` summary after its response status is
+known. Its `accessMode` avoids Cloudflare's automatic redaction of fields named `auth`. OAuth
+summaries carry a 16-hex `subjectHash` compatible with playground/artifact joins and,
+for grants issued after client attribution was added, a versioned secret-keyed `clientHash` derived
+from the OAuth client id stored in encrypted grant props. Older grants report a null client hash;
+admin/dev bypasses have null identity fields; rejected bearer requests omit identity fields. The
+summary also records a colo-stripped Ray ID and app request UUID. Child search/execute/op events and
+OTel spans join through Cloudflare request/Ray metadata instead of repeating high-cardinality user
+fields. Network/geo/TLS fields are never promoted into an app user fingerprint
+(`src/observability-request.ts`, `.agents/skills/cloudflare-observability-review/`).
+
 The `search` tool handler is a pure function call: `searchCatalogPage(getCatalog(), { query,
 kind?, service?, limit? })`. `getCatalog()` (`src/catalog/load.ts`) imports the generated
 `catalog/manifest.json` as a bundled JSON module and validates it once per isolate via

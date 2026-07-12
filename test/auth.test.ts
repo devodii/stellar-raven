@@ -487,7 +487,7 @@ describe("WorkOSAuthHandler", () => {
         request: expect.objectContaining({ clientId: "client-abc" }),
         userId: expectedSubject,
         scope: ["mcp"],
-        props: { subject: expectedSubject, scopes: ["mcp"] }
+        props: { subject: expectedSubject, scopes: ["mcp"], clientId: "client-abc" }
       })
     );
     expect(kv.store.has("login:st2")).toBe(false);

@@ -247,6 +247,11 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       span.setAttribute("sandbox.skillRun", skillRuns);
       span.setAttribute("sandbox.artifactReadCount", artifactReadStats.count);
       span.setAttribute("sandbox.artifactReadBytes", artifactReadStats.bytes);
+      const spanOperationSummary = summarizeOperationLedger(opLedger);
+      span.setAttribute("sandbox.operationTotal", spanOperationSummary.total);
+      span.setAttribute("sandbox.operationOk", spanOperationSummary.ok);
+      span.setAttribute("sandbox.operationError", spanOperationSummary.error);
+      span.setAttribute("sandbox.operationSoftEmpty", spanOperationSummary.softEmpty);
       return result;
     });
     const logs = shapeLogs(outcome.logs, secrets);

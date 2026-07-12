@@ -11,9 +11,10 @@
  *
  * Identity hygiene (prior art ADR-0016 lesson): the WorkOS access token is
  * dropped right after the code exchange — never stored, never in props. The
- * only identity that moves forward is `subject`, a peppered hash of the
- * WorkOS user id (colon-free hex; the provider's opaque tokens use `:` as a
- * separator, so the userId must not contain one).
+ * only human identity that moves forward is `subject`, a peppered hash of
+ * the WorkOS user id (colon-free hex; the provider's opaque tokens use `:`
+ * as a separator, so the userId must not contain one). The OAuth client id
+ * also rides in encrypted props for privacy-safe per-client observability.
  *
  * Confused-deputy defences (we are an OAuth proxy — server to the MCP
  * client, client to WorkOS):
@@ -246,7 +247,7 @@ async function completeCallback(
     userId: subject,
     scope: scopes,
     metadata: { via: "workos-authkit" },
-    props: { subject, scopes }
+    props: { subject, scopes, clientId: parked.oauthReq.clientId }
   });
 
   return new Response(null, {

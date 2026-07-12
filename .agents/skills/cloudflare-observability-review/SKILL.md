@@ -15,7 +15,8 @@ Solo scratchpad/todo so the evidence survives outside the current context window
 
 ## Principle
 
-Prefer Cloudflare-native request identity over app-issued task IDs.
+Prefer Cloudflare-native request identity for one invocation. Use the app's
+privacy-safe OAuth subject/client hashes only for cross-request attribution.
 
 Observability works without a model-facing `correlationId` contract. Same-user
 concurrent MCP tasks are rare, and for debugging/evals we join requests by Ray ID,
@@ -58,9 +59,27 @@ Across a controlled eval/research run:
 
 Across arbitrary third-party MCP traffic:
 
-- Cloudflare headers alone are best-effort, not proof.
-- Use auth subject/client attribution if implemented.
+- Join one invocation through the Ray ID and Cloudflare request metadata.
+- For successful OAuth requests, group across invocations by `subjectHash`
+  and/or `clientHash` from the authoritative `mcp_request` summary. Child
+  events join through `$metadata.requestId`; they do not repeat the hashes.
+- Old grants issued before client attribution have `clientHash = null`. Never
+  fill that gap from user-agent or network fields.
 - Accept that rare same-user concurrency may be ambiguous.
+
+Identity caveats:
+
+- `subjectHash` is the same 16-hex `hashPrefix(subject)` used by playground
+  and artifact events.
+- `clientHash` is a 16-hex, versioned, domain-separated HMAC of the OAuth
+  client id. The raw client id lives only in encrypted grant props.
+- Rotating `MCP_SERVER_SECRET` creates a temporary split: old grants retain
+  old props while new grants derive new user/client hashes. Demo cookies
+  rotate too.
+- A wrong admin bearer token intentionally falls through to the provider and
+  appears as `accessMode = "oauth-rejected"`; do not derive identity from
+  rejected credentials.
+- OAuth-provider `OPTIONS /mcp` preflights emit no `mcp_request` app event.
 
 ## Live Probe
 
@@ -110,6 +129,11 @@ Wait 30-90 seconds for ingestion before querying.
 4. For broader reviews, group counts by `$metadata.type`,
    `$workers.event.request.path`, `$workers.event.response.status`,
    `$workers.event.request.headers.user-agent`, or `cloudflare.ray_id`.
+5. For cross-request OAuth review, filter app events to
+   `evt = "mcp_request"`, then group by `subjectHash` or `clientHash`. Use
+   each matching event's `$metadata.requestId`/`rayId` to join child tool/op
+   events and spans. A null client hash means a pre-attribution grant, not an
+   anonymous user.
 
 ## Demo Playground Failures
 
@@ -179,6 +203,11 @@ that `evt = "demo-search"` finds.
 
 High-value fields:
 
+- MCP request summary: `accessMode`, `subjectHash`, `clientHash`, `requestId`,
+  `rayId`, `method`, `status`. Successful requests include identity keys
+  (null outside attributed OAuth); rejected events omit them entirely.
+- The older `auth` app field is redacted to `*****` by Cloudflare and is not
+  useful for grouping; the `/mcp` summary deliberately uses `accessMode`.
 - App JSON logs: `evt`, `query`, `kind`, `service`, `hits`, `total`, `top`,
   `ok`, `error`, `code`, `resultPreview`, `answerPreview`, `finalPreview`,
   `latestUserPreview`, `latestUserHash`, `latestUserChars`, `historyChars`,
@@ -209,8 +238,9 @@ Privacy-sensitive fields already present in platform logs:
   enough.
 - Ordinary user support: Ray ID plus auth mode, user-agent, host/path/status,
   and nearby events is usually enough.
-- Multi-request attribution by authenticated user/client: prefer adding
-  privacy-safe auth subject/client fields to app logs.
+- Multi-request attribution by authenticated user/client: use the existing
+  request-summary `subjectHash`/`clientHash`; do not infer missing attribution
+  from platform fingerprint fields.
 - Exact separation of rare same-user concurrent tasks: accept ambiguity unless
   there is evidence it matters enough to add a new app-level mechanism.
 

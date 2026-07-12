@@ -113,6 +113,10 @@ What this project has enabled is at the bottom.
   event). Expect 0 ms readings for pure-CPU eval segments (timer freezing); the adapter I/O
   inside still measures correctly. `enterSpan` is a safe no-op when tracing is off/unsampled and
   ends the span on throw/reject, so local dev and error paths are unaffected.
+- **Extended locally (2026-07-11)**: `codemode.execute` also carries bounded
+  `sandbox.operationTotal`, `sandbox.operationOk`, `sandbox.operationError`,
+  and `sandbox.operationSoftEmpty` counts. No user/client identifiers or
+  payloads are added to spans.
 - Not doing now: OTel export (no external sink in use), log/trace sampling <1 (traffic too low
   to matter), Logpush/Tail Workers (superseded by OTel destinations for our needs).
 
@@ -182,6 +186,22 @@ Useful indexed fields observed for `stellar-raven-codemode`:
 Privacy note: platform invocation logs already index IP-bearing fields such as
 `$workers.event.request.headers.cf-connecting-ip` and `x-real-ip`, plus detailed
 geo/TLS metadata. Do not copy IPs or IP-derived fingerprints into app JSON logs.
-For this project, app logs should add semantic fields Cloudflare cannot infer:
-auth subject/client attribution if production evidence shows user/client
-grouping is needed beyond Ray IDs and controlled eval markers.
+For this project, app logs add semantic fields Cloudflare cannot infer on one
+authoritative `mcp_request` summary: privacy-safe `subjectHash` and
+`clientHash` for authenticated cross-request grouping. Child events still
+join through Cloudflare request/Ray metadata and do not repeat those
+identifiers. Old grants can have a null client hash, and neither IP nor other
+network-derived fingerprints are used to fill the gap.
+
+The 2026-07-11 pre-change production baseline also showed that Cloudflare
+redacts the app field named `auth` to `*****`. The new request summary uses
+`accessMode` so OAuth/admin/dev/rejected classes remain queryable.
+
+That baseline queried the six-hour window ending at Unix ms `1783818170600`
+with `$metadata.service = "stellar-raven-codemode"` and
+`evt = "mcp_request"`. It returned 50 app events: successful and rejected
+requests had Cloudflare `$metadata.requestId` values, while none had
+`subjectHash`, `clientHash`, or an app `rayId`. Ray
+`a19c19fccd55dec9` joined one of those request logs to a root OTel span through
+`cloudflare.ray_id`; an initialize-only request correctly had no custom
+`codemode.execute` child span.
