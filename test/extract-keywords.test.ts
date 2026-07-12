@@ -98,3 +98,60 @@ describe("scoreEntryWeighted — low-weight keyword blend (lever 4)", () => {
     expect(withKw).toBeGreaterThanOrEqual(plain);
   });
 });
+
+describe("scoreEntryWeighted — routing-keyword blend (lever 7)", () => {
+  const op = {
+    id: "scout.getBuilders",
+    name: "getBuilders",
+    service: "scout",
+    kind: "operation",
+    description: "Search Stellar builders. The Stellar PEOPLE directory."
+  };
+
+  it("is a no-op for entries without routingKeywords (undefined or empty)", () => {
+    const q = "search stellar builders directory";
+    expect(scoreEntryWeighted({ ...op, routingKeywords: [] }, q)).toBe(scoreEntryWeighted(op, q));
+    expect(scoreEntryWeighted({ ...op, routingKeywords: undefined }, q)).toBe(
+      scoreEntryWeighted(op, q)
+    );
+  });
+
+  it("weights curated routing vocabulary above lever-4 keywords, at most description weight", () => {
+    const q = "builders recruiting latam";
+    const viaKeywords = scoreEntryWeighted({ ...op, keywords: ["recruiting", "latam"] }, q)!;
+    const viaRouting = scoreEntryWeighted({ ...op, routingKeywords: ["recruiting", "latam"] }, q)!;
+    const viaDescription = scoreEntryWeighted(
+      { ...op, description: `${op.description} recruiting latam` },
+      q
+    )!;
+    // The whole point of the field: hotter than schema-shrapnel keywords…
+    expect(viaRouting).toBeGreaterThan(viaKeywords);
+    // …but never hotter than the same vocabulary carried in the description
+    // (equal at the current blend of 1.0).
+    expect(viaRouting).toBeLessThanOrEqual(viaDescription);
+  });
+
+  it("rescues a gate-failed entry via routing vocabulary alone", () => {
+    const q = "widgets recruiting latam hiring"; // no token overlaps op's scored fields enough
+    const without = scoreEntryWeighted(op, q);
+    expect(without).toBeNull();
+    const withRouting = scoreEntryWeighted(
+      { ...op, routingKeywords: ["recruiting", "latam", "hiring", "widgets"] },
+      q
+    );
+    expect(withRouting).not.toBeNull();
+  });
+
+  it("blends both keyword fields additively without lowering the base", () => {
+    const q = "search stellar builders recruiting flag";
+    const plain = scoreEntryWeighted(op, q)!;
+    const both = scoreEntryWeighted(
+      { ...op, keywords: ["flag"], routingKeywords: ["recruiting"] },
+      q
+    )!;
+    const keywordsOnly = scoreEntryWeighted({ ...op, keywords: ["flag"] }, q)!;
+    const routingOnly = scoreEntryWeighted({ ...op, routingKeywords: ["recruiting"] }, q)!;
+    expect(both).toBeGreaterThanOrEqual(Math.max(keywordsOnly, routingOnly));
+    expect(both).toBeGreaterThanOrEqual(plain);
+  });
+});

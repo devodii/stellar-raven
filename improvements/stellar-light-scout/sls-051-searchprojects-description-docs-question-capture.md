@@ -1,13 +1,16 @@
 ---
 id: sls-051
 service: stellar-light-scout
-status: proposed
+status: fixed-upstream
 discovered: 2026-07-11
 evidence:
   - routing A/B at the Scout 1.7.15 absorb (commit 6cf5bbf): 22 extended-lane stellarDocs-labeled questions ranked scout.searchProjects at top-1 (the 1.7.15 description/enum enrichment added ~9 to a pre-existing ~13), plus 3 legacy-lane stellarDocs cases; solo://proj/49/scratchpad/todo-940-general-mit--592
   - score-attribution sweep 2026-07-11 (same scratchpad): removing keywords left the capture intact on every case; truncating the description to 180 chars eliminated it — the description surface alone drives the capture
   - independent adversarial review 2026-07-11 (fable lane 3443): in captured cases the correct docs operation out-scored searchProjects 1.9–3.6x on the gate-free lexical metric (707 vs 383; 806 vs 437; 857 vs 560) and still lost on tier placement
   - consumer-side mitigation landed gateway-side 2026-07-11 (commit bb25276, bounded tier interleave): recovers 12 of 22 captured extended cases; the remainder and every other lexical consumer of scout's self-description inherit the capture as-is
+  - fixed upstream in Scout 1.7.16 (changelog 2026-07-11, "sls-051 structural fix") — implements this finding's recommendation verbatim; all 17 operation descriptions rewritten ≤600 chars with routing vocabulary moved to a machine-readable x-routing extension, guarded in upstream contract CI (scripts/eval/routing-surface-check.ts) using this finding's docs-shaped probes
+  - live verification 2026-07-12 at the 1.7.16 absorb (GitHub issue #21; solo://proj/49/scratchpad/drift-issue-21-scout--605): live openapi.json serves 1.7.16 with 0 descriptions >600 chars and x-routing on all 17 ops; of the 22 extended-lane cases previously captured by searchProjects, none rank searchProjects top-1 any longer and 19 now rank a docs/lumenloop operation top-1 (the other 3 route elsewhere) — capture removal verified through the gateway's x-routing ingestion, scoring lever 7
+  - recurrence probe: upstream keeps the ≤600-char + probe assertions in their contract CI; on our side any description re-fattening reappears as legacy/extended gate movement at the daily drift absorb
 ---
 
 ## Finding

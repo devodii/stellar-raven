@@ -374,7 +374,8 @@ function scoreCandidates(
         service: entry.service,
         kind: entry.kind,
         description: entry.description,
-        keywords: entry.keywords
+        keywords: entry.keywords,
+        routingKeywords: entry.routingKeywords
       },
       opts.query
     );

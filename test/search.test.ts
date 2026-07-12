@@ -224,7 +224,8 @@ describe("searchCatalog — tiered gate-rescue backfill (round 4, M1)", () => {
         service: entry.service,
         kind: entry.kind,
         description: entry.description,
-        keywords: entry.keywords
+        keywords: entry.keywords,
+        routingKeywords: entry.routingKeywords
       },
       query
     );
@@ -272,10 +273,12 @@ describe("searchCatalog — tiered gate-rescue backfill (round 4, M1)", () => {
     // Extended-corpus mechanism check: this question passes the gate for
     // only a handful of entries, so the page mixes tiers. The docs backfill
     // hit overwhelmingly dominates the first gated hit on the common score
-    // scale and must therefore interleave above it.
+    // scale and must therefore interleave above it. (The previous fixture
+    // question stopped mixing tiers at the Scout 1.7.16 absorb — its gated
+    // hits were scout ops whose fat descriptions no longer pass the gate.)
     const query =
-      "What does it take to become a Stellar anchor, including SEP and Anchor Platform " +
-      "setup, licensing, liquidity or float, and on-ramp/off-ramp operating requirements?";
+      "In a SEP-6 programmatic deposit, which SEP actually carries the customer's KYC " +
+      "data — SEP-6 itself or another SEP?";
     const hits = searchCatalog(catalog, { query, limit: 5 });
     expect(hits).toHaveLength(5);
     const tiers = hits.map((h) => gatedScore(h.id, query) !== null);
@@ -356,17 +359,17 @@ describe("searchCatalogPage — tier marker + total/truncated (todos 838/840)", 
 
   it("keeps page membership, total, and truncated fixed while interleaving", () => {
     const query =
-      "What does it take to become a Stellar anchor, including SEP and Anchor Platform " +
-      "setup, licensing, liquidity or float, and on-ramp/off-ramp operating requirements?";
+      "In a SEP-6 programmatic deposit, which SEP actually carries the customer's KYC " +
+      "data — SEP-6 itself or another SEP?";
     const page = searchCatalogPage(catalog, { query, limit: 5 });
     // This is the pre-interleave selected page membership, asserted as a set:
     // the candidate only changes its order.
     expect(page.hits.map((hit) => hit.id).sort()).toEqual(
       [
-        "scout.getRfps",
-        "scout.searchProjects",
+        "scout.explainRepo",
+        "skills.lumenloop.stellar-ecosystem-digest#worked-example-what-s-new-in-stellar-rwa-in-the-last-30-days",
         "stellarDocs.search_anchor_sep_docs",
-        "stellarDocs.search_doc_titles",
+        "stellarDocs.search_docs",
         "stellarDocs.search_docs_in_category"
       ].sort()
     );

@@ -111,10 +111,44 @@ function attachOperationKeywords(entries, extraBodiesById = new Map(), { cap } =
     if (!tokens) return entry;
     const distinctive = [...tokens].filter((t) => (df.get(t) ?? 0) <= maxDf);
     const keywords = extractKeywords(distinctive.join(" "), {
-      exclude: [entry.id, entry.service, entry.kind, entry.description],
+      exclude: [
+        entry.id,
+        entry.service,
+        entry.kind,
+        entry.description,
+        // A token already in routingKeywords must not ride both blends
+        // (scoring.ts levers 4 + 7 are additive).
+        ...(entry.routingKeywords ?? [])
+      ],
       ...(cap !== undefined ? { cap } : {})
     });
     return keywords.length > 0 ? { ...entry, keywords } : entry;
+  });
+}
+
+/**
+ * Attach `routingKeywords` (scoring.ts lever 7) to operation entries from
+ * upstream-curated routing vocabulary (`bodiesById`: Scout's x-routing
+ * purpose/useWhen/exampleQuestions/keywords, collected by buildScout). Same
+ * noise controls as attachOperationKeywords — the service-wide document-
+ * frequency filter drops vocabulary shared across the service's ops, and
+ * extractKeywords dedups against the entry's already-scored fields — but the
+ * result lands in its own field so scoring can weight curated routing
+ * vocabulary above schema shrapnel. Run BEFORE attachOperationKeywords so
+ * the schema pass can exclude these tokens.
+ */
+function attachRoutingKeywords(entries, bodiesById) {
+  return entries.map((entry) => {
+    const bodies = bodiesById.get(entry.id);
+    if (!bodies || bodies.length === 0) return entry;
+    // Default 64 cap binds exactly on the broad search ops (searchProjects/
+    // searchRepos/searchResearch carry the longest curated vocabularies) —
+    // roomier like the docs title cap, still bounded: ≤128 short tokens/op.
+    const routingKeywords = extractKeywords(bodies.join("\n"), {
+      exclude: [entry.id, entry.service, entry.kind, entry.description],
+      cap: 128
+    });
+    return routingKeywords.length > 0 ? { ...entry, routingKeywords } : entry;
   });
 }
 
@@ -451,6 +485,18 @@ function scoutOutputSchema(op, openapi) {
 
 function buildScout(inv) {
   const entries = [];
+  // Scout 1.7.16 (sls-051 structural fix) moved routing vocabulary — synonym
+  // chains, region/product terms, question exemplars — out of description
+  // prose into a machine-readable `x-routing` extension per operation.
+  // Upstream's documented consumer convention: score it as separately-
+  // weighted fields, never concatenated into the description. Collected
+  // here (purpose/useWhen/exampleQuestions/keywords) and attached as the
+  // `routingKeywords` field via attachRoutingKeywords (scoring.ts lever 7).
+  // `notFor` is deliberately dropped — its clauses carry OTHER operations'
+  // vocabulary ("a funded project → searchProjects" on getBuilders), which
+  // as this op's keywords would recreate the cross-capture the upstream fix
+  // removed.
+  const routingExtras = new Map();
   const openapi = inv.openapi;
   const base = openapi.servers?.[0]?.url ?? "https://stellarlight.xyz";
   const consumedNotes = new Set();
@@ -479,6 +525,16 @@ function buildScout(inv) {
       );
       const note = SCOUT_DESCRIPTION_NOTES[opId];
       if (note !== undefined) consumedNotes.add(opId);
+      const routing = op["x-routing"];
+      if (routing && typeof routing === "object") {
+        const parts = [
+          routing.purpose,
+          ...(Array.isArray(routing.useWhen) ? routing.useWhen : []),
+          ...(Array.isArray(routing.exampleQuestions) ? routing.exampleQuestions : []),
+          ...(Array.isArray(routing.keywords) ? routing.keywords : [])
+        ].filter((v) => typeof v === "string" && v.length > 0);
+        if (parts.length > 0) routingExtras.set(`scout.${opId}`, [parts.join("\n")]);
+      }
       entries.push({
         id: `scout.${opId}`,
         service: "scout",
@@ -520,7 +576,7 @@ function buildScout(inv) {
       );
     }
   }
-  return entries;
+  return { entries, routingExtras };
 }
 
 // ---------------------------------------------------------------------------
@@ -757,6 +813,7 @@ export function assertNoNonExposedRefs(entries) {
     const text = [
       entry.description ?? "",
       ...(entry.keywords ?? []),
+      ...(entry.routingKeywords ?? []),
       // Runnable schemas ship to the model (signatures, describe, super
       // spec) — their whole JSON is guarded text like any description.
       ...(entry.runnable === true
@@ -789,12 +846,15 @@ function main() {
   assertScoutExclusionsResolve(stellarLight.openapi);
 
   const stellarDocsEntries = buildStellarDocs(stellarDocsSpec);
+  const scout = buildScout(stellarLight);
   // Runnable attachment runs over the FULLY assembled set: its declared-op
   // guard needs every service's operation entries in scope, not just skills.
   const entries = attachRunnableSkills(
     [
       ...attachOperationKeywords(buildLumenloop(lumenloop)),
-      ...attachOperationKeywords(buildScout(stellarLight)),
+      // Scout ops: x-routing vocabulary → routingKeywords (lever 7) first,
+      // then schema tokens → keywords with the routing tokens excluded.
+      ...attachOperationKeywords(attachRoutingKeywords(scout.entries, scout.routingExtras)),
       // Docs ops carry page-title vocabulary (hundreds of distinct frequency-1
       // tokens post-DF) — the default 64 cap truncates the alphabetical tail,
       // so they get a roomier cap. Still bounded: 12 ops × ≤256 short tokens.

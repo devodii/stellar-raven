@@ -11,6 +11,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadManifest, type Catalog } from "../src/catalog/search.ts";
 import { RUNNERS } from "../src/skills/runners/index.ts";
+// Import-safe: build-catalog.mjs is main-guarded (see its footer).
+import { assertNoNonExposedRefs } from "../scripts/build-catalog.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MANIFEST_PATH = join(ROOT, "catalog", "manifest.json");
@@ -175,6 +177,45 @@ describe("build-catalog.mjs", () => {
       method: "GET",
       path: "/api/projects/search"
     });
+  });
+});
+
+describe("x-routing ingestion — routingKeywords field (scoring lever 7, issue #21)", () => {
+  it("attaches routingKeywords to exactly the exposed scout ops that publish x-routing", () => {
+    const withField = catalog.entries.filter((e) => (e.routingKeywords ?? []).length > 0);
+    // 17 upstream ops carry x-routing; partnerAssistant is build-excluded.
+    expect(withField).toHaveLength(16);
+    for (const entry of withField) {
+      expect(entry.service, entry.id).toBe("scout");
+      expect(entry.kind, entry.id).toBe("operation");
+    }
+  });
+
+  it("keeps routingKeywords disjoint from keywords and within the cap", () => {
+    for (const entry of catalog.entries) {
+      const routing = entry.routingKeywords ?? [];
+      if (routing.length === 0) continue;
+      expect(routing.length, entry.id).toBeLessThanOrEqual(128);
+      const kw = new Set(entry.keywords ?? []);
+      for (const token of routing) {
+        expect(kw.has(token), `${entry.id}: token "${token}" rides both blends`).toBe(false);
+      }
+    }
+  });
+
+  it("drops notFor — cross-op routing clauses never become this op's vocabulary", () => {
+    // Sentinel: getBuilders' upstream x-routing notFor routes stat questions
+    // to getLeaderboard. Ingesting notFor would plant "leaderboard" here and
+    // recreate the cross-capture the 1.7.16 fix removed.
+    const builders = catalog.entries.find((e) => e.id === "scout.getBuilders");
+    expect(builders?.routingKeywords ?? []).not.toContain("leaderboard");
+  });
+
+  it("ADR-0003 guard scans routingKeywords like any other emitted text", () => {
+    const entries = catalog.entries.map((e) => ({ ...e }));
+    const victim = entries.find((e) => e.id === "scout.getBuilders")!;
+    victim.routingKeywords = [...(victim.routingKeywords ?? []), "scout.partnerAssistant"];
+    expect(() => assertNoNonExposedRefs(entries)).toThrow(/ADR-0003 leak/);
   });
 });
 

@@ -824,3 +824,46 @@ editorial/freshness label ambiguity. Nothing was tuned per question. The extende
 query-independent mitigation; it is explicitly recorded rather than laundered through the new
 baseline. Decision record: `solo://proj/49/scratchpad/issue-19-drift-resol--591`. Baseline result:
 `routing-2026-07-11T18-53-06-914Z.json`.
+
+## Re-baseline + lever 7 (2026-07-12, issue #21): Scout 1.7.16 x-routing absorb
+
+Upstream shipped the sls-051 structural fix: all 17 non-meta Scout operation descriptions
+rewritten as terse ≤600-char purpose statements (verified live at ingest: 0 over 600), with the
+routing vocabulary — synonym chains, region/product terms, question exemplars — MOVED to a
+machine-readable `x-routing` extension `{purpose, keywords, useWhen, notFor, exampleQuestions}`.
+Path/method and operationId sets are byte-identical; no schema changes; no exposure or runner
+decision. Upstream's documented consumer convention: score `x-routing` as separately-weighted
+fields, never concatenated into the description.
+
+A bare absorb collapsed routing — legacy strict 213/271/304 → 185/241/285, with all 50 top-1
+losses on scout-expected cases and 22 gains that are exactly the docs/lumenloop capture-relief
+sls-051 asked for. The absorb therefore ships with **scoring lever 7** (`routingKeywords`:
+operation entries carry the x-routing vocabulary as its own field, scored as an independent
+augmented pass; `notFor` is excluded as cross-op vocabulary). Swept on the routing eval:
+
+| config (legacy strict top-1/3/5) | result |
+|---|---:|
+| merged into lever-4 keywords @0.4 | 185/244/287 |
+| lever 7 @0.8, DF-filtered, cap 64 | 191/250/295 |
+| lever 7 @1.0, DF-filtered, cap 64 | 194/255/298 |
+| lever 7 @1.0, no DF, cap 64 | 197/260/297 |
+| lever 7 @0.9, no DF, cap 128 | 201/263/— |
+| **lever 7 @1.0, no DF, cap 128 (shipped)** | **205/272/305** |
+
+The DF filter and default cap were dropped/raised for this field because upstream already
+curates the vocabulary per-op (the filter was double-applying a noise control) and the 64 cap
+bound exactly on the three broad search ops. Final: top-3/top-5 in-band (+1/+1), top-1 −8.
+
+The honest decomposition — corrected by the grok-4.5 adversarial review (scratchpad 606),
+which caught an arithmetic error in the first draft of this record: of the 50 scout losses,
+lever 7 recovers **20** (not 42), leaving **30** residual; all 22 capture-relief gains hold
+(−50 + 20 + 22 = −8). The full cost is stated, not laundered: legacy scout-scope top-1 falls
+67 → 37, printed accept-either top-1 268 → 236, card@5 100 → 89. Extended strict improves
+71/101/107 → **85/102/109**, but by composition shift — docs 49 → 81 while scout collapses
+22 → 4 — and skills moves 18 → **19**/23/23. The 30 residual cases routed on prose upstream
+deliberately deleted, and their distinctive vocabulary does not appear in `x-routing` either,
+so no blend setting recovers them (sweep above); several route to plausible alternates
+(lumenloop SCF ops on SCF questions, skills on how-to). Accepted as the honest new floor with
+the upstream curation gap filed as sls-052, the successor finding to sls-051. Decision record:
+`solo://proj/49/scratchpad/drift-issue-21-scout--605`. Baseline result:
+`routing-2026-07-12T21-12-46-662Z.json`.

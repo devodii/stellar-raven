@@ -78,6 +78,18 @@ export const catalogEntrySchema = z.object({
    */
   keywords: z.array(z.string()).optional(),
   /**
+   * Operation entries only (optional): curated machine-routing vocabulary
+   * the upstream service publishes separately from its prose description
+   * (Scout 1.7.16 `x-routing`: purpose/useWhen/exampleQuestions/keywords —
+   * the sls-051 structural fix). Distilled at build time WITHOUT the
+   * document-frequency filter `keywords` get (upstream already curates the
+   * vocabulary per-op; the A/B measured the filter as a net loss here) and
+   * blended into scoring at its own, higher weight (src/catalog/scoring.ts
+   * lever 7): this vocabulary was DESIGNED for routing, unlike
+   * schema-derived shrapnel. Never rendered to users.
+   */
+  routingKeywords: z.array(z.string()).optional(),
+  /**
    * Runnable-skill marker (research/skill-run-design.md §5): literal `true`
    * ONLY on the kind:"skill" entries whose data-gathering core also ships as
    * a bundled host-side runner (src/skills/runners/), callable inside

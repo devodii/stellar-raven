@@ -65,6 +65,18 @@
  *     TIER_INTERLEAVE_MARGIN times the gated hit's score. The drift guard in
  *     test/scoring.test.ts proves the two scorers share a scale wherever the
  *     gate passes (see search.ts).
+ *
+ *  7. Routing-keyword field (Scout 1.7.16 x-routing absorb, issue #21) —
+ *     operation entries may carry `routingKeywords`: vocabulary the upstream
+ *     service curates specifically for routing and publishes separately from
+ *     its prose description (Scout's `x-routing` extension: purpose, useWhen,
+ *     exampleQuestions, keywords). Same double-scoring shape as lever 4 but
+ *     blended at ROUTING_KEYWORD_BLEND — hotter than schema-shrapnel
+ *     keywords, cooler than the description itself — per upstream's own
+ *     consumer convention ("score as separately-weighted fields rather than
+ *     concatenating into the description"). Chosen by A/B sweep at the
+ *     1.7.16 absorb; the routing eval guards changes. (Lever 6, query-side
+ *     alias canonicalization, is documented at QUERY_TOKEN_ALIASES below.)
  */
 import {
   normalizeSearchText,
@@ -75,8 +87,14 @@ import {
 
 export type { ScorableEntry } from "./vendor/search-scoring.ts";
 
-/** ScorableEntry plus the optional build-time keyword field (lever 4). */
-export type WeightedScorableEntry = ScorableEntry & { keywords?: readonly string[] };
+/**
+ * ScorableEntry plus the optional build-time keyword fields: `keywords`
+ * (lever 4) and `routingKeywords` (lever 7).
+ */
+export type WeightedScorableEntry = ScorableEntry & {
+  keywords?: readonly string[];
+  routingKeywords?: readonly string[];
+};
 
 /**
  * General English stopwords (standard closed-class set — articles, copulas,
@@ -112,6 +130,17 @@ export function effectiveQuery(query: string): string {
 const KEYWORD_BLEND = 0.4;
 
 /**
+ * Routing-keyword blend factor (lever 7, Scout 1.7.16 x-routing absorb).
+ * `routingKeywords` carry vocabulary the upstream service curated FOR
+ * routing (synonym chains, region/product terms, question exemplars —
+ * upstream's own convention: "score as separately-weighted fields"), so
+ * they blend in hotter than lever 4's schema-shrapnel keywords. Chosen by
+ * A/B sweep on the routing eval at the 1.7.16 absorb (0.4/0.6/0.8/1.0
+ * measured; eval/README.md); the routing gate is the guard on changing it.
+ */
+const ROUTING_KEYWORD_BLEND = 1.0;
+
+/**
  * Joined-keywords cache for the augmented scoring pass. Keyed on the
  * `keywords` ARRAY, not the scorable wrapper: searchCatalog() builds a fresh
  * wrapper object per entry per query, but passes `entry.keywords` by
@@ -134,8 +163,14 @@ function joinedKeywords(keywords: readonly string[]): string {
 type EntryScorer = (entry: ScorableEntry, query: string) => number | null;
 
 /**
- * Base score with the low-weight keyword field blended in (lever 4).
- * Entries without keywords take the base scorer untouched.
+ * Base score with the build-time keyword fields blended in (levers 4 + 7).
+ * Entries without either field take the base scorer untouched. Each field
+ * is scored as its own augmented pass against the SAME base, so the two
+ * deltas are independent and additive; on the rescue path (base gated to
+ * null) the entry re-enters at the best single field's damped score —
+ * additive rescue would let two weak fields fake one strong match.
+ * Build-time dedup (scripts/build-catalog.mjs) keeps `keywords` disjoint
+ * from `routingKeywords`, so a token never rides both blends.
  */
 function scoreWithKeywords(
   entry: WeightedScorableEntry,
@@ -143,14 +178,29 @@ function scoreWithKeywords(
   score: EntryScorer
 ): number | null {
   const base = score(entry, query);
-  if (!entry.keywords || entry.keywords.length === 0) return base;
-  const augmented = score(
-    { ...entry, description: `${entry.description} ${joinedKeywords(entry.keywords)}` },
-    query
-  );
-  if (augmented === null) return base;
-  if (base === null) return Math.round(augmented * KEYWORD_BLEND); // keyword rescue, damped
-  return base + Math.max(0, Math.round((augmented - base) * KEYWORD_BLEND));
+  const fields: { tokens: readonly string[]; blend: number }[] = [];
+  if (entry.keywords && entry.keywords.length > 0) {
+    fields.push({ tokens: entry.keywords, blend: KEYWORD_BLEND });
+  }
+  if (entry.routingKeywords && entry.routingKeywords.length > 0) {
+    fields.push({ tokens: entry.routingKeywords, blend: ROUTING_KEYWORD_BLEND });
+  }
+  if (fields.length === 0) return base;
+  let blended = base ?? 0;
+  let rescued: number | null = null;
+  for (const field of fields) {
+    const augmented = score(
+      { ...entry, description: `${entry.description} ${joinedKeywords(field.tokens)}` },
+      query
+    );
+    if (augmented === null) continue;
+    if (base === null) {
+      rescued = Math.max(rescued ?? 0, Math.round(augmented * field.blend));
+    } else {
+      blended += Math.max(0, Math.round((augmented - base) * field.blend));
+    }
+  }
+  return base === null ? rescued : blended;
 }
 
 /**
