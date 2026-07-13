@@ -718,6 +718,13 @@ function buildSkills(manifest) {
           kind: "skill-section",
           description,
           ...(keywords.length > 0 ? { keywords } : {}),
+          // Sections are exposed (exact-id skill.read, availableSections)
+          // but OUT of search since the 2026-07-13 skills-form A/B: 204
+          // section cards measurably crowded the 50 operations while adding
+          // nothing the whole-skill entry does not deliver (scratchpad 608
+          // P4: QA 41C/7W vs 39C/9W, stable wins 3-1, OpenZeppelin case
+          // correct 6/6 via whole-skill discovery alone).
+          searchable: false,
           transport: { type: "file", path: `${skillDir}/SKILL.md`, section: heading }
         });
       }
@@ -746,6 +753,8 @@ function buildSkills(manifest) {
           kind: "skill-section",
           description: fileDescription,
           ...(fileKeywords.length > 0 ? { keywords: fileKeywords } : {}),
+          // Same search exclusion as ## sections (2026-07-13 A/B; see above).
+          searchable: false,
           transport: { type: "file", path: `${skillDir}/${file.path}` }
         });
       }
@@ -759,21 +768,25 @@ function buildSkills(manifest) {
 // design). One categorical treatment over the ASSEMBLED entries: which
 // representation of the pinned skill store enters search. Everything else —
 // exposure, exact-id reads/runs, schemas, bundle, scoring constants — is a
-// control. Arm A is the shipped catalog and applies no change; the default
-// build (no --skills-form flag) is therefore byte-identical to before.
+// control. Arm B WON the 2026-07-13 A/B (P4 in the scratchpad) and is now
+// the DEFAULT build: buildSkills stamps sections searchable:false at
+// creation, so B is a no-op here. Arm A (sections back in search) is kept
+// buildable for future rounds; C (all skills out of search) is banked with
+// its +30/−1 offline evidence for a possible follow-up from the B baseline.
 // ---------------------------------------------------------------------------
 
 export const SKILLS_FORM_ARMS = ["A", "B", "C", "D"];
 
 export function applySkillsFormArm(entries, arm) {
-  if (arm === "A") return entries;
+  if (arm === "B") return entries; // shipped default
   let treated = entries;
-  if (arm === "B" || arm === "D") {
-    // Sections (and file entries) stay exposed and exact-id readable but
-    // leave search. Parents stay searchable and byte-identical to A (in B).
-    treated = treated.map((e) =>
-      e.service === "skills" && e.kind === "skill-section" ? { ...e, searchable: false } : e
-    );
+  if (arm === "A") {
+    // Legacy pre-2026-07-13 representation: sections re-enter search.
+    treated = treated.map((e) => {
+      if (e.service !== "skills" || e.kind !== "skill-section") return e;
+      const { searchable, ...rest } = e;
+      return rest;
+    });
   }
   if (arm === "C") {
     treated = treated.map((e) => (e.service === "skills" ? { ...e, searchable: false } : e));
@@ -924,17 +937,17 @@ function main() {
   assertScoutExclusionsResolve(stellarLight.openapi);
   assertSideEffectingOpsExcluded(stellarLight.openapi);
 
-  // Experiment-arm selection (--skills-form A|B|C|D, default A = shipped;
-  // any non-A arm REQUIRES --out so a variant can never overwrite the
-  // shipped manifest).
+  // Experiment-arm selection (--skills-form A|B|C|D, default B = shipped
+  // since the 2026-07-13 A/B; any non-B arm REQUIRES --out so a variant can
+  // never overwrite the shipped manifest).
   const armIdx = process.argv.indexOf("--skills-form");
-  const arm = armIdx >= 0 ? process.argv[armIdx + 1] : "A";
+  const arm = armIdx >= 0 ? process.argv[armIdx + 1] : "B";
   if (!SKILLS_FORM_ARMS.includes(arm)) {
     throw new Error(`--skills-form must be one of ${SKILLS_FORM_ARMS.join("|")}, got "${arm}"`);
   }
   const outIdx = process.argv.indexOf("--out");
   const outPath = outIdx >= 0 ? resolve(process.argv[outIdx + 1]) : OUT_PATH;
-  if (arm !== "A" && outIdx < 0) {
+  if (arm !== "B" && outIdx < 0) {
     throw new Error(`--skills-form ${arm} requires --out <path>: variant manifests never overwrite ${OUT_PATH}`);
   }
 
@@ -1008,7 +1021,7 @@ function main() {
       `  operation-records sha256 ${sha256Json(entries.filter((e) => e.kind === "operation"))}\n` +
       `  bundle sha256 ${createHash("sha256").update(readFileSync(join(ROOT, "src", "skills", "bundle.json"))).digest("hex")}\n` +
       `  searchable skills ${searchableCounts.skill} whole + ${searchableCounts["skill-section"]} sections ` +
-      `(exposed: 18 whole + 204 sections in every arm)`
+      `(exposed: 18 whole + 204 sections in every arm; shipped default B = 18 + 0)`
   );
 
   const counts = {};

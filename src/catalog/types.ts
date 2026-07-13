@@ -93,9 +93,10 @@ export const catalogEntrySchema = z.object({
    * Search-visibility marker (skills program, Solo scratchpad 608): literal
    * `false` ONLY — absence means searchable. An entry with `searchable:
    * false` stays fully exposed (exact-id describe/read/run, codemode.catalog,
-   * super spec) but never enters search scoring or results. Built for the
-   * skills-form experiment arms; the shipped manifest carries the field only
-   * when a measured arm ships it.
+   * super spec) but never enters search scoring or results. SHIPPED on all
+   * 204 skill-section entries since the 2026-07-13 skills-form A/B (arm B
+   * won: sections crowded operations in search while whole-skill entries
+   * carried every measured discovery need — scratchpad 608 P4).
    */
   searchable: z.literal(false).optional(),
   /**

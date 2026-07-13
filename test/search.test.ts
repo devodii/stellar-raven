@@ -157,9 +157,15 @@ describe("searchCatalog — excluded ops are absent by construction (ADR-0003)",
 });
 
 describe("searchCatalog — routing quality", () => {
-  it("surfaces skill-section hits for \"soroban storage\"", () => {
+  it("never surfaces skill-section hits — sections left search (2026-07-13 A/B)", () => {
+    // Sections are exposed (skill.read, availableSections) but carry
+    // searchable:false since arm B shipped; a WHOLE skill may still rank.
+    for (const query of ["soroban storage", "when to use this skill", "worked example digest"]) {
+      const hits = searchCatalog(catalog, { query, limit: 10 });
+      expect(hits.some((h) => h.kind === "skill-section"), query).toBe(false);
+    }
     const hits = searchCatalog(catalog, { query: "soroban storage" });
-    expect(hits.some((h) => h.kind === "skill-section")).toBe(true);
+    expect(hits.length).toBeGreaterThan(0);
   });
 
   it("routes \"soroban defi projects\" to project-search operations", () => {
@@ -367,13 +373,15 @@ describe("searchCatalogPage — tier marker + total/truncated (todos 838/840)", 
     expect(page.hits.map((hit) => hit.id).sort()).toEqual(
       [
         "scout.explainRepo",
-        "skills.lumenloop.stellar-ecosystem-digest#worked-example-what-s-new-in-stellar-rwa-in-the-last-30-days",
         "stellarDocs.search_anchor_sep_docs",
         "stellarDocs.search_docs",
-        "stellarDocs.search_docs_in_category"
+        "stellarDocs.search_docs_in_category",
+        "stellarDocs.search_meeting_notes"
       ].sort()
     );
-    expect(page.total).toBe(272);
+    // total counts searchable candidates only — 204 sections left search at
+    // the 2026-07-13 A/B, so the candidate pool shrank from 272.
+    expect(page.total).toBe(68);
     expect(page.truncated).toBe(true);
   });
 
@@ -476,15 +484,13 @@ describe("searchCatalog — availableSections on skill hits (todo 812)", () => {
     expect([...hit.availableSections!].sort()).toEqual([...r.availableSections].sort());
   });
 
-  it("keeps the field OFF operation and skill-section hits", () => {
+  it("keeps the field OFF operation hits", () => {
+    // (Skill-section hits no longer occur in search — sections carry
+    // searchable:false since the 2026-07-13 A/B; the searchable-seam test in
+    // this file guards that directly.)
     const opHit = searchCatalog(catalog, { query: "lumenloop.search_directory" })[0] as SearchHit;
     expect(opHit.kind).toBe("operation");
     expect(opHit.availableSections).toBeUndefined();
-    const sectionHits = searchCatalog(catalog, { query: "soroban storage", limit: 20 }).filter(
-      (h) => h.kind === "skill-section"
-    );
-    expect(sectionHits.length).toBeGreaterThan(0);
-    expect(sectionHits.every((h) => h.availableSections === undefined)).toBe(true);
   });
 
   it("skills exist only under the canonical skills.* id — one skill, one hit (ADR-0003)", () => {
@@ -503,16 +509,19 @@ describe("searchCatalog — availableSections on skill hits (todo 812)", () => {
 });
 
 describe("searchCatalog — keyword-indexed section bodies (todo 810)", () => {
-  it("surfaces a section for a term that appears ONLY mid-body, not in its description", () => {
-    // Real corpus example: "fuzz" lives in the body of the smart-contracts
-    // testing companion but not in the section entry's 200-char description.
+  it("keeps section keyword extraction intact while sections stay OUT of search", () => {
+    // The build-time extraction machinery still runs (section entries remain
+    // exposed for exact-id reads and future arms), but searchable:false keeps
+    // the entry out of every result page (2026-07-13 A/B).
     const sectionId = "skills.stellar-dev.smart-contracts#file:testing.md";
     const entry = catalog.entries.find((e) => e.id === sectionId)!;
     expect(entry).toBeDefined();
     expect(entry.description.toLowerCase()).not.toContain("fuzz"); // precondition
     expect(entry.keywords).toContain("fuzz"); // build-time extraction carried it
+    expect(entry.searchable).toBe(false);
     const hits = searchCatalog(catalog, { query: "fuzz testing smart contracts" });
-    expect(hits.map((h) => h.id)).toContain(sectionId);
+    expect(hits.map((h) => h.id)).not.toContain(sectionId);
+    expect(hits.length).toBeGreaterThan(0); // other surfaces still answer
   });
 
   it("keeps keywords out of the SearchHit contract (internal scoring field only)", () => {

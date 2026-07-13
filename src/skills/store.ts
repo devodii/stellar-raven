@@ -4,7 +4,9 @@
  *
  * `codemode.skill.read(name, { sections? })` resolves through the CATALOG,
  * not the filesystem: `name` must be an exact catalog id (a `skills.*` skill
- * or skill-section id — the ids `search` returns), and content comes from
+ * id — the form `search` returns — or a skill-section id from a hit's
+ * `availableSections`; sections left search at the 2026-07-13 skills-form
+ * A/B but stay exact-id readable), and content comes from
  * src/skills/bundle.json (built by scripts/bundle-skills.mjs; keys equal
  * each entry's transport.path). Exposure is decided at build time (ADR-0003):
  * everything in the catalog is readable; anything excluded simply has no

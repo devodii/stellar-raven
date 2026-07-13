@@ -125,8 +125,11 @@ untouched.
 1. *Stopword gate-rescue* — an entry that fails the coverage gate on the full query is
    rescored with closed-class English stopwords removed. Entries that already passed keep
    their exact vendor score (filtering stopwords for all scoring was tried and regressed).
-2. *Kind weighting* — `skill-section` entries are scaled ×0.75 so 204 near-duplicate
-   fragments don't blanket-outrank the operations on shared topical vocabulary.
+2. *Kind weighting* — `skill-section` entries are scaled ×0.75 so near-duplicate
+   fragments don't blanket-outrank the operations on shared topical vocabulary. (Since the
+   2026-07-13 skills-form A/B all 204 section entries also carry `searchable: false` and
+   never enter search at all — the weight only matters for experiment arms that re-enable
+   them; see `eval/README.md` "Skills-form A/B".)
 3. *Service diversity* — the returned set is selected with a per-service quota
    (`max(2, ceil(0.4 × limit))`, score order preserved, top hit never displaced,
    overflow backfills empty slots).
@@ -459,9 +462,12 @@ arithmetic. `generatedAt` comes from the mirror manifest's `synced_at`, never wa
 "skill"` entry (id `skills.<source>.<name>`, description from frontmatter or first
 paragraph); one `kind: "skill-section"` entry per `##` heading (id `<skillId>#<slug>`,
 duplicate slugs deduped `-2`, `-3`…; description = heading + first paragraph, truncated to
-200 chars; low-weight `keywords` extracted from the *section body* so mid-section content —
-error codes, flags, function names — is lexically searchable); and one section-kind entry
-per extra `.md` file (id `<skillId>#file:<relpath>`). Retired onboarding skills are never
+200 chars; `keywords` extracted from the *section body*); and one section-kind entry
+per extra `.md` file (id `<skillId>#file:<relpath>`). Every section entry carries
+`searchable: false` since the 2026-07-13 skills-form A/B: sections stay exposed for
+exact-id `skill.read` and `availableSections` navigation but never enter search — the
+measured A/B showed the 204 section cards crowded operations while whole-skill entries
+carried every discovery need (`eval/README.md` "Skills-form A/B"; Solo scratchpad 608). Retired onboarding skills are never
 emitted — no skill entry, no sections, no bundle bytes (ADR-0003; the retirement record is
 `RETIRED_ONBOARDING_SKILLS` in `scripts/exposure.mjs` plus the ADR). Lumenloop-API-served
 skill metadata (14 skills as zips) is likewise never emitted: public skills duplicate

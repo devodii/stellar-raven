@@ -854,6 +854,35 @@ The DF filter and default cap were dropped/raised for this field because upstrea
 curates the vocabulary per-op (the filter was double-applying a noise control) and the 64 cap
 bound exactly on the three broad search ops. Final: top-3/top-5 in-band (+1/+1), top-1 −8.
 
+## Skills-form A/B (2026-07-13, todo 890): sections leave search — SHIPPED
+
+The full program record (R1 evidence / R2 pre-registered design / R3 form-factor + prior art,
+P2 synthesis, offline screen, grok-4.5 pre-spend adversarial review + reconciliation, paid
+round, P4 decision) lives in Solo scratchpad `skills-program-how-r--608`. Summary: four
+manifest arms differing only in the skills search representation (A current, B sections
+`searchable:false`, C all skills out of search, D section vocabulary distilled onto parents),
+built by `scripts/build-catalog.mjs --skills-form`, served sequentially through the Solo dev
+process under a SHA-verified swap/restart/probe procedure after the pre-spend review proved
+disk hash ≠ served catalog without it.
+
+Offline screen: D eliminated (recapture hazard confirmed: parent keyword bags at full kind
+weight, interloper top-1 59 vs B's 56); C banked (+30/−1 legacy but kills the skills lane by
+design); **B advanced** (legacy strict 205/272/305 → 209/285/316, skills lane at floor 18/23,
+extended/overlay improved, capture 68→56 top-1 / 278→214 top-5, deterministic discovery
+one-shot + replay improved). Paid round, counterbalanced 3× paired blocks: QA-30 **A
+39C/42P/9W vs B 41C/42P/7W** over 90 gradings/arm; stable per-case wins 3–1 for B; skills
+stratum flat (OpenZeppelin correct 6/6 — whole-skill discovery carries the load-bearing case);
+carried live-v2 ten: B zero wrongs across 3 runs; agent discovery: B ≥ A on every overall
+metric in every run. No pre-registered blocker fired; ledger ~738 top-level jobs under the
+850/$228 ceiling.
+
+**Shipped**: `buildSkills` stamps every skill-section entry `searchable:false` (exposed for
+`skill.read`/`availableSections`/future arms; out of search scoring, results, and totals).
+Whole-skill entries, the runnable digest, the bundle, and all scoring constants unchanged.
+Gate re-baselined to `routing-2026-07-13T08-54-21-839Z.json` (209/285/316; skills floor 18 —
+q-skill-eco-scout-rwa-landscape moved top-1→top-3). Arm C remains a possible future round from
+this baseline; arm A stays buildable for replication.
+
 The honest decomposition — corrected by the grok-4.5 adversarial review (scratchpad 606),
 which caught an arithmetic error in the first draft of this record: of the 50 scout losses,
 lever 7 recovers **20** (not 42), leaving **30** residual; all 22 capture-relief gains hold

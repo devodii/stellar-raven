@@ -24,8 +24,10 @@
  *     whole-skill entry also ranks) are scaled by 0.75. The search tool
  *     exists to route a model to something it can CALL or open whole; 203
  *     near-duplicate fragments should not blanket-outrank 57 operations on
- *     shared topical vocabulary. Sections still rank — and still win on
- *     strong lexical matches. Whole-skill entries keep full weight.
+ *     shared topical vocabulary. (Since the 2026-07-13 skills-form A/B all
+ *     section entries also carry searchable:false and never enter search in
+ *     the shipped catalog — this weight only applies in experiment arms that
+ *     re-enable them.) Whole-skill entries keep full weight.
  *
  *  3. Service-diversity selection — the top-`limit` SET is chosen with a
  *     per-service quota (score order otherwise preserved). A routing search

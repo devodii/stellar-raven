@@ -154,7 +154,10 @@ content cannot re-enter the public repo.
 
 - **Build-time sectioning:** each `SKILL.md` is split on `##` headings (multi-file skills keep
   their file structure); every skill and every section becomes a catalog entry with its own
-  description, so `search("soroban storage patterns")` can return *a section*, not a 40 KB skill.
+  description. Since the 2026-07-13 skills-form A/B, section entries carry `searchable: false`:
+  `search` returns whole-skill hits (each carrying `availableSections` keys) and sections are
+  read exact-id via `skill.read` — the measured arm-B outcome (`eval/README.md`
+  "Skills-form A/B").
 - **Selective exposure is build-time data (ADR-0003):** the exclusion lists in
   `scripts/exposure.mjs` control which skills exist in the catalog at all; excluded skills
   are never emitted, so they cannot appear in search or resolve in the sandbox.

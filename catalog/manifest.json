@@ -5401,6 +5401,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/reference/positioning-brief-template.md",
@@ -5479,6 +5480,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5497,6 +5499,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5581,6 +5584,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5618,6 +5622,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5679,6 +5684,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5723,6 +5729,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5807,6 +5814,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/scf-submission-radar/SKILL.md",
@@ -5908,6 +5916,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/reference/build-plan-template.md",
@@ -5963,6 +5972,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/SKILL.md",
@@ -5981,6 +5991,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/SKILL.md",
@@ -6065,6 +6076,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/SKILL.md",
@@ -6149,6 +6161,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/SKILL.md",
@@ -6216,6 +6229,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/SKILL.md",
@@ -6300,6 +6314,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-builder-quickstart/SKILL.md",
@@ -6401,6 +6416,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/reference/audit-report-template.md",
@@ -6461,6 +6477,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/SKILL.md",
@@ -6479,6 +6496,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/SKILL.md",
@@ -6507,6 +6525,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/SKILL.md",
@@ -6591,6 +6610,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/SKILL.md",
@@ -6628,6 +6648,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/SKILL.md",
@@ -6695,6 +6716,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-content-auditor/SKILL.md",
@@ -6954,6 +6976,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -6972,6 +6995,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7056,6 +7080,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/reference/digest-template.md",
@@ -7073,6 +7098,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7137,6 +7163,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7221,6 +7248,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7274,6 +7302,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7317,6 +7346,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7354,6 +7384,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7397,6 +7428,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7415,6 +7447,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7462,6 +7495,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7512,6 +7546,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7530,6 +7565,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7548,6 +7584,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7632,6 +7669,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7675,6 +7713,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7759,6 +7798,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-digest/SKILL.md",
@@ -7860,6 +7900,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/reference/landscape-template.md",
@@ -7877,6 +7918,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -7924,6 +7966,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -7994,6 +8037,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -8054,6 +8098,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -8138,6 +8183,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -8191,6 +8237,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -8275,6 +8322,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-ecosystem-scout/SKILL.md",
@@ -8349,6 +8397,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-integration-finder/SKILL.md",
@@ -8433,6 +8482,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-integration-finder/SKILL.md",
@@ -8489,6 +8539,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-integration-finder/SKILL.md",
@@ -8538,6 +8589,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-integration-finder/SKILL.md",
@@ -8622,6 +8674,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-integration-finder/SKILL.md",
@@ -8723,6 +8776,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/reference/dossier-template.md",
@@ -8740,6 +8794,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -8794,6 +8849,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -8872,6 +8928,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -8925,6 +8982,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -9009,6 +9067,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -9054,6 +9113,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -9128,6 +9188,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/lumenloop/lumenloop-skills/tree/d92c56bda17ab702d3202335cfe814d64e70e191/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/lumenloop/stellar-project-dossier/SKILL.md",
@@ -9229,6 +9290,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/develop-secure-contracts/SKILL.md",
@@ -9313,6 +9375,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/develop-secure-contracts/SKILL.md",
@@ -9397,6 +9460,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/develop-secure-contracts/SKILL.md",
@@ -9452,6 +9516,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/setup-stellar-contracts/SKILL.md",
@@ -9507,6 +9572,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/setup-stellar-contracts/SKILL.md",
@@ -9565,6 +9631,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/setup-stellar-contracts/SKILL.md",
@@ -9599,6 +9666,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/setup-stellar-contracts/SKILL.md",
@@ -9646,6 +9714,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/setup-stellar-contracts/SKILL.md",
@@ -9710,6 +9779,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/upgrade-stellar-contracts/SKILL.md",
@@ -9728,6 +9798,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/upgrade-stellar-contracts/SKILL.md",
@@ -9812,6 +9883,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/upgrade-stellar-contracts/SKILL.md",
@@ -9896,6 +9968,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/upgrade-stellar-contracts/SKILL.md",
@@ -9980,6 +10053,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/OpenZeppelin/openzeppelin-skills/tree/d72005b53b6d8c937dd1b76262a3e2ebbace2edb/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/openzeppelin-stellar/upgrade-stellar-contracts/SKILL.md",
@@ -10081,6 +10155,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10165,6 +10240,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10249,6 +10325,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10333,6 +10410,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10417,6 +10495,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10461,6 +10540,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10545,6 +10625,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10618,6 +10699,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10655,6 +10737,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10732,6 +10815,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10767,6 +10851,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10851,6 +10936,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10935,6 +11021,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -10990,6 +11077,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -11070,6 +11158,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -11133,6 +11222,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -11185,6 +11275,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/agentic-payments/SKILL.md",
@@ -11284,6 +11375,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11354,6 +11446,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11438,6 +11531,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11477,6 +11571,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11533,6 +11628,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11560,6 +11656,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11644,6 +11741,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11728,6 +11826,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11794,6 +11893,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11861,6 +11961,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11893,6 +11994,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -11977,6 +12079,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/assets/SKILL.md",
@@ -12058,6 +12161,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12082,6 +12186,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12125,6 +12230,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12157,6 +12263,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12241,6 +12348,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12272,6 +12380,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12307,6 +12416,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12375,6 +12485,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12459,6 +12570,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12543,6 +12655,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12618,6 +12731,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12663,6 +12777,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12747,6 +12862,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12777,6 +12893,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/dapp/SKILL.md",
@@ -12878,6 +12995,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -12962,6 +13080,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13046,6 +13165,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13130,6 +13250,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13197,6 +13318,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13240,6 +13362,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13266,6 +13389,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13292,6 +13416,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13376,6 +13501,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13412,6 +13538,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/data/SKILL.md",
@@ -13447,6 +13574,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -13506,6 +13634,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -13590,6 +13719,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -13619,6 +13749,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -13703,6 +13834,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/development.md",
@@ -13786,6 +13918,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/security.md",
@@ -13869,6 +14002,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/testing.md",
@@ -13926,6 +14060,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -14003,6 +14138,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -14078,6 +14214,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -14113,6 +14250,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -14194,6 +14332,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -14227,6 +14366,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/smart-contracts/SKILL.md",
@@ -14328,6 +14468,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14382,6 +14523,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14466,6 +14608,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14525,6 +14668,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14608,6 +14752,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14692,6 +14837,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14776,6 +14922,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14860,6 +15007,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14878,6 +15026,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14905,6 +15054,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -14989,6 +15139,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15049,6 +15200,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15093,6 +15245,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15177,6 +15330,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15261,6 +15415,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15345,6 +15500,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15425,6 +15581,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15509,6 +15666,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15542,6 +15700,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15604,6 +15763,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15676,6 +15836,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15713,6 +15874,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15787,6 +15949,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15825,6 +15988,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15908,6 +16072,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -15992,6 +16157,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16052,6 +16218,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16129,6 +16296,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16161,6 +16329,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16212,6 +16381,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16296,6 +16466,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16340,6 +16511,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16404,6 +16576,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16488,6 +16661,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16510,6 +16684,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16545,6 +16720,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16629,6 +16805,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/standards/SKILL.md",
@@ -16725,6 +16902,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -16797,6 +16975,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -16832,6 +17011,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -16850,6 +17030,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -16893,6 +17074,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -16977,6 +17159,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -17061,6 +17244,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -17145,6 +17329,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -17229,6 +17414,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -17313,6 +17499,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -17343,6 +17530,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/stellar/stellar-dev-skill/tree/c2f3c0728c32044ed8b6d696767c3aed71b4e32d/skills"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-dev/zk-proofs/SKILL.md",
@@ -17392,6 +17580,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -17414,6 +17603,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -17452,6 +17642,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -17517,6 +17708,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -17601,6 +17793,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/README.md",
@@ -17684,6 +17877,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/references/api-reference.md",
@@ -17767,6 +17961,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/references/examples.md",
@@ -17850,6 +18045,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -17934,6 +18130,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18000,6 +18197,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18084,6 +18282,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18168,6 +18367,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18252,6 +18452,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18335,6 +18536,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18419,6 +18621,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",
@@ -18503,6 +18706,7 @@
         "fetchedAt": "2026-07-09T23:33:45Z",
         "source": "https://github.com/Stellar-Light/stellar-scout/tree/aea0c125325ceed746eefaa505e3bd45dabd5ca1"
       },
+      "searchable": false,
       "service": "skills",
       "transport": {
         "path": "ecosystem-skills/skills/stellar-light/stellar-scout/SKILL.md",

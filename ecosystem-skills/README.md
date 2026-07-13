@@ -6,9 +6,10 @@ Development Foundation (SDF), and Stellar Light — plus a snapshot of the broad
 [stellarlight.xyz](https://stellarlight.xyz/skills) ecosystem **directory**.
 
 Lifted from `stellar-raven-next/ecosystem-skills/` (pinned commits, a generated index, a refresh
-script). In **this** repo it is the skills source the unified catalog builds from: each skill and
-each of its `##` sections becomes a searchable catalog entry (see `PLAN.md` §3), subject to the
-manifest allowlist. The mirror itself stays a plain, script-synced copy of upstream.
+script). In **this** repo it is the skills source the unified catalog builds from: each skill becomes a
+searchable catalog entry, and each of its `##` sections becomes an exposed exact-id entry with
+`searchable: false` — readable via `skill.read`, out of search since the 2026-07-13 skills-form
+A/B (see `PLAN.md` §3) — subject to the manifest allowlist. The mirror itself stays a plain, script-synced copy of upstream.
 
 ## Layout
 

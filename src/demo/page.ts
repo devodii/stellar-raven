@@ -646,7 +646,7 @@ const SAMPLE_QUERY = "soroban smart contract deploy";
 const SAMPLE_HITS: Array<{ id: string; kind: string; score: number }> = [
   { id: "stellarDocs.search_soroban_contract_docs", kind: "operation", score: 281 },
   { id: "skills.stellar-dev.smart-contracts", kind: "skill", score: 237 },
-  { id: "skills.stellar-dev.smart-contracts#build-deploy-invoke", kind: "skill-section", score: 162 },
+  { id: "skills.openzeppelin-stellar.setup-stellar-contracts", kind: "skill", score: 112 },
   { id: "stellarDocs.search_docs", kind: "operation", score: 105 }
 ];
 
@@ -708,7 +708,7 @@ function sampleTrace(): string {
     `<span class="st ok">ok</span></summary><div class="tcard-body">` +
     `<div class="qline">query <b>${esc(SAMPLE_QUERY)}</b><span class="qf">limit=4</span></div>` +
     `<ol class="hits">${hits}</ol>` +
-    `<div class="hmeta">4 of 47 matches &middot; truncated &mdash; more matched than shown</div>` +
+    `<div class="hmeta">4 of 13 matches &middot; truncated &mdash; more matched than shown</div>` +
     `</div></details>` +
     `<details class="tcard" open><summary><span class="tw">execute</span>` +
     `<span class="tlabel">sandboxed JavaScript</span>` +
