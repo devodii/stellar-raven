@@ -75,8 +75,10 @@ Known channels (issue access confirmed 2026-07-09):
 - `stellar-docs/` content/content-structure findings →
   <https://github.com/stellar/stellar-docs>; pure Algolia ranking/tokenization findings may still
   need search-owner triage when that repository cannot plausibly own the behavior.
-- `lumenloop/` API/content findings — no confirmed public issue channel is wired yet; record the
-  report route in the finding file when one is used.
+- `lumenloop/` API/content findings → <https://github.com/lumenloop/lumenloop-backend>
+  (authenticated issue access confirmed 2026-07-13). Directory-record corrections belong in
+  <https://github.com/lumenloop/stellar-ecosystem-db>; skill-content findings remain in
+  <https://github.com/lumenloop/lumenloop-skills>. Record the exact issue URL in the finding.
 
 ## Resolution paths (stellar-docs: upstream vs. direct Algolia)
 

@@ -81,6 +81,8 @@ describe("lumenloop adapter", () => {
     if (r.ok) return;
     expect(r.error.kind).toBe("soft-empty");
     expect(r.error.message).toContain("search_directory");
+    expect(r.error.hint).toContain("search_content_semantic");
+    expect(r.error.hint).toContain("exact identity");
   });
 
   it("maps 400 invalid_arguments to a typed error with code + hint + details", async () => {
@@ -161,6 +163,7 @@ describe("scout adapter", () => {
     expect(r.error.kind).toBe("soft-empty");
     expect(r.error.status).toBe(404);
     expect(r.error.hint).toContain("/api/skills");
+    expect(r.error.hint).toContain("scout.searchResearch");
   });
 
   it("maps a NON-JSON 404 to soft-empty too (same contract as the JSON 404 branch)", async () => {
@@ -170,6 +173,7 @@ describe("scout adapter", () => {
     if (r.ok) return;
     expect(r.error.kind).toBe("soft-empty");
     expect(r.error.status).toBe(404);
+    expect(r.error.hint).toContain("open-world identity");
   });
 
   it("keeps a non-JSON non-404 upstream failure as kind error", async () => {
@@ -302,6 +306,8 @@ describe("stellarDocs adapter", () => {
     if (r.ok) return;
     expect(r.error.kind).toBe("soft-empty");
     expect(r.error.message).toContain("not in the docs corpus");
+    expect(r.error.hint).toContain("docs index");
+    expect(r.error.hint).toContain("open-world ecosystem identity");
   });
 
   it("returns 4xx as error without host retry", async () => {

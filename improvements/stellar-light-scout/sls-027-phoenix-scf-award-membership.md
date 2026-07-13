@@ -1,13 +1,14 @@
 ---
 id: sls-027
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout Phoenix record reports 394500 but awarded-round membership includes rounds 18 and 24
   - official Phoenix SCF project page exposes seven submission cards, four Awarded and three Not Awarded
   - live Lumenloop Phoenix SCF response returns the same four awarded rows and 394500 total
   - Solo scratchpad 575 GT-16 primary process 3244 and blind process 3245
+  - live re-check 2026-07-13: https://stellarlight.xyz/api/projects/search?q=Phoenix&limit=20 returns scfAwardedRounds [16,20,25], excluding the prior false memberships in rounds 18 and 24
 ---
 
 ## Finding

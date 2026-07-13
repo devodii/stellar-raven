@@ -10,6 +10,9 @@ evidence:
   - Solo project 49, todo 831 and truth-maintenance scratchpad 567 independent corroboration matrices
   - eval/qa/reviewed/2026-07-09-improvements-evidence.md (durable redacted review of the 8-case post-vote P27 smoke: 0 correct / 3 partial / 5 wrong; every verdict manually reviewed)
   - upstream issue filed 2026-07-09: https://github.com/stellar/stellar-docs/issues/2574
+recurrences:
+  - date: 2026-07-13
+    evidence: structured HTTP probe returned 200 and still rendered Protocol 27 as Testnet while retaining Protocol 26 as the Mainnet heading
 probe:
   type: http-text
   url: https://developers.stellar.org/docs/networks/software-versions

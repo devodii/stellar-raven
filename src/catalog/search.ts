@@ -27,7 +27,7 @@
 // the module graph loads under plain `node` (type stripping) — the eval CLI
 // and vitest both import this file directly (frozen contract, scratchpad 514).
 import { z } from "zod";
-import { catalogSchema, type Catalog, type CatalogEntry, type CatalogKind } from "./types.ts";
+import { catalogSchema, type Catalog, type CatalogEntry, type CatalogKind, type RetrievalReason } from "./types.ts";
 import { lastIdSegment, VALID_IDENT } from "./id.ts";
 import {
   scoreEntryWeighted,
@@ -73,6 +73,17 @@ export type SearchHit = {
    * Omitted when the skill has no section entries (sectionless bodies).
    */
   availableSections?: string[];
+};
+
+export type RecoveryCandidate = {
+  from: string;
+  id: string;
+  service: string;
+  relation: string;
+  reasons: RetrievalReason[];
+  lane: string;
+  description: string;
+  signature?: string;
 };
 
 export type SearchOptions = {
@@ -177,6 +188,13 @@ const refinedCatalogSchema = catalogSchema.superRefine((catalog, ctx) => {
       }
     }
 
+    if (entry.retrievalProfile && entry.kind !== "operation") {
+      ctx.addIssue({ code: "custom", message: `retrieval profile entry ${entry.id} is not an operation` });
+    }
+    if (entry.buildAuthorityRoles && (entry.kind !== "skill" || entry.service !== "skills")) {
+      ctx.addIssue({ code: "custom", message: `build authority roles on ${entry.id} require a skills whole-skill entry` });
+    }
+
     if (entry.kind !== "operation") continue;
     const name = lastIdSegment(entry.id);
 
@@ -205,6 +223,25 @@ const refinedCatalogSchema = catalogSchema.superRefine((catalog, ctx) => {
       });
     } else {
       names.set(name, entry.id);
+    }
+  }
+
+  const byId = new Map(catalog.entries.map((entry) => [entry.id, entry]));
+  for (const entry of catalog.entries) {
+    if (!entry.retrievalProfile) continue;
+    const seenTargets = new Set<string>();
+    for (const edge of entry.retrievalProfile.recoverWith) {
+      const target = byId.get(edge.id);
+      if (!target || target.kind !== "operation") {
+        ctx.addIssue({ code: "custom", message: `retrieval profile ${entry.id} references non-exposed operation ${edge.id}` });
+      }
+      if (edge.id === entry.id) {
+        ctx.addIssue({ code: "custom", message: `retrieval profile ${entry.id} contains a self-edge` });
+      }
+      if (seenTargets.has(edge.id)) {
+        ctx.addIssue({ code: "custom", message: `retrieval profile ${entry.id} repeats target ${edge.id}` });
+      }
+      seenTargets.add(edge.id);
     }
   }
 });
@@ -521,4 +558,45 @@ export function searchCatalogPage(catalog: Catalog, opts: SearchOptions): Search
  */
 export function searchCatalog(catalog: Catalog, opts: SearchOptions): SearchHit[] {
   return searchCatalogPage(catalog, opts).hits;
+}
+
+/**
+ * Exact-ID, query-independent recovery suggestions. They are deliberately
+ * separate from ranked hits: normal scorer membership/order never changes.
+ */
+export function recoveryCandidates(
+  catalog: Catalog,
+  fromIds: readonly string[],
+  reason?: RetrievalReason,
+  limit = 3
+): RecoveryCandidate[] {
+  if (limit <= 0) return [];
+  const attempted = new Set(fromIds);
+  const byId = new Map(catalog.entries.map((entry) => [entry.id, entry]));
+  const selected = new Set<string>();
+  const out: RecoveryCandidate[] = [];
+  for (const from of fromIds) {
+    const source = byId.get(from);
+    if (!source?.retrievalProfile) continue;
+    for (const edge of source.retrievalProfile.recoverWith) {
+      if (reason && !edge.on.includes(reason)) continue;
+      if (attempted.has(edge.id) || selected.has(edge.id)) continue;
+      const target = byId.get(edge.id);
+      if (!target || target.kind !== "operation") continue;
+      const signature = renderSignature(target, { compactOversizedOutput: true });
+      out.push({
+        from,
+        id: target.id,
+        service: target.service,
+        relation: edge.relation,
+        reasons: [...edge.on],
+        lane: source.retrievalProfile.lane,
+        description: target.description,
+        ...(signature ? { signature } : {})
+      });
+      selected.add(edge.id);
+      if (out.length >= limit) return out;
+    }
+  }
+  return out;
 }

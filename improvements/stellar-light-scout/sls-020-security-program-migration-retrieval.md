@@ -1,7 +1,7 @@
 ---
 id: sls-020
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout research query for the exact 2026-05-07 SDF HackerOne consolidation returned no matching transition record
@@ -9,6 +9,7 @@ evidence:
   - live SDF security landing content still advertises both general programs and is stale relative to the controlling policy
   - Solo scratchpad 575 GT-07 primary process 3223
   - GT-40 blind recurrence: exact current-policy research still missed the 2026-05-07 consolidation and June 29 reward matrix while stale $50K Soroban material remained retrievable
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellar-scout/issues/10
 ---
 
 ## Finding

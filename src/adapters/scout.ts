@@ -31,6 +31,8 @@ import {
 } from "./types.ts";
 
 const SERVICE = "scout";
+const SCOUT_MISS_HINT =
+  "Scope this miss to the requested Scout record. For an open-world identity or history question, make one broader pass: use scout.searchResearch for cited research/history, scout.searchProjects for project identity, or scout.getBuilders for directory membership; validate any semantic candidate before attribution.";
 
 function fillPathTemplate(
   path: string,
@@ -114,7 +116,8 @@ export async function callScout(
           service: SERVICE,
           kind: res.status === 404 ? "soft-empty" : "error",
           message: `HTTP ${res.status} from ${path}: ${text.slice(0, 300)}`,
-          status: res.status
+          status: res.status,
+          ...(res.status === 404 ? { hint: SCOUT_MISS_HINT } : {})
         });
       }
       return okResult({ text, contentType });
@@ -139,7 +142,7 @@ export async function callScout(
           kind: "soft-empty",
           message,
           status: 404,
-          ...(hint ? { hint } : {})
+          hint: hint ? `${hint} ${SCOUT_MISS_HINT}` : SCOUT_MISS_HINT
         });
       }
       if (res.status === 503 && body.unavailable === true) {
@@ -175,6 +178,7 @@ export async function callScout(
             : `scout answered with meta.error: ${meta.error}`,
         status: res.status,
         code: meta.error,
+        hint: SCOUT_MISS_HINT,
         ...(advisory !== undefined ? { details: advisory } : {})
       });
     }

@@ -39,7 +39,7 @@ const CATEGORY_FLOORS = {
 const PARTNER_ONBOARD_RE = /(?:^|\.)partnerOnboard$/;
 const DIGEST_SKILL = "skills.lumenloop.stellar-ecosystem-digest";
 const LEDGER_SOURCE_COUNTS = {
-  "battery-2026-07": 469,
+  "battery-2026-07": 493,
   boxy: 21,
   kaan: 49,
   raph: 90,

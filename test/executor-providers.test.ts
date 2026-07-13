@@ -732,6 +732,60 @@ describe("codemode fns", () => {
     expect(r.truncated).toBe(true);
   });
 
+  it("search returns exact-ID recovery separately and leaves ranking unchanged", async () => {
+    const baseline = (await codemode.search!({ query: "builder directory", limit: 5 })) as {
+      hits: Array<{ id: string }>;
+    };
+    const recovered = (await codemode.search!({
+      query: "builder directory",
+      limit: 5,
+      recoverFrom: ["scout.getBuilders"],
+      reason: "empty"
+    })) as {
+      ok: boolean;
+      hits: Array<{ id: string }>;
+      recovery: Array<{ id: string }>;
+    };
+    expect(recovered.ok).toBe(true);
+    expect(recovered.hits).toEqual(baseline.hits);
+    expect(recovered.recovery.map((candidate) => candidate.id)).toEqual([
+      "lumenloop.search_content_semantic",
+      "scout.searchResearch"
+    ]);
+  });
+
+  it("search requires explicit recoverFrom ids before returning recovery candidates", async () => {
+    const baseline = (await codemode.search!({ query: "builder directory", limit: 5 })) as {
+      hits: Array<{ id: string }>;
+      recovery: unknown[];
+    };
+    const reasonOnly = (await codemode.search!({
+      query: "builder directory",
+      limit: 5,
+      reason: "empty"
+    })) as { ok: boolean; hits: Array<{ id: string }>; recovery: unknown[] };
+    expect(reasonOnly.ok).toBe(true);
+    expect(reasonOnly.hits).toEqual(baseline.hits);
+    expect(baseline.recovery).toEqual([]);
+    expect(reasonOnly.recovery).toEqual([]);
+  });
+
+  it("search rejects unknown recovery ids and reasons", async () => {
+    const unknownId = (await codemode.search!({
+      query: "builder directory",
+      recoverFrom: ["scout.getBuilder"]
+    })) as { ok: boolean; error: { message: string } };
+    expect(unknownId.ok).toBe(false);
+    expect(unknownId.error.message).toContain("scout.getBuilder");
+
+    const unknownReason = (await codemode.search!({
+      query: "builder directory",
+      reason: "uncertain"
+    })) as { ok: boolean; error: { message: string } };
+    expect(unknownReason.ok).toBe(false);
+    expect(unknownReason.error.message).toContain("valid reasons");
+  });
+
   it("search logs the shared privacy-bounded page telemetry shape", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     try {
@@ -813,7 +867,7 @@ describe("codemode fns", () => {
 
   it("catalog() returns the full manifest view — every entry callable, host detail stripped", async () => {
     const view = (await codemode.catalog!()) as {
-      entries: { id: string; transport?: unknown }[];
+      entries: { id: string; transport?: unknown; retrievalProfile?: unknown }[];
     };
     expect(view.entries.length).toBe(catalog.entries.length);
     // No policy layer exists (ADR-0003): nothing uncallable is in the view.
@@ -821,6 +875,7 @@ describe("codemode fns", () => {
       true
     );
     expect(view.entries.every((e) => !("transport" in e) && !("provenance" in e))).toBe(true);
+    expect(view.entries.find((e) => e.id === "scout.getBuilders")?.retrievalProfile).toBeDefined();
   });
 
   it("catalog() supports exact kind/service intersection filters and compact projection", async () => {
@@ -1087,20 +1142,24 @@ describe("codemode fns", () => {
     expect(r.content).toContain("#");
   });
 
-  it("skill_read fires the onSkillRead hook on successful reads only (advice-only signal)", async () => {
-    let fired = 0;
+  it("skill_read reports only exact catalog-declared build-authority roles", async () => {
+    const reads: Array<{ id: string; roles: readonly string[] }> = [];
     const providers = buildSandbox(catalog, bundle, env, {
-      onSkillRead: () => {
-        fired += 1;
+      onSkillRead: (id, roles) => {
+        reads.push({ id, roles });
       }
     });
     const fns = fnsOf(providers, "codemode");
     await fns.skill_read!("skills.definitely.not-a-skill", {});
-    expect(fired).toBe(0); // failed read: no signal
+    expect(reads).toEqual([]); // failed read: no signal
     await fns.search!("skill content");
-    expect(fired).toBe(0); // discovery is not a skill read
+    expect(reads).toEqual([]); // discovery is not a skill read
+    await fns.skill_read!("skills.stellar-dev.smart-contracts", {});
     await fns.skill_read!("skills.lumenloop.stellar-project-dossier", {});
-    expect(fired).toBe(1);
+    expect(reads).toEqual([
+      { id: "skills.stellar-dev.smart-contracts", roles: ["contract"] },
+      { id: "skills.lumenloop.stellar-project-dossier", roles: [] }
+    ]);
   });
 
   it("skill_run fires the onSkillRun hook on every dispatch (usage count, not success count)", async () => {

@@ -25,15 +25,31 @@
   "truth": {
     "domain": "mixed",
     "status": "confirmed",
-    "asOf": "2026-07-11",
+    "asOf": "2026-07-13",
     "sources": [
       {
         "class": "A",
         "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
       },
       {
+        "class": "A",
+        "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+        "note": "First-party SDF scam-safety guidance; undated live page accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://support.kraken.com/articles/360000184543-memo-for-stellar-lumens-xlm-deposits",
+        "note": "Provider-owned evidence that XLM deposit/memo requirements are provider-address specific and mutable"
+      },
+      {
+        "class": "A",
+        "ref": "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams",
+        "note": "Independent regulator guidance on crypto impersonation and bargain/investment scams; accessed 2026-07-13."
+      },
+      {
         "class": "D",
-        "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+        "ref": "https://www.forbes.com/advisor/investing/cryptocurrency/best-crypto-exchanges/",
+        "note": "Independent comparison observed 2026-07-13; explicitly compares fees or spreads and deposit/withdrawal processes rather than declaring a timeless universal cheapest venue."
       }
     ],
     "corroboration": [
@@ -44,29 +60,43 @@
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
-            "observedAt": "2026-07-11"
+            "observedAt": "2026-07-13"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+            "observedAt": "2026-07-13"
+          },
+          {
+            "class": "A",
+            "ref": "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams",
+            "observedAt": "2026-07-13",
+            "note": "Regulator corroboration for unsolicited crypto-offer and impersonation risk."
           },
           {
             "class": "D",
-            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
-            "observedAt": "2026-07-11"
+            "ref": "https://www.forbes.com/advisor/investing/cryptocurrency/best-crypto-exchanges/",
+            "observedAt": "2026-07-13",
+            "note": "Independent support for comparing scenario-specific fees/spreads and deposit/withdrawal mechanics rather than naming one universal cheapest provider."
           }
         ]
       }
     ],
     "verified": {
-      "date": "2026-07-11",
-      "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+      "date": "2026-07-13",
+      "by": "Todo 972 provenance re-check; retained the behavioral golden without naming or ranking a provider",
       "evidence": [
-        "solo://proj/49/process/3415",
-        "solo://proj/49/process/3419",
-        "scratchpad/p4/h3-raph/fable-voice-review.md",
-        "scratchpad/p4/h3-raph-blind/reconciliation.md",
         "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
-        "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+        "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+        "https://support.kraken.com/articles/360000184543-memo-for-stellar-lumens-xlm-deposits",
+        "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams",
+        "https://www.forbes.com/advisor/investing/cryptocurrency/best-crypto-exchanges/",
+        "2026-07-13 bounded web sweep found provider-specific buy/deposit guidance, not a durable universal cheapest-provider ranking; no judge-facing change warranted.",
+        "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol review"
       ],
       "rootCause": [
-        "eval-authoring"
+        "eval-authoring",
+        "solo://proj/49/todo/golden-truth-review--972"
       ]
     },
     "origin": "raph buy-xlm-where-best-rates-fees"

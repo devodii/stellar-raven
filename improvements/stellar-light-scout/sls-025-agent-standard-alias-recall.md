@@ -1,13 +1,14 @@
 ---
 id: sls-025
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout exact and broad probes for ERC-8004, 8004, stellar-8004, stellar8004, and progax01
   - broad 8004 searches returned trionlabs/stellar-8004 and progax01/stellar8004 while some exact aliases returned zero
   - Solo scratchpad 575 GT-12 primary process 3237 and independent blind process 3241
   - GT-18 recurrence: exact repo search q=x402 returned zero while broader searches and direct repos exposed canonical x402, RouteDock, REAPP, ApiCharge, StellarPay402, AgentCard, and Bear implementations
+  - https://github.com/Stellar-Light/stellarlight/issues/512
   - GT-55 recurrence: exact repo search q=subquery/stellar-subql-starter returned zero while the public non-archived repository exists and broader indexer searches returned noisy adjacent rows
 recurrences:
   - date: 2026-07-11

@@ -1,13 +1,14 @@
 ---
 id: sls-019
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live GET /api/research source=cap exact-identifier sweep on 2026-07-10
   - target ranks for CAP-0021/0035/0038/0058/0066/0071/0074 were 7/18/23/11/3/1/9 respectively
   - control query Asset Clawback ranked the CAP-0035 document first
   - Solo scratchpad 575 drift verdict and independent read-only review by process 3209
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/510
 ---
 
 ## Finding

@@ -896,3 +896,27 @@ so no blend setting recovers them (sweep above); several route to plausible alte
 the upstream curation gap filed as sls-052, the successor finding to sls-051. Decision record:
 `solo://proj/49/scratchpad/drift-issue-21-scout--605`. Baseline result:
 `routing-2026-07-12T21-12-46-662Z.json`.
+
+## Drift absorb (2026-07-13, issue #22): Scout 1.7.18 + routing cap repair
+
+Scout 1.7.18 kept the path/method and operation-description sets stable, added
+nullable project rename-continuity data, and expanded `x-routing` for builders,
+leaderboard repo health, and SDF organizational research. The expansion exposed
+a consumer-side flaw: `searchResearch` grew to 149 curated tokens, while lever 7
+kept only 128 by frequency. Repeated new org vocabulary evicted existing
+security/SCF terms, moving legacy strict routing from the 209/285/316 baseline to
+207/283/314 and dropping two expected Scout cards from the top five even though
+the aggregate band still passed.
+
+The general repair raises only the bounded curated-routing ceiling from 128 to
+256; blend weight, document-frequency behavior, operation descriptions, and the
+gate baseline stay unchanged. This retains the complete current 149-token set
+and measures **211/287/316** legacy strict, **86/102/110** extended strict, and
+**18/23/23** skills strict. The two lost cards return, the YieldBlox incident
+case moves `searchResearch` rank 3→1, and no baseline edit is needed. New broad
+builder vocabulary adds `getBuilders` at ranks 3–5 on five smart-contract/docs
+queries, but it does not displace their expected family; the exact builder
+queries improve. Owned QA surface annotations for the Rust/Soroban and LatAm
+builder-directory cases now name `scout.getBuilders`. Review evidence and the
+upstream finding reconciliation (`sls-050`, `sls-052`, new `sls-054`) live in
+`solo://proj/49/scratchpad/issue-22-drift-revie--623`.

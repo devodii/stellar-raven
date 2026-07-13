@@ -1,7 +1,7 @@
 ---
 id: sls-026
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout Aquarius project response reports scfTotalAwardedUSD 391000 and rounds 17,23,27,30
@@ -11,6 +11,7 @@ evidence:
   - GT-17 recurrence: semantic RWA rows with award_type Build included Test Transaction, Ready for Payment, and Information Collection statuses
   - GT-38 recurrence: primary process 3297 and blind process 3299 reproduced Scout Aquarius $391K with rounds 17/23/27/30 against official $291K paid, $100K Pending, and $70K Ineligible row semantics
   - GT-37 recurrence: SocketFi and JS kit awarded-round lists include non-awarded submissions; Chainlink Relayer, WageLink, and Stellar Oracle Shield have official awards despite Scout false negatives
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/511
 recurrences:
   - date: 2026-07-10
     evidence: GT-38 independently reproduced the Aquarius aggregate/row-status conflict and confirmed that round 30 must never be described as Awarded

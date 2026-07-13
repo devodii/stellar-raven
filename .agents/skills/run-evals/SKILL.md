@@ -111,6 +111,38 @@ pre-spend review has actually caught (dated evidence:
 
 A missed plan review blocks launch; it never retroactively invalidates data already collected.
 
+### Additional pre-registration for source-addition lanes
+
+Adding a new source family changes both evidence access and routing competition. Before spending on
+an A/B for a new service, index, corpus, or source namespace, add these items to the reviewed round
+brief:
+
+1. **Fix the gainable denominator.** For every proposed upside case, require baseline below
+   Correct, probe-verified evidence for every missing key fact in the new source, and no residual
+   that is merely answer craft. State `X of N audited-gainable` before launch; do not count
+   baseline-Correct or structurally ungainable rows as upside opportunities.
+2. **Measure the symmetric capture slice.** Every existing routing case the candidate newly captures
+   at top 1 enters a paired no-regression QA arm. A source can improve its intended questions while
+   degrading unrelated answers through evidence flooding; aggregate routing alone does not measure
+   that downside.
+3. **Control verdict variance.** Use two or three runs per arm on a small slice, or a second judge for
+   every cross-arm grade difference before it counts. The exact replication rule and cost ceiling
+   belong in the pre-spend brief.
+4. **Grade facts as well as verdicts.** Pre-register missing-fact and wrong-claim deltas as the
+   mechanism-sensitive metric; Correct/Partial/Wrong remains the headline. A useful source can fill
+   facts without moving a coarse verdict, while one precision error can hide the gain.
+5. **Measure provenance directly.** If first-party or otherwise unique sourcing is the value
+   proposition, define its own instrument—such as uniquely reachable golden-source URLs or
+   first-party citation rate. Do not use QA-grade movement as a proxy for provenance.
+6. **Review labels before routing measurement.** Adjudicate cases whose expected source predates the
+   candidate namespace before the A/B, and pre-commit the disposition for the common
+   retrieval-win/QA-neutral/routing-cost outcome. Operation names are routing-load-bearing text, so
+   inspect exact per-case captures rather than treating a source namespace as neutral metadata.
+
+When the candidate surface differs from HEAD, the answering server must serve the complete candidate
+manifest, spec, adapters, and descriptions from one pinned revision. A partial local overlay is not a
+valid source-addition arm.
+
 For a multi-lane or CI-like round, use `truth-maintenance` as the coordinator rather than
 holding every transcript, drift note, golden check, and improvement follow-up in one context
 window. The coordinator should own the Solo ledger and spawn isolated reviewers for:
@@ -248,10 +280,15 @@ Known judge failure modes (from `eval/qa/README.md`):
   (`JUDGE_RUBRIC` in `judge.mjs` is the current version; verdicts carry
   `{rubric, packVersion, promptSha256}` stamps). The comparability rules and the committed
   noise floor live in `eval/qa/README.md` ("Judging rubric and score comparability").
-- **Denominator note:** the owned battery (484 cases, the authoritative denominator per
-  `eval/qa/README.md`) is the baseline denominator; pre-rebuild aggregate baselines are archival
-  (`research/audits/2026-07-qa-history.md`) and are not directly comparable at the aggregate
-  level. Per-id comparisons remain valid for continuing case ids (same rubric).
+- **Denominator note:** the owned battery is 490 cases as of 2026-07-13. The 2026-07-11 baseline
+  remains historically 484-denominated, and pre-rebuild aggregates remain archival
+  (`research/audits/2026-07-qa-history.md`); neither is directly comparable to a 490-case aggregate.
+  Per-id comparisons remain valid for continuing ids under the same rubric/pack tuple.
+- **Deterministic sample-membership note:** sample-30 is proportional by service and uses
+  even-spaced picks over id-sorted strata. Adding cases can therefore change sampled ids without
+  changing sampler code. The 484→490 expansion retained 25 ids and replaced five (full list in
+  `eval/qa/README.md`); none of the six new cases entered the sample. Before claiming movement
+  across a denominator change, use an explicit common-id list or disclose the membership churn.
 - Freshness cases: sourced drift from the golden snapshot is fine; confident unsourced
   contradiction is not. Expect a small floor of judge-vs-live disagreements.
 - **Avoid-clause bypass of the rubric-v2 addendum**: a golden whose must-avoid item bans

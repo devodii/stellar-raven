@@ -1,9 +1,10 @@
 ---
 id: ll-009
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
+  - https://github.com/lumenloop/lumenloop-backend/issues/25 (filed 2026-07-13; backend owns the content enrichment and publishing pipeline; confirmed open with `gh issue view`)
   - lumenloop.com/research/stellar-weekly-roundup-week-29-2026 + lumenloop.com/media/state-stellar-q1-2026-beyond (fetched 2026-07-03)
   - messari.io/report/state-of-stellar-q1-2026 (the written report, pub 2026-04-29) + Messari interview youtube.com/watch?v=t0agtgLajhg (2026-06-04)
   - Solo project 49, todo 829 (consistency sweep + golden-truth resolution), scratchpad 521

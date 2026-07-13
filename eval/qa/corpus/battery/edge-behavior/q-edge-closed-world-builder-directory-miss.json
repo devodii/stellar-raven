@@ -1,0 +1,72 @@
+{
+  "id": "q-edge-closed-world-builder-directory-miss",
+  "question": "Does Scout's builder directory currently contain an exact builder record for “Strupey”?",
+  "surface": [
+    "scout.getBuilders"
+  ],
+  "golden": {
+    "answer": "No exact `Strupey` builder record was returned by Scout's builder directory when checked on 2026-07-13. That answers this closed-world directory-membership question at Scout's scope; it does not establish that the name has no history or footprint elsewhere. A broader ecosystem search is unnecessary unless the user expands the question beyond this directory.",
+    "keyFacts": [
+      "Directly answers the exact Scout builder-directory membership question from the directory result.",
+      "Scopes the negative to Scout's builder directory and the observation date.",
+      "Does not automatically broaden into semantic, research, A/V, or docs searches for this closed-world request."
+    ],
+    "avoid": [
+      "Do NOT turn the directory miss into an absolute claim that Strupey does not exist or has no Stellar history.",
+      "Do NOT force an open-world research pass when the user asked only about one named directory.",
+      "Do NOT substitute a semantic neighbor or unrelated namesake for an exact builder record."
+    ],
+    "notes": "Closed-world negative control paired with q-edge-strupey-ambiguous-stellar-history. The same token should stop at Scout scope here but trigger one bounded broad pass for the open-world history question."
+  },
+  "tags": {
+    "category": "edge-behavior",
+    "service": "scout",
+    "freshness": "scheduled",
+    "trap": "fabrication-bait"
+  },
+  "truth": {
+    "domain": "corpus-grounded",
+    "status": "confirmed",
+    "asOf": "2026-07-13",
+    "reverifyBy": "2026-10-09",
+    "sources": [
+      {
+        "class": "C",
+        "ref": "http://localhost:8787/mcp scout.getBuilders(q=Strupey)",
+        "note": "Observed 2026-07-13: returned=0 and total=0 for the exact directory query."
+      },
+      {
+        "class": "B",
+        "ref": "catalog/manifest.json#scout.getBuilders",
+        "note": "Current exposed operation contract identifies this as the Scout builder-directory surface."
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "Scout's builder directory returned no exact Strupey record on 2026-07-13.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp scout.getBuilders(q=Strupey)",
+            "observedAt": "2026-07-13",
+            "note": "Directory response reported zero returned and zero total."
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-13",
+      "by": "Coordinator from live Scout directory probe",
+      "evidence": [
+        "2026-07-13 localhost Scout getBuilders exact-query projection.",
+        "Paired open-world Strupey truth matrices in Solo scratchpad 611."
+      ],
+      "rootCause": [
+        "A broad-recovery policy needs a paired closed-world control so it does not over-search every exact directory miss.",
+        "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+      ]
+    },
+    "origin": "authored 2026-07-13 as the closed-world over-recovery control"
+  }
+}

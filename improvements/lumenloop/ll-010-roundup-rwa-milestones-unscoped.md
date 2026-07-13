@@ -1,13 +1,14 @@
 ---
 id: ll-010
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-06
 evidence:
   - eval/qa/results/2026-07-06T18-48-22-variantA.json (q-asset-rwa-tokenized-freshness, partial — overturned to pass in review)
   - verdict-review workflow wf_01b3347d-1b8 (triage: judge-artifact; the upstream signal survives the overturn)
   - live verification 2026-07-06: lumenloop search_content_semantic returned the Jun-19 and May-29 roundup quotes verbatim
   - Solo project 49, todo 846
+  - https://github.com/lumenloop/lumenloop-backend/issues/27
 ---
 
 ## Finding

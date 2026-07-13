@@ -288,7 +288,9 @@ export async function callStellarDocs(
       return errResult({
         service: SERVICE,
         kind: "soft-empty",
-        message: `no indexed sections found for ${String(args.path)} — the path is not in the docs index (check url_without_anchor from a search hit; auto-generated API-reference pages are not indexed)`
+        message: `no indexed sections found for ${String(args.path)} — the path is not in the docs index (check url_without_anchor from a search hit; auto-generated API-reference pages are not indexed)`,
+        hint:
+          "This is a docs-index result only. For an open-world ecosystem identity or history question, corroborate with the broad Lumenloop or Scout families before drawing a wider negative conclusion."
       });
     }
 
@@ -325,7 +327,11 @@ export async function callStellarDocs(
           body.nbHits === 0
             ? "zero hits — this topic is not in the docs corpus (zero is a reliable negative on this index)"
             : "the index matched pages, but none in this operation's docs category — try stellarDocs.search_docs for a corpus-wide search",
-        status: 200
+        status: 200,
+        hint:
+          body.nbHits === 0
+            ? "Scope the negative to this docs index. For an open-world ecosystem identity or history question, corroborate with the broad Lumenloop or Scout families."
+            : "Broaden once with stellarDocs.search_docs; if the question is about ecosystem identity or history rather than official technical wording, also consult a broad Lumenloop or Scout family."
       });
     }
 

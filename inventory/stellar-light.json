@@ -1,16 +1,15 @@
 {
-  "changelogEntryCount": 68,
+  "changelogEntryCount": 70,
   "changelogLatest": {
-    "date": "2026-07-11",
-    "detail": "17 operations shrank (before→after chars): searchResearch 2395→399, searchProjects 2330→362, getLeaderboard 1551→390, analyzeEcosystem 1510→390, searchRepos 1436→381, getBuilders 1321→353, getClusters 1241→382, getRfps 1174→385, getHackathon 1066→364, getHackathons 1061→384, compareHackathons 928→370, listSkills 890→398, explainRepo 826→370, getStatus 757→309, getPartners 738→393, getSkill 720→369, partnerAssistant 659→374. No parameter or response-shape changes — operation descriptions + the additive x-routing extension only. Guarded in contract CI by scripts/eval/routing-surface-check.ts: asserts every description ≤600 chars and that sls-051's docs-shaped probes ('which Wasm target does the current Stellar CLI build to?' et al.) never rank searchProjects' description as top token-coverage nor ≥0.35 absolute. scout-mcp tool descriptions received the same shrink and ride the next npm publish.",
-    "summary": "sls-051 structural fix — operation descriptions rewritten as terse purpose statements (every one now ≤600 chars; searchProjects was 2,330, searchResearch 2,395), and the routing vocabulary they carried (category/product enumerations, synonym chains, question exemplars) MOVED — not deleted — to a new machine-readable `x-routing` extension on each operation: {purpose, keywords[], useWhen[], notFor[], exampleQuestions[]}. WHY: enumeration-heavy description prose was lexically capturing question families other operations answer (22/122 extended-lane docs-shaped questions ranked searchProjects top-1 at the 1.7.15 absorb), and each prose repair just moved the capture to a new family — 1.7.15 fixed editorial capture and created docs capture. Consumers that cached operation descriptions should re-baseline against 1.7.16; lexical/embedding routers should score `x-routing` as separately-weighted fields rather than concatenating it into the description (convention documented in info.description under 'Routing metadata').",
+    "date": "2026-07-12",
+    "detail": "Schema: projects gain optional aliases[]/renamedAt/renameSourceUrl. Search: aliases join the candidate query and nameMatchScore (exact alias = rank 3). First populated record: vesseo (formerly Vibrant). The general mechanism replaces per-case synonym patches for renames.",
+    "summary": "sls-050: rename continuity as structured data. Project rows gain a nullable `identity` block ({currentName, aliases, renamedAt, sourceUrl}) served whenever a record carries former names; alias lookups now rank as exact-name matches in searchProjects (q=vibrant resolves to vesseo with the continuity disclosed, not via invisible synonyms). Additive.",
     "surfaces": [
       "api"
     ],
-    "type": "changed",
-    "version": "spec 1.7.16"
+    "type": "added"
   },
-  "fetchedAt": "2026-07-12T20:52:52.998Z",
+  "fetchedAt": "2026-07-13T21:32:54.648Z",
   "openapi": {
     "components": {
       "parameters": {
@@ -680,6 +679,32 @@
             "id": {
               "type": "string"
             },
+            "identity": {
+              "description": "Rename continuity (sls-050). Present when this project has former names: aliases resolve to this record in search, and this block carries the provenance. Cite the CURRENT name; mention the alias when the user asked by it.",
+              "nullable": true,
+              "properties": {
+                "aliases": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "currentName": {
+                  "type": "string"
+                },
+                "renamedAt": {
+                  "description": "When the current name took effect (if known).",
+                  "format": "date",
+                  "nullable": true,
+                  "type": "string"
+                },
+                "sourceUrl": {
+                  "nullable": true,
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
             "lastActivityAt": {
               "description": "Most recent commit across the project's own indexed repos — attach as the as-of date for 'is this project active?' answers. Null when no repo has a known commit date.",
               "format": "date-time",
@@ -1265,7 +1290,7 @@
       },
       "summary": "Agent-native data layer for the Stellar ecosystem — projects, builders, hackathons, SCF, audits, research.",
       "title": "Stellar Scout API",
-      "version": "1.7.16"
+      "version": "1.7.18"
     },
     "openapi": "3.1.0",
     "paths": {
@@ -1522,11 +1547,24 @@
           ],
           "x-routing": {
             "exampleQuestions": [
+              "Who are experienced Rust Soroban devs I could work with?",
               "Find experienced Soroban devs I could reach out to",
               "Rust builders to hire in LatAm working on payments",
               "Who in Lagos has shipped a Stellar project?"
             ],
             "keywords": [
+              "developers",
+              "devs",
+              "engineers",
+              "contributors",
+              "experienced",
+              "senior",
+              "hire",
+              "typescript",
+              "javascript",
+              "frontend",
+              "backend",
+              "smart contract developer",
               "builder",
               "builders",
               "developer",
@@ -1561,6 +1599,7 @@
             ],
             "purpose": "Find Stellar builders (people) by skill, location, or shipped projects — recruiting/hiring.",
             "useWhen": [
+              "find developers by stack + role/seniority (e.g. experienced Rust Soroban devs)",
               "find me a teammate/collaborator who has shipped X",
               "Stellar devs in [place] who've done Soroban / 'Rust builders to hire' / 'builders in LatAm working on payments'",
               "who can I hire for an anchor build — you want a PERSON to contact",
@@ -2182,11 +2221,22 @@
           ],
           "x-routing": {
             "exampleQuestions": [
+              "Which leaderboard projects have open issues?",
               "What are the most active Stellar projects in the last 30 days?",
               "How many active developers does Stellar have?",
               "Export the top 100 Stellar projects as CSV"
             ],
             "keywords": [
+              "open issues",
+              "issue tracker",
+              "issue backlog",
+              "repo health",
+              "repository health",
+              "maintenance",
+              "activity",
+              "most active",
+              "commits",
+              "stars",
               "leaderboard",
               "top projects",
               "most active",
@@ -2216,6 +2266,8 @@
             ],
             "purpose": "Ranked active-project leaderboard + Electric Capital ecosystem developer stats.",
             "useWhen": [
+              "which projects have open issues / the biggest issue backlog",
+              "repo health / maintenance / activity comparisons across projects",
               "who/what are the top/most-active Stellar projects",
               "most-starred projects; which projects shipped recently (last 30d)",
               "how many active Stellar devs / how does Stellar's dev activity look (EC 28-day active / Stellar-only / multichain splits)",
@@ -3287,6 +3339,7 @@
           ],
           "x-routing": {
             "exampleQuestions": [
+              "What is the SDF enterprise fund and what is its mandate?",
               "How does the Stellar Consensus Protocol work?",
               "What does the SCF Handbook say about award tiers?",
               "Has there been a reentrancy incident on Soroban?",
@@ -3294,6 +3347,15 @@
               "How do I make my issued asset visible on exchanges and explorers?"
             ],
             "keywords": [
+              "SDF",
+              "Stellar Development Foundation",
+              "enterprise fund",
+              "mandate",
+              "organizational structure",
+              "leadership",
+              "chief scientist",
+              "roadmap",
+              "grants program",
               "sep",
               "seps",
               "cap",
@@ -3375,6 +3437,7 @@
             ],
             "purpose": "Cited knowledge/docs answers from the Stellar research corpus ($vectorSearch over Voyage embeddings; BM25-lite keyword fallback when vectors are unavailable).",
             "useWhen": [
+              "SDF organizational questions (enterprise fund, mandate, leadership, structure)",
               "'how does X work', 'is X possible / has X been discussed on Stellar', 'what does the SEP/spec/audit say about X'",
               "primary-source citations for a thesis or design question; ecosystem KNOWLEDGE & explainer questions ('what is / how does / who / why / is it true that…')",
               "security & risk (audits, exploits, incidents, post-mortems, oracle manipulation), compliance & regulation (Travel Rule, FATF, KYC/AML, sanctions)",
@@ -3860,7 +3923,7 @@
       }
     ]
   },
-  "openapiVersion": "1.7.16",
+  "openapiVersion": "1.7.18",
   "operationCount": 24,
   "service": "stellar-light",
   "source": {
@@ -3872,7 +3935,7 @@
     "status": "https://stellarlight.xyz/api/status"
   },
   "status": {
-    "apiVersion": "1.7.16",
+    "apiVersion": "1.7.18",
     "docs": "https://stellarlight.xyz/scout",
     "endpoints": [
       "/api/status",
@@ -3905,7 +3968,7 @@
     "sources": [
       {
         "count": 957,
-        "lastUpdatedAt": "2026-07-12T01:07:04.579Z",
+        "lastUpdatedAt": "2026-07-13T19:28:23.367Z",
         "name": "projects",
         "populationId": "projects|status:all"
       },
@@ -3918,26 +3981,26 @@
       },
       {
         "count": 116,
-        "lastUpdatedAt": "2026-07-12T06:00:31.590Z",
+        "lastUpdatedAt": "2026-07-13T06:01:27.792Z",
         "name": "builders",
         "notes": "Synced from Stellar Passport — small and growing dataset",
         "populationId": "builders|status:all"
       },
       {
-        "count": 2473,
-        "lastUpdatedAt": "2026-07-12T05:58:43.809Z",
+        "count": 2477,
+        "lastUpdatedAt": "2026-07-13T11:02:44.495Z",
         "name": "repos",
         "notes": "Indexed-and-scored Stellar GitHub repos (powers /api/repos/search)",
         "populationId": "repos|status:all"
       },
       {
         "count": 1,
-        "lastUpdatedAt": "2026-07-10T16:52:42.026958+00:00",
+        "lastUpdatedAt": "2026-07-13T17:11:03.796137+00:00",
         "name": "ecosystemStats",
-        "notes": "Electric Capital snapshot, as of 2026-07-02"
+        "notes": "Electric Capital snapshot, as of 2026-07-05"
       },
       {
-        "count": 7,
+        "count": 9,
         "lastUpdatedAt": null,
         "name": "sdfSkills",
         "notes": "Proxied from skills.stellar.org (server-cached 24h). Live freshness shown on the upstream site."

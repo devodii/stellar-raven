@@ -53,6 +53,12 @@ plausibly receive it; do not file to this repo just to close the loop. The draft
 scrubs the upstream issue body, resolves the repo from intake when unambiguous, and refuses unclear or
 mixed targets unless a human supplies `--repo`.
 
+Current owner map (confirmed 2026-07-13): `lumenloop/lumenloop-backend` owns Lumenloop API and
+content-pipeline findings, while `lumenloop/stellar-ecosystem-db` owns committed directory-record
+corrections. For Stellar Light, `Stellar-Light/stellarlight` owns API/data/discovery behavior,
+`Stellar-Light/stellar-scout` owns the Scout skill, and `Stellar-Light/scout-mcp` owns the MCP wrapper.
+Official Stellar skill findings target `stellar/stellar-dev-skill`.
+
 When adding or editing a finding, run:
 
 ```sh

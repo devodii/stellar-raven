@@ -1,13 +1,14 @@
 ---
 id: sls-021
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-10
 evidence:
   - live scout.getPartners query for mobile money plus off-ramp returned only Zeam
   - HoneyCoin partner row has empty assets, seps, and rampTypes fields
   - current HoneyCoin operator coverage and API documentation describe mobile-money and off-ramp capabilities across multiple markets
   - Solo scratchpad 575 GT-10 primary process 3230
+  - live re-check 2026-07-13: GET https://stellarlight.xyz/api/partners?q=mobile%20money&ramps=off-ramp returns Honey Coin with on-ramp/off-ramp and USDC/USDT fields, so the omission no longer reproduces
 ---
 
 ## Finding

@@ -1,13 +1,14 @@
 ---
 id: sls-022
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live searchResearch incident query returned row 6a32d6de60958975da632755
   - row dates the incident to May 2026, calls the completed drain attempted/contained, and renders the XLM quantity as $61 million in XLM
   - primary operator disclosures and on-chain records place the drain on 2026-02-22 with material loss before partial quarantine and later remediation
   - Solo scratchpad 575 GT-09 primary process 3226
+  - https://github.com/Stellar-Light/stellarlight/issues/513
 ---
 
 ## Finding

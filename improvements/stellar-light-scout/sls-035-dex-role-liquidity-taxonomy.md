@@ -1,12 +1,13 @@
 ---
 id: sls-035
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live DEX cluster contained 33 mixed-role records
   - operator and protocol sources distinguish native venues, AMMs, routers, aggregators, and UIs
   - Solo scratchpad 575 GT-19 primary 3254 and blind 3258
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/517
 ---
 
 ## Finding

@@ -1,13 +1,14 @@
 ---
 id: sls-037
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - Rarible row was Live with empty supportedNetworks and Ethereum/Polygon-only description
   - official SCF award and Rarible STELLAR enum establish a real integration relationship
   - current Rarible supported-chain documentation and UI did not verify public Stellar support
   - Solo scratchpad 575 GT-19 primary 3254 and blind 3258
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/523
 ---
 
 ## Finding

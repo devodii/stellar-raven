@@ -1,13 +1,14 @@
 ---
 id: sls-028
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout NFT project discovery returned rows whose linked domains were rechecked on 2026-07-10
   - octoplace.io and thebluemarble.io resolved to unrelated gambling content
   - SNNAC returned 503 and IRL's current operator page did not substantiate the directory NFT description
   - Solo scratchpad 575 GT-16 blind process 3245
+  - https://github.com/Stellar-Light/stellarlight/issues/515
 ---
 
 ## Finding

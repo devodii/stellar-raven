@@ -1,12 +1,13 @@
 ---
 id: ll-016
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - SDF attributes the 2014 Stellar fork to weaknesses in the inherited consensus design
   - Ripple's contemporaneous response disputes that causal interpretation
   - Solo scratchpad 575 GT-27 primary 3270 and blind 3272
+  - https://github.com/lumenloop/lumenloop-backend/issues/31
 ---
 
 ## Finding

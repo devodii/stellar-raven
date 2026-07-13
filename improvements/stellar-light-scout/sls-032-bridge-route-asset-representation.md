@@ -1,12 +1,13 @@
 ---
 id: sls-032
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live bridge/project discovery surfaced Axelar, Allbridge, Squid, CCTP, and adjacent payment records without route-level asset representation
   - quote-time checks showed canonical Stellar USDC routes via CCTP, Allbridge Core, or Squid Intents while an explicit Axelar route delivered USDC.axl
   - Solo scratchpad 575 GT-15 primary process 3243 and independent blind process 3246
+  - https://github.com/Stellar-Light/stellarlight/issues/516 (filed 2026-07-13 after live API/OpenAPI re-check)
 ---
 
 ## Finding

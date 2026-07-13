@@ -1,10 +1,11 @@
 ---
 id: sk-012
 service: skills
-status: proposed
+status: reported-upstream
 discovered: 2026-07-11
 evidence:
   - P4 H2 observed skills.stellar-dev.agentic-payments describe "MPP Channel mode" while current official MPP-on-Stellar material names the intent Session and implements it with a one-way payment channel; solo://proj/49/scratchpad/super-corpus-rebuild--585
+  - upstream issue filed 2026-07-13: https://github.com/stellar/stellar-dev-skill/issues/57
 ---
 
 ## Finding

@@ -667,6 +667,32 @@
           "id": {
             "type": "string"
           },
+          "identity": {
+            "description": "Rename continuity (sls-050). Present when this project has former names: aliases resolve to this record in search, and this block carries the provenance. Cite the CURRENT name; mention the alias when the user asked by it.",
+            "nullable": true,
+            "properties": {
+              "aliases": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "currentName": {
+                "type": "string"
+              },
+              "renamedAt": {
+                "description": "When the current name took effect (if known).",
+                "format": "date",
+                "nullable": true,
+                "type": "string"
+              },
+              "sourceUrl": {
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
           "lastActivityAt": {
             "description": "Most recent commit across the project's own indexed repos — attach as the as-of date for 'is this project active?' answers. Null when no repo has a known commit date.",
             "format": "date-time",
@@ -1243,7 +1269,7 @@
     "description": "One spec covering every operation this MCP server can execute, across four services: lumenloop, scout (Stellar Light), stellarDocs (Algolia-backed docs search), and skills (bundled agent playbooks). Paths are keyed '/{service}/{operation}' and each operationId is the exact callable name: an operation with operationId 'lumenloop.search_directory' is invoked inside the execute tool's sandbox as `await lumenloop.search_directory(args)` — args is ONE object matching the operation's requestBody schema (POST ops) or its parameter names (GET ops). The exact call line is on each operation as x-execute. Every call resolves (never throws) to { ok: true, data } or { ok: false, error: { service, kind, message } }; the 200 response schema documents `data`. Every path in this spec is callable — exposure is filtered at build time, so nothing uncallable is described. Auth is handled host-side — code never sees keys.",
     "title": "stellar-raven-codemode — unified super spec",
     "version": "1.0.0",
-    "x-generatedAt": "2026-07-12T20:52:52.998Z"
+    "x-generatedAt": "2026-07-13T21:32:54.648Z"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -1459,7 +1485,7 @@
     },
     "/lumenloop/find_content_by_entity": {
       "post": {
-        "description": "Find articles, AV, events, governance proposals, and SCF submissions that mention a specific named entity. Uses LLM-extracted entities (project/person/organization/token) from content_entities. Case-insensitive match on entity_name or exact match on normalized_slug. Use this when you want exact entity grounding, not semantic similarity.\n\nWhen to use: Find content mentioning a NAMED entity (project, organization, token) by case-insensitive name match with LLM-confidence filtering — works even when the entity has no directory slug. If you have a slug, prefer find_content_about_project.\n\nReturns: Array of content items with the matched entity, confidence score, and content metadata.\n\nCatalog note: entity_type \"person\" yields all-empty groups on this lane even for heavily covered people (live-verified 2026-07-03) — an empty person result is lane behavior, NOT evidence of absence. Use entity types project, organization, or token; for a person, use search_content_semantic with the person name instead.",
+        "description": "Find articles, AV, events, governance proposals, and SCF submissions that mention a specific named entity. Uses LLM-extracted entities (project/person/organization/token) from content_entities. Case-insensitive match on entity_name or exact match on normalized_slug. Use this when you want exact entity grounding, not semantic similarity.\n\nWhen to use: Find content mentioning a NAMED entity (project, organization, token) by case-insensitive name match with LLM-confidence filtering — works even when the entity has no directory slug. If you have a slug, prefer find_content_about_project.\n\nReturns: Array of content items with the matched entity, confidence score, and content metadata.\n\nCatalog note: entity_type \"person\" can return ok data with all-empty groups even for heavily covered people (live-verified 2026-07-03). This is a data-shaped empty, not a transport or soft-empty failure. It supports only the scoped statement that this exact lookup linked no content. For open-world person coverage, use search_content_semantic, then require exact identity plus source and date before attribution.",
         "operationId": "lumenloop.find_content_by_entity",
         "requestBody": {
           "content": {
@@ -2486,7 +2512,7 @@
     },
     "/lumenloop/search_content_semantic": {
       "post": {
-        "description": "Search all content semantically. Embeds the query text and finds similar articles, AV, events, and tweets via pgvector cosine distance. Use this (not search_documents/list_documents) whenever the query is conceptual or phrased as a question, or when you do not know which collection holds the answer; reserve search_documents for exact title/URL keyword lookup. Supports date/source/type filters — use these for scoped research queries like \"find Stellar DeFi content from March\" or \"what did SDF post about privacy\".\n\nWhen to use: Meaning-based search across ALL published content types at once (articles, AV, events, research) — the default discovery tool for \"what has been said about X\". For exact-term lookup in one collection use search_documents; for content about one specific project use find_content_about_project. For \"latest/current\" ecosystem facts (protocol version, program/fund status, recent incidents or launches) prefer this over live web — results are dated and the corpus updates continuously; cite the date. Use web only for facts the corpus cannot hold, e.g. upstream package/registry pins (crates.io, npm, GitHub release tags).\n\nReturns: Results grouped by content type, each with AI summary, source url, date, and similarity score — never full text. Cite the returned url. response_format 'concise' (external default) omits long_summary; pass 'detailed' to include it.",
+        "description": "Search all content semantically. Embeds the query text and finds similar articles, AV, events, and tweets via pgvector cosine distance. Use this (not search_documents/list_documents) whenever the query is conceptual or phrased as a question, or when you do not know which collection holds the answer; reserve search_documents for exact title/URL keyword lookup. Supports date/source/type filters — use these for scoped research queries like \"find Stellar DeFi content from March\" or \"what did SDF post about privacy\".\n\nWhen to use: Meaning-based search across ALL published content types at once (articles, AV, events, research) — the default discovery tool for \"what has been said about X\". For exact-term lookup in one collection use search_documents; for content about one specific project use find_content_about_project. For \"latest/current\" ecosystem facts (protocol version, program/fund status, recent incidents or launches) prefer this over live web — results are dated and the corpus updates continuously; cite the date. Use web only for facts the corpus cannot hold, e.g. upstream package/registry pins (crates.io, npm, GitHub release tags).\n\nReturns: Results grouped by content type, each with AI summary, source url, date, and similarity score — never full text. Cite the returned url. response_format 'concise' (external default) omits long_summary; pass 'detailed' to include it.\n\nCatalog note: this is the wide-net recovery lane for open-world identity, history, event, and obscure-topic questions after directory, entity, or docs lookups are empty or off-target. Semantic rows are candidates, not attribution: require exact identity plus source and date, and discard merely adjacent results.",
         "operationId": "lumenloop.search_content_semantic",
         "requestBody": {
           "content": {
@@ -2621,7 +2647,7 @@
     },
     "/lumenloop/search_directory": {
       "post": {
-        "description": "Search the Stellar ecosystem directory for projects by name, description, or category (substring match). If a multi-word or conceptual query matches no substring, it automatically falls back to semantic project discovery (response carries match_mode: \"semantic\") so you still get the closest projects.\n\nWhen to use: Start here to find a Stellar ecosystem project by name, keyword, or category when you do not know its slug. Substring match, but a multi-word/conceptual query that hits no substring auto-falls back to semantic project discovery, so you can also use it for \"what RWA/wallet/oracle projects exist\" style asks. For \"projects like X\" use find_similar_projects_semantic; for content ABOUT a project use find_content_about_project.\n\nReturns: { count, projects: [...] } — each project: slug, title, description, category, tags. When the substring match is empty and the semantic fallback fires, the response also carries match_mode: \"semantic\" + a note, and rows include a similarity score. Take the slug into get_project for full details.\n\nCatalog note: prefer this lane plus find_content_about_project when a what is X or who builds X question wants narrative editorial context about a named ecosystem project; the scout project search returns structured fields only.",
+        "description": "Search the Stellar ecosystem directory for projects by name, description, or category (substring match). If a multi-word or conceptual query matches no substring, it automatically falls back to semantic project discovery (response carries match_mode: \"semantic\") so you still get the closest projects.\n\nWhen to use: Start here to find a Stellar ecosystem project by name, keyword, or category when you do not know its slug. Substring match, but a multi-word/conceptual query that hits no substring auto-falls back to semantic project discovery, so you can also use it for \"what RWA/wallet/oracle projects exist\" style asks. For \"projects like X\" use find_similar_projects_semantic; for content ABOUT a project use find_content_about_project.\n\nReturns: { count, projects: [...] } — each project: slug, title, description, category, tags. When the substring match is empty and the semantic fallback fires, the response also carries match_mode: \"semantic\" + a note, and rows include a similarity score. Take the slug into get_project for full details.\n\nCatalog note: prefer this lane plus find_content_about_project when a what is X or who builds X question wants narrative editorial context about a named ecosystem project; the scout project search returns structured fields only. A match_mode semantic row is a candidate, not exact identity proof.",
         "operationId": "lumenloop.search_directory",
         "requestBody": {
           "content": {
@@ -3089,7 +3115,7 @@
     },
     "/scout/getBuilders": {
       "get": {
-        "description": "The Stellar PEOPLE directory — builder profiles synced from Stellar Passport (bio, role, location, shipped projects[]), searchable by q/skill and location. Use to find a person to recruit, hire, or collaborate with. Not for the company/product behind a project ('who built X') → use searchProjects. Profiles carry NO populated SCF-tier/award data.",
+        "description": "The Stellar PEOPLE directory — builder profiles synced from Stellar Passport (bio, role, location, shipped projects[]), searchable by q/skill and location. Use to find a person to recruit, hire, or collaborate with. Not for the company/product behind a project ('who built X') → use searchProjects. Profiles carry NO populated SCF-tier/award data.\n\nCatalog note: this is a bounded directory-membership surface, not an exhaustive biography or ecosystem-history index. An empty row set means no matching Scout builder record; for an open-world identity or history question, make one broad content or research pass before a wider negative conclusion.",
         "operationId": "scout.getBuilders",
         "parameters": [
           {
@@ -4352,7 +4378,7 @@
     },
     "/scout/searchRepos": {
       "get": {
-        "description": "Search the indexed Stellar ecosystem GitHub code repos — actual source graded by repoScore (0-100: freshness + traction + ecosystem authority), filterable by language/minScore. Use for 'show me the code/repos for X' or 'find a Rust/Soroban implementation of X' — prior-art source to read, fork, or cite. Not for products/companies and their funding/status → use searchProjects.",
+        "description": "Search the indexed Stellar ecosystem GitHub code repos — actual source graded by repoScore (0-100: freshness + traction + ecosystem authority), filterable by language/minScore. Use for 'show me the code/repos for X' or 'find a Rust/Soroban implementation of X' — prior-art source to read, fork, or cite. Not for products/companies and their funding/status → use searchProjects.\n\nCatalog note: repoScore, stars, rank, and directory presence are discovery metadata, not API, security, license, audit, maintenance, or production evidence. Verify those claims at the repository and primary sources before reusing code.",
         "operationId": "scout.searchRepos",
         "parameters": [
           {
@@ -4411,7 +4437,7 @@
     },
     "/scout/searchResearch": {
       "get": {
-        "description": "Semantic search over the Stellar knowledge corpus — SDF blog, SCF Handbook, SEPs/standards, dev docs, papers, audits, incident reports. Returns cited text chunks with source, section, URL, confidence (audits add auditor/severity). THE surface for 'how does X work', 'what does the SEP/spec/audit say', and how-to/feasibility questions. Not for products and their funding/status → use searchProjects.",
+        "description": "Semantic search over the Stellar knowledge corpus — SDF blog, SCF Handbook, SEPs/standards, dev docs, papers, audits, incident reports. Returns cited text chunks with source, section, URL, confidence (audits add auditor/severity). THE surface for 'how does X work', 'what does the SEP/spec/audit say', and how-to/feasibility questions. Not for products and their funding/status → use searchProjects.\n\nCatalog note: this is the broad Scout cited-research recovery lane for history, standards, incidents, audits, and unknown technical topics. Treat chunks as leads: preserve their source and date, and require an exact entity match before attribution.",
         "operationId": "scout.searchResearch",
         "parameters": [
           {
@@ -6132,7 +6158,7 @@
   "x-generated": {
     "builder": "scripts/build-super-spec.mjs",
     "catalogEntries": 272,
-    "generatedAt": "2026-07-12T20:52:52.998Z"
+    "generatedAt": "2026-07-13T21:32:54.648Z"
   },
   "x-services": {
     "lumenloop": {
@@ -6144,7 +6170,7 @@
     },
     "scout": {
       "base": "https://stellarlight.xyz",
-      "fetchedAt": "2026-07-12T20:52:52.998Z",
+      "fetchedAt": "2026-07-13T21:32:54.648Z",
       "note": "Read-only keyless API, carried near-verbatim from the upstream OpenAPI (components namespaced 'scout.*').",
       "source": "https://stellarlight.xyz/api/openapi.json"
     },

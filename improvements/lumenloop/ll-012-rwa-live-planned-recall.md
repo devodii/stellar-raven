@@ -1,14 +1,14 @@
 ---
 id: ll-012
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
-intake: unclear
 evidence:
   - live broad search_directory query for real-world assets returned 10 rows
   - broad results included planned DTCC while omitting several primary-confirmed live issuers/products
   - exact-name probes could retrieve Benji, WisdomTree, Figure, Spiko, and Etherfuse records
   - Solo scratchpad 575 GT-11 primary process 3231
+  - https://github.com/lumenloop/lumenloop-backend/issues/29
 ---
 
 ## Finding

@@ -1,12 +1,13 @@
 ---
 id: sls-039
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - Scout project rows expose tvlUSD and tvlAsOf but not a history or method URL
   - direct same-provider Blend/Soroswap series distinguish current, quarter trend, peak, and record
   - Solo scratchpad 575 GT-23 primary 3264 and blind 3267
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/522
 ---
 
 ## Finding

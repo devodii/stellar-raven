@@ -58,7 +58,8 @@ MCP client (LLM)
   │  streamable HTTP /mcp   (createMcpHandler, stateless; bearer auth in front)
   ▼
 Host Worker  (Workers Paid · wrangler: worker_loaders LOADER · nodejs_compat)
-  ├─ tool "search"  { query, kind?, service?, limit? }        [no isolate — host-side]
+  ├─ tool "search"  { query, kind?, service?, limit?, recoverFrom?, reason? }
+  │     [no isolate — host-side; recovery is exact-ID advisory metadata, separate from ranking]
   │     ranked search over the unified catalog (ConnectorDescription[]):
   │     every service operation + every skill + every skill section
   │     top-k hits returned WITH rendered TS signatures (describeTarget)
@@ -83,8 +84,9 @@ Host Worker  (Workers Paid · wrangler: worker_loaders LOADER · nodejs_compat)
 
 **Search shape — settled 2026-07-02 (`research/decisions/0001-search-tool-shape.md`, accepted).**
 Exactly two tools ship: top-level `search` is a **host-side ranked query** `{ query, kind?,
-service?, limit? }` (the round-2 implementation, over upstream's own vendored `searchConnectors`
-scorer), and `execute` is `{ code }`. The code-shaped discovery variant that upstream's
+service?, limit?, recoverFrom?, reason? }` (the round-2 implementation, over upstream's own
+vendored `searchConnectors` scorer); recovery is exact-ID advisory metadata returned separately
+from ranked hits and never changes ranking. `execute` is `{ code }`. The code-shaped discovery variant that upstream's
 `openApiMcpServer` puts at the front door was **retired into `execute`'s sandbox**: a golden Q→A
 A/B (60 paired cases, `eval/qa/`) found the host-side ranked search directionally more accurate
 and — decisively — more reliable, while the in-sandbox code search burned the caller's turn
@@ -252,8 +254,9 @@ wrangler `^4.107.0`, compat ≥ 2026-06-11 + `nodejs_compat`, `worker_loaders` b
 
 ## 7. Phased build
 
-> Status (end of Round 4): **all 8 phases shipped and live** on the default route
-> **https://raven.stellar.buzz** (with **https://agents.stellar.buzz** served as an alias — both
+> Status (end of Round 4): **the base implementation of all 8 phases is shipped and live** on the default route;
+> the evidence-poor recovery and build-stage prior-art additions implemented on 2026-07-13 remain pending release.
+> The current production route is **https://raven.stellar.buzz** (with **https://agents.stellar.buzz** served as an alias — both
 > in `wrangler.jsonc` routes) (Solo todos 788–825; evidence: `eval/README.md`,
 > `eval/agentic/README.md`, `eval/plan/README.md`, `research/decisions/0001-search-tool-shape.md`,
 > `research/decisions/0002-skills-retirement-twin-dedup.md`,
@@ -292,8 +295,10 @@ wrangler `^4.107.0`, compat ≥ 2026-06-11 + `nodejs_compat`, `worker_loaders` b
 
 1. **Scaffold** — wrangler + pinned deps + CLAUDE.md + hygiene checks. *(shipped)*
 2. **Catalog + `search`** — manifest types, builder over the service snapshots, authored Docs
-   spec, Docs page-title snapshot, and skills manifest; host-side search with TS signatures in
-   results. Fully offline-testable. *(shipped)*
+   spec, Docs page-title snapshot, and skills manifest; host-side search with TS signatures plus
+   manifest-validated, exact-ID evidence-poor recovery candidates kept separate from ranking and
+   returned only after non-empty explicit `recoverFrom` ids (a reason alone never escalates).
+   Fully offline-testable. *(base search shipped; the recovery addition is pending release)*
 3. **Adapters + `execute`** — per-service clients in `src/adapters/`, `DynamicWorkerExecutor`
    with namespaced providers, and `codemode.search/describe` sandbox globals. *(shipped)*
 4. **Skills store** — sectioned retrieval (`skill.read`), build-time exposure policy, and
@@ -303,7 +308,10 @@ wrangler `^4.107.0`, compat ≥ 2026-06-11 + `nodejs_compat`, `worker_loaders` b
    truncation, structured logs, and execute spans. *(shipped)*
 6. **Inventory refresh** — refresh script + drift CI + adapted surface smoke check. *(shipped)*
 7. **Evals** — routing, discovery, QA, plan, agentic, and live-data lanes with committed gate
-   baselines and own-repo formats. *(shipped; see `eval/EVALS.md`)*
+   baselines and own-repo formats. The mechanism/unit holdouts cover contract, dapp, SDK, protocol,
+   and infrastructure authority roles; behavioral QA currently pairs contract and infrastructure
+   design-stage cases with a known-step no-detour control. *(base lanes shipped; the 2026-07-13
+   controls are implemented in the current worktree and pending release; see `eval/EVALS.md`)*
 8. **Deploy + auth** — WorkOS-backed OAuth at `/mcp` with admin-token + local-dev bypasses;
    deployed on the default route and alias. *(shipped)*
 

@@ -104,7 +104,9 @@ export async function callLumenloop(
         service: SERVICE,
         kind: "soft-empty",
         message: text,
-        status: res.status
+        status: res.status,
+        hint:
+          "This lane is inconclusive. For an open-world topic, identity, or history question, make one broader Lumenloop pass with search_content_semantic; use search_directory only to resolve a project slug, and validate semantic rows against exact identity, source, and date before attribution."
       });
     }
 

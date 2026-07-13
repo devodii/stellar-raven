@@ -1,7 +1,7 @@
 ---
 id: ll-008
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - live production execute 2026-07-03 (lumenloop.get_project on lobstr and moneygram; Solo scratchpad 521 follow-up, todo 826 comment 2224)
@@ -9,6 +9,7 @@ evidence:
   - live re-verified 2026-07-06 (eval round todo 846): lobstr still operating_region ["Indonesia"] / based_in "Estonia"; moneygram description still "over 200 countries and territories" with no rail-vs-footprint distinction or as-of date
   - live re-verified 2026-07-10 (golden audit GT-10, Solo process 3230): MoneyGram still described with the 200+ corporate footprint, while current operator surfaces report 170+/174 cash coverage and separately label bank/mobile/card rails coming soon
   - GT-18 recurrence 2026-07-10: Soroswap resolves as Financial Protocols in Lumenloop while sibling Scout records use Protocol/Contract and DEX type fields
+  - https://github.com/lumenloop/stellar-ecosystem-db/issues/3
 ---
 
 ## Finding

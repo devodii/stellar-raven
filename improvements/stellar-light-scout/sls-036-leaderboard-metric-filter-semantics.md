@@ -1,13 +1,14 @@
 ---
 id: sls-036
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live sort=activity range=30d payload did not expose repoScore or commit count
   - activity, stars, issues, and sampled GitHub commits produced different rankings
   - Solo scratchpad 575 GT-19 primary 3254 and blind 3258
   - GT-55 live sort=issues range=all payload returned project-level openIssuesTotal rollups with generatedAt and repoCount that differed from contemporaneous GitHub issue-only checks
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/524
 recurrences:
   - date: 2026-07-11
     evidence: GT-55 reproduced that issues is a cached project/repository-universe backlog rollup, not activity or quality; GitHub repository open_issues_count also cannot corroborate issue-only totals because it includes pull requests

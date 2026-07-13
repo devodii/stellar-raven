@@ -63,6 +63,38 @@ export const provenanceSchema = z
   })
   .catchall(z.unknown());
 
+export const RETRIEVAL_LANES = ["exact", "directory", "detail", "semantic", "research", "av", "corpus"] as const;
+export const RETRIEVAL_REASONS = ["empty", "weak", "adjacent", "ambiguous", "partial"] as const;
+export const RETRIEVAL_RELATIONS = [
+  "broader-semantic",
+  "cited-research",
+  "different-medium",
+  "cross-family",
+  "corpus-wide",
+  "structured-identity",
+  "source-code"
+] as const;
+
+/**
+ * Query-independent roles for skills that can ground a design-stage build
+ * review. This is deliberately narrow: a successful read of any arbitrary
+ * skill is not evidence that the execute composed an implementation playbook.
+ */
+export const BUILD_AUTHORITY_ROLES = ["contract", "dapp", "sdk-integration", "protocol", "infrastructure"] as const;
+export type BuildAuthorityRole = (typeof BUILD_AUTHORITY_ROLES)[number];
+
+export type RetrievalReason = (typeof RETRIEVAL_REASONS)[number];
+
+export const retrievalProfileSchema = z.object({
+  lane: z.enum(RETRIEVAL_LANES),
+  emptyScope: z.enum(["operation", "corpus", "inconclusive"]),
+  recoverWith: z.array(z.object({
+    id: z.string().min(1),
+    relation: z.enum(RETRIEVAL_RELATIONS),
+    on: z.array(z.enum(RETRIEVAL_REASONS)).min(1)
+  })).min(1).max(6)
+});
+
 export const catalogEntrySchema = z.object({
   /** Exact-match id, `<namespace>.<name>` (+ `#<section>` for skill sections). */
   id: z.string().min(1),
@@ -89,6 +121,14 @@ export const catalogEntrySchema = z.object({
    * schema-derived shrapnel. Never rendered to users.
    */
   routingKeywords: z.array(z.string()).optional(),
+  /** Query-independent exact-ID recovery graph, validated at catalog build/load. */
+  retrievalProfile: retrievalProfileSchema.optional(),
+  /**
+   * Whole-skill entries only: the build domains this exact exposed playbook
+   * authoritatively covers for the host's bounded prior-art composition cue.
+   * It is metadata, never a claim that a returned repository is applicable.
+   */
+  buildAuthorityRoles: z.array(z.enum(BUILD_AUTHORITY_ROLES)).min(1).optional(),
   /**
    * Search-visibility marker (skills program, Solo scratchpad 608): literal
    * `false` ONLY — absence means searchable. An entry with `searchable:

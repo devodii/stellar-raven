@@ -1,13 +1,14 @@
 ---
 id: sls-031
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-10
 evidence:
   - Scout DeFindex TVL 16385898 asOf 2026-07-09T22:06:45Z
   - concurrent operator, DeFiLlama, and Dune observations ranged from roughly 16.255M to 16.57M
   - live Scout response exposed timestamp but not enough inclusion/pricing methodology to reconcile the difference
   - Solo scratchpad 575 GT-15 primary process 3243 and blind process 3246
+  - https://github.com/Stellar-Light/stellarlight/issues/494; live re-check 2026-07-13 shows /api/analyze?dimension=tvl now returns provider, as-of, scope, and methodology basis
 ---
 
 ## Finding

@@ -28,6 +28,7 @@ import { DynamicWorkerExecutor } from "@cloudflare/codemode";
 import superSpecJson from "../../specs/super-spec.json";
 import bundleJson from "../skills/bundle.json";
 import { getCatalog } from "../catalog/load.ts";
+import type { BuildAuthorityRole } from "../catalog/types.ts";
 import { buildSandbox, type ArtifactReadStats, type OpLedgerCall, type SandboxProvider } from "./providers.ts";
 import {
   createSpecSandboxCode,
@@ -53,11 +54,18 @@ export type ExecuteOperationSummary = {
   ok: number;
   error: number;
   softEmpty: number;
+  /** Successful calls whose operation contract returns semantic/directory/research candidates. */
+  candidateEvidence?: number;
+  /** Successful Scout project/repository calls whose contracts can return prior-art candidates. */
+  priorArtCandidates?: number;
 };
 
 export type ExecuteEvidenceSummary = {
   kind: "service-data" | "service-inconclusive" | "skill-content" | "artifact-data" | "none";
   skillRead: boolean;
+  /** Exact playbooks with a declared design-stage build-authority role. */
+  buildAuthoritySkillIds?: string[];
+  buildAuthorityRoles?: BuildAuthorityRole[];
   skillRuns: number;
   artifactReads: number;
 };
@@ -116,13 +124,34 @@ export type ExecuteRunnerOptions = {
   modelBoundaryMaxTokens?: number;
 };
 
+const CANDIDATE_EVIDENCE_OPS = new Set([
+  "lumenloop.search_directory",
+  "lumenloop.search_content_semantic",
+  "lumenloop.find_av_passages",
+  "lumenloop.find_similar_scf_submissions",
+  "scout.searchProjects",
+  "scout.searchResearch"
+]);
+
+const PRIOR_ART_EVIDENCE_OPS = new Set([
+  "scout.searchProjects",
+  "scout.searchRepos",
+  "scout.explainRepo"
+]);
+
 function summarizeOperationLedger(calls: readonly OpLedgerCall[]): ExecuteOperationSummary {
   const summary: ExecuteOperationSummary = { total: calls.length, ok: 0, error: 0, softEmpty: 0 };
+  let candidateEvidence = 0;
+  let priorArtCandidates = 0;
   for (const call of calls) {
     if (call.outcome === "ok") summary.ok += 1;
     else if (call.outcome === "error") summary.error += 1;
     else summary.softEmpty += 1;
+    if (call.outcome === "ok" && CANDIDATE_EVIDENCE_OPS.has(call.op)) candidateEvidence += 1;
+    if (call.outcome === "ok" && PRIOR_ART_EVIDENCE_OPS.has(call.op)) priorArtCandidates += 1;
   }
+  if (candidateEvidence > 0) summary.candidateEvidence = candidateEvidence;
+  if (priorArtCandidates > 0) summary.priorArtCandidates = priorArtCandidates;
   return summary;
 }
 
@@ -206,6 +235,8 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
     // The flag is ADVICE-ONLY: it may change the truncation footer's wording,
     // never the token budget or which result bytes are kept.
     let skillRead = false;
+    const buildAuthoritySkillIds = new Set<string>();
+    const buildAuthorityRoles = new Set<BuildAuthorityRole>();
     // Count of skill.run dispatches this run (attempted, whatever the
     // outcome) — stamped on the codemode.execute span below so runnable-skill
     // usage is visible in the trace waterfall; per-run outcomes live in the
@@ -215,8 +246,12 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
     let artifactReadStats: ArtifactReadStats = { count: 0, bytes: 0 };
     const providers = buildSandbox(getCatalog(), bundleJson as SkillBundle, env, {
       superSpec: superSpecJson,
-      onSkillRead: () => {
+      onSkillRead: (skillId, roles) => {
         skillRead = true;
+        if (roles.length > 0) {
+          buildAuthoritySkillIds.add(skillId);
+          for (const role of roles) buildAuthorityRoles.add(role);
+        }
       },
       onSkillRun: () => {
         skillRuns += 1;
@@ -268,6 +303,8 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
                 ? "skill-content"
                 : "none",
       skillRead,
+      buildAuthoritySkillIds: [...buildAuthoritySkillIds].sort(),
+      buildAuthorityRoles: [...buildAuthorityRoles].sort(),
       skillRuns,
       artifactReads: artifactReadStats.count
     };

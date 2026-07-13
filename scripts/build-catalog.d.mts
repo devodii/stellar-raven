@@ -7,3 +7,7 @@ export function assertSideEffectingOpsExcluded(
   openapi: unknown,
   excluded?: ReadonlySet<string>
 ): void;
+export function attachRetrievalProfiles(
+  entries: readonly Record<string, unknown>[],
+  profiles?: Record<string, unknown>
+): Array<Record<string, unknown>>;

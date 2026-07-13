@@ -5,7 +5,7 @@
     "lumenloop.search_content_semantic"
   ],
   "golden": {
-    "answer": "A grounded answer consults the current LumenLoop corpus, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-10, the verified sources supported this observed answer:\n\nPublished material about **Tyler van der Hoeven (`kalepail`)** includes the official Developer Docs author index (seven posts), the **2024-06-13 developer meeting** covering Super Peach, Passkey Kit, and Launchtube, **Practical Path Payments** (2020-04-10), the **Turing Complete Contract Proposal for Stellar** talk (whose page has a date conflict that should be disclosed), the **SDF Developer Advocates AMA** (2023-05-04), and the 2022 SDF Stellar Lounge at SXSW video. Current project context includes `passkey-kit` and `stellar/launchtube`; Passkey Kit now labels itself a legacy precursor/demo and points new work to Smart Account Kit. Use official Docs/Scout research first. Lumenloop semantic results are candidate discovery only and require exact-name/source/date validation; its current exact-person lane returning empty is a service limitation, not evidence that nothing exists.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+    "answer": "A grounded answer consults the current LumenLoop corpus, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-13, verified exact-name sources included the official Developer Docs author index (seven posts), the **2024-06-13 developer meeting** covering Super Peach, Passkey Kit, and Launchtube, **Practical Path Payments** (2020-04-10), the **Turing Complete Contract Proposal for Stellar** event page (which renders July 10, 2020 while its body says June 19, so disclose the conflict), and the **SDF Developer Advocates AMA** (2023-05-04). Current repository context is also dated: on 2026-07-13, `kalepail/passkey-kit` described a v1 Stellar smart-wallet SDK and called Smart Account Kit a sibling with a different, non-drop-in authorization model; `stellar/launchtube` remained a directly inspectable source repository. LumenLoop semantic results are candidate discovery only and require exact-name, source, and date validation; an empty exact-person lane is a service limitation, not evidence that nothing has been published.\n\nThe roster is illustrative rather than exhaustive: a later grounded answer should re-query and report what the same source basis supports at its own observation time.",
     "keyFacts": [
       "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
       "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
@@ -21,42 +21,48 @@
   "tags": {
     "category": "scf-grants-builders",
     "service": "lumenloop",
-    "freshness": "live"
+    "freshness": "scheduled"
   },
   "truth": {
     "domain": "mixed",
     "status": "confirmed",
-    "asOf": "2026-07-10",
+    "asOf": "2026-07-13",
+    "reverifyBy": "2026-10-07",
     "sources": [
       {
         "class": "A",
         "ref": "https://developers.stellar.org/meetings/authors/kalepail",
-        "note": "class inferred at migration"
+        "note": "Official author index observed 2026-07-13; displayed Tyler van der Hoeven and seven posts."
       },
       {
         "class": "A",
         "ref": "https://developers.stellar.org/meetings/2024/06/13",
-        "note": "class inferred at migration"
+        "note": "Official meeting page dated 2024-06-13; exact-name coverage of Super Peach, Passkey Kit, and Launchtube; accessed 2026-07-13."
       },
       {
         "class": "A",
         "ref": "https://stellar.org/events/community/practical-path-payments",
-        "note": "class inferred at migration"
+        "note": "Official event page dated 2020-04-10; exact-name Tyler van der Hoeven appearance; accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/community/events/turing-complete-contract-proposal-for-stellar",
+        "note": "Official event page observed 2026-07-13; header renders 2020-07-10 while body says 2020-06-19, so the date conflict is explicit."
       },
       {
         "class": "A",
         "ref": "https://stellar.org/events/community/ama-with-sdfs-new-developer-advocates",
-        "note": "class inferred at migration"
+        "note": "Official event page dated 2023-05-04; exact-name SDF Developer Advocates AMA appearance; accessed 2026-07-13."
       },
       {
-        "class": "D",
+        "class": "B",
         "ref": "https://github.com/kalepail/passkey-kit",
-        "note": "class inferred at migration"
+        "note": "Direct repository observed 2026-07-13; README describes Passkey Kit v1 and Smart Account Kit as a non-drop-in sibling, not a successor that makes this repository merely legacy."
       },
       {
         "class": "B",
         "ref": "https://github.com/stellar/launchtube",
-        "note": "class inferred at migration"
+        "note": "Direct source repository observed 2026-07-13; supports the Launchtube project attribution."
       }
     ],
     "corroboration": [
@@ -66,40 +72,42 @@
         "evidence": [
           {
             "class": "C",
-            "ref": "C: exact person/full-name probes empty and A/V semantic results unrelated",
-            "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "ref": "http://localhost:8787/mcp lumenloop.find_content_by_entity(entity=Tyler%20van%20der%20Hoeven,entity_type=person)",
+            "observedAt": "2026-07-13",
+            "note": "Exact-person content collections were empty; this is source-scoped retrieval evidence, not an open-world negative."
           },
           {
             "class": "A",
-            "ref": "A/B: official Docs author/events pages and Tyler-linked repositories",
-            "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "ref": "https://developers.stellar.org/meetings/authors/kalepail",
+            "observedAt": "2026-07-13",
+            "note": "Exact-name official author index with seven posts."
           },
           {
             "class": "B",
-            "ref": "A/B: official Docs author/events pages and Tyler-linked repositories",
-            "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "ref": "https://github.com/kalepail/passkey-kit",
+            "observedAt": "2026-07-13",
+            "note": "Direct current repository context, including the explicit non-drop-in Smart Account Kit relationship."
           }
         ]
       }
     ],
     "verified": {
-      "date": "2026-07-11",
-      "by": "P4 conversions rework after independent Fable copy/quality review",
+      "date": "2026-07-13",
+      "by": "Evidence-poor retrieval truth reconciliation with independent Opus and Sol review",
       "evidence": [
-        "Solo scratchpad 575 GT-35 primary 3287 and blind 3289; live probes and official-source roster on 2026-07-10.",
-        "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-        "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "Solo scratchpad 575 GT-35 primary 3287 and blind 3289; exact-person probes and official-source roster.",
+        "2026-07-13 recheck of https://developers.stellar.org/meetings/authors/kalepail, https://developers.stellar.org/meetings/2024/06/13, and https://github.com/kalepail/passkey-kit corrected the stale repository-status wording.",
+        "solo://proj/49/scratchpad/evidence-poor-retrie--611 — durable multi-model review and current-source reconciliation",
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "solo://proj/49/scratchpad/evidence-poor-retrie--611 — scheduled the mutable person/content result set and corrected repository source class without changing the inherited as-of claim."
       ],
       "rootCause": [
         "Route recipe was treated as truth and an empty data-shaped response was mistaken for absence.",
         "improvements/lumenloop/ll-005-person-entity-empty-lane.md",
         "improvements/lumenloop/ll-017-semantic-person-match-provenance.md",
         "eval-authoring",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "truth-metadata maintenance"
       ]
     },
     "origin": "raven-next q-builder-content-by-person"

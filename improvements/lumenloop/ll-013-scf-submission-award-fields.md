@@ -1,10 +1,10 @@
 ---
 id: ll-013
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
-intake: unclear
 evidence:
+  - https://github.com/lumenloop/lumenloop-backend/issues/26
   - live lumenloop.get_scf_submissions({slug:"blend"}) response asOf 2026-07-10
   - current official SCF Blend submission/project payload fetched independently the same day
   - Solo scratchpad 575 GT-14 primary process 3239 and independent blind process 3242

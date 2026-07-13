@@ -1,7 +1,7 @@
 ---
 id: ll-007
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - live search_content_semantic events probe (2026-07-03 evening, production)
@@ -9,6 +9,7 @@ evidence:
   - Solo project 49, todo 807, scratchpad 521
   - live re-verified 2026-07-06 (eval round todo 846): Bhopal (id 1597) and Jabalpur (id 1598) rows still carry start_at 2026-06-27 with "July 27" in the summary prose
   - live re-verified 2026-07-09: authenticated event semantic search returned ids 1597/1598 with start_at 2026-06-27T05:30/06:30Z while both summaries still say July 27
+  - filed 2026-07-13: https://github.com/lumenloop/lumenloop-backend/issues/20
 recurrences:
   - date: 2026-07-09
     evidence: POST search_content_semantic for Bhopal/Jabalpur Build On Stellar returned ids 1597/1598 with June 27 structured timestamps and July 27 summary prose

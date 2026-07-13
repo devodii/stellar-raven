@@ -1,13 +1,14 @@
 ---
 id: sls-034
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - paginated q=stablecoin returned 161 keyword rows and 37 Stablecoin-typed rows but omitted issuer-confirmed PYUSD, EURAU, and MGUSD
   - exact Stablecoin typing mixed assets with organizations and tools
   - SDF/issuer primary pages independently confirmed PYUSD, EURAU, and MGUSD Stellar launch/issuance
   - Solo scratchpad 575 GT-20 primary process 3256 and independent blind process 3257
+  - Upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/518
 ---
 
 ## Finding

@@ -1,7 +1,7 @@
 {
   "$comment": "Deterministic stratified sample (N=30, by service) of the owned QA battery.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "8f6d4d870ecc086072c01e2c8c1407c7a367ca565334f70be4a49c491fc218a0",
+  "corpusContentSha256": "92f1b54f8fbbbebe431a200e22b27470e3f7cecff9dbb76d8927750c1d62661a",
   "counts": {
     "total": 30,
     "byCategory": {
@@ -24,8 +24,8 @@
       "stellarDocs": 15
     },
     "byFreshness": {
-      "live": 12,
-      "scheduled": 6,
+      "live": 11,
+      "scheduled": 7,
       "stable": 12
     },
     "traps": {
@@ -664,23 +664,26 @@
       }
     },
     {
-      "id": "q-defi-liquid-staking-whitespace",
-      "question": "What liquid staking / LST protocols are live on Stellar?",
+      "id": "q-defi-defindex-honest",
+      "question": "What is Defindex's TVL and exact product lineup?",
       "surface": [
+        "lumenloop.find_content_by_entity",
+        "lumenloop.find_similar_scf_submissions",
         "lumenloop.get_project",
+        "lumenloop.get_scf_submissions",
         "lumenloop.search_directory"
       ],
       "golden": {
-        "answer": "Stellar uses **SCP/FBA, not proof of stake**, and validators receive no protocol monetary reward, so there is no native validator-staking position for a canonical XLM LST to tokenize. As of **2026-07-10**, no live native-XLM liquid-staking token/protocol was identified across official Stellar docs/site search, current Scout/Lumenloop directories, provider/repository searches, DeFiLlama, and deep web conflict sweeps. This is a bounded snapshot, not a permanent impossibility.\n\nDo not misclassify alternatives: **yXLM** is an issuer/anchor-backed interest-earning XLM token whose primary record does not attribute yield to validator staking; **Chrysalis** was an SCF concept converting XLM to ETH and staking ETH via Lido, with no verified Stellar mainnet deployment; Blend deposits, LP/vault shares, RWA yield tokens, and external-asset wrappers are also not native XLM LSTs.",
+        "answer": "**DeFindex** is noncustodial multi-token vault/yield infrastructure on Soroban, with vault and strategy contracts, a factory/GUI, REST API, TypeScript and Flutter SDKs, dfToken vault shares, partner fees, sponsored transactions, and integration/zapper support. Its operator strategy endpoint exposed seven BlendStrategy adapters on 2026-07-10; those are adapters, not seven distinct end-user products.\n\nCurrent TVL is available but source-relative: operator site **$16.57M**, DeFiLlama about **$16.49M**, Scout **$16.386M as of 2026-07-09**, and Dune's week-of-2026-07-06 series about **$16.255M**. Describe this as an approximate dated $16.26M-$16.57M range unless methodologies are reconciled. Do not select one as timeless truth or repeat the operator's older undated $1.1M headline.",
         "keyFacts": [
-          "Explains the SCP/no-validator-reward structural reason and states the no-live-native-XLM-LST result with source universe and date.",
-          "Distinguishes issuer-funded XLM yield, lending/LP/vault positions, and external ETH staking wrappers from native validator staking."
+          "Describes DeFindex's current noncustodial vault/API/SDK/dfToken surface from operator sources.",
+          "Reports dated TVL sources and methodology disagreement rather than claiming no figure exists or freezing one number."
         ],
         "avoid": [
-          "Do NOT state a permanent global absence or call any XLM yield token a native LST without a validator-staking reward source.",
-          "Do NOT treat yXLM, Chrysalis, Blend deposits, LP/vault shares, or RWA yield products as proof of a native XLM LST."
+          "Do NOT say current TVL is unavailable, repeat an undated $1.1M value, or turn one snapshot into permanent truth.",
+          "Do NOT inflate strategy adapters into separate products or claim guaranteed yield."
         ],
-        "notes": "WHITESPACE honesty case. No dominant Soroban LST protocol is surfaced in the Scout directory. NB: Stellar uses SCP (federated agreement), not proof-of-stake — so there's no native staking to liquid-stake in the Ethereum/Solana sense; this strengthens the honest 'no LST' answer. Trap: inventing one or importing Lido/Marinade as Stellar-native. Freshness-soft: re-query the live directory. 2026-06-29 reviewed: re-ran Scout 'liquid staking'/'LST staked token' queries — returns only generic DeFi (DEXes Aquarius/Phoenix/Comet, etc.), no dedicated Stellar-native liquid-staking protocol; whitespace claim holds. Confidence kept medium.\nAlso good if the answer: Frames the absence as a genuine gap (not under-reporting) rather than asserting a product exists.\nGolden cites: Note that the conclusion is from absence of any LST project in the sourced corpus (treat as 'not publicly listed as active').\nCorrected 2026-07-10. Grade the dated/source-bounded native-staking negative and counterexample classification, not the word whitespace."
+        "notes": "HONEST-NO-INFO case for TVL. Updated grounding: Scout NOW carries DeFindex (by PaltaLabs, scfAwarded ~$150K, types=[Lending]) as non-custodial tokenized yield vaults routing across Blend etc. So identity is well-grounded; the honesty test is specifically about exact current TVL (not surfaced) — reward 'cite the role + flag TVL unknown' over a fabricated number.\nAlso good if the answer: Notes DeFindex's role as a Blend-aware yield router/aggregator (deposits flow into underlying lenders like Blend).\nGolden cites: A source for DeFindex's role (Scout project record), plus an explicit note that exact current TVL is not in the corpus.\nCorrected 2026-07-10. Grade product identity plus dated/method-aware TVL reporting; no exact scalar is required."
       },
       "tags": {
         "category": "defi-ecosystem",
@@ -689,66 +692,68 @@
       },
       "truth": {
         "domain": "real-world",
-        "status": "confirmed",
+        "status": "disputed",
+        "asOf": "2026-07-10",
         "sources": [
           {
-            "class": "A",
-            "ref": "https://developers.stellar.org/docs/learn/fundamentals/stellar-consensus-protocol",
+            "class": "D",
+            "ref": "https://www.defindex.io/",
             "note": "class inferred at migration"
           },
           {
             "class": "D",
-            "ref": "https://ultracapital.xyz/.well-known/stellar.toml",
-            "note": "class inferred at migration"
-          },
-          {
-            "class": "A",
-            "ref": "https://communityfund.stellar.org/submissions/reclPkvuD4iqLs6E5",
+            "ref": "https://www.defindex.io/api/strategies",
             "note": "class inferred at migration"
           },
           {
             "class": "D",
-            "ref": "https://chrysalis.raum.network",
+            "ref": "https://docs.defindex.io/llms.txt",
+            "note": "class inferred at migration"
+          },
+          {
+            "class": "D",
+            "ref": "https://defillama.com/protocol/defindex",
             "note": "class inferred at migration"
           }
         ],
         "corroboration": [
           {
-            "claim": "No live native-XLM validator-staking derivative was identified across the audited source classes asOf 2026-07-10",
-            "verdict": "confirmed",
+            "claim": "DeFindex has current product/API evidence and contemporaneous TVL observations near $16.3M-$16.6M",
+            "verdict": "disputed",
             "evidence": [
               {
                 "class": "A",
-                "ref": "A: Stellar SCP/no-validator-reward docs",
+                "ref": "A: DeFindex site/docs/strategy API",
                 "observedAt": "2026-07-11",
                 "note": "verbatim legacy evidence descriptor imported at migration"
               },
               {
                 "class": "C",
-                "ref": "C/D: current Scout/Lumenloop/operator/repo/DefiLlama and deep conflict sweeps",
-                "observedAt": "2026-07-11",
+                "ref": "C/D: Scout, DeFiLlama, Dune, and independent conflict sweep asOf 2026-07-10",
+                "observedAt": "2026-07-10",
                 "note": "verbatim legacy evidence descriptor imported at migration"
               },
               {
                 "class": "D",
-                "ref": "C/D: current Scout/Lumenloop/operator/repo/DefiLlama and deep conflict sweeps",
-                "observedAt": "2026-07-11",
+                "ref": "C/D: Scout, DeFiLlama, Dune, and independent conflict sweep asOf 2026-07-10",
+                "observedAt": "2026-07-10",
                 "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "Golden-truth sweep import — GT-15 lanes confirmed the structural native-XLM LST negative but found the inherited answer both under-bounded ('no dominant') and over-absolute ('genuine whitespace') from one undated directory. The correction records the audited source universe and non-LST counterexamples.",
+          "date": "2026-07-09",
+          "by": "Golden-truth sweep import — GT-15 lanes found the inherited 'current TVL is not surfaced' answer stale. Multiple current sources and an operator strategy API now exist, with a modest source/methodology range that must be disclosed rather than denied or collapsed.",
           "evidence": [
-            "Solo scratchpad 575 GT-15 primary 3243 and blind 3246; 952-project Scout snapshot plus official/provider/repo sweeps"
+            "Operator $16.57M; DeFiLlama ~$16.49M; Scout $16.386M asOf 2026-07-09; Dune weekly $16.255M",
+            "Solo scratchpad 575 GT-15 processes 3243/3246"
           ],
           "rootCause": [
-            "eval-side negative claim lacked search universe/date and conflated third-party yield with validator staking"
+            "eval-side no-information snapshot outlived new live API/TVL evidence"
           ]
         },
-        "origin": "raven-next q-defi-liquid-staking-whitespace"
+        "origin": "raven-next q-defi-defindex-honest"
       }
     },
     {
@@ -1243,24 +1248,24 @@
       }
     },
     {
-      "id": "q-hist-quantum-preparedness-plan",
-      "question": "What did Stellar's June 2026 Quantum Preparedness Plan commit to, and which quantum-safe features were still roadmap items?",
+      "id": "q-hist-meridian-2026-corrected-venue",
+      "question": "Where and when is Meridian 2026 scheduled, given that older announcements named Abu Dhabi?",
       "surface": [
         "lumenloop.search_content_semantic",
         "lumenloop.search_documents"
       ],
       "golden": {
-        "answer": "SDF published the Quantum Preparedness Plan on June 9, 2026 as a three-stage roadmap, not an announcement that Stellar was already quantum-safe. Stage 1 targets ML-DSA-44 and ML-DSA-65 signature-verification host functions for Soroban during 2026 so contract accounts can adopt quantum-safe authentication. Stage 2 targets protocol-level opt-in migration in 2027, and the plan says every Stellar account is expected to be able to add a quantum-safe signer by the end of 2027. The article explicitly says the quantum-safe signer type and verification primitives were missing at publication, so dates and capabilities are plans/expectations rather than shipped guarantees.",
+        "answer": "As of July 11, 2026, the current official Meridian site schedules Meridian 2026 for October 28–29 at Convento do Beato in Lisbon, Portugal; HackMeridian is scheduled for October 25–26. Older sources saying October 21–22 at Yas Marina in Abu Dhabi reflect the original announcement, not the current schedule. SDF publicly announced the move to Lisbon and new dates on April 1, 2026. Because the event is still upcoming, answers should cite the current official site and an as-of date.",
         "keyFacts": [
-          "SDF published the Quantum Preparedness Plan on June 9, 2026.",
-          "Stage 1 plans ML-DSA-44/65 verification host functions for Soroban contract accounts during 2026.",
-          "The plan is a roadmap; it did not mean Stellar accounts were already quantum-safe by default."
+          "As of July 11, 2026, Meridian 2026 is scheduled for October 28–29 at Convento do Beato in Lisbon.",
+          "HackMeridian is scheduled for October 25–26, 2026.",
+          "Abu Dhabi October 21–22 was the superseded schedule; SDF announced the Lisbon change on April 1, 2026."
         ],
         "avoid": [
-          "Do NOT claim ML-DSA host functions or a native quantum-safe signer had already shipped when the plan was published.",
-          "Do NOT turn the 2026/2027 targets into guaranteed completion dates."
+          "Do NOT present Abu Dhabi/Yas Marina on October 21–22 as the current Meridian 2026 schedule.",
+          "Do NOT state the Lisbon schedule without an as-of qualifier while the event remains upcoming."
         ],
-        "notes": "Roadmap status is volatile and must be reverified. Grade the dated distinction between planned and shipped behavior."
+        "notes": "Corrected-fact, freshness-sensitive case. The stale CoinDesk sponsored recap is useful evidence of the prior schedule but must not override the current official event site."
       },
       "tags": {
         "category": "history-org-tokenomics",
@@ -1275,51 +1280,55 @@
         "sources": [
           {
             "class": "A",
-            "ref": "https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan"
+            "ref": "https://meridian.stellar.org/"
           },
           {
             "class": "A",
-            "ref": "https://stellar.org/protocol-upgrades"
+            "ref": "https://meridian.stellar.org/event-details"
           },
           {
-            "class": "F",
-            "ref": "https://horizon.stellar.org/"
+            "class": "A",
+            "ref": "https://x.com/StellarOrg/status/2039405316803031315"
+          },
+          {
+            "class": "D",
+            "ref": "https://www.coindesk.com/sponsored-content/what-you-missed-at-the-stellar-meridian-conference"
           }
         ],
         "corroboration": [
           {
-            "claim": "SDF published the three-stage Quantum Preparedness Plan on 2026-06-09",
-            "verdict": "confirmed",
-            "evidence": [
-              {
-                "class": "A",
-                "ref": "https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan",
-                "observedAt": "2026-07-11",
-                "note": "Primary page embeds date 2026-06-09 and describes the stages."
-              },
-              {
-                "class": "D",
-                "ref": "https://www.google.com/search?q=%22Quantum+Preparedness+Plan%22+Stellar+June+9+2026",
-                "observedAt": "2026-07-11",
-                "note": "General-web sweep corroborates the dated SDF announcement and found no earlier shipped-feature claim."
-              }
-            ]
-          },
-          {
-            "claim": "ML-DSA-44/65 host functions and a quantum-safe signer were planned rather than shipped as of 2026-07-11",
+            "claim": "As of 2026-07-11 Meridian 2026 is scheduled for Lisbon October 28-29, with HackMeridian October 25-26",
             "verdict": "confirmed-as-of",
             "evidence": [
               {
                 "class": "A",
-                "ref": "https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan",
+                "ref": "https://meridian.stellar.org/event-details",
                 "observedAt": "2026-07-11",
-                "note": "Article says the signer type and verification primitives are the piece missing today and places them on the roadmap."
+                "note": "Official FAQ gives dates, venue, city, and hackathon dates."
               },
               {
-                "class": "F",
-                "ref": "https://horizon.stellar.org/",
+                "class": "D",
+                "ref": "https://luma.com/meridian2026ll",
                 "observedAt": "2026-07-11",
-                "note": "Live Mainnet reported Protocol 27; checked against the official protocol-upgrade inventory, which did not list ML-DSA host functions as activated."
+                "note": "Independent event listing points to Lisbon and defers to the official site."
+              }
+            ]
+          },
+          {
+            "claim": "Abu Dhabi October 21-22 is the current Meridian 2026 schedule",
+            "verdict": "contradicted",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://x.com/StellarOrg/status/2039405316803031315",
+                "observedAt": "2026-07-11",
+                "note": "Official April 1 post announces new city Lisbon and new dates October 28-29."
+              },
+              {
+                "class": "D",
+                "ref": "https://www.coindesk.com/sponsored-content/what-you-missed-at-the-stellar-meridian-conference",
+                "observedAt": "2026-07-11",
+                "note": "Older page preserves the superseded Abu Dhabi October 21-22 announcement and explains the stale-source trap."
               }
             ]
           }
@@ -1331,9 +1340,10 @@
             "solo://proj/49/process/3417",
             "solo://proj/49/process/3423",
             "scratchpad/p4/n2-events-blind/reconciliation.md",
-            "https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan",
-            "https://stellar.org/protocol-upgrades",
-            "https://horizon.stellar.org/"
+            "https://meridian.stellar.org/",
+            "https://meridian.stellar.org/event-details",
+            "https://x.com/StellarOrg/status/2039405316803031315",
+            "https://www.coindesk.com/sponsored-content/what-you-missed-at-the-stellar-meridian-conference"
           ],
           "rootCause": [
             "eval-authoring"
@@ -1818,22 +1828,24 @@
       }
     },
     {
-      "id": "q-scf-current-hackathons-compare-live",
-      "question": "Using current event data, compare the latest Stellar ZK hackathon with the recent agents/x402 hackathon.",
+      "id": "q-scf-current-round",
+      "question": "What is the current open SCF round and when is its submission deadline?",
       "surface": [
-        "scout.getHackathons",
-        "scout.compareHackathons"
+        "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Discover the current matching event slugs, compare them, and report dates, source, status, registered hackers and prize pools only as returned. Cite both event URLs and generatedAt; distinguish registered hackers from submissions and null from zero.",
+        "answer": "A grounded answer consults the live Stellar Scout directory or research data, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-11, the live RFP response identified SCF #45 in Submission and carried a 2026-08-16 submission deadline.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
         "keyFacts": [
-          "Discovers current slugs before calling the comparison.",
-          "Reports sourced dates/status/hacker/prize fields with generatedAt.",
-          "Distinguishes hackers from submissions and unavailable from zero."
+          "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
+          "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
+          "Keeps the stable Build cap distinct from the changing round schedule."
         ],
         "avoid": [
-          "Uses archived event totals or equates registered hackers with submissions."
-        ]
+          "Do NOT present the expired July 26 deadline as current.",
+          "Do NOT assert any round/deadline as permanent or fabricate a date not grounded in a live source.",
+          "Do NOT present version-, provider-, interface-, or availability-sensitive observations as timeless; date the changeable part without weakening stable protocol or historical facts."
+        ],
+        "notes": "Dossier §4. Freshness item — rotates every ~6 weeks; reward staleness-flagging. scout_rfps surfaces activeQuarter signal.\nAlso good if the answer: States the SCF Build cadence is roughly every 6 weeks. | Notes the standard $150K XLM Build cap for the round.\nGolden cites: communityfund.stellar.org/awards (the live awards page) for the current round/deadline.\nFRESHNESS CORRECTION 2026-07-09 (todo 901): SCF #45 remains current, but its deadline is August 16, 2026, not July 26. Official awards and Scout live-round metadata agree. Continue gating on dated lookup behavior rather than one frozen round."
       },
       "tags": {
         "category": "scf-grants-builders",
@@ -1841,100 +1853,91 @@
         "freshness": "live"
       },
       "truth": {
-        "domain": "corpus-grounded",
+        "domain": "real-world",
         "status": "confirmed",
         "asOf": "2026-07-11",
         "sources": [
           {
-            "class": "C",
-            "ref": "https://stellarlight.xyz/api/hackathons"
-          },
-          {
-            "class": "D",
-            "ref": "https://dorahacks.io/hackathon/stellar-hacks-zk/detail"
-          },
-          {
-            "class": "B",
-            "ref": "catalog/manifest.json#scout.compareHackathons"
+            "class": "A",
+            "ref": "https://communityfund.stellar.org/awards",
+            "note": "class inferred at migration"
           },
           {
             "class": "A",
-            "ref": "https://developers.stellar.org/meetings/2026/04/23"
+            "ref": "https://stellar.gitbook.io/scf-handbook/scf-awards/build-award",
+            "note": "class inferred at migration"
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/rfps?status=open",
+            "note": "class inferred at migration"
           }
         ],
         "corroboration": [
           {
-            "claim": "A valid comparison resolves live slugs, sources each field, dates the response, and preserves field semantics.",
+            "claim": "As of 2026-07-09, SCF #45 is in Submission and closes 2026-08-16; Build awards remain capped at up to $150K worth of XLM",
             "verdict": "confirmed",
             "evidence": [
               {
+                "class": "A",
+                "ref": "A: https://communityfund.stellar.org/awards fetched 2026-07-09 — SCF #45 deadline August 16, 2026",
+                "observedAt": "2026-07-09",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              },
+              {
                 "class": "C",
-                "ref": "https://stellarlight.xyz/api/hackathons",
-                "observedAt": "2026-07-11"
-              },
-              {
-                "class": "D",
-                "ref": "https://dorahacks.io/hackathon/stellar-hacks-zk/detail",
-                "observedAt": "2026-07-11"
-              },
-              {
-                "class": "B",
-                "ref": "catalog/manifest.json#scout.compareHackathons",
-                "observedAt": "2026-07-11"
+                "ref": "C: https://stellarlight.xyz/api/rfps?status=open fetched 2026-07-09T23:48Z — currentRound 45, submissionWindow.closes 2026-08-16, asOf 2026-07-09",
+                "observedAt": "2026-07-09",
+                "note": "verbatim legacy evidence descriptor imported at migration"
               },
               {
                 "class": "A",
-                "ref": "https://developers.stellar.org/meetings/2026/04/23",
-                "observedAt": "2026-07-11"
-              }
-            ]
-          },
-          {
-            "claim": "Archived totals remain current or hackers equal submissions.",
-            "verdict": "contradicted",
-            "evidence": [
-              {
-                "class": "B",
-                "ref": "catalog/manifest.json#scout.compareHackathons",
-                "observedAt": "2026-07-11"
+                "ref": "A: SCF Build Award handbook fetched 2026-07-09 — up to $150,000 worth of XLM",
+                "observedAt": "2026-07-09",
+                "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "by": "P4 conversions rework after independent Fable copy/quality review",
           "evidence": [
-            "solo://proj/49/process/3414",
-            "solo://proj/49/process/3420",
-            "catalog/manifest.json#scout.compareHackathons",
-            "https://developers.stellar.org/meetings/2026/04/23"
+            "Solo scratchpad 569 Batch B, 2026-07-09.",
+            "Sibling expansion found and corrected the same July 26 date in q-edge-scf-v7-centralization-myths.",
+            "2026-07-11 localhost:8787 search→execute probe observed: the live RFP response identified SCF #45 in Submission and carried a 2026-08-16 submission deadline.",
+            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
           ],
           "rootCause": [
-            "freshness-drift"
+            "Ordinary freshness drift in a roughly six-week round schedule; the old case correctly warned that its date would expire.",
+            "solo://proj/49/todo/golden-corpus-health--901 — risk-weighted refute batch B",
+            "eval-authoring",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
           ]
         },
-        "origin": "core-35 compare-current-hackathons"
+        "origin": "raven-next q-scf-current-round"
       }
     },
     {
-      "id": "q-scf-rfps-hackathons-live",
-      "question": "What SCF RFPs and Stellar hackathons are open, active, or upcoming right now?",
+      "id": "q-scf-sdf-bug-bounty",
+      "question": "What does the SDF Bug Bounty pay for a Stellar protocol vulnerability versus a Soroban smart-contract exploit?",
       "surface": [
-        "scout.getRfps",
-        "scout.getHackathons"
+        "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Query RFPs and hackathons independently, including separate getHackathons({status:\"active\"}) and getHackathons({status:\"upcoming\"}) calls. Date and cite both lanes. Only an ok empty data response supports scoped “none returned”; soft-empty or error is inconclusive.",
+        "answer": "A grounded answer consults the live Stellar Scout directory or research data, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-10, the verified sources supported this observed answer:\n\nFor new general SDF reports, use the **Stellar HackerOne policy**. Consolidation took effect **2026-05-07**; the old general Stellar Immunefi program is deprecated for new submissions. Under the HackerOne matrix, standard Critical/High/Medium/Low/Note maxima are **25K/15K/10K/2K/500 points**; one point is currently $1 and rewards are paid in XLM. A special core/protocol carveout can calculate a critical reward as 10% of directly affected funds, capped at **250K points**. That carveout covers `stellar-core`, `stellar-protocol`, and Soroban runtime/host code—not arbitrary third-party Soroban apps, which are outside SDF's program. The separate OpenZeppelin Stellar Contracts Immunefi bounty remains distinct, with a $25K maximum single critical payout and $250K total contest maximum. Audit Bank funds audits; it is not the vulnerability-report bounty.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
         "keyFacts": [
-          "Queries RFP and hackathon lanes independently with current status filters.",
-          "Cites source URLs and reports generatedAt/asOf for both.",
-          "Handles empty results with scoped language and returned fallback channels.",
-          "Preserves ok-empty versus soft-empty/error distinctions; only ok-empty supports a scoped absence statement."
+          "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
+          "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
+          "Separates deprecated general Immunefi, the independent OpenZeppelin bounty, third-party apps, and Audit Bank."
         ],
         "avoid": [
-          "Concludes no opportunity exists worldwide from a zero-row served response."
-        ]
+          "Do NOT repeat a timeless $250K protocol/$50K Soroban-app split.",
+          "Do NOT send new general SDF reports to deprecated Immunefi or merge OpenZeppelin's policy into SDF's.",
+          "Do NOT present version-, provider-, interface-, or availability-sensitive observations as timeless; date the changeable part without weakening stable protocol or historical facts."
+        ],
+        "notes": "Dossier §5.4. Trap: swapping the $250K-XLM / $50K-USD tiers, or confusing with Audit Bank.\nAlso good if the answer: The Bug Bounty is an SDF-direct program (stellar.org/grants-and-funding), separate from the SCF.\nGolden cites: stellar.org/grants-and-funding bug-bounty section.\nGT-40 blind reversed the primary top-line after following the cited controlling policy. Policy and intake are volatile; accept dated, scope-aware figures only."
       },
       "tags": {
         "category": "scf-grants-builders",
@@ -1942,80 +1945,74 @@
         "freshness": "live"
       },
       "truth": {
-        "domain": "mixed",
+        "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-11",
+        "asOf": "2026-07-10",
         "sources": [
           {
-            "class": "C",
-            "ref": "https://stellarlight.xyz/api/rfps?status=open"
+            "class": "D",
+            "ref": "https://hackerone.com/stellar?view_policy=true",
+            "note": "class inferred at migration"
           },
           {
-            "class": "C",
-            "ref": "https://stellarlight.xyz/api/hackathons?status=active"
+            "class": "D",
+            "ref": "https://immunefi.com/bug-bounty/stellar/information/",
+            "note": "class inferred at migration"
           },
           {
-            "class": "A",
-            "ref": "https://communityfund.stellar.org/awards"
-          },
-          {
-            "class": "C",
-            "ref": "https://stellarlight.xyz/api/hackathons?status=upcoming"
+            "class": "D",
+            "ref": "https://immunefi.com/bug-bounty/openzeppelin-stellar/information/",
+            "note": "class inferred at migration"
           }
         ],
         "corroboration": [
           {
-            "claim": "The two opportunity lanes require independent current filters, citations, timestamps, and scoped empty handling.",
+            "claim": "Current controlling bounty matrix",
             "verdict": "confirmed",
             "evidence": [
               {
-                "class": "C",
-                "ref": "https://stellarlight.xyz/api/rfps?status=open",
-                "observedAt": "2026-07-11"
-              },
-              {
-                "class": "C",
-                "ref": "https://stellarlight.xyz/api/hackathons?status=active",
-                "observedAt": "2026-07-11"
+                "class": "A",
+                "ref": "A: HackerOne policy updated 2026-06-29",
+                "observedAt": "2026-06-29",
+                "note": "verbatim legacy evidence descriptor imported at migration"
               },
               {
                 "class": "A",
-                "ref": "https://communityfund.stellar.org/awards",
-                "observedAt": "2026-07-11"
+                "ref": "A/D: deprecated general and separate OZ Immunefi policies",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
               },
               {
-                "class": "C",
-                "ref": "https://stellarlight.xyz/api/hackathons?status=upcoming",
-                "observedAt": "2026-07-11"
-              }
-            ]
-          },
-          {
-            "claim": "A zero-row response proves no opportunity exists anywhere.",
-            "verdict": "contradicted",
-            "evidence": [
+                "class": "D",
+                "ref": "A/D: deprecated general and separate OZ Immunefi policies",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              },
               {
-                "class": "B",
-                "ref": "catalog/manifest.json#scout.getHackathons",
-                "observedAt": "2026-07-11"
+                "class": "F",
+                "ref": "F: GT-40 blind",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
               }
             ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 H1 primary (Solo 3414) + blind reconciliation (Solo 3420)",
+          "by": "P4 conversions rework after independent Fable copy/quality review",
           "evidence": [
-            "solo://proj/49/process/3414",
-            "solo://proj/49/process/3420",
-            "https://communityfund.stellar.org/awards",
-            "catalog/manifest.json#scout.getHackathons"
+            "Solo scratchpad 575 GT-40 blind process 3304; controlling policies fetched 2026-07-10.",
+            "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
+            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
           ],
           "rootCause": [
-            "eval-authoring"
+            "improvements/stellar-light-scout/sls-020-security-program-migration-supersession.md",
+            "eval-authoring",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
           ]
         },
-        "origin": "core-35 rfps-and-hackathons"
+        "origin": "raven-next q-scf-sdf-bug-bounty"
       }
     },
     {
@@ -2094,7 +2091,7 @@
         "stellarDocs.search_soroban_contract_docs"
       ],
       "golden": {
-        "answer": "A grounded answer derives its named examples and status claims from the current official Stellar documentation, then dates the roster so it is not presented as permanent. As of 2026-07-11, the current documentation search returned build examples using `stellar contract build` and output under `target/wasm32v1-none/release/`.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+        "answer": "A grounded answer derives its named examples and status claims from the current official Stellar documentation, then dates the roster so it is not presented as permanent. As of 2026-07-13, the current documentation search returned build examples using `stellar contract build` and output under `target/wasm32v1-none/release/`.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
         "keyFacts": [
           "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
           "Names `wasm32v1-none` as the current build target for new Soroban contracts.",
@@ -2105,6 +2102,7 @@
         "avoid": [
           "Do not use the misspelled target `wasm32v1- none` or old `wasm32-unknown-unknown` guidance as the final answer.",
           "Do not tell users to hand-edit generated Wasm or bypass the CLI without explaining the target and release profile.",
+          "Do NOT add an ecosystem prior-art or competitor landscape detour to this already-scoped build/debug question; current official docs and CLI evidence are sufficient.",
           "Do NOT present the observed live result set as a complete or permanent roster; explicitly historical facts remain historical."
         ],
         "notes": "Verified with Stellar Docs MCP and local `stellar contract build --help` from CLI 25.2.0. The dossier mentions newer protocol/SDK releases, but the target guidance is stable in current docs.\nAlso good if the answer: Mentions output path `target/wasm32v1-none/release/<contract>.wasm`. | Notes target installation is per toolchain, so after Rust upgrades the target may need reinstalling.\nGolden cites: Must cite current Stellar setup/Hello World or Rust dialect docs for `wasm32v1-none`. | Freshness-sensitive answer should cite a dated/current official docs source or local CLI evidence."
@@ -2117,41 +2115,62 @@
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-11",
+        "asOf": "2026-07-13",
         "sources": [
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world",
-            "note": "class inferred at migration"
+            "note": "Official current Hello World build guide accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/learn/fundamentals/contract-development/rust-dialect",
-            "note": "class inferred at migration"
+            "note": "Official Rust dialect/target guidance accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup",
-            "note": "class inferred at migration"
+            "note": "Official smart-contract toolchain setup guide accessed 2026-07-13."
           },
           {
-            "class": "D",
+            "class": "B",
             "ref": "https://github.com/OpenZeppelin/stellar-contracts",
-            "note": "class inferred at migration"
+            "note": "Direct OpenZeppelin Stellar contracts source repository; class B source code, accessed 2026-07-13."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Current Stellar contract build guidance uses `stellar contract build` with the `wasm32v1-none` target and release output path.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world",
+                "observedAt": "2026-07-13"
+              },
+              {
+                "class": "C",
+                "ref": "solo://proj/49/scratchpad/truth-maintenance-20--575",
+                "observedAt": "2026-07-11",
+                "note": "Durable record of the localhost Docs search and local Stellar CLI 25.2.0 help verification."
+              }
+            ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "date": "2026-07-13",
+          "by": "Prior-art build-route paired-control reconciliation after independent Sol and Grok review",
           "evidence": [
             "solo://proj/49/scratchpad/truth-maintenance-20--575",
             "2026-07-11 localhost:8787 search→execute probe observed: the current documentation search returned build examples using `stellar contract build` and output under `target/wasm32v1-none/release/`.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/prior-art-build-rout--613 — durable independent review and no-detour reconciliation",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613 — established this current official-docs build error as the known-step no-detour control."
           ],
           "rootCause": [
             "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "prior-art no-detour control"
           ]
         },
         "origin": "raven-next q-sor-build-target-wasm32v1"
@@ -2494,58 +2513,120 @@
       }
     },
     {
-      "id": "q-ti-explain-repo-payload-status",
-      "question": "I need a source-grounded explanation of where Stellar transaction result codes are implemented. How should Scout's repo explanation response be interpreted?",
+      "id": "q-ti-openzeppelin-relayer",
+      "question": "What is the OpenZeppelin Relayer on Stellar — is it live on mainnet, how is the relayer address funded/topped-up, and how do I integrate it with my backend to pay gas?",
       "surface": [
-        "scout.explainRepo"
+        "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Use explainRepo with the deep code question and optionally pin the authoritative repo. Check both the host envelope and the upstream payload's data.ok. Treat the routed repository and repo URL as provenance; the generated explanation can degrade to routing metadata when no answer is available and should be verified against code for safety-critical conclusions.",
+        "answer": "OpenZeppelin **Relayer** is a self-hostable AGPL relaying service. Its Stellar support includes prepared XDR submission, classic payments, Soroban invocation, fee-bump/sponsorship workflows, policies, and multiple signer backends. In self-hosted use, you configure and fund the Stellar relayer account yourself so it can pay network fees and required reserves.\n\nOpenZeppelin **Channels** is the managed offering. It adds hosted authentication/operations and uses parallel Stellar accounts and fee handling for throughput. Hosted service billing/top-up policy is a Channels contract; it is not a generic address or rule that applies to every self-hosted Relayer. In either model, keep credentials and signing authority server-side, validate the exact transaction intent, apply app policy/rate limits, submit, and track the result.\n\nVersion and health claims must be dated. As of **2026-07-11**, the repository's latest release was **v1.6.0**, while rendered documentation still exposed 1.5.x/current paths inconsistently. The hosted endpoints returned authentication responses, which proves reachability rather than successful relaying, and the official status feed reported partial degradation/timeouts during the review. Recheck the current release, supported networks, funding terms, and status before production use.",
         "keyFacts": [
-          "Uses explainRepo for a deep implementation question, optionally with an explicit owner/repo.",
-          "Checks data.ok separately from the host envelope and preserves routed-repo provenance."
+          "Distinguishes self-hosted OpenZeppelin Relayer from managed OpenZeppelin Channels.",
+          "Describes Stellar XDR/payment/Soroban, policy/signer, and fee-bump/sponsorship support without turning managed features into protocol guarantees.",
+          "Separates self-hosted account funding from managed Channels billing/top-up policy.",
+          "Dates version/provider-health claims and discloses the v1.6.0-versus-rendered-1.5.x disagreement as of 2026-07-11."
         ],
         "avoid": [
-          "Do NOT treat envelope success alone as proof that the upstream produced an answer.",
-          "Do NOT present an AI-generated repo explanation as stronger than the cited source code."
+          "Do NOT conflate self-hosted Relayer with managed Channels.",
+          "Do NOT publish a generic hosted top-up address or claim relaying is free of funded fee authority.",
+          "Do NOT interpret HTTP 401 as downtime or one reachable request as successful full service health.",
+          "Do NOT pin release, network support, or provider health without an as-of date."
         ],
-        "notes": "Behavioral contract case for Scout's nested payload status and graceful degradation."
+        "notes": "GT-53 CORRECTION 2026-07-11: grade the self-hosted Relayer versus managed Channels distinction, their different funding/service contracts, and dated evidence. Repository v1.6.0 and rendered 1.5.x docs disagreed; the official status feed showed partial degradation. A 401 proves an authenticated endpoint is reachable, not that a relay succeeded or failed globally."
       },
       "tags": {
         "category": "tooling-infra",
         "service": "scout",
-        "freshness": "live"
+        "freshness": "scheduled"
       },
       "truth": {
         "domain": "mixed",
-        "status": "confirmed",
+        "status": "disputed",
         "asOf": "2026-07-11",
+        "reverifyBy": "2026-09-01",
         "sources": [
           {
-            "class": "B",
-            "ref": "catalog/manifest.json",
-            "note": "Fetch-verified local path exists and defines the exercised contract/workflow."
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tools/openzeppelin-relayer",
+            "note": "class inferred at migration"
           },
           {
-            "class": "C",
-            "ref": "http://localhost:8787/mcp",
-            "note": "Live localhost search→execute probe."
+            "class": "D",
+            "ref": "https://docs.openzeppelin.com/relayer/stellar",
+            "note": "class inferred at migration"
+          },
+          {
+            "class": "D",
+            "ref": "https://docs.openzeppelin.com/relayer/guides/stellar-channels-guide",
+            "note": "class inferred at migration"
+          },
+          {
+            "class": "D",
+            "ref": "https://github.com/OpenZeppelin/openzeppelin-relayer/releases/tag/v1.6.0",
+            "note": "class inferred at migration"
+          },
+          {
+            "class": "D",
+            "ref": "https://status.channels.openzeppelin.com/api/v2/status.json",
+            "note": "class inferred at migration"
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Self-hosted Relayer and managed Channels are distinct contracts with overlapping Stellar support",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "A: OpenZeppelin Stellar Relayer and Channels guides plus Stellar migration page, accessed 2026-07-11",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              },
+              {
+                "class": "B",
+                "ref": "B: OpenZeppelin Relayer v1.6.0 release/source",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              },
+              {
+                "class": "C",
+                "ref": "C: official Channels status feed and package registry, probed read-only 2026-07-11",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              }
+            ]
+          },
+          {
+            "claim": "Rendered docs and latest release identify one synchronized current version",
+            "verdict": "disputed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "A: rendered Relayer docs expose 1.5.x/current paths",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              },
+              {
+                "class": "B",
+                "ref": "B: repository latest release is v1.6.0 as of 2026-07-11",
+                "observedAt": "2026-07-11",
+                "note": "verbatim legacy evidence descriptor imported at migration"
+              }
+            ]
           }
         ],
         "verified": {
           "date": "2026-07-11",
-          "by": "P4 coverage-closure lane (Solo process 3427)",
+          "by": "Golden-truth sweep import — The inherited answer collapsed self-hosted OpenZeppelin Relayer and managed OpenZeppelin Channels into one service and treated hosted fee policy as if it were the self-hosted funding model. GT-53 independently confirmed the product split, current capabilities, and dated release/docs/status disagreement.",
           "evidence": [
-            "2026-07-11 localhost:8787 search→execute probe observed: HTTP 200; explainRepo returned envelope ok=true and payload data.ok=true with an explicitly routed stellar/stellar-core answer and repo sources.",
-            "catalog/manifest.json exists and supports the behavioral golden.",
-            "Sibling sweep: reviewed existing battery cases sharing the exercised surface; no contradictory behavioral golden found.",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "Solo scratchpad 575, GT-53 primary 3372 and blind 3378, independently reviewed 2026-07-11.",
+            "Both lanes confirmed the hosted/self-host funding boundary; the blind lane added release/status evidence and rejected 401-as-downtime."
           ],
           "rootCause": [
-            "eval-authoring"
+            "Eval-side product-identity collapse and freshness drift; the cross-owner SDF/OpenZeppelin cleanup candidate is recorded in the GT-53 audit rather than forced into one upstream finding."
           ]
         },
-        "origin": "authored 2026-07 (coverage)"
+        "origin": "raven-next q-ti-openzeppelin-relayer"
       }
     },
     {

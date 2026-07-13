@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-03T02:17:28.333Z",
+  "fetchedAt": "2026-07-13T21:32:50.808Z",
   "index": "crawler_Stellar Docs - Docusaurus",
   "service": "stellar-docs",
   "settings": {
@@ -86,10 +86,10 @@
   },
   "source": {
     "authEnv": [
-      "ALGOLIA_APPLICATION_ID",
-      "ALGOLIA_API_KEY"
+      "ALGOLIA_APPLICATION_ID_DOCS",
+      "ALGOLIA_API_KEY_DOCS"
     ],
     "research": "research/services/stellar-docs-algolia.md",
-    "settings": "https://{ALGOLIA_APPLICATION_ID}-dsn.algolia.net/1/indexes/crawler_Stellar%20Docs%20-%20Docusaurus/settings"
+    "settings": "https://{ALGOLIA_APPLICATION_ID_DOCS}-dsn.algolia.net/1/indexes/crawler_Stellar%20Docs%20-%20Docusaurus/settings"
   }
 }

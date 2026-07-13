@@ -12,8 +12,13 @@ import { fileURLToPath } from "node:url";
 import { loadManifest, type Catalog } from "../src/catalog/search.ts";
 import { RUNNERS } from "../src/skills/runners/index.ts";
 // Import-safe: build-catalog.mjs is main-guarded (see its footer).
-import { assertNoNonExposedRefs, assertSideEffectingOpsExcluded } from "../scripts/build-catalog.mjs";
+import {
+  assertNoNonExposedRefs,
+  assertSideEffectingOpsExcluded,
+  attachRetrievalProfiles
+} from "../scripts/build-catalog.mjs";
 import { EXCLUDED_SCOUT_OPS } from "../scripts/exposure.mjs";
+import { MICRO_MAP } from "../src/mcp/micro-map.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MANIFEST_PATH = join(ROOT, "catalog", "manifest.json");
@@ -63,6 +68,48 @@ describe("build-catalog.mjs", () => {
   it("has globally unique ids", () => {
     const ids = catalog.entries.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("attaches only exact, exposed operation recovery edges", () => {
+    const operations = new Set(
+      catalog.entries.filter((entry) => entry.kind === "operation").map((entry) => entry.id)
+    );
+    const profiled = catalog.entries.filter((entry) => entry.retrievalProfile);
+    expect(profiled.length).toBeGreaterThan(0);
+    for (const entry of profiled) {
+      const id = entry.id;
+      const profile = entry.retrievalProfile!;
+      expect(operations.has(id), id).toBe(true);
+      for (const edge of profile.recoverWith) {
+        expect(operations.has(edge.id), `${id} -> ${edge.id}`).toBe(true);
+        expect(edge.id).not.toBe(id);
+      }
+    }
+  });
+
+  it("fails loud on orphaned, self, and non-exposed recovery edges", () => {
+    const entries = catalog.entries.map(({ retrievalProfile: _profile, ...entry }) => entry);
+    expect(() => attachRetrievalProfiles(entries, {
+      "missing.operation": {
+        lane: "directory",
+        emptyScope: "operation",
+        recoverWith: [{ id: "scout.searchResearch", relation: "cross-family", on: ["empty"] }]
+      }
+    })).toThrow(/matched no exposed operation/);
+    expect(() => attachRetrievalProfiles(entries, {
+      "scout.getBuilders": {
+        lane: "directory",
+        emptyScope: "operation",
+        recoverWith: [{ id: "scout.getBuilders", relation: "cross-family", on: ["empty"] }]
+      }
+    })).toThrow(/self-edge/);
+    expect(() => attachRetrievalProfiles(entries, {
+      "scout.getBuilders": {
+        lane: "directory",
+        emptyScope: "operation",
+        recoverWith: [{ id: "scout.notExposed", relation: "cross-family", on: ["empty"] }]
+      }
+    })).toThrow(/non-exposed operation/);
   });
 
   it("has the expected entry counts per service/kind", () => {
@@ -179,6 +226,38 @@ describe("build-catalog.mjs", () => {
       path: "/api/projects/search"
     });
   });
+
+  it("maps each design-stage build domain to exact Scout, skill, and Docs authority", () => {
+    const expected = [
+      ["Design/build/integrate", "skills.stellar-dev.smart-contracts", "stellarDocs.search_soroban_contract_docs"],
+      ["Design/build/integrate", "skills.stellar-dev.dapp", "stellarDocs.search_wallet_dapp_docs"],
+      ["Design/build/integrate", "skills.stellar-dev.dapp", "stellarDocs.search_sdk_cli_tools_docs"],
+      ["Design/build/integrate", "skills.stellar-dev.standards", "stellarDocs.search_protocol_concepts_docs"],
+      ["Design/build/integrate", "skills.stellar-dev.data", "stellarDocs.search_rpc_horizon_data_docs"]
+    ] as const;
+    for (const [title, skillId, docsId] of expected) {
+      const line = MICRO_MAP.split("\n").find((candidate) => candidate.includes(title));
+      expect(line, title).toBeDefined();
+      expect(line, title).toContain("scout.searchProjects");
+      expect(line, title).toContain("scout.searchRepos");
+      expect(line, title).toContain(skillId);
+      expect(line, title).toContain(docsId);
+    }
+  });
+
+  it("declares build authority only on the exact whole-skill role map", () => {
+    const roles = new Map(
+      catalog.entries
+        .filter((entry) => entry.buildAuthorityRoles)
+        .map((entry) => [entry.id, entry.buildAuthorityRoles])
+    );
+    expect([...roles.entries()]).toEqual([
+      ["skills.stellar-dev.dapp", ["dapp", "sdk-integration"]],
+      ["skills.stellar-dev.data", ["infrastructure"]],
+      ["skills.stellar-dev.smart-contracts", ["contract"]],
+      ["skills.stellar-dev.standards", ["protocol"]]
+    ]);
+  });
 });
 
 describe("x-routing ingestion — routingKeywords field (scoring lever 7, issue #21)", () => {
@@ -196,7 +275,7 @@ describe("x-routing ingestion — routingKeywords field (scoring lever 7, issue 
     for (const entry of catalog.entries) {
       const routing = entry.routingKeywords ?? [];
       if (routing.length === 0) continue;
-      expect(routing.length, entry.id).toBeLessThanOrEqual(128);
+      expect(routing.length, entry.id).toBeLessThanOrEqual(256);
       const kw = new Set(entry.keywords ?? []);
       for (const token of routing) {
         expect(kw.has(token), `${entry.id}: token "${token}" rides both blends`).toBe(false);

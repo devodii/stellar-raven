@@ -1,0 +1,161 @@
+{
+  "id": "q-builder-justin-rice-history",
+  "question": "Who's Justin Rice, and what is his history in the Stellar ecosystem?",
+  "surface": [
+    "lumenloop.search_content_semantic",
+    "scout.searchResearch",
+    "lumenloop.find_av_passages"
+  ],
+  "golden": {
+    "answer": "Justin Rice is a documented Stellar Development Foundation ecosystem leader. As observed on 2026-07-13, SDF's live but undated leadership page listed him as **VP of Ecosystem**; that is a dated page observation, not a title inferred from old material. Historical first-party pages called him **Head of Ecosystem** for a 2021-02-16 AMA and **VP of Ecosystem** by the 2021-04-20 GBBC University Dialogues event. CoinDesk independently interviewed him as Stellar's “head of ecosystem” in an article published 2021-11-03; treat that wording as contemporary corroboration, not proof of a later demotion. Rice is also the named author of SDF's **“Introducing Automated Market Makers on Stellar”** (2021-07-01) and **“Soroban Is Feature Complete”** (2023-08-22). The reviewed sources establish a dated role and work history but not an exact SDF joining or promotion date. Broad semantic results are discovery leads—verify the exact full name, source, and date before attribution.",
+    "keyFacts": [
+      "Identifies Justin Rice as a historically documented SDF ecosystem leader using exact-name, dated first-party sources.",
+      "Reports the live team-page title only as observed on 2026-07-13 and keeps the 2021–2024 role references historically dated.",
+      "Mentions at least one dated, exact-name SDF publication or event contribution.",
+      "Treats semantic matches as candidates and validates exact identity, source, and date before attribution."
+    ],
+    "avoid": [
+      "Do NOT infer a 2026 current role from 2020–2024 material; if using the live team page, date the observation.",
+      "Do NOT conflate Justin Rice with unrelated semantic-neighbor entities such as another person named Justin.",
+      "Do NOT attribute a GitHub handle, SEP authorship, or other biography details without a source that establishes them.",
+      "Do NOT turn an empty exact-person lane into a claim that Justin Rice has no Stellar history."
+    ],
+    "notes": "Positive control for evidence-poor recovery. The answer should recover exact-name dated history from broad content/research after narrow directory or person lanes miss, while refusing to convert historical titles into a current-role assertion."
+  },
+  "tags": {
+    "category": "scf-grants-builders",
+    "service": "lumenloop",
+    "freshness": "scheduled"
+  },
+  "truth": {
+    "domain": "mixed",
+    "status": "confirmed",
+    "asOf": "2026-07-13",
+    "reverifyBy": "2026-10-22",
+    "sources": [
+      {
+        "class": "A",
+        "ref": "https://stellar.org/foundation/team",
+        "note": "Undated live SDF team page observed 2026-07-13; lists Justin Rice as VP, Ecosystem."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/community/events/ama-with-justin-rice",
+        "note": "Exact-name first-party event page; calls Rice SDF's head of Ecosystem; event date 2021-02-16; accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/community/events/gbbc-university-dialogues-on-blockchain-digital-assets",
+        "note": "Exact-name first-party event page; calls Rice VP of Ecosystem of SDF; event date 2021-04-20 at 23:00 UTC; accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/community/events/stellar-development-foundation-q3-2024-in-review",
+        "note": "Exact-name first-party event page; calls Rice VP of Ecosystem; event date 2024-11-06; accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/developers/introducing-automated-market-makers-on-stellar",
+        "note": "First-party author metadata names Justin Rice; published 2021-07-01; accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/blog/developers/soroban-is-feature-complete",
+        "note": "First-party author metadata names Justin Rice; published 2023-08-22; accessed 2026-07-13."
+      },
+      {
+        "class": "D",
+        "ref": "https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity",
+        "note": "Independent exact-name interview identifies Rice with Stellar ecosystem leadership and attributes AMM comments; published 2021-11-03; accessed 2026-07-13."
+      },
+      {
+        "class": "C",
+        "ref": "Cloudflare production rays a1a519aa3907e144 through a1a51b394acdc572",
+        "note": "Production retrieval evidence: broad semantic search recovered exact-name dated Stellar event rows after narrow calls missed."
+      }
+    ],
+    "corroboration": [
+      {
+        "claim": "SDF described Justin Rice as Head of Ecosystem on 2021-02-16 and as VP of Ecosystem by the 2021-04-20 GBBC event; the reviewed sources do not establish an exact promotion date.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/community/events/ama-with-justin-rice",
+            "observedAt": "2026-07-13",
+            "note": "Historical title tied to event date 2021-02-16."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/community/events/gbbc-university-dialogues-on-blockchain-digital-assets",
+            "observedAt": "2026-07-13",
+            "note": "Historical VP title tied to event date 2021-04-20 at 23:00 UTC."
+          },
+          {
+            "class": "D",
+            "ref": "https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity",
+            "observedAt": "2026-07-13",
+            "note": "Published 2021-11-03; independently identifies Rice as Stellar's head of ecosystem. It does not establish formal title chronology."
+          }
+        ]
+      },
+      {
+        "claim": "Justin Rice has exact-name, dated SDF publications and event contributions in the Stellar ecosystem.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/introducing-automated-market-makers-on-stellar",
+            "observedAt": "2026-07-13",
+            "note": "Author metadata; published 2021-07-01."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/soroban-is-feature-complete",
+            "observedAt": "2026-07-13",
+            "note": "Author metadata; published 2023-08-22."
+          },
+          {
+            "class": "D",
+            "ref": "https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity",
+            "observedAt": "2026-07-13",
+            "note": "Independent interview attributes AMM implementation commentary to Rice; it corroborates documented ecosystem contribution but not SDF page authorship metadata."
+          }
+        ]
+      },
+      {
+        "claim": "The live SDF team page listed Justin Rice as VP, Ecosystem when observed on 2026-07-13.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/foundation/team",
+            "observedAt": "2026-07-13",
+            "note": "The page is live and undated, so the claim is tied to the observation date."
+          },
+          {
+            "class": "D",
+            "ref": "https://theorg.com/org/stellar-org/org-chart/justin-rice",
+            "observedAt": "2026-07-13",
+            "note": "Independent but likely derivative current-profile corroboration; SDF remains authoritative."
+          }
+        ]
+      }
+    ],
+    "verified": {
+      "date": "2026-07-13",
+      "by": "Coordinator after independent Opus and Sol truth matrices",
+      "evidence": [
+        "First-party Stellar event and blog pages plus https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity and https://theorg.com/org/stellar-org/org-chart/justin-rice.",
+        "Production and localhost retrieval probes demonstrating narrow miss and broad exact-name recovery.",
+        "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+      ],
+      "rootCause": [
+        "Broad semantic capability existed but the interaction stopped after narrow evidence-poor calls.",
+        "Historical role evidence needed an explicit source-date gate to avoid a current-role hallucination.",
+        "improvements/lumenloop/ll-017-semantic-person-match-provenance.md"
+      ]
+    },
+    "origin": "authored 2026-07-13 from production miss and independent truth verification"
+  }
+}

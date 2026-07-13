@@ -1,13 +1,14 @@
 ---
 id: sls-040
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live getBuilders returned 114 profiles and all 114 scfTier values were blank
   - live OpenAPI and wrapper implementation expose q, location, and skill but not scfTier
   - operation descriptions and README still advertise SCF-tier or award-track recruiting
   - unknown scfTier input was ignored and returned the same unfiltered result
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/521
   - Solo scratchpad 575 GT-35 primary 3287 and blind 3289
 ---
 

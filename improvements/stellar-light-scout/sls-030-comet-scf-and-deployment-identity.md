@@ -1,13 +1,14 @@
 ---
 id: sls-030
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout Comet record reported scfAwarded false
   - official SCF pages show Comet Awarded 150000 in round 13 and 141000 in round 18
   - mainnet Blend backstop contract/interface verifies a live Comet-derived weighted pool
   - Solo scratchpad 575 GT-15 primary process 3243 and independent blind process 3246
+  - live re-check 2026-07-13: https://stellarlight.xyz/api/projects/search?q=Comet&limit=5 returns Inactive, scfAwarded true, $291,000, rounds 13 and 18, plus the embedded Blend backstop lifecycle note
 ---
 
 ## Finding

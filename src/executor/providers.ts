@@ -31,7 +31,7 @@
  *     provider RPC instead (a source-injected `const codemode` would shadow
  *     this provider global) — same resolved document either way.
  *   codemode.search(queryOrOpts)      — host-side searchCatalogPage (ranked;
- *     { ok, hits, total, truncated } — truncated ⇒ retry with a higher limit
+ *     { ok, hits, total, truncated, recovery } — truncated ⇒ retry with a higher limit
  *     or narrower filters). Unknown kind/service filter values are rejected
  *     as error envelopes naming the valid set (todo 839) — the frozen
  *     searchCatalog contract keeps filters silent, so the validation lives
@@ -59,10 +59,19 @@
  * the flat `skill_read`/`skill_run` dispatch fns — codemode's documented
  * prelude mechanism.)
  */
-import { CATALOG_KINDS, type Catalog, type CatalogEntry, type CatalogKind } from "../catalog/types.ts";
+import {
+  CATALOG_KINDS,
+  RETRIEVAL_REASONS,
+  type BuildAuthorityRole,
+  type Catalog,
+  type CatalogEntry,
+  type CatalogKind,
+  type RetrievalReason
+} from "../catalog/types.ts";
 import {
   searchCatalogPage,
   catalogServices,
+  recoveryCandidates,
   renderSignature,
   sectionKeysOf
 } from "../catalog/search.ts";
@@ -353,7 +362,14 @@ export function buildProviders(
 }
 
 /** codemode.search input: a bare query string or search options. */
-type SearchArg = string | { query?: unknown; kind?: unknown; service?: unknown; limit?: unknown };
+type SearchArg = string | {
+  query?: unknown;
+  kind?: unknown;
+  service?: unknown;
+  limit?: unknown;
+  recoverFrom?: unknown;
+  reason?: unknown;
+};
 type CatalogArg = { kind?: unknown; service?: unknown; compact?: unknown };
 
 /**
@@ -371,6 +387,7 @@ function catalogEntryView(entry: CatalogEntry) {
     description: entry.description,
     inputSchema: entry.inputSchema,
     outputSchema: entry.outputSchema,
+    ...(entry.retrievalProfile ? { retrievalProfile: entry.retrievalProfile } : {}),
     // Runnable-skill affordance flag (design §5): present-and-true only, same
     // as the manifest — code-grep discovery (`entries.filter(e => e.runnable)`)
     // sees exactly what the catalog says, no third truth value.
@@ -401,7 +418,8 @@ function describeCatalogEntry(catalog: Catalog, id?: unknown) {
     id: entry.id,
     service: entry.service,
     kind: entry.kind,
-    description: entry.description
+    description: entry.description,
+    ...(entry.retrievalProfile ? { retrievalProfile: entry.retrievalProfile } : {})
   };
   if (entry.kind === "skill") {
     const availableSections = sectionKeysOf(catalog, entry.id);
@@ -464,7 +482,7 @@ export function buildCodemodeProvider(
      * signal: run.ts uses it to append section-read advice to the truncation
      * footer — it must never affect which result bytes are kept.
      */
-    onSkillRead?: () => void;
+    onSkillRead?: (skillId: string, roles: readonly BuildAuthorityRole[]) => void;
     /**
      * Fired on every skill_run dispatch (attempted runs, whatever the
      * outcome — the span attribute counts skill.run USAGE; per-run outcomes
@@ -656,7 +674,7 @@ export function buildCodemodeProvider(
                 error: {
                   service: "codemode",
                   kind: "error",
-                  message: 'codemode.search needs a query: search("targeted query") or search({ query, kind?, service?, limit? })'
+                  message: 'codemode.search needs a query: search("targeted query") or search({ query, kind?, service?, limit?, recoverFrom?, reason? })'
                 }
               };
             }
@@ -691,6 +709,48 @@ export function buildCodemodeProvider(
                 }
               };
             }
+            const recoverFrom = opts.recoverFrom ?? undefined;
+            if (
+              recoverFrom !== undefined &&
+              (!Array.isArray(recoverFrom) ||
+                recoverFrom.length > 10 ||
+                recoverFrom.some((id) => typeof id !== "string" || id.length === 0))
+            ) {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message: "codemode.search: recoverFrom must be an array of at most 10 non-empty exact operation ids"
+                }
+              };
+            }
+            const operationIds = new Set(
+              catalog.entries.filter((entry) => entry.kind === "operation").map((entry) => entry.id)
+            );
+            const unknownRecoveryIds =
+              (recoverFrom as string[] | undefined)?.filter((id) => !operationIds.has(id)) ?? [];
+            if (unknownRecoveryIds.length > 0) {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message: `codemode.search: unknown recoverFrom operation id(s) ${unknownRecoveryIds.map((id) => JSON.stringify(id)).join(", ")} — ids are exact-match`
+                }
+              };
+            }
+            const reason = opts.reason ?? undefined;
+            if (reason !== undefined && !(RETRIEVAL_REASONS as readonly unknown[]).includes(reason)) {
+              return {
+                ok: false,
+                error: {
+                  service: "codemode",
+                  kind: "error",
+                  message: `codemode.search: unknown recovery reason ${JSON.stringify(reason)} — valid reasons: ${RETRIEVAL_REASONS.join(", ")}`
+                }
+              };
+            }
             const queryHash = await hashPrefix(opts.query);
             const t0 = Date.now();
             const page = searchCatalogPage(catalog, {
@@ -700,6 +760,12 @@ export function buildCodemodeProvider(
               limit: typeof opts.limit === "number" ? opts.limit : undefined
             });
             const { hits, total, truncated } = page;
+            // Recovery models a real prior attempt, never the ranked hits
+            // the model merely saw in this search response. A reason with no
+            // explicit attempted operation is inert rather than an escalation.
+            const recovery = Array.isArray(recoverFrom) && recoverFrom.length > 0
+              ? recoveryCandidates(catalog, recoverFrom as string[], reason as RetrievalReason | undefined)
+              : [];
             logEvent("search", {
               source: "codemode",
               ...searchEventFields({
@@ -714,10 +780,12 @@ export function buildCodemodeProvider(
               total,
               truncated,
               top: hits.slice(0, 3).map((h) => h.id),
-              responseChars: JSON.stringify(hits).length,
+              recovery: recovery.length,
+              recoveryTop: recovery.slice(0, 3).map((candidate) => candidate.id),
+              responseChars: JSON.stringify({ hits, recovery }).length,
               ms: Date.now() - t0
             });
-            return { ok: true, hits, total, truncated };
+            return { ok: true, hits, total, truncated, recovery };
           },
 
           // The canonical detail-on-demand step (todo 841, mirroring upstream
@@ -739,7 +807,10 @@ export function buildCodemodeProvider(
 
     skill_read: async (name?: unknown, opts?: unknown) => {
       const r = readSkill(catalog, bundle, name, opts);
-      if (r.ok) hooks?.onSkillRead?.();
+      if (r.ok && typeof name === "string") {
+        const entry = catalog.entries.find((candidate) => candidate.id === name);
+        hooks?.onSkillRead?.(name, entry?.buildAuthorityRoles ?? []);
+      }
       return r;
     },
 
@@ -932,7 +1003,7 @@ export function buildSandbox(
   deps?: {
     fetchImpl?: FetchLike;
     superSpec?: unknown;
-    onSkillRead?: () => void;
+    onSkillRead?: (skillId: string, roles: readonly BuildAuthorityRole[]) => void;
     onSkillRun?: () => void;
     onOpCall?: (call: OpLedgerCall) => void;
     artifact?: ArtifactSandboxDeps;

@@ -2,7 +2,7 @@
   "id": "q-builder-rust-soroban-devs",
   "question": "Who are some experienced Soroban / Rust smart-contract builders in the Stellar ecosystem I could reach out to?",
   "surface": [
-    "scout.searchProjects"
+    "scout.getBuilders"
   ],
   "golden": {
     "answer": "A grounded answer derives its named examples and status claims from the live Stellar Scout directory or research data, then dates the roster so it is not presented as permanent. As of 2026-07-11, the live builder directory returned five Rust matches, including Samuel Ogera and Asman Malika.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",

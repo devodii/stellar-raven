@@ -1,15 +1,16 @@
 ---
 id: ll-019
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
-intake: unclear
 evidence:
   - current manifest/inventory description for find_av_passages
   - live execute response returned a top-level array, not declared object results shape
   - rows exposed AI summary/long_summary and opaque start_offset but no transcript text
   - created_at values behaved as ingestion metadata rather than reliable recording dates
   - Solo scratchpad 575 GT-44 primary 3316 and blind 3324
+  - live recheck 2026-07-13: authenticated POST returned success:true with data as a top-level array; the public detail/OpenAPI still declare data.results
+  - reported upstream 2026-07-13: https://github.com/lumenloop/lumenloop-backend/issues/35
 ---
 
 ## Finding

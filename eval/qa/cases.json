@@ -1,37 +1,37 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "8f6d4d870ecc086072c01e2c8c1407c7a367ca565334f70be4a49c491fc218a0",
+  "corpusContentSha256": "92f1b54f8fbbbebe431a200e22b27470e3f7cecff9dbb76d8927750c1d62661a",
   "counts": {
-    "total": 484,
+    "total": 490,
     "byCategory": {
       "assets-anchors-seps": 47,
       "compliance-rwa-payments": 39,
       "defi-ecosystem": 57,
-      "edge-behavior": 45,
+      "edge-behavior": 48,
       "history-org-tokenomics": 19,
       "protocol-core": 49,
       "retail-consumer": 33,
-      "scf-grants-builders": 48,
-      "soroban": 72,
-      "tooling-infra": 75
+      "scf-grants-builders": 49,
+      "soroban": 73,
+      "tooling-infra": 76
     },
     "byService": {
-      "lumenloop": 60,
+      "lumenloop": 63,
       "none": 22,
-      "scout": 132,
+      "scout": 135,
       "skills": 33,
       "stellarDocs": 237
     },
     "byFreshness": {
-      "live": 154,
-      "scheduled": 121,
+      "live": 153,
+      "scheduled": 128,
       "stable": 209
     },
     "traps": {
       "ambiguous": 2,
       "cant-do": 6,
-      "fabrication-bait": 4,
+      "fabrication-bait": 7,
       "governance": 1,
       "injection": 6,
       "out-of-scope": 4,
@@ -2465,7 +2465,7 @@
       "id": "q-builder-by-region-latam",
       "question": "Find Stellar builders based in Latin America who work on payments or DeFi.",
       "surface": [
-        "scout.searchProjects"
+        "scout.getBuilders"
       ],
       "golden": {
         "answer": "A grounded answer derives its named examples and status claims from the live Stellar Scout directory or research data, then dates the roster so it is not presented as permanent. As of 2026-07-11, the live builder directory returned 19 Latin America matches, including builders in Chile and Brazil.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
@@ -2678,7 +2678,7 @@
         "lumenloop.search_content_semantic"
       ],
       "golden": {
-        "answer": "A grounded answer consults the current LumenLoop corpus, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-10, the verified sources supported this observed answer:\n\nPublished material about **Tyler van der Hoeven (`kalepail`)** includes the official Developer Docs author index (seven posts), the **2024-06-13 developer meeting** covering Super Peach, Passkey Kit, and Launchtube, **Practical Path Payments** (2020-04-10), the **Turing Complete Contract Proposal for Stellar** talk (whose page has a date conflict that should be disclosed), the **SDF Developer Advocates AMA** (2023-05-04), and the 2022 SDF Stellar Lounge at SXSW video. Current project context includes `passkey-kit` and `stellar/launchtube`; Passkey Kit now labels itself a legacy precursor/demo and points new work to Smart Account Kit. Use official Docs/Scout research first. Lumenloop semantic results are candidate discovery only and require exact-name/source/date validation; its current exact-person lane returning empty is a service limitation, not evidence that nothing exists.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+        "answer": "A grounded answer consults the current LumenLoop corpus, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-13, verified exact-name sources included the official Developer Docs author index (seven posts), the **2024-06-13 developer meeting** covering Super Peach, Passkey Kit, and Launchtube, **Practical Path Payments** (2020-04-10), the **Turing Complete Contract Proposal for Stellar** event page (which renders July 10, 2020 while its body says June 19, so disclose the conflict), and the **SDF Developer Advocates AMA** (2023-05-04). Current repository context is also dated: on 2026-07-13, `kalepail/passkey-kit` described a v1 Stellar smart-wallet SDK and called Smart Account Kit a sibling with a different, non-drop-in authorization model; `stellar/launchtube` remained a directly inspectable source repository. LumenLoop semantic results are candidate discovery only and require exact-name, source, and date validation; an empty exact-person lane is a service limitation, not evidence that nothing has been published.\n\nThe roster is illustrative rather than exhaustive: a later grounded answer should re-query and report what the same source basis supports at its own observation time.",
         "keyFacts": [
           "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
           "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
@@ -2694,42 +2694,48 @@
       "tags": {
         "category": "scf-grants-builders",
         "service": "lumenloop",
-        "freshness": "live"
+        "freshness": "scheduled"
       },
       "truth": {
         "domain": "mixed",
         "status": "confirmed",
-        "asOf": "2026-07-10",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-10-07",
         "sources": [
           {
             "class": "A",
             "ref": "https://developers.stellar.org/meetings/authors/kalepail",
-            "note": "class inferred at migration"
+            "note": "Official author index observed 2026-07-13; displayed Tyler van der Hoeven and seven posts."
           },
           {
             "class": "A",
             "ref": "https://developers.stellar.org/meetings/2024/06/13",
-            "note": "class inferred at migration"
+            "note": "Official meeting page dated 2024-06-13; exact-name coverage of Super Peach, Passkey Kit, and Launchtube; accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/events/community/practical-path-payments",
-            "note": "class inferred at migration"
+            "note": "Official event page dated 2020-04-10; exact-name Tyler van der Hoeven appearance; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/community/events/turing-complete-contract-proposal-for-stellar",
+            "note": "Official event page observed 2026-07-13; header renders 2020-07-10 while body says 2020-06-19, so the date conflict is explicit."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/events/community/ama-with-sdfs-new-developer-advocates",
-            "note": "class inferred at migration"
+            "note": "Official event page dated 2023-05-04; exact-name SDF Developer Advocates AMA appearance; accessed 2026-07-13."
           },
           {
-            "class": "D",
+            "class": "B",
             "ref": "https://github.com/kalepail/passkey-kit",
-            "note": "class inferred at migration"
+            "note": "Direct repository observed 2026-07-13; README describes Passkey Kit v1 and Smart Account Kit as a non-drop-in sibling, not a successor that makes this repository merely legacy."
           },
           {
             "class": "B",
             "ref": "https://github.com/stellar/launchtube",
-            "note": "class inferred at migration"
+            "note": "Direct source repository observed 2026-07-13; supports the Launchtube project attribution."
           }
         ],
         "corroboration": [
@@ -2739,43 +2745,206 @@
             "evidence": [
               {
                 "class": "C",
-                "ref": "C: exact person/full-name probes empty and A/V semantic results unrelated",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "http://localhost:8787/mcp lumenloop.find_content_by_entity(entity=Tyler%20van%20der%20Hoeven,entity_type=person)",
+                "observedAt": "2026-07-13",
+                "note": "Exact-person content collections were empty; this is source-scoped retrieval evidence, not an open-world negative."
               },
               {
                 "class": "A",
-                "ref": "A/B: official Docs author/events pages and Tyler-linked repositories",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://developers.stellar.org/meetings/authors/kalepail",
+                "observedAt": "2026-07-13",
+                "note": "Exact-name official author index with seven posts."
               },
               {
                 "class": "B",
-                "ref": "A/B: official Docs author/events pages and Tyler-linked repositories",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://github.com/kalepail/passkey-kit",
+                "observedAt": "2026-07-13",
+                "note": "Direct current repository context, including the explicit non-drop-in Smart Account Kit relationship."
               }
             ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "date": "2026-07-13",
+          "by": "Evidence-poor retrieval truth reconciliation with independent Opus and Sol review",
           "evidence": [
-            "Solo scratchpad 575 GT-35 primary 3287 and blind 3289; live probes and official-source roster on 2026-07-10.",
-            "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "Solo scratchpad 575 GT-35 primary 3287 and blind 3289; exact-person probes and official-source roster.",
+            "2026-07-13 recheck of https://developers.stellar.org/meetings/authors/kalepail, https://developers.stellar.org/meetings/2024/06/13, and https://github.com/kalepail/passkey-kit corrected the stale repository-status wording.",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611 — durable multi-model review and current-source reconciliation",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611 — scheduled the mutable person/content result set and corrected repository source class without changing the inherited as-of claim."
           ],
           "rootCause": [
             "Route recipe was treated as truth and an empty data-shaped response was mistaken for absence.",
             "improvements/lumenloop/ll-005-person-entity-empty-lane.md",
             "improvements/lumenloop/ll-017-semantic-person-match-provenance.md",
             "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "truth-metadata maintenance"
           ]
         },
         "origin": "raven-next q-builder-content-by-person"
+      }
+    },
+    {
+      "id": "q-builder-justin-rice-history",
+      "question": "Who's Justin Rice, and what is his history in the Stellar ecosystem?",
+      "surface": [
+        "lumenloop.search_content_semantic",
+        "scout.searchResearch",
+        "lumenloop.find_av_passages"
+      ],
+      "golden": {
+        "answer": "Justin Rice is a documented Stellar Development Foundation ecosystem leader. As observed on 2026-07-13, SDF's live but undated leadership page listed him as **VP of Ecosystem**; that is a dated page observation, not a title inferred from old material. Historical first-party pages called him **Head of Ecosystem** for a 2021-02-16 AMA and **VP of Ecosystem** by the 2021-04-20 GBBC University Dialogues event. CoinDesk independently interviewed him as Stellar's “head of ecosystem” in an article published 2021-11-03; treat that wording as contemporary corroboration, not proof of a later demotion. Rice is also the named author of SDF's **“Introducing Automated Market Makers on Stellar”** (2021-07-01) and **“Soroban Is Feature Complete”** (2023-08-22). The reviewed sources establish a dated role and work history but not an exact SDF joining or promotion date. Broad semantic results are discovery leads—verify the exact full name, source, and date before attribution.",
+        "keyFacts": [
+          "Identifies Justin Rice as a historically documented SDF ecosystem leader using exact-name, dated first-party sources.",
+          "Reports the live team-page title only as observed on 2026-07-13 and keeps the 2021–2024 role references historically dated.",
+          "Mentions at least one dated, exact-name SDF publication or event contribution.",
+          "Treats semantic matches as candidates and validates exact identity, source, and date before attribution."
+        ],
+        "avoid": [
+          "Do NOT infer a 2026 current role from 2020–2024 material; if using the live team page, date the observation.",
+          "Do NOT conflate Justin Rice with unrelated semantic-neighbor entities such as another person named Justin.",
+          "Do NOT attribute a GitHub handle, SEP authorship, or other biography details without a source that establishes them.",
+          "Do NOT turn an empty exact-person lane into a claim that Justin Rice has no Stellar history."
+        ],
+        "notes": "Positive control for evidence-poor recovery. The answer should recover exact-name dated history from broad content/research after narrow directory or person lanes miss, while refusing to convert historical titles into a current-role assertion."
+      },
+      "tags": {
+        "category": "scf-grants-builders",
+        "service": "lumenloop",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-10-22",
+        "sources": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/foundation/team",
+            "note": "Undated live SDF team page observed 2026-07-13; lists Justin Rice as VP, Ecosystem."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/community/events/ama-with-justin-rice",
+            "note": "Exact-name first-party event page; calls Rice SDF's head of Ecosystem; event date 2021-02-16; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/community/events/gbbc-university-dialogues-on-blockchain-digital-assets",
+            "note": "Exact-name first-party event page; calls Rice VP of Ecosystem of SDF; event date 2021-04-20 at 23:00 UTC; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/community/events/stellar-development-foundation-q3-2024-in-review",
+            "note": "Exact-name first-party event page; calls Rice VP of Ecosystem; event date 2024-11-06; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/introducing-automated-market-makers-on-stellar",
+            "note": "First-party author metadata names Justin Rice; published 2021-07-01; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/blog/developers/soroban-is-feature-complete",
+            "note": "First-party author metadata names Justin Rice; published 2023-08-22; accessed 2026-07-13."
+          },
+          {
+            "class": "D",
+            "ref": "https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity",
+            "note": "Independent exact-name interview identifies Rice with Stellar ecosystem leadership and attributes AMM comments; published 2021-11-03; accessed 2026-07-13."
+          },
+          {
+            "class": "C",
+            "ref": "Cloudflare production rays a1a519aa3907e144 through a1a51b394acdc572",
+            "note": "Production retrieval evidence: broad semantic search recovered exact-name dated Stellar event rows after narrow calls missed."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "SDF described Justin Rice as Head of Ecosystem on 2021-02-16 and as VP of Ecosystem by the 2021-04-20 GBBC event; the reviewed sources do not establish an exact promotion date.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/community/events/ama-with-justin-rice",
+                "observedAt": "2026-07-13",
+                "note": "Historical title tied to event date 2021-02-16."
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/community/events/gbbc-university-dialogues-on-blockchain-digital-assets",
+                "observedAt": "2026-07-13",
+                "note": "Historical VP title tied to event date 2021-04-20 at 23:00 UTC."
+              },
+              {
+                "class": "D",
+                "ref": "https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity",
+                "observedAt": "2026-07-13",
+                "note": "Published 2021-11-03; independently identifies Rice as Stellar's head of ecosystem. It does not establish formal title chronology."
+              }
+            ]
+          },
+          {
+            "claim": "Justin Rice has exact-name, dated SDF publications and event contributions in the Stellar ecosystem.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/developers/introducing-automated-market-makers-on-stellar",
+                "observedAt": "2026-07-13",
+                "note": "Author metadata; published 2021-07-01."
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/developers/soroban-is-feature-complete",
+                "observedAt": "2026-07-13",
+                "note": "Author metadata; published 2023-08-22."
+              },
+              {
+                "class": "D",
+                "ref": "https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity",
+                "observedAt": "2026-07-13",
+                "note": "Independent interview attributes AMM implementation commentary to Rice; it corroborates documented ecosystem contribution but not SDF page authorship metadata."
+              }
+            ]
+          },
+          {
+            "claim": "The live SDF team page listed Justin Rice as VP, Ecosystem when observed on 2026-07-13.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/foundation/team",
+                "observedAt": "2026-07-13",
+                "note": "The page is live and undated, so the claim is tied to the observation date."
+              },
+              {
+                "class": "D",
+                "ref": "https://theorg.com/org/stellar-org/org-chart/justin-rice",
+                "observedAt": "2026-07-13",
+                "note": "Independent but likely derivative current-profile corroboration; SDF remains authoritative."
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-13",
+          "by": "Coordinator after independent Opus and Sol truth matrices",
+          "evidence": [
+            "First-party Stellar event and blog pages plus https://www.coindesk.com/business/2021/11/03/stellar-validators-vote-in-amm-integration-that-could-boost-liquidity and https://theorg.com/org/stellar-org/org-chart/justin-rice.",
+            "Production and localhost retrieval probes demonstrating narrow miss and broad exact-name recovery.",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+          ],
+          "rootCause": [
+            "Broad semantic capability existed but the interaction stopped after narrow evidence-poor calls.",
+            "Historical role evidence needed an explicit source-date gate to avoid a current-role hallucination.",
+            "improvements/lumenloop/ll-017-semantic-person-match-provenance.md"
+          ]
+        },
+        "origin": "authored 2026-07-13 from production miss and independent truth verification"
       }
     },
     {
@@ -2868,7 +3037,7 @@
       "id": "q-builder-rust-soroban-devs",
       "question": "Who are some experienced Soroban / Rust smart-contract builders in the Stellar ecosystem I could reach out to?",
       "surface": [
-        "scout.searchProjects"
+        "scout.getBuilders"
       ],
       "golden": {
         "answer": "A grounded answer derives its named examples and status claims from the live Stellar Scout directory or research data, then dates the roster so it is not presented as permanent. As of 2026-07-11, the live builder directory returned five Rust matches, including Samuel Ogera and Asman Malika.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
@@ -11606,6 +11775,78 @@
       }
     },
     {
+      "id": "q-edge-closed-world-builder-directory-miss",
+      "question": "Does Scout's builder directory currently contain an exact builder record for “Strupey”?",
+      "surface": [
+        "scout.getBuilders"
+      ],
+      "golden": {
+        "answer": "No exact `Strupey` builder record was returned by Scout's builder directory when checked on 2026-07-13. That answers this closed-world directory-membership question at Scout's scope; it does not establish that the name has no history or footprint elsewhere. A broader ecosystem search is unnecessary unless the user expands the question beyond this directory.",
+        "keyFacts": [
+          "Directly answers the exact Scout builder-directory membership question from the directory result.",
+          "Scopes the negative to Scout's builder directory and the observation date.",
+          "Does not automatically broaden into semantic, research, A/V, or docs searches for this closed-world request."
+        ],
+        "avoid": [
+          "Do NOT turn the directory miss into an absolute claim that Strupey does not exist or has no Stellar history.",
+          "Do NOT force an open-world research pass when the user asked only about one named directory.",
+          "Do NOT substitute a semantic neighbor or unrelated namesake for an exact builder record."
+        ],
+        "notes": "Closed-world negative control paired with q-edge-strupey-ambiguous-stellar-history. The same token should stop at Scout scope here but trigger one bounded broad pass for the open-world history question."
+      },
+      "tags": {
+        "category": "edge-behavior",
+        "service": "scout",
+        "freshness": "scheduled",
+        "trap": "fabrication-bait"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-10-09",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp scout.getBuilders(q=Strupey)",
+            "note": "Observed 2026-07-13: returned=0 and total=0 for the exact directory query."
+          },
+          {
+            "class": "B",
+            "ref": "catalog/manifest.json#scout.getBuilders",
+            "note": "Current exposed operation contract identifies this as the Scout builder-directory surface."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Scout's builder directory returned no exact Strupey record on 2026-07-13.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "http://localhost:8787/mcp scout.getBuilders(q=Strupey)",
+                "observedAt": "2026-07-13",
+                "note": "Directory response reported zero returned and zero total."
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-13",
+          "by": "Coordinator from live Scout directory probe",
+          "evidence": [
+            "2026-07-13 localhost Scout getBuilders exact-query projection.",
+            "Paired open-world Strupey truth matrices in Solo scratchpad 611."
+          ],
+          "rootCause": [
+            "A broad-recovery policy needs a paired closed-world control so it does not over-search every exact directory miss.",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+          ]
+        },
+        "origin": "authored 2026-07-13 as the closed-world over-recovery control"
+      }
+    },
+    {
       "id": "q-edge-deep-full-history-report",
       "question": "I need an exhaustive, fully-comprehensive deep-research report on the complete history of the Stellar Development Foundation, leaving nothing out.",
       "surface": [
@@ -12713,19 +12954,23 @@
       "id": "q-edge-lumenloop-person-entity-empty",
       "question": "What should I conclude when LumenLoop person-entity lookup succeeds but every content collection is empty?",
       "surface": [
-        "lumenloop.find_content_by_entity"
+        "lumenloop.find_content_by_entity",
+        "lumenloop.search_content_semantic",
+        "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Treat this person-entity result as a successful soft-empty lookup: no indexed articles, AV, events, proposals, or SCF submissions were linked to that exact person entity. It is not an outage and not proof the person has no real-world footprint. Report the index-scoped absence and, if useful, retry exact-name variants or broader content search.",
+        "answer": "Treat the returned `ok: true` envelope with empty articles, AV, events, proposals, and SCF submissions as a data-shaped empty result, not a transport failure and not a `soft-empty` error envelope. For a closed-world question, it supports only the scoped statement that this exact LumenLoop person lookup linked no content. For an open-world identity, history, or publication question, that is insufficient: make one wider pass with broad ecosystem content/research surfaces such as `lumenloop.search_content_semantic` and `scout.searchResearch` (and A/V search when spoken material matters). Treat semantic rows as candidates, and attribute them only after exact-name or canonical-identity validation plus source and date. If that broader pass still provides no verified evidence, say the identity or history remains unverified and ask for spelling, project, handle, or timeframe rather than claiming the person has no footprint.",
         "keyFacts": [
-          "Recognizes the person entity envelope can succeed while all content arrays are empty.",
-          "Scopes the conclusion to no linked content in the LumenLoop index."
+          "Distinguishes an `ok: true` data-shaped empty response from a `soft-empty` error envelope.",
+          "Scopes a closed-world conclusion to no content linked by the exact LumenLoop person lookup.",
+          "For an open-world identity/history question, performs one wider semantic/research pass and validates identity, source, and date before attribution."
         ],
         "avoid": [
           "Do NOT claim the person does not exist or has no public work.",
-          "Do NOT convert empty arrays into a transport or authorization error."
+          "Do NOT convert empty arrays into a transport, authorization, or `soft-empty` error.",
+          "Do NOT treat an adjacent semantic result as proof of identity or current role."
         ],
-        "notes": "Dedicated person entity empty catalog-note trap; NEG / soft-empty lane."
+        "notes": "Corrected 2026-07-13 after the Justin Rice production miss: an `ok` data-shaped empty is not a soft-empty envelope. Closed-world directory/index absence may be reported at source scope; open-world identity/history requires one broad pass and provenance validation."
       },
       "tags": {
         "category": "edge-behavior",
@@ -12735,30 +12980,54 @@
       "truth": {
         "domain": "mixed",
         "status": "confirmed",
-        "asOf": "2026-07-11",
+        "asOf": "2026-07-13",
         "sources": [
           {
             "class": "B",
-            "ref": "catalog/manifest.json",
+            "ref": "catalog/manifest.json#lumenloop.find_content_by_entity",
             "note": "Fetch-verified local path exists and defines the exercised contract/workflow."
           },
           {
             "class": "C",
             "ref": "http://localhost:8787/mcp",
-            "note": "Live localhost search→execute probe."
+            "note": "Live localhost exact-person and broad recovery probes."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "An ok=true response with empty content collections is a data-shaped empty scoped to the exact LumenLoop person lookup; broader exact-name evidence can still exist.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#lumenloop.find_content_by_entity",
+                "observedAt": "2026-07-13",
+                "note": "Operation contract distinguishes the person entity lane and its bounded recovery path."
+              },
+              {
+                "class": "C",
+                "ref": "http://localhost:8787/mcp lumenloop.find_content_by_entity(entity=Justin%20Rice,entity_type=person)",
+                "observedAt": "2026-07-13",
+                "note": "Exact-person collections were empty while the paired broad semantic probe returned exact-name dated event rows."
+              }
+            ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 coverage-closure lane (Solo process 3427)",
+          "date": "2026-07-13",
+          "by": "Evidence-poor retrieval recovery correction (Solo scratchpad 611)",
           "evidence": [
-            "2026-07-11 localhost:8787 search→execute probe observed: HTTP 200; find_content_by_entity for an unknown person returned envelope ok=true with empty articles, av, events, proposals, and scf_submissions arrays.",
+            "2026-07-11 localhost:8787 probe observed: find_content_by_entity for an unknown person returned envelope ok=true with empty articles, av, events, proposals, and scf_submissions arrays.",
+            "2026-07-13 production trace: narrow Justin Rice operations returned empty or adjacent ok data, while a later broad LumenLoop semantic query returned exact-name historical event rows.",
+            "2026-07-13 localhost Strupey probe: broad families returned no exact-token row, demonstrating why semantic-neighbor output still needs identity validation.",
             "catalog/manifest.json exists and supports the behavioral golden.",
             "Sibling sweep: reviewed existing battery cases sharing the exercised surface; no contradictory behavioral golden found.",
             "solo://proj/49/scratchpad/super-corpus-rebuild--585"
           ],
           "rootCause": [
-            "eval-authoring"
+            "A data-shaped empty was mislabeled as soft-empty and treated as enough for an open-world conclusion.",
+            "eval-authoring",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
           ]
         },
         "origin": "authored 2026-07 (coverage)"
@@ -13346,6 +13615,112 @@
       }
     },
     {
+      "id": "q-edge-open-world-recovery-after-narrow-miss",
+      "question": "The exact builder and project lookups returned nothing useful for an obscure Stellar name. Can I conclude there is no Stellar history for it?",
+      "surface": [
+        "scout.getBuilders",
+        "scout.searchProjects",
+        "lumenloop.search_content_semantic",
+        "scout.searchResearch",
+        "lumenloop.find_av_passages",
+        "stellarDocs.search_docs"
+      ],
+      "golden": {
+        "answer": "No—not for that open-world conclusion. Empty exact builder/project lookups support only scoped statements about those directories. First make one bounded wider pass using the surface that fits the claim: `lumenloop.search_content_semantic` for ecosystem content and events, `scout.searchResearch` for cited history, `lumenloop.find_av_passages` for spoken material, and `stellarDocs.search_docs` when the question is about official technical wording. Broad semantic rows remain candidates, not proof. Attribute a person, project, event, or role only when an exact identity or canonical slug is tied to a source and date. If the wider pass is still empty, off-target, adjacent, or ambiguous, report that the requested Stellar history could not be verified from the searched sources and ask for a spelling, handle, project, link, or timeframe. A closed-world question such as “is this exact name in the builder directory?” may stop at the directory-scoped answer.",
+        "keyFacts": [
+          "Does not turn empty narrow directories into an open-world claim that no history exists.",
+          "Makes one bounded broad pass using semantic content, cited research, A/V, or official docs according to the claim.",
+          "Treats semantic neighbors as candidates and requires exact identity or canonical slug plus source and date before attribution.",
+          "Allows a closed-world directory question to end with a clearly source-scoped result.",
+          "When broad evidence remains insufficient, gives a scoped unverified answer and asks for disambiguating context."
+        ],
+        "avoid": [
+          "Do NOT claim that several empty or off-target `ok` responses prove absence.",
+          "Do NOT automatically run every available surface or repeat unbounded searches.",
+          "Do NOT attribute a semantic neighbor, historical role, or current role without exact dated provenance.",
+          "Do NOT force open-world recovery when the user explicitly asked only about membership in a named directory or index."
+        ],
+        "notes": "General regression for the 2026-07-13 evidence-poor retrieval miss. It deliberately covers people, projects, topics, and history rather than encoding a named-person special case."
+      },
+      "tags": {
+        "category": "edge-behavior",
+        "service": "lumenloop",
+        "freshness": "live",
+        "trap": "fabrication-bait"
+      },
+      "truth": {
+        "domain": "corpus-grounded",
+        "status": "confirmed",
+        "asOf": "2026-07-13",
+        "sources": [
+          {
+            "class": "B",
+            "ref": "scripts/catalog-data/retrieval-profiles.mjs (RETRIEVAL_PROFILES)",
+            "note": "Exposed exact-ID contingency graph and operation descriptions."
+          },
+          {
+            "class": "B",
+            "ref": "src/mcp/tools.ts (SEARCH_DESCRIPTION and EXECUTE_DESCRIPTION evidence-sufficiency rules)",
+            "note": "Closed-world/open-world stopping rule and provenance gate."
+          },
+          {
+            "class": "C",
+            "ref": "Cloudflare production rays a1a519aa3907e144 through a1a51b394acdc572",
+            "note": "Observed narrow empty/adjacent calls followed by a successful broad semantic recovery in the Justin Rice interaction."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Narrow data-shaped misses are insufficient for an open-world negative, while broad semantic results require exact identity and dated provenance.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "Cloudflare production observability review, rays a1a519aa3907e144 through a1a51b394acdc572",
+                "observedAt": "2026-07-13",
+                "note": "Broad LumenLoop semantic search found exact-name historical event rows after narrower routes returned nothing useful."
+              },
+              {
+                "class": "C",
+                "ref": "http://localhost:8787/mcp Justin Rice and Strupey recovery probes",
+                "observedAt": "2026-07-13",
+                "note": "Positive control produced exact-name dated rows; negative control produced no exact-token row despite voluminous semantic neighbors."
+              },
+              {
+                "class": "B",
+                "ref": "scripts/catalog-data/retrieval-profiles.mjs (RETRIEVAL_PROFILES)",
+                "observedAt": "2026-07-13",
+                "note": "Manifest metadata names only exposed exact-ID recovery operations and keeps candidates separate from ranked hits."
+              },
+              {
+                "class": "B",
+                "ref": "src/mcp/tools.ts (SEARCH_DESCRIPTION and EXECUTE_DESCRIPTION evidence-sufficiency rules)",
+                "observedAt": "2026-07-13",
+                "note": "Local source contract states the closed-world/open-world stopping rule and exact identity/source/date gate."
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-13",
+          "by": "Production forensics plus SOLO multi-model recovery review",
+          "evidence": [
+            "Cloudflare production rays a1a519aa3907e144 through a1a51b394acdc572 for the shared Stellar Raven interaction.",
+            "2026-07-13 localhost positive and negative recovery probes against the existing Solo dev process.",
+            "scripts/catalog-data/retrieval-profiles.mjs (RETRIEVAL_PROFILES) and src/mcp/tools.ts (SEARCH_DESCRIPTION/EXECUTE_DESCRIPTION evidence-sufficiency rules).",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+          ],
+          "rootCause": [
+            "Evidence sufficiency was inferred from healthy envelopes rather than the answer's claim scope.",
+            "Broad recovery capability existed but was not surfaced as a bounded contingency after narrow misses.",
+            "improvements/lumenloop/ll-017-semantic-person-match-provenance.md",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+          ]
+        },
+        "origin": "authored 2026-07-13 from production miss and multi-model SOLO review"
+      }
+    },
+    {
       "id": "q-edge-partner-detail-soft-empty",
       "question": "What should happen when Scout getPartner receives an unknown or unpublished partner slug?",
       "surface": [
@@ -13665,6 +14040,130 @@
           ]
         },
         "origin": "raven-next q-edge-send-me-free-xlm"
+      }
+    },
+    {
+      "id": "q-edge-strupey-ambiguous-stellar-history",
+      "question": "What is the history of Strupey in the Stellar ecosystem?",
+      "surface": [
+        "lumenloop.search_content_semantic",
+        "scout.searchResearch",
+        "scout.searchProjects",
+        "scout.getBuilders",
+        "stellarDocs.search_docs"
+      ],
+      "golden": {
+        "answer": "I could not verify a Stellar person, project, token, protocol, or topic named **“Strupey”** from the broad Stellar sources searched as of 2026-07-13. The searches returned no exact-token row; nearby semantic results therefore do not establish an identity or history. That is a dated, source-scoped non-verification—not proof that the name cannot exist in a private community, under another spelling, or outside the indexed sources. Please clarify the spelling, whether Strupey is a person/handle/project/token, and any project, link, social handle, event, or timeframe you have. I would not substitute an unrelated real-world namesake, Justin Rice, or any fuzzy semantic neighbor for the requested identity.",
+        "keyFacts": [
+          "Reports that no exact Stellar identity/history was verified, scoped to the searched sources and observation date.",
+          "Does not promote semantic neighbors into an exact person, project, token, protocol, or topic match.",
+          "Asks for spelling, entity type, handle/link/project, or timeframe to disambiguate the request.",
+          "Does not turn non-verification into an absolute claim that the person or name cannot exist."
+        ],
+        "avoid": [
+          "Do NOT invent a Stellar history for Strupey from nearby semantic rows.",
+          "Do NOT conflate Strupey with Joe Strupek, Justin Rice, or another unrelated person or project.",
+          "Do NOT say simply that Strupey does not exist; keep the result source-scoped and dated.",
+          "Do NOT stop at one narrow directory if the user asked an open-world history question."
+        ],
+        "notes": "Negative/ambiguous control paired with the Justin Rice positive. The safe outcome after one broad pass is scoped non-verification plus clarification, not a semantic-neighbor answer or an absolute negative."
+      },
+      "tags": {
+        "category": "edge-behavior",
+        "service": "lumenloop",
+        "freshness": "scheduled",
+        "trap": "fabrication-bait"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "unverifiable",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-10-15",
+        "sources": [
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp Strupey broad-family probe",
+            "note": "LumenLoop semantic, Scout research/projects/builders, and Stellar Docs calls returned no exact-token Strupey row on 2026-07-13."
+          },
+          {
+            "class": "B",
+            "ref": "https://api.github.com/search/users?q=strupey%20in%3Alogin&per_page=10",
+            "note": "Exact GitHub user-login search observed 2026-07-13; total_count=0. This does not cover private, renamed, or unindexed identities."
+          },
+          {
+            "class": "B",
+            "ref": "https://api.github.com/search/repositories?q=strupey%20in%3Aname%2Cdescription%2Creadme&per_page=10",
+            "note": "Exact public-repository search observed 2026-07-13; total_count=0. This is bounded API evidence, not proof of nonexistence."
+          },
+          {
+            "class": "E",
+            "ref": "stellarDocs.search_docs(query=%22Strupey%22,includeMeetings=true)",
+            "note": "Official Stellar Docs index returned a zero-hit soft-empty on 2026-07-13; scoped only to that index."
+          },
+          {
+            "class": "D",
+            "ref": "https://x.com/Strupey",
+            "note": "Exact handle belongs to Joe Strupek; reviewed profile showed no Stellar affiliation; observed 2026-07-13."
+          },
+          {
+            "class": "D",
+            "ref": "https://www.joestrupek.com/about",
+            "note": "Undated linked biography observed 2026-07-13; identifies Joe Strupek and links the Strupey handle, but shows no Stellar affiliation."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "A public Stellar identity or history for Strupey could not be verified from the searched sources as of 2026-07-13.",
+            "verdict": "unverifiable",
+            "evidence": [
+              {
+                "class": "C",
+                "ref": "http://localhost:8787/mcp Strupey broad-family probe",
+                "observedAt": "2026-07-13",
+                "note": "Zero exact-token rows across current gateway families despite semantic-neighbor output."
+              },
+              {
+                "class": "B",
+                "ref": "https://api.github.com/search/users?q=strupey%20in%3Alogin&per_page=10",
+                "observedAt": "2026-07-13",
+                "note": "Exact public user-login search returned zero."
+              },
+              {
+                "class": "B",
+                "ref": "https://api.github.com/search/repositories?q=strupey%20in%3Aname%2Cdescription%2Creadme&per_page=10",
+                "observedAt": "2026-07-13",
+                "note": "Exact public repository search returned zero."
+              },
+              {
+                "class": "E",
+                "ref": "stellarDocs.search_docs(query=%22Strupey%22,includeMeetings=true)",
+                "observedAt": "2026-07-13",
+                "note": "Zero-hit soft-empty scoped to the official docs index."
+              },
+              {
+                "class": "D",
+                "ref": "https://x.com/Strupey",
+                "observedAt": "2026-07-13",
+                "note": "The exact handle identifies Joe Strupek, but the reviewed profile supplies no Stellar link; it is counterevidence against conflation, not proof of global absence."
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-13",
+          "by": "Coordinator after independent Opus and Sol truth matrices",
+          "evidence": [
+            "Current gateway broad-family exact-token projection.",
+            "Exact GitHub API user and repository searches, official-docs zero-hit, and exact-handle counterevidence documented in solo://proj/49/scratchpad/evidence-poor-retrie--611.",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
+          ],
+          "rootCause": [
+            "Semantic systems can return high-volume adjacent rows even when the requested term is absent.",
+            "A negative open-world existence claim requires scoped non-verification and clarification rather than neighbor attribution.",
+            "improvements/lumenloop/ll-017-semantic-person-match-provenance.md"
+          ]
+        },
+        "origin": "authored 2026-07-13 as a negative control for evidence-poor retrieval"
       }
     },
     {
@@ -15116,21 +15615,27 @@
     },
     {
       "id": "q-gap-semantic-directory-fallback",
-      "question": "What should I report if Lumenloop directory search falls back from substring matching to semantic results?",
+      "question": "What should I report if Lumenloop directory search falls back from substring matching to semantic results, and what should I do next when the user's question is open-world rather than directory-scoped?",
       "surface": [
         "lumenloop.search_directory",
-        "lumenloop.find_similar_projects_semantic"
+        "lumenloop.find_similar_projects_semantic",
+        "lumenloop.search_content_semantic",
+        "scout.searchResearch"
       ],
       "golden": {
-        "answer": "Inspect `match_mode`. For an intentionally nonmatching phrase, the live result returned `match_mode: 'semantic'` plus a note explaining the fallback and closest projects. Label those results as semantic fallback; do not present them as exact text matches. Use `find_similar_projects_semantic` when starting from a known project.",
+        "answer": "Inspect and preserve `match_mode`. If the directory returns `match_mode: \"semantic\"`, describe the rows as nearby semantic candidates, not literal name matches and not verified identity evidence. For a closed-world directory question, report only that the directory did not produce a substring match and show the labeled candidates if useful. For an open-world question about an obscure person, project, topic, or history, do not stop at those neighbors: make one wider pass with the relevant broad content/research surface, then require an exact name or canonical project identity plus source and date before attribution. `find_similar_projects_semantic` is appropriate when the starting project identity is already known; it does not establish an unknown identity.",
         "keyFacts": [
           "Checks and reports the `match_mode` field.",
-          "Labels semantic-fallback results rather than calling them exact matches."
+          "Labels semantic-fallback rows as candidates rather than exact text or identity matches.",
+          "Distinguishes a closed-world directory result from an open-world identity, history, project, or topic question.",
+          "Uses one broad content/research pass for an evidence-poor open-world question and validates identity, source, and date before attribution."
         ],
         "avoid": [
-          "Do NOT claim a semantic fallback row matched the submitted text literally."
+          "Do NOT claim a semantic fallback row matched the submitted text literally.",
+          "Do NOT present a nearby semantic row as the requested person/project or infer a current role without exact identity and dated provenance.",
+          "Do NOT use similar-project search to establish an unknown project's identity."
         ],
-        "notes": "N1 live contract probe 2026-07-11: Succeeded with count=2, match_mode=semantic, and a fallback explanation for an intentionally nonmatching query."
+        "notes": "Expanded 2026-07-13 from a field-contract case into the general evidence-poor recovery contract. The question now explicitly asks for that conditional branch: the broad pass is conditional on open-world answer scope and does not overturn a properly scoped directory-only answer."
       },
       "tags": {
         "category": "defi-ecosystem",
@@ -15140,46 +15645,59 @@
       "truth": {
         "domain": "corpus-grounded",
         "status": "confirmed",
-        "asOf": "2026-07-11",
+        "asOf": "2026-07-13",
         "sources": [
           {
-            "class": "A",
+            "class": "B",
             "ref": "catalog/manifest.json#lumenloop.search_directory",
-            "note": "Exposed operation contract and catalog notes."
+            "note": "Exposed operation contract, match-mode note, and exact-ID recovery profile."
           },
           {
             "class": "B",
             "ref": "inventory/lumenloop.json",
             "note": "Committed inventory snapshot for the service family."
+          },
+          {
+            "class": "C",
+            "ref": "http://localhost:8787/mcp",
+            "note": "Live directory and broad-recovery probes on 2026-07-13."
           }
         ],
         "corroboration": [
           {
-            "claim": "Checks and reports the `match_mode` field.",
+            "claim": "Semantic directory fallback is candidate discovery rather than literal or identity proof, and open-world recovery needs provenance checks.",
             "verdict": "confirmed-as-of",
             "evidence": [
               {
                 "class": "C",
-                "ref": "http://localhost:8787/mcp JSON-RPC tools/call execute, 2026-07-11",
-                "observedAt": "2026-07-11",
-                "note": "Succeeded with count=2, match_mode=semantic, and a fallback explanation for an intentionally nonmatching query."
+                "ref": "http://localhost:8787/mcp JSON-RPC tools/call execute",
+                "observedAt": "2026-07-13",
+                "note": "Strupey returned semantic neighbors across broad surfaces but zero exact-token rows; Justin Rice broad semantic results included exact-name dated event rows."
+              },
+              {
+                "class": "B",
+                "ref": "catalog/manifest.json#lumenloop.search_directory",
+                "observedAt": "2026-07-13",
+                "note": "Exact operation entry carries match-mode semantics and exposed recovery metadata."
               }
             ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 Lane N1 gap-ops authoring",
+          "date": "2026-07-13",
+          "by": "Evidence-poor retrieval recovery correction (Solo scratchpad 611)",
           "evidence": [
-            "http://localhost:8787/mcp JSON-RPC tools/call execute, 2026-07-11",
-            "catalog/manifest.json#lumenloop.search_directory",
-            "inventory/lumenloop.json"
+            "2026-07-13 localhost directory, semantic, Scout research, and docs probes for Justin Rice and Strupey.",
+            "catalog/manifest.json exact-ID retrieval profiles and semantic-match description notes.",
+            "solo://proj/49/scratchpad/evidence-poor-retrie--611"
           ],
           "rootCause": [
-            "solo://project/49/scratchpad/p4/n1-gapops"
+            "Semantic-neighbor output was data-shaped and could be mistaken for sufficient evidence.",
+            "improvements/lumenloop/ll-017-semantic-person-match-provenance.md",
+            "eval-authoring"
           ]
         },
-        "origin": "authored 2026-07 (gap-ops)"
+        "origin": "authored 2026-07 (gap-ops); generalized 2026-07-13"
       }
     },
     {
@@ -15924,14 +16442,14 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "UNHCR and UNICC launched Stellar Aid Assist in Ukraine in **December 2022**. It used USDC on Stellar, recipient wallets, and cash redemption such as MoneyGram; later implementations used the Stellar Disbursement Platform. **SDF reported** that by December 2023 the program had disbursed over **$1.1M to more than 1,500 individuals**. Later reports cite roughly $4.6M and about 2,500 Ukraine households or broader mostly-Ukraine/Argentina coverage; keep those later sources, units, countries, and periods separate rather than summing them.",
+        "answer": "UNHCR, with UNICC and SDF, announced the Ukraine pilot in **December 2022**. It delivered Circle USDC on Stellar to recipient wallets with cash-out through MoneyGram, and independent contemporary reporting corroborated that deployed flow. Later SDF anniversary posts reported evolving adoption figures, but those issuer-reported snapshots use different dates, units, and scopes. Keep them separately attributed; do not add them together or silently generalize a Ukraine household/individual measure to other countries.",
         "keyFacts": [
-          "Correctly identifies UNHCR/Ukraine/USDC flow and attributes every amount/unit/window to its dated source."
+          "Correctly identifies the UNHCR/Ukraine/USDC flow and keeps later issuer-reported snapshots separately attributed without importing unsupported exact metrics into judge-facing gospel."
         ],
         "avoid": [
           "Do NOT call the aid speculative XLM/Ripple, or merge individuals with households, Ukraine with multi-country scope, or first-year with later totals."
         ],
-        "notes": "GT-27 2026-07-10: preserve the Dec-2022 UNHCR launch and USDC flow; attribute the Dec-2023 >$1.1M/>1,500-individual milestone to SDF and keep later household/country/amount windows distinct.\nGT-27 PRECISION 2026-07-10: source attribution and metric units are load-bearing."
+        "notes": "GT-27 2026-07-10: preserve the Dec-2022 UNHCR launch and USDC flow and keep later SDF anniversary snapshots distinct by unit, country, and window.\nGT-27 PRECISION 2026-07-13: the two-year page is dated 2024-12-19; exact anniversary metrics were removed from judge-facing gospel because they lacked an independent source class."
       },
       "tags": {
         "category": "history-org-tokenomics",
@@ -15943,55 +16461,71 @@
         "status": "confirmed",
         "sources": [
           {
-            "class": "D",
+            "class": "A",
             "ref": "https://www.unhcr.org/ua/en/news/unhcr-launches-pilot-cash-based-intervention-using-blockchain-technology-humanitarian-payments",
-            "note": "class inferred at migration"
+            "note": "UNHCR primary launch announcement published 2022-12-15; accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/blog/foundation-news/one-year-of-stellar-aid-assist",
-            "note": "class inferred at migration"
+            "note": "SDF one-year report published 2023-12-20; reports more than $1.1m to more than 1,500 individuals; accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/blog/foundation-news/stellar-aid-assist-2-year-anniversary",
-            "note": "class inferred at migration"
+            "note": "SDF two-year report published 2024-12-19; reports an issuer-authored later program snapshot; accessed 2026-07-13. Exact amounts and units are not judge-gated without an independent source class."
+          },
+          {
+            "class": "A",
+            "ref": "https://www.unhcr.org/news/stories/life-saving-efficient-and-secure-humanitarian-aid-gives-refugees-choices",
+            "note": "UNHCR primary program story published 2025-05-08; later program context, not the source for SDF's 2023 or 2025 snapshots; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://ukraine.un.org/en/211593-unhcr-launches-pilot-cash-based-intervention-using-blockchain-technology-humanitarian",
+            "note": "United Nations in Ukraine primary launch record published 2022-12-15; accessed 2026-07-13."
           },
           {
             "class": "D",
-            "ref": "https://www.unhcr.org/news/stories/life-saving-efficient-and-secure-humanitarian-aid-gives-refugees-choices",
-            "note": "class inferred at migration"
+            "ref": "https://www.coindesk.com/consensus-magazine/2023/04/17/stellar-aid-assist-uses-stablecoins-for-humanitarian-relief",
+            "note": "Independent contemporary reporting published 2023-04-17 on the deployed Ukraine USDC/wallet/MoneyGram flow; accessed 2026-07-13."
           }
         ],
         "corroboration": [
           {
-            "claim": "UNHCR launched the Ukraine USDC/wallet/MoneyGram flow in Dec 2022; SDF reported >$1.1M to >1,500 individuals by Dec 2023, while later $4.6M/~2,500 figures use different household/country windows.",
-            "verdict": "corpus-only",
+            "claim": "UNHCR, UNICC, and SDF announced the Ukraine USDC/wallet/MoneyGram pilot in December 2022.",
+            "verdict": "confirmed",
             "evidence": [
               {
                 "class": "A",
-                "ref": "A: UNHCR launch and 2025 program sources",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://ukraine.un.org/en/211593-unhcr-launches-pilot-cash-based-intervention-using-blockchain-technology-humanitarian",
+                "observedAt": "2026-07-13"
               },
               {
                 "class": "D",
-                "ref": "A-independent: dated SDF one/two-year reports",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://www.coindesk.com/consensus-magazine/2023/04/17/stellar-aid-assist-uses-stablecoins-for-humanitarian-relief",
+                "observedAt": "2026-07-13",
+                "note": "Independent reporting on the operational flow, not the later issuer-reported totals."
               }
-            ],
-            "note": "Legacy verdict: confirmed-source-relative."
+            ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The core program is right, but issuer-reported milestone units and windows can be silently merged with later household/country totals.",
+          "date": "2026-07-13",
+          "by": "Todo 972 release-closeout golden-truth reconciliation after independent Fable and Sol reviews",
           "evidence": [
-            "Solo scratchpad 575 GT-27 primary 3270 and blind 3272."
+            "https://ukraine.un.org/en/211593-unhcr-launches-pilot-cash-based-intervention-using-blockchain-technology-humanitarian",
+            "https://www.coindesk.com/consensus-magazine/2023/04/17/stellar-aid-assist-uses-stablecoins-for-humanitarian-relief",
+            "https://stellar.org/blog/foundation-news/one-year-of-stellar-aid-assist",
+            "https://stellar.org/blog/foundation-news/stellar-aid-assist-2-year-anniversary",
+            "stellar-raven execute artifact b53313aa-d7db-4ff8-872a-5f24f9220bf7",
+            "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol review",
+            "Sibling sweep: exact anniversary-post amounts were removed from judge-facing gospel because no independent source class was found; the answer retains only the independently corroborated launch flow and the attribution rule."
           ],
           "rootCause": [
-            "Issuer-reported individuals, households, countries, and amount windows were treated as interchangeable."
+            "Issuer-reported individuals, households, countries, and amount windows were treated as interchangeable.",
+            "Eval metadata incorrectly labeled independently corroborated primary-source history as corpus-only.",
+            "solo://proj/49/todo/golden-truth-review--972"
           ]
         },
         "origin": "raven-next q-hist-unhcr-stellar-aid-assist"
@@ -19055,7 +19589,7 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "A grounded answer obtains the requested current value or state from the live Stellar Scout directory or research data, states the measurement basis, and makes the observation date visible. As of 2026-07-10, the verified sources supported this observed answer:\n\nThe **SDF Enterprise Fund** is a venture-style fund investing in companies that grow the Stellar ecosystem. As of **2026-07-10**, SDF says its **portfolio totals over $100 million**. That is SDF's portfolio wording—not a precise reconciled cumulative-cash-deployed total, fair value, or cost basis. Historical public totals do not fully reconcile, so do not manufacture a lifetime scalar. The **MoneyGram** stake was explicitly funded from SDF's cash treasury, not the Enterprise Fund. Cite separate dated announcements for any individual investee amount.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+        "answer": "A grounded answer obtains the requested current value or state from the live Stellar Scout directory or research data, states the measurement basis, and makes the observation date visible. As of 2026-07-13, the verified sources supported this observed answer:\n\nThe **SDF Enterprise Fund** is a venture-style fund investing in companies that grow the Stellar ecosystem. As of **2026-07-13**, SDF says its **portfolio totals over $100 million**. That is SDF's portfolio wording—not a precise reconciled cumulative-cash-deployed total, fair value, or cost basis. Historical public totals do not fully reconcile, so do not manufacture a lifetime scalar. The **MoneyGram** stake was explicitly funded from SDF's cash treasury, not the Enterprise Fund; independent reporting repeated that treasury-versus-fund distinction on 2023-08-16. Cite separate dated announcements for any individual investee amount.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
         "keyFacts": [
           "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
           "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
@@ -19071,64 +19605,72 @@
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "live"
+        "freshness": "scheduled"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-10-20",
         "sources": [
           {
             "class": "A",
             "ref": "https://stellar.org/enterprise-fund",
-            "note": "class inferred at migration"
+            "note": "Undated live SDF Enterprise Fund page observed 2026-07-13; says investments span five continents and the portfolio totals over $100m."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/blog/foundation-news/sdfs-investment-in-moneygram-international",
-            "note": "class inferred at migration"
+            "note": "SDF announcement published 2023-08-15; says the MoneyGram investment used SDF's cash treasury rather than the Enterprise Fund; accessed 2026-07-13."
+          },
+          {
+            "class": "D",
+            "ref": "https://www.ledgerinsights.com/stellar-blockchain-invests-in-moneygram/",
+            "note": "Independent report published 2023-08-16; repeats that MoneyGram was funded from SDF treasury rather than the Enterprise Fund; accessed 2026-07-13."
           }
         ],
         "corroboration": [
           {
-            "claim": "SDF describes a venture-style Enterprise Fund portfolio totaling over $100m; MoneyGram was funded from SDF cash treasury outside the fund.",
-            "verdict": "confirmed",
+            "claim": "As of 2026-07-13, SDF describes its Enterprise Fund portfolio as totaling over $100m; this is source-reported portfolio wording, while MoneyGram was funded from SDF cash treasury outside the fund.",
+            "verdict": "confirmed-as-of",
             "evidence": [
               {
                 "class": "A",
-                "ref": "A: current Enterprise Fund and MoneyGram announcement",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://stellar.org/enterprise-fund",
+                "observedAt": "2026-07-13",
+                "note": "Supports only SDF's live, source-reported 'portfolio totaling over $100m' wording; it does not define a reconciled valuation basis."
               },
               {
                 "class": "A",
-                "ref": "A/D: dated SDF recaps and quarterly reports showing unreconciled historical series",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://stellar.org/blog/foundation-news/sdfs-investment-in-moneygram-international",
+                "observedAt": "2026-07-13",
+                "note": "First-party 2023-08-15 treasury-versus-Enterprise-Fund distinction."
               },
               {
                 "class": "D",
-                "ref": "A/D: dated SDF recaps and quarterly reports showing unreconciled historical series",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://www.ledgerinsights.com/stellar-blockchain-invests-in-moneygram/",
+                "observedAt": "2026-07-13",
+                "note": "Independent 2023-08-16 corroboration for the MoneyGram funding-source distinction, not for the live $100m portfolio metric."
               }
             ],
             "note": "Legacy verdict: confirmed-with-metric-scope."
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "date": "2026-07-13",
+          "by": "Todo 972 release-closeout golden-truth reconciliation after independent Fable and Sol reviews",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275.",
-            "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "https://stellar.org/enterprise-fund",
+            "https://stellar.org/blog/foundation-news/sdfs-investment-in-moneygram-international",
+            "https://www.ledgerinsights.com/stellar-blockchain-invests-in-moneygram/",
+            "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol metric-scope reviews",
+            "Sibling sweep: q-org-sdf-mandate-buckets and q-org-sdf-structure-mandate retain separate mandate/reserve semantics."
           ],
           "rootCause": [
             "Eval-side portfolio-value/cost-basis/cumulative-cash metric conflation.",
             "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "solo://proj/49/todo/golden-truth-review--972"
           ]
         },
         "origin": "raven-next q-org-sdf-enterprise-fund"
@@ -19141,79 +19683,83 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "A grounded answer consults the live Stellar Scout directory or research data, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-10, the verified sources supported this observed answer:\n\nSDF organizes its work under mandate buckets funded from entrusted XLM rather than shareholder equity. The framework has changed: **2019** used Direct Development, Ecosystem Support, Use-Case Investment, and User Acquisition; the **2025-era** framing uses SDF Development, Stellar Growth, Product and Innovation, and Assets and Liquidity. The live page says allocation updates are in progress and its account/bucket rows can have different timestamps. Cite the applicable dated mandate, attach an as-of date to any balance, and do not invent an exact allocation split or mechanically sum asynchronous rows as one synchronized total.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+        "answer": "A grounded answer consults the live Stellar Scout directory or research data, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-13, the verified sources supported this observed answer:\n\nSDF organizes its work under mandate buckets funded from entrusted XLM rather than shareholder equity. The framework has changed: **2019** used Direct Development, Ecosystem Support, Use-Case Investment, and User Acquisition; the **2025-era** framing uses SDF Development, Stellar Growth, Product and Innovation, and Assets and Liquidity. The live page simultaneously says real-time public balances will be made available again “imminently” while rendering current-balance rows. Treat that as a dated page-state observation: it is fair to report that rows are visible, but not to call them a synchronized real-time feed. Cite the applicable dated mandate, attach an as-of date to any balance, and do not invent an exact allocation split or mechanically sum asynchronous rows as one synchronized total.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
         "keyFacts": [
           "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
           "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
-          "Separates the 2019 mandate bucket names from the 2025-era mandate bucket names."
+          "Separates the 2019 mandate bucket names from the 2025-era mandate bucket names.",
+          "Describes balance availability as a dated page-state observation rather than treating visible rows as a synchronized real-time feed."
         ],
         "avoid": [
           "Do NOT use the 2017 previous-mandate route as proof of the 2019 taxonomy.",
           "Do NOT invent precise allocations, sum mixed timestamps as one current total, or describe shareholder capital.",
-          "Do NOT present version-, provider-, interface-, or availability-sensitive observations as timeless; date the changeable part without weakening stable protocol or historical facts."
+          "Do NOT present version-, provider-, interface-, or availability-sensitive observations as timeless; date the changeable part without weakening stable protocol or historical facts.",
+          "Do NOT penalize an answer for accurately saying dated/current rows are visible; penalize only an unsupported claim that they constitute the promised synchronized real-time feed."
         ],
-        "notes": "GT-28 CORRECTION 2026-07-10: use /foundation/mandate/2019 for the 2019 taxonomy; /foundation/previous-mandate is the 2017 version. Current allocation updates are in progress and displayed rows are not one synchronized snapshot.\nGT-28 independently confirmed by processes 3274/3275; sd-012 owns current label/timestamp drift."
+        "notes": "GT-28 CORRECTION 2026-07-10: use /foundation/mandate/2019 for the 2019 taxonomy; /foundation/previous-mandate is the 2017 version. Current allocation updates are in progress and displayed rows are not one synchronized snapshot.\nGT-28 independently confirmed by processes 3274/3275; sd-012 owns current label/timestamp drift.\n2026-07-13: the live page's “imminently” sentence and simultaneously rendered rows are an internally mixed availability signal; grade dated descriptions of either visible state fairly while preserving the no-synchronized-total rule."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "live"
+        "freshness": "scheduled"
       },
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-10",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-10-27",
         "sources": [
           {
             "class": "A",
             "ref": "https://stellar.org/foundation/mandate",
-            "note": "class inferred at migration"
+            "note": "Live current mandate page observed 2026-07-13; supplies 2025-era buckets and dated rendered balance rows."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/foundation/mandate/2019",
-            "note": "class inferred at migration"
+            "note": "Historical 2019 mandate page accessed 2026-07-13; supplies the 2019 bucket taxonomy."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/blog/foundation-news/an-updated-mandate-for-a-growing-stellar-ecosystem",
-            "note": "class inferred at migration"
+            "note": "First-party announcement of the updated mandate framing; accessed 2026-07-13."
           }
         ],
         "corroboration": [
           {
-            "claim": "2019 and 2025 mandate bucket names differ as stated; the current page says allocation updates are in progress and exposes mixed-timestamp rows.",
+            "claim": "2019 and 2025 mandate bucket names differ as stated; the current page says real-time balances will return imminently while rendering balance rows, so availability must be described as a dated page state.",
             "verdict": "confirmed-as-of",
             "evidence": [
               {
                 "class": "A",
-                "ref": "A: current mandate and /foundation/mandate/2019",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://stellar.org/foundation/mandate",
+                "observedAt": "2026-07-13",
+                "note": "Current 2025-era bucket labels and the mixed page state: rendered balance rows alongside the promise that real-time balances will return imminently."
               },
               {
-                "class": "F",
-                "ref": "F: linked-account/dashboard reads",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "class": "A",
+                "ref": "https://stellar.org/foundation/mandate/2019",
+                "observedAt": "2026-07-13",
+                "note": "Historical 2019 taxonomy; prevents substituting the separate 2017 previous-mandate route."
               }
             ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "date": "2026-07-13",
+          "by": "Todo 972 release-closeout golden-truth reconciliation after independent Fable and Sol reviews",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; blind caught the 2017/2019 route mismatch.",
-            "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "https://stellar.org/foundation/mandate",
+            "https://stellar.org/foundation/mandate/2019",
+            "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol live-page reviews",
+            "Sibling sweep: q-org-sdf-structure-mandate and q-org-sdf-enterprise-fund preserve metric/source scope."
           ],
           "rootCause": [
             "Eval-side historical route/version confusion and detached timestamp semantics.",
             "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md",
             "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "solo://proj/49/todo/golden-truth-review--972"
           ]
         },
         "origin": "raven-next q-org-sdf-mandate-buckets"
@@ -19226,7 +19772,7 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "The **Stellar Development Foundation (SDF)** is a Delaware **non-stock nonprofit corporation** that supports the public Stellar network. Its mission is to create equitable access to the global financial system. It has no shareholders or owners in the for-profit sense, is self-funded in part through XLM entrusted at inception, and pays applicable U.S. taxes. SDF is not Ripple and does not unilaterally operate or own Stellar; independent validators participate in the network. SDF discloses mandate XLM holdings through dated dashboards, mandate pages, and quarterly reports. Do not embed a durable reserve number in this organizational answer: totals are point-in-time and source/method scoped.",
+        "answer": "The **Stellar Development Foundation (SDF)** is a Delaware **non-stock nonprofit corporation** that supports the public Stellar network. Its mission is to create equitable access to the global financial system. SDF's current mandate says it is self-funded, pays taxes, and has no shareholders; independent organization directories corroborate the non-stock form. SDF is distinct from Ripple. SDF describes its role as supporting Stellar's development and growth, while official developer materials describe Stellar itself as a public, open-source, decentralized peer-to-peer network with validators. SDF discloses mandate XLM holdings through dated mandate pages and quarterly reports. Do not embed a durable reserve number in this organizational answer: totals are point-in-time and source/method scoped.",
         "keyFacts": [
           "Identifies SDF's nonprofit legal form, mission, and self-funding/no-shareholder structure.",
           "Separates SDF from Ripple and from unilateral control of the public network, and keeps reserve totals dated."
@@ -19235,7 +19781,7 @@
           "Do NOT call SDF for-profit, Ripple, or the unilateral owner/operator of Stellar.",
           "Do NOT repeat ~30B as a current reserve or treat named accounts/report rows as exhaustive without date and scope."
         ],
-        "notes": "GT-28 CORRECTION 2026-07-10: organizational/legal core confirmed. Remove the stale ~30B reserve; any holdings figure requires a dated dashboard/mandate/report and explicit scope.\nGT-28 independently confirmed by processes 3274/3275."
+        "notes": "GT-28 CORRECTION 2026-07-10: organizational/legal core confirmed. Remove the stale ~30B reserve; any holdings figure requires a dated dashboard/mandate/report and explicit scope.\nGT-28 independently confirmed by processes 3274/3275.\n2026-07-13 provenance repair: current SDF mandate/foundation pages support the mission, self-funding, tax, and no-shareholder claims; independent WEF/LobbyFacts records support the non-stock form; official developer material supports the public, decentralized network distinction."
       },
       "tags": {
         "category": "history-org-tokenomics",
@@ -19244,55 +19790,113 @@
       },
       "truth": {
         "domain": "real-world",
-        "status": "disputed",
-        "asOf": "2026-07-10",
+        "status": "confirmed",
+        "asOf": "2026-07-13",
         "sources": [
           {
             "class": "A",
             "ref": "https://stellar.org/foundation",
-            "note": "class inferred at migration"
+            "note": "Official SDF foundation overview accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/foundation/mandate",
-            "note": "class inferred at migration"
+            "note": "Official live mandate and funding-structure page observed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://stellar.org/quarterly-reports",
-            "note": "class inferred at migration"
+            "note": "Official quarterly-report index accessed 2026-07-13; supports dated rather than timeless holdings reporting."
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/",
+            "note": "Official developer overview describes Stellar as an open-source, decentralized, peer-to-peer network and links validator-operation guidance; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/terms-of-service",
+            "note": "Current SDF self-identification as a Delaware nonprofit corporation"
+          },
+          {
+            "class": "D",
+            "ref": "https://www.lobbyfacts.eu/datacard/stellar-development-foundation?rid=244864450367-86",
+            "note": "Independent EU Transparency Register presentation describes SDF as a U.S. nonstock nonprofit"
+          },
+          {
+            "class": "D",
+            "ref": "https://www.weforum.org/organizations/stellar-development-foundation",
+            "note": "Independent World Economic Forum organization profile describes SDF as a U.S.-based non-stock nonprofit and states its mission; accessed 2026-07-13."
           }
         ],
         "corroboration": [
           {
-            "claim": "SDF is a Delaware non-stock nonprofit with no shareholders and an equitable-access mission; any XLM mandate holding is point-in-time, not a stable ~30B fact.",
-            "verdict": "disputed",
+            "claim": "SDF is a Delaware non-stock nonprofit with an equitable-access mission; its current mandate says it is self-funded, pays taxes, and has no shareholders.",
+            "verdict": "confirmed",
             "evidence": [
               {
                 "class": "A",
-                "ref": "A: SDF foundation/mandate/legal statement and Q1 2026 report",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://stellar.org/foundation/mandate",
+                "observedAt": "2026-07-13"
+              },
+              {
+                "class": "D",
+                "ref": "https://www.lobbyfacts.eu/datacard/stellar-development-foundation?rid=244864450367-86",
+                "observedAt": "2026-07-13"
+              }
+            ]
+          },
+          {
+            "claim": "Official SDF material describes the foundation's role as supporting Stellar's development and growth, while official developer material describes Stellar as a public, open-source, decentralized peer-to-peer network with validator participation.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/",
+                "observedAt": "2026-07-13"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/learn/the-power-of-stellar",
+                "observedAt": "2026-07-13",
+                "note": "Official network overview states SDF's support role and separately describes the network/ecosystem."
+              }
+            ]
+          },
+          {
+            "claim": "Any SDF XLM mandate holding is a dated, source-scoped observation rather than a stable reserve scalar.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://stellar.org/foundation/mandate",
+                "observedAt": "2026-07-13"
               },
               {
                 "class": "F",
-                "ref": "F: official dashboard and named-account Horizon reads",
+                "ref": "solo://proj/49/scratchpad/truth-maintenance-20--575",
                 "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "note": "Official dashboard and named-account Horizon reads established point-in-time scope"
               }
-            ],
-            "note": "Legacy verdict: confirmed-core-contradicted-scalar."
+            ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The organizational/legal core is correct, but the undated ~30B SDF reserve is materially stale versus current official disclosures around 15.6B and does not belong in a durable structure answer.",
+          "date": "2026-07-13",
+          "by": "Todo 972 release-closeout golden-truth reconciliation after independent Fable and Sol reviews",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; live dashboard about 15.588B, April report about 16.4B with scope caveats."
+            "https://stellar.org/foundation/mandate",
+            "https://developers.stellar.org/",
+            "https://www.weforum.org/organizations/stellar-development-foundation",
+            "https://stellar.org/terms-of-service",
+            "https://www.lobbyfacts.eu/datacard/stellar-development-foundation?rid=244864450367-86",
+            "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol ship/hold reviews",
+            "Sibling sweep: q-org-sdf-mandate-buckets and q-org-sdf-enterprise-fund retain dated metric scope; no stable reserve scalar was reintroduced."
           ],
           "rootCause": [
             "Eval-side historical reserve rounding became an undated present-tense fact.",
-            "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md"
+            "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md",
+            "solo://proj/49/todo/golden-truth-review--972"
           ]
         },
         "origin": "raven-next q-org-sdf-structure-mandate"
@@ -24694,15 +25298,31 @@
       "truth": {
         "domain": "mixed",
         "status": "confirmed",
-        "asOf": "2026-07-11",
+        "asOf": "2026-07-13",
         "sources": [
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos"
           },
           {
+            "class": "A",
+            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+            "note": "First-party SDF scam-safety guidance; undated live page accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://support.kraken.com/articles/360000184543-memo-for-stellar-lumens-xlm-deposits",
+            "note": "Provider-owned evidence that XLM deposit/memo requirements are provider-address specific and mutable"
+          },
+          {
+            "class": "A",
+            "ref": "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams",
+            "note": "Independent regulator guidance on crypto impersonation and bargain/investment scams; accessed 2026-07-13."
+          },
+          {
             "class": "D",
-            "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+            "ref": "https://www.forbes.com/advisor/investing/cryptocurrency/best-crypto-exchanges/",
+            "note": "Independent comparison observed 2026-07-13; explicitly compares fees or spreads and deposit/withdrawal processes rather than declaring a timeless universal cheapest venue."
           }
         ],
         "corroboration": [
@@ -24713,29 +25333,43 @@
               {
                 "class": "A",
                 "ref": "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
-                "observedAt": "2026-07-11"
+                "observedAt": "2026-07-13"
+              },
+              {
+                "class": "A",
+                "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+                "observedAt": "2026-07-13"
+              },
+              {
+                "class": "A",
+                "ref": "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams",
+                "observedAt": "2026-07-13",
+                "note": "Regulator corroboration for unsolicited crypto-offer and impersonation risk."
               },
               {
                 "class": "D",
-                "ref": "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
-                "observedAt": "2026-07-11"
+                "ref": "https://www.forbes.com/advisor/investing/cryptocurrency/best-crypto-exchanges/",
+                "observedAt": "2026-07-13",
+                "note": "Independent support for comparing scenario-specific fees/spreads and deposit/withdrawal mechanics rather than naming one universal cheapest provider."
               }
             ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 H3 primary+blind (Solo 3415/3419) with Fable voice review",
+          "date": "2026-07-13",
+          "by": "Todo 972 provenance re-check; retained the behavioral golden without naming or ranking a provider",
           "evidence": [
-            "solo://proj/49/process/3415",
-            "solo://proj/49/process/3419",
-            "scratchpad/p4/h3-raph/fable-voice-review.md",
-            "scratchpad/p4/h3-raph-blind/reconciliation.md",
             "https://developers.stellar.org/docs/build/guides/transactions/pooled-accounts-muxed-accounts-memos",
-            "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers"
+            "https://stellar.org/blog/foundation-news/how-to-protect-yourself-from-scammers",
+            "https://support.kraken.com/articles/360000184543-memo-for-stellar-lumens-xlm-deposits",
+            "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams",
+            "https://www.forbes.com/advisor/investing/cryptocurrency/best-crypto-exchanges/",
+            "2026-07-13 bounded web sweep found provider-specific buy/deposit guidance, not a durable universal cheapest-provider ranking; no judge-facing change warranted.",
+            "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol review"
           ],
           "rootCause": [
-            "eval-authoring"
+            "eval-authoring",
+            "solo://proj/49/todo/golden-truth-review--972"
           ]
         },
         "origin": "raph buy-xlm-where-best-rates-fees"
@@ -32748,7 +33382,7 @@
         "stellarDocs.search_soroban_contract_docs"
       ],
       "golden": {
-        "answer": "A grounded answer derives its named examples and status claims from the current official Stellar documentation, then dates the roster so it is not presented as permanent. As of 2026-07-11, the current documentation search returned build examples using `stellar contract build` and output under `target/wasm32v1-none/release/`.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+        "answer": "A grounded answer derives its named examples and status claims from the current official Stellar documentation, then dates the roster so it is not presented as permanent. As of 2026-07-13, the current documentation search returned build examples using `stellar contract build` and output under `target/wasm32v1-none/release/`.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
         "keyFacts": [
           "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
           "Names `wasm32v1-none` as the current build target for new Soroban contracts.",
@@ -32759,6 +33393,7 @@
         "avoid": [
           "Do not use the misspelled target `wasm32v1- none` or old `wasm32-unknown-unknown` guidance as the final answer.",
           "Do not tell users to hand-edit generated Wasm or bypass the CLI without explaining the target and release profile.",
+          "Do NOT add an ecosystem prior-art or competitor landscape detour to this already-scoped build/debug question; current official docs and CLI evidence are sufficient.",
           "Do NOT present the observed live result set as a complete or permanent roster; explicitly historical facts remain historical."
         ],
         "notes": "Verified with Stellar Docs MCP and local `stellar contract build --help` from CLI 25.2.0. The dossier mentions newer protocol/SDK releases, but the target guidance is stable in current docs.\nAlso good if the answer: Mentions output path `target/wasm32v1-none/release/<contract>.wasm`. | Notes target installation is per toolchain, so after Rust upgrades the target may need reinstalling.\nGolden cites: Must cite current Stellar setup/Hello World or Rust dialect docs for `wasm32v1-none`. | Freshness-sensitive answer should cite a dated/current official docs source or local CLI evidence."
@@ -32771,41 +33406,62 @@
       "truth": {
         "domain": "real-world",
         "status": "confirmed",
-        "asOf": "2026-07-11",
+        "asOf": "2026-07-13",
         "sources": [
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world",
-            "note": "class inferred at migration"
+            "note": "Official current Hello World build guide accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/learn/fundamentals/contract-development/rust-dialect",
-            "note": "class inferred at migration"
+            "note": "Official Rust dialect/target guidance accessed 2026-07-13."
           },
           {
             "class": "A",
             "ref": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup",
-            "note": "class inferred at migration"
+            "note": "Official smart-contract toolchain setup guide accessed 2026-07-13."
           },
           {
-            "class": "D",
+            "class": "B",
             "ref": "https://github.com/OpenZeppelin/stellar-contracts",
-            "note": "class inferred at migration"
+            "note": "Direct OpenZeppelin Stellar contracts source repository; class B source code, accessed 2026-07-13."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Current Stellar contract build guidance uses `stellar contract build` with the `wasm32v1-none` target and release output path.",
+            "verdict": "confirmed-as-of",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/smart-contracts/getting-started/hello-world",
+                "observedAt": "2026-07-13"
+              },
+              {
+                "class": "C",
+                "ref": "solo://proj/49/scratchpad/truth-maintenance-20--575",
+                "observedAt": "2026-07-11",
+                "note": "Durable record of the localhost Docs search and local Stellar CLI 25.2.0 help verification."
+              }
+            ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "date": "2026-07-13",
+          "by": "Prior-art build-route paired-control reconciliation after independent Sol and Grok review",
           "evidence": [
             "solo://proj/49/scratchpad/truth-maintenance-20--575",
             "2026-07-11 localhost:8787 search→execute probe observed: the current documentation search returned build examples using `stellar contract build` and output under `target/wasm32v1-none/release/`.",
-            "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/prior-art-build-rout--613 — durable independent review and no-detour reconciliation",
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613 — established this current official-docs build error as the known-step no-detour control."
           ],
           "rootCause": [
             "eval-authoring",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "prior-art no-detour control"
           ]
         },
         "origin": "raven-next q-sor-build-target-wasm32v1"
@@ -36071,6 +36727,131 @@
           ]
         },
         "origin": "raven-next q-soroban-fuzz-testing"
+      }
+    },
+    {
+      "id": "q-soroban-greenfield-escrow-prior-art-preflight",
+      "question": "Help me design and implement a production-minded milestone escrow contract on Soroban. Pick the architecture and start with the contract skeleton.",
+      "surface": [
+        "scout.searchProjects",
+        "scout.searchRepos",
+        "stellarDocs.search_soroban_contract_docs",
+        "skills.stellar-dev.smart-contracts"
+      ],
+      "golden": {
+        "answer": "Before committing the architecture, make one bounded prior-art pass in the same research step as the smart-contract skill and current official Docs lookup. Use it to discover requirements, failure modes, and whether an existing protocol should be integrated instead of rebuilt; do not copy a repository or treat popularity as authority. Return no more than three materially distinct candidates.\n\nAs of 2026-07-13, illustrative verified categories included: the official classic Claimable Balances \"Escrow-Style Payment\" pattern; the Apache-2.0 `stellar/soroban-examples` timelock and atomic-exchange teaching patterns (adjacent primitives, not production escrow); Trustless Work, an exact non-custodial milestone-escrow product surfaced in an SDF developer call and later listed by the SDF Audit Bank with Runtime Verification, whose contract repository did not expose an in-tree license in this verification; and DevAsign's Apache-2.0 bounty-escrow contract, for which no audit was verified in the repository or bounded sources. These names are examples, not a permanent required roster.\n\nTurn the review into a short design delta before writing code: custody/token flow, milestone and partial releases, approval roles, explicit dispute state, deadline/refund behavior, fee splits, upgrade/admin boundaries, events, and invariant-focused tests. The initial skeleton should reflect that delta with an explicit lifecycle enum, escrow/milestone records, role-authenticated fund/approve/release/dispute/resolve/refund entry points, conservation and one-way-transition checks, and events/tests for every state change. Current APIs and security procedure still come from the smart-contract skill and official Docs. Raven can report exact URLs and indexed freshness/provenance, but its repo rows do not expose license; mark license/audit/deployment/compatibility unknown unless a source-backed result establishes them, and treat the candidate as study-only until direct repository inspection clears reuse. If no close implementation appears, state the searched scope and proceed from the official playbook; do not claim the ecosystem has none.",
+        "keyFacts": [
+          "Performs a bounded repos/projects prior-art pass before committing a substantial greenfield architecture, alongside the smart-contract skill and current official Docs.",
+          "Uses prior art for requirements, pitfalls, and build-vs-integrate decisions while keeping skills/docs authoritative for current APIs and security procedure.",
+          "Separates exact escrow products from official conceptual patterns and turns the review into concrete design consequences before code.",
+          "The bounded review precedes but does not replace the requested architecture, compact contract skeleton, security boundaries, and invariant-focused tests; it leaves unsupported license/audit/deployment/compatibility fields unknown."
+        ],
+        "avoid": [
+          "Do NOT skip the bounded ecosystem/source-code prior-art pass and jump directly from generic skill patterns to a production-minded architecture.",
+          "Do NOT require Trustless Work, DevAsign, or any fixed repository roster in future answers; re-query and verify current results.",
+          "Do NOT call timelock, atomic swap, single offer, or a misleading repo description exact production escrow without checking applicability.",
+          "Do NOT infer license, security, audit, maintenance, deployment, or production readiness from public visibility, stars, repoScore, funding, or directory status."
+        ],
+        "notes": "This is the proactive design-stage half of a paired regression. It deliberately asks for architecture plus implementation without mentioning prior art. Grade the bounded discovery-and-vetting behavior and the resulting architecture/skeleton, not keyword recall or a permanent repo list; accept a different current roster with exact URLs/dates and honest caveats. Independent Opus truth lane verified the illustrative escrow taxonomy on 2026-07-13; known-step no-detour control is q-sor-build-target-wasm32v1."
+      },
+      "tags": {
+        "category": "soroban",
+        "service": "scout",
+        "freshness": "live"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-08-20",
+        "sources": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/meetings/2024/12/05",
+            "note": "Official SDF developer call dated 2024-12-05 about Trustless Work building an escrow service on Stellar; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/tools/cli/cookbook/tx-new-create-claimable-balance#escrow-style-payment",
+            "note": "Official classic-protocol escrow-style Claimable Balance pattern, not a Soroban contract; accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/audit-bank/projects",
+            "note": "Live SDF Audit Bank project listing observed 2026-07-13 for the Trustless Work Runtime Verification audit."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/soroban-examples",
+            "note": "Direct official repository observed 2026-07-13; Apache-2.0 teaching examples include timelock and atomic-exchange patterns."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/Trustless-Work/trustlesswork-smart-contract-stellar",
+            "note": "Direct exact milestone-escrow repository inspected 2026-07-13; no in-tree LICENSE was verified at the observed revision."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/devasignhq/soroban-contract",
+            "note": "Direct bounty-escrow repository inspected 2026-07-13; Apache-2.0 license was visible and no audit evidence was found in the bounded repository review."
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/repos/search",
+            "note": "Live Scout repository discovery/freshness source; discovery metadata is not quality or license proof."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "Escrow prior art spans exact products, official conceptual patterns, and misleading adjacent repositories, so applicability and provenance must be checked before architecture or reuse.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/meetings/2024/12/05",
+                "observedAt": "2026-07-13",
+                "note": "Exact-product context from an official dated developer call."
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/tools/cli/cookbook/tx-new-create-claimable-balance#escrow-style-payment",
+                "observedAt": "2026-07-13",
+                "note": "Official adjacent classic-protocol pattern, explicitly not a Soroban contract."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/Trustless-Work/trustlesswork-smart-contract-stellar",
+                "observedAt": "2026-07-13",
+                "note": "Direct exact-product source and license-file inspection."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/devasignhq/soroban-contract",
+                "observedAt": "2026-07-13",
+                "note": "Direct adjacent bounty-escrow source, license, and bounded audit-evidence inspection."
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search",
+                "observedAt": "2026-07-13",
+                "note": "Live discovery/freshness metadata only; it does not establish license, audit, deployment, compatibility, or production readiness."
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-13",
+          "by": "Opus 4.8 independent golden-truth lane, Solo process 3526; coordinator encoded behavior-first golden",
+          "evidence": [
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#opus-escrow-truth-matrix"
+          ],
+          "rootCause": [
+            "The build workflow paired skills with official docs but did not proactively route substantial design requests through the already-exposed prior-art operations.",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#opus-escrow-truth-matrix",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#post-authoring-review-corrections-for-the-two-preflight-cases"
+          ]
+        },
+        "origin": "authored prior-art build-route review 2026-07-13"
       }
     },
     {
@@ -43045,6 +43826,146 @@
           ]
         },
         "origin": "raven-next q-tool-go-sdk-ingest"
+      }
+    },
+    {
+      "id": "q-tool-greenfield-indexer-prior-art-preflight",
+      "question": "Design a production-minded service that ingests Soroban contract events into a queryable historical index. Choose the architecture and give me the implementation plan.",
+      "surface": [
+        "scout.searchRepos",
+        "scout.searchProjects",
+        "stellarDocs.search_rpc_horizon_data_docs",
+        "skills.stellar-dev.data"
+      ],
+      "golden": {
+        "answer": "Treat this as a substantial infrastructure design, so do one bounded prior-art pass before selecting the architecture. Consult the data skill and current official indexer/event-ingestion Docs for authority, while using Scout repos/projects to compare existing roles and decide build versus integrate. Return no more than three materially distinct candidates.\n\nReturn a role-labeled shortlist rather than one undifferentiated repo list: recent RPC event polling, a ledger-data exporter such as Galexie, an ingest library, an ETL pipeline, a turnkey/narrow indexer, and a hosted-service client solve different layers. Report exact URLs, indexed activity/archive evidence, and actual role. Raven has no repo-license field, so license, audit, deployment, and compatibility stay unknown unless a source-backed result establishes them; treat candidates as study-only until direct repository inspection clears reuse. `repoScore`, stars, or rank are navigation metadata, not proof of correctness or production fitness.\n\nA concrete plan should use a checkpointed ingestion worker, durable append-only raw event/ledger storage, idempotent normalization into versioned relational/query tables, a replay/backfill path (using the appropriate historical data source rather than assuming RPC is archival), monitoring/dead-letter handling, and a serving API. RPC retention is not durable history; define cursor recovery, duplicate handling, schema/version evolution, and operational ownership. If no close turnkey implementation appears, report the search scope and compose from official ingestion patterns plus the closest maintained primitives rather than claiming no public prior art exists.",
+        "keyFacts": [
+          "Performs a bounded prior-art pass for a substantial non-escrow infrastructure design before selecting architecture.",
+          "Keeps official data skills/docs authoritative while using repos/projects for role comparison and build-vs-integrate decisions.",
+          "Separates RPC polling, exporter/data lake, ingest library, ETL, indexer, and hosted client roles.",
+          "Leaves unsupported license/audit/deployment/compatibility fields unknown, blocks reuse claims until direct source inspection, and does not infer quality from ranking metadata."
+        ],
+        "avoid": [
+          "Do NOT answer only from generic data-skill patterns without checking existing Stellar indexing implementations.",
+          "Do NOT call recent RPC `getEvents` polling a complete durable historical index or conflate Galexie with a serving query index.",
+          "Do NOT freeze a named repository roster or treat an exact Scout zero result as proof that no public implementation exists.",
+          "Do NOT infer correctness, security, license, maintenance, or production readiness from repoScore, stars, or rank.",
+          "Do NOT turn missing Raven license, audit, deployment, or compatibility fields into either a positive assertion or a global absence claim."
+        ],
+        "notes": "Non-escrow holdout for the same proactive design-stage behavior. It reuses the independently maintained truth basis of q-tool-indexer-repos-discovery but changes the user wording from an explicit repo request to an architecture/build request."
+      },
+      "tags": {
+        "category": "tooling-infra",
+        "service": "scout",
+        "freshness": "scheduled"
+      },
+      "truth": {
+        "domain": "mixed",
+        "status": "confirmed",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2026-08-27",
+        "sources": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/data/indexers",
+            "note": "Official current indexer overview accessed 2026-07-13."
+          },
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/docs/build/guides/events/ingest",
+            "note": "Official event-ingestion guide accessed 2026-07-13."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-ledger-data-indexer",
+            "note": "Direct repository inspected 2026-07-13 for its narrow ledger-data indexer role."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-galexie",
+            "note": "Direct repository inspected 2026-07-13 for its ledger-data export role."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/go-stellar-sdk/tree/main/ingest",
+            "note": "Direct Go SDK ingest library path inspected 2026-07-13."
+          },
+          {
+            "class": "B",
+            "ref": "https://github.com/stellar/stellar-etl",
+            "note": "Direct ETL repository inspected 2026-07-13 for its pipeline role."
+          },
+          {
+            "class": "C",
+            "ref": "https://stellarlight.xyz/api/repos/search",
+            "note": "Live Scout repository discovery endpoint observed 2026-07-13; discovery metadata is not license, audit, deployment, compatibility, or quality proof."
+          }
+        ],
+        "corroboration": [
+          {
+            "claim": "A Stellar event-indexing architecture must distinguish official ingestion primitives and multiple repository roles rather than treating any single discovery result as a complete indexer.",
+            "verdict": "confirmed",
+            "evidence": [
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/data/indexers",
+                "observedAt": "2026-07-13",
+                "note": "Official role map for indexer architectures."
+              },
+              {
+                "class": "A",
+                "ref": "https://developers.stellar.org/docs/build/guides/events/ingest",
+                "observedAt": "2026-07-13",
+                "note": "Official current event-ingestion procedure."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-ledger-data-indexer",
+                "observedAt": "2026-07-13",
+                "note": "Direct narrow indexer source."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-galexie",
+                "observedAt": "2026-07-13",
+                "note": "Direct exporter source; not conflated with a serving query index."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/go-stellar-sdk/tree/main/ingest",
+                "observedAt": "2026-07-13",
+                "note": "Direct ingest-library source."
+              },
+              {
+                "class": "B",
+                "ref": "https://github.com/stellar/stellar-etl",
+                "observedAt": "2026-07-13",
+                "note": "Direct ETL-pipeline source."
+              },
+              {
+                "class": "C",
+                "ref": "https://stellarlight.xyz/api/repos/search",
+                "observedAt": "2026-07-13",
+                "note": "Live discovery and indexed-freshness evidence only."
+              }
+            ]
+          }
+        ],
+        "verified": {
+          "date": "2026-07-13",
+          "by": "Behavioral derivative of q-tool-indexer-repos-discovery, independently reviewed by Sol blind non-escrow truth lane",
+          "evidence": [
+            "eval/qa/corpus/battery/tooling-infra/q-tool-indexer-repos-discovery.json",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#sol-blind-non-escrow-truth-matrix",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#post-authoring-review-corrections-for-the-two-preflight-cases"
+          ],
+          "rootCause": [
+            "Existing corpus covered explicit repo discovery but not proactive prior-art review from a greenfield architecture request.",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#sol-blind-non-escrow-truth-matrix",
+            "solo://proj/49/scratchpad/prior-art-build-rout--613#post-authoring-review-corrections-for-the-two-preflight-cases"
+          ]
+        },
+        "origin": "authored prior-art build-route review 2026-07-13"
       }
     },
     {

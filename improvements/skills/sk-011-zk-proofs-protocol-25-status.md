@@ -1,11 +1,12 @@
 ---
 id: sk-011
 service: skills
-status: proposed
+status: reported-upstream
 discovered: 2026-07-11
 evidence:
   - P4 H2 observed skills.stellar-dev.zk-proofs still label CAP-0074 BN254 and CAP-0075 Poseidon/Poseidon2 as proposed/gated and recommend waiting for BN254; solo://proj/49/scratchpad/super-corpus-rebuild--585
   - official Stellar ZK documentation, the stellar-protocol CAP index, and stellar-core v25.0.0 release notes identify the Protocol 25 primitives as shipped/final
+  - exact existing upstream issue confirmed open 2026-07-13: https://github.com/stellar/stellar-dev-skill/issues/51
 ---
 
 ## Finding

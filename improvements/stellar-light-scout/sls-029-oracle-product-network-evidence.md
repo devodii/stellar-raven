@@ -1,7 +1,7 @@
 ---
 id: sls-029
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live Scout oracle search returns provider-level Live labels without product/network evidence tiers
@@ -11,6 +11,7 @@ evidence:
   - Lightecho mainnet contract exists but its observed price state was four months stale
   - Solo scratchpad 575 GT-16 primary process 3244 and blind process 3245
   - Solo scratchpad 575 GT-17 primary process 3247 and blind process 3248
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/514
 ---
 
 ## Finding

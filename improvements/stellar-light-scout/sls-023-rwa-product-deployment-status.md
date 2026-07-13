@@ -1,7 +1,7 @@
 ---
 id: sls-023
 service: stellar-light-scout
-status: verified
+status: fixed-upstream
 discovered: 2026-07-10
 evidence:
   - live searchProjects query for real world asset returned 51 rows
@@ -10,6 +10,7 @@ evidence:
   - Solo scratchpad 575 GT-11 primary process 3231
   - GT-17 recurrence: live WisdomTree GOLD/EQTY, Figure YLDS, and Etherfuse assets were absent from a three-product overview derived from broad discovery
   - GT-18 recurrence: CRDT required issuer-primary legal class, transfer-agent record priority, eligibility/controls, exact issuer/SAC, and multichain launch scope not represented by a project-level row
+  - https://github.com/Stellar-Light/stellarlight/issues/494; live re-check 2026-07-13 returns DTCC as Development with dated operator-announcement provenance, so the false-live regression no longer reproduces
 ---
 
 ## Finding

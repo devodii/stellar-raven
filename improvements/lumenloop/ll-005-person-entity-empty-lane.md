@@ -1,7 +1,7 @@
 ---
 id: ll-005
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - live probe 2026-07-03: find_content_by_entity {entity:"Denelle Dixon", entity_type:"person"} → success:true, all groups empty
@@ -9,9 +9,14 @@ evidence:
   - Solo project 49, todo 825 (skills-harvest verification pass)
   - live re-verified 2026-07-06 (eval round todo 846): person probe (Denelle Dixon) still ok:true with all 5 groups empty while the organization control returns 5/5/5/5/5 — silent person-lane emptiness unchanged
   - live re-verified 2026-07-10 during GT-35: Tyler van der Hoeven exact person, exact any-type, and Tyler person probes returned all-empty groups; kalepail returned one record misclassified as project
+  - https://github.com/lumenloop/lumenloop-backend/issues/19 (filed 2026-07-13)
 recurrences:
   - date: 2026-07-10
     evidence: GT-35 primary/blind exact-person probes reproduced silent emptiness for Tyler van der Hoeven and a kalepail person/project classification mismatch
+  - date: 2026-07-13
+    evidence: targeted QA q-edge-lumenloop-person-entity-empty reproduced ok=true with all groups empty for Denelle Dixon while broad semantic search returned populated exact-name content
+  - date: 2026-07-13
+    evidence: post-fix QA performed the broad pass but called the ok=true empty payload a lane defect, showing the catalog mitigation must explicitly distinguish data-shaped empty from transport and soft-empty failure
 ---
 
 ## Finding
@@ -40,3 +45,9 @@ Any one of, in preference order: (1) serve person entities on the external lane;
 Mitigated on our side 2026-07-03 with a catalog description note
 (`scripts/description-notes.mjs`, LUMENLOOP_DESCRIPTION_NOTES) — but every other
 external consumer still hits it.
+
+The 2026-07-13 post-fix transcript exposed an ambiguity in that mitigation: the
+model read “lane behavior” as a service defect and missed the valid closed-world,
+source-scoped conclusion. The local note now says explicitly that the response is
+normal `ok` data (not transport or `soft-empty` failure), states its narrow scope,
+and routes only open-world coverage questions to semantic recovery.

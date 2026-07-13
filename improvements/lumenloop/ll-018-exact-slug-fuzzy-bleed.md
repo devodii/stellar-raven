@@ -1,13 +1,14 @@
 ---
 id: ll-018
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - lumenloop.get_scf_submissions with slug band returned Band Protocol and unrelated Bando
   - operation guidance presents slug as the preferred resolved project identity
   - official Band project record establishes one Band identity and award history
   - Solo scratchpad 575 GT-37 primary 3296 and blind 3298
+  - https://github.com/lumenloop/lumenloop-backend/issues/34
 ---
 
 ## Finding

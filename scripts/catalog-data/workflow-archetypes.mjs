@@ -94,14 +94,33 @@ export const WORKFLOW_ARCHETYPES = [
   },
   {
     id: "build-integrate-implementation",
-    title: "Build/integrate implementation",
-    questionShape: "How should I build, integrate, deploy, or debug a Stellar app or contract?",
+    title: "Design/build/integrate",
+    questionShape: "How should I design a Stellar contract, dapp, SDK, protocol, or infrastructure component?",
+    families: ["scout", "skills", "stellarDocs"],
+    steps: [
+      { id: "scout.searchProjects", why: "check existing prior art" },
+      { id: "scout.searchRepos", why: "make one bounded repo pass" },
+      { id: "skills.stellar-dev.smart-contracts", why: "use the contract playbook" },
+      { id: "stellarDocs.search_soroban_contract_docs", why: "verify contract APIs" },
+      { id: "skills.stellar-dev.dapp", why: "use dapp and client playbooks" },
+      { id: "stellarDocs.search_wallet_dapp_docs", why: "verify wallet APIs" },
+      { id: "stellarDocs.search_sdk_cli_tools_docs", why: "verify SDK APIs" },
+      { id: "skills.stellar-dev.standards", why: "use the standards playbook" },
+      { id: "stellarDocs.search_protocol_concepts_docs", why: "verify protocol concepts" },
+      { id: "skills.stellar-dev.data", why: "use the data playbook" },
+      { id: "stellarDocs.search_rpc_horizon_data_docs", why: "verify infrastructure APIs" }
+    ]
+  },
+  {
+    id: "implementation-debug",
+    title: "Known-step implementation/debug",
+    questionShape: "How do I implement, deploy, or debug one already-scoped Stellar step?",
     families: ["skills", "stellarDocs"],
     steps: [
       { id: "skills.stellar-dev.smart-contracts", why: "use the tested smart-contract workflow playbook" },
-      { id: "stellarDocs.search_soroban_contract_docs", why: "corroborate contract details in official docs" },
+      { id: "stellarDocs.search_soroban_contract_docs", why: "verify current contract APIs and examples" },
       { id: "skills.stellar-dev.dapp", why: "use the frontend/wallet integration playbook" },
-      { id: "stellarDocs.search_wallet_dapp_docs", why: "verify wallet and dapp API behavior" }
+      { id: "stellarDocs.search_wallet_dapp_docs", why: "verify current wallet and dapp behavior" }
     ]
   },
   {
@@ -113,7 +132,22 @@ export const WORKFLOW_ARCHETYPES = [
       { id: "scout.getHackathons", why: "enumerate hackathon/event records" },
       { id: "scout.getHackathon", why: "read one event with projects and participants" },
       { id: "scout.getBuilders", why: "resolve builder identities and profiles" },
-      { id: "lumenloop.search_directory", why: "cross-check project identity and ecosystem context" }
+      { id: "lumenloop.search_directory", why: "cross-check project identity and ecosystem context" },
+      { id: "lumenloop.search_content_semantic", why: "broaden open-world identity or event history after a narrow directory miss" },
+      { id: "scout.searchResearch", why: "corroborate historical claims against cited research" }
+    ]
+  },
+  {
+    id: "evidence-poor-open-world-recovery",
+    title: "Evidence-poor open-world recovery",
+    questionShape: "Who or what is an obscure Stellar entity, what is its history, or what should I do when narrow lookups return empty or only adjacent candidates?",
+    families: ["lumenloop", "scout", "stellarDocs"],
+    steps: [
+      { id: "lumenloop.search_content_semantic", why: "search broadly across dated community, editorial, event, and research content" },
+      { id: "scout.searchResearch", why: "search the cited vector research corpus for history and primary-source leads" },
+      { id: "scout.searchProjects", why: "test whether an unknown name resolves to a structured project identity" },
+      { id: "stellarDocs.search_docs", why: "check official technical wording, authorship, or protocol history" },
+      { id: "lumenloop.find_av_passages", why: "add spoken-material candidates only when the question needs talks or interviews" }
     ]
   },
   {

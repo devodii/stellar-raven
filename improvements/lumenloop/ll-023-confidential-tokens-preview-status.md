@@ -1,11 +1,11 @@
 ---
 id: ll-023
 service: lumenloop
-status: proposed
+status: reported-upstream
 discovered: 2026-07-11
-intake: unclear
 evidence:
   - P4 N2 candidate identifies the 2026-06-29 Confidential Tokens item as a Testnet developer preview with audits underway, not Mainnet approval; solo://proj/49/scratchpad/super-corpus-rebuild--585
+  - https://github.com/lumenloop/lumenloop-backend/issues/39
 ---
 
 ## Finding

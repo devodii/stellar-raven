@@ -1,13 +1,14 @@
 ---
 id: sk-010
 service: skills
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
 evidence:
   - stellar/stellar-dev-skill commit c2f3c0728c32044ed8b6d696767c3aed71b4e32d dapp SKILL.md installs and imports @creit.tech/stellar-wallets-kit
   - the same dapp skill uses the legacy new StellarWalletsKit constructor and allowAllModules API
   - current Wallets Kit maintainer documentation prefers JSR @creit-tech/stellar-wallets-kit and static StellarWalletsKit.init with configured/default modules
   - local pinned mirror ecosystem-skills/skills/stellar-dev/dapp/SKILL.md reproduces the upstream source bytes; Solo scratchpad 575 GT-56 process 3398 records the owner split
+  - upstream issue filed 2026-07-13: https://github.com/stellar/stellar-dev-skill/issues/56
 ---
 
 ## Finding

@@ -1,11 +1,12 @@
 ---
 id: ll-025
 service: lumenloop
-status: proposed
+status: reported-upstream
 discovered: 2026-07-11
-intake: unclear
 evidence:
   - P4 N2 candidate reads the 2026-06-09 quantum-post-quantum roadmap as stating ML-DSA host functions and native signer support were still missing and staged for 2026/2027; solo://proj/49/scratchpad/super-corpus-rebuild--585
+  - Live comparison on 2026-07-13: https://lumenloop.com/news/introducing-quantum-preparedness-plan summarizes the roadmap in present-tense/immediate language, while https://stellar.org/blog/foundation-news/introducing-the-quantum-preparedness-plan retains the missing-today and future/expected qualifiers.
+  - https://github.com/lumenloop/lumenloop-backend/issues/37
 ---
 
 ## Finding
@@ -18,8 +19,13 @@ roadmap as current network functionality.
 ## Evidence
 
 P4 N2 captured the future-tense and staged timeline in its 2026-07-11 candidate
-review. This remains proposed until a live Lumenloop output is preserved with
-the source comparison.
+review. On 2026-07-13, the public Lumenloop page was compared with its linked
+Stellar source: the summary says Stage 1 “adds” host functions and enterprise
+wallets can shift “immediately,” while the source says the signer/primitives are
+missing today and frames the 2026/2027 capabilities as expected or future work.
+This confirms a maturity-typing risk on that page, not the broader prevalence,
+the internal generation path, or whether newer implementation evidence exists.
+The owner-facing report is https://github.com/lumenloop/lumenloop-backend/issues/37.
 
 ## Recommendation
 

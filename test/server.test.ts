@@ -89,13 +89,20 @@ describe("tool registration", () => {
     expect(names).toEqual(["execute", "search"]);
   });
 
-  it("search is the host-side ranked query: { query, kind?, service?, limit? }", async () => {
+  it("search is ranked discovery plus exact-ID recovery metadata", async () => {
     const { tools } = await client.listTools();
     const search = tools.find((t) => t.name === "search");
     expect(search).toBeDefined();
     const schema = search!.inputSchema as JsonSchema;
     expect(schema.type).toBe("object");
-    expect(Object.keys(schema.properties ?? {}).sort()).toEqual(["kind", "limit", "query", "service"]);
+    expect(Object.keys(schema.properties ?? {}).sort()).toEqual([
+      "kind",
+      "limit",
+      "query",
+      "reason",
+      "recoverFrom",
+      "service"
+    ]);
     expect(schema.required).toEqual(["query"]);
     expect(schema.properties?.query?.type).toBe("string");
     expect(schema.properties?.kind?.enum).toEqual([...SEARCH_KINDS]);
@@ -288,6 +295,69 @@ describe("search behavior (host-side ranked)", () => {
     expect(structured.hits[0]?.signature).toContain("SearchDirectoryInput");
     expect(structured.nextSteps).toMatch(/execute/i);
     expect(structured.nextSteps).toContain("filter raw row JSON");
+    expect(structured.nextSteps).toContain("at most two `scout.searchRepos`/`scout.searchProjects`");
+    expect(structured.nextSteps).toContain("three returned candidates");
+    expect(structured.nextSteps).toMatch(/single-step how-to or debugging/i);
+  });
+
+  it("returns bounded exact-ID recovery separately from ranked hits", async () => {
+    const baseline = await client.callTool({
+      name: "search",
+      arguments: { query: "builder directory", limit: 5 }
+    });
+    const recovered = await client.callTool({
+      name: "search",
+      arguments: {
+        query: "builder directory",
+        limit: 5,
+        recoverFrom: ["scout.getBuilders"],
+        reason: "empty"
+      }
+    });
+    const before = baseline.structuredContent as { hits: Array<{ id: string }> };
+    const after = recovered.structuredContent as {
+      hits: Array<{ id: string }>;
+      recovery: Array<{ from: string; id: string }>;
+    };
+    expect(after.hits).toEqual(before.hits);
+    expect(after.recovery.map((candidate) => candidate.id)).toEqual([
+      "lumenloop.search_content_semantic",
+      "scout.searchResearch"
+    ]);
+    expect(after.recovery.every((candidate) => candidate.from === "scout.getBuilders")).toBe(true);
+  });
+
+  it("does not infer recovery from ranking or a reason without explicit attempted ids", async () => {
+    const baseline = await client.callTool({
+      name: "search",
+      arguments: { query: "builder directory", limit: 5 }
+    });
+    const reasonOnly = await client.callTool({
+      name: "search",
+      arguments: { query: "builder directory", limit: 5, reason: "empty" }
+    });
+    const before = baseline.structuredContent as { hits: Array<{ id: string }>; recovery: unknown[] };
+    const after = reasonOnly.structuredContent as { hits: Array<{ id: string }>; recovery: unknown[] };
+    expect(before.recovery).toEqual([]);
+    expect(after.hits).toEqual(before.hits);
+    expect(after.recovery).toEqual([]);
+  });
+
+  it("rejects unknown recoverFrom ids without fuzzy resolution", async () => {
+    const result = await client.callTool({
+      name: "search",
+      arguments: { query: "builder directory", recoverFrom: ["scout.getBuilder"] }
+    });
+    expect(result.isError).toBeFalsy();
+    const structured = result.structuredContent as {
+      hits: unknown[];
+      recovery: unknown[];
+      nextSteps: string;
+    };
+    expect(structured.hits).toEqual([]);
+    expect(structured.recovery).toEqual([]);
+    expect(structured.nextSteps).toContain("scout.getBuilder");
+    expect(structured.nextSteps).toContain("exact-match");
   });
 
   it("skill hits cross the tool boundary with availableSections (todo 812)", async () => {
@@ -485,6 +555,185 @@ describe("execute behavior", () => {
     expect(text).toContain('{"echoed":13}');
     expect(text).toContain("--- console (1 lines) ---");
     expect(text).toContain("hello from sandbox");
+  });
+
+  it("preserves error, soft-empty, mixed, data, and no-call evidence outcomes in the footer", async () => {
+    for (const [summary, expectedHeader] of [
+      [{ total: 2, ok: 0, error: 2, softEmpty: 0 }, "--- SERVICE ERRORS ---"],
+      [{ total: 2, ok: 0, error: 0, softEmpty: 2 }, "--- EVIDENCE RECOVERY ---"],
+      [{ total: 2, ok: 0, error: 1, softEmpty: 1 }, "--- INCONCLUSIVE SERVICE OUTCOMES ---"],
+      [{ total: 2, ok: 1, error: 1, softEmpty: 0 }, ""],
+      [{ total: 0, ok: 0, error: 0, softEmpty: 0 }, ""]
+    ] as const) {
+      const execClient = await connectedClient({
+        runExecute: async () => ({
+          ok: true,
+          result: '{"answer":"scoped"}',
+          truncated: false,
+          logs: [],
+          operationSummary: summary
+        })
+      });
+      const result = await execClient.callTool({
+        name: "execute",
+        arguments: { code: "async () => 1" }
+      });
+      const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+      for (const header of [
+        "--- SERVICE ERRORS ---",
+        "--- EVIDENCE RECOVERY ---",
+        "--- INCONCLUSIVE SERVICE OUTCOMES ---"
+      ]) {
+        expect(text.includes(header)).toBe(header === expectedHeader);
+      }
+      if (expectedHeader) expect(text).toContain("open-world negative");
+    }
+  });
+
+  it("adds a provenance reminder for candidate-evidence operations without forcing recovery", async () => {
+    const execClient = await connectedClient({
+      runExecute: async () => ({
+        ok: true,
+        result: '{"rows":[{"title":"nearby"}]}',
+        truncated: false,
+        logs: [],
+        operationSummary: {
+          total: 2,
+          ok: 2,
+          error: 0,
+          softEmpty: 0,
+          candidateEvidence: 1
+        }
+      })
+    });
+    const result = await execClient.callTool({
+      name: "execute",
+      arguments: { code: "async () => 1" }
+    });
+    const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+    expect(text).toContain("--- CANDIDATE EVIDENCE ---");
+    expect(text).toContain("exact identity or canonical slug plus source and date");
+    expect(text).toContain("date current or mutable claims by observation time");
+    expect(text).toContain("closed-world directory answer");
+    expect(text).not.toContain("--- EVIDENCE RECOVERY ---");
+  });
+
+  it("adds bounded reuse caveats after Scout prior-art operations", async () => {
+    const execClient = await connectedClient({
+      runExecute: async () => ({
+        ok: true,
+        result: '{"repos":[{"name":"example"}]}',
+        truncated: false,
+        logs: [],
+        operationSummary: {
+          total: 2,
+          ok: 2,
+          error: 0,
+          softEmpty: 0,
+          priorArtCandidates: 1
+        },
+        evidenceSummary: {
+          kind: "skill-content",
+          skillRead: true,
+          buildAuthoritySkillIds: ["skills.stellar-dev.smart-contracts"],
+          buildAuthorityRoles: ["contract"],
+          skillRuns: 0,
+          artifactReads: 0
+        }
+      })
+    });
+    const result = await execClient.callTool({
+      name: "execute",
+      arguments: { code: "async () => 1" }
+    });
+    const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+    expect(text).toContain("--- PRIOR-ART CANDIDATES ---");
+    expect(text).toContain("no more than three directly relevant candidates");
+    expect(text).toContain("exact URL, role/applicability, freshness/provenance, and limitations");
+    expect(text).toMatch(/License, audit, deployment, compatibility.*remain unknown/i);
+    expect(text).toContain("rank, stars, funding, directory status, and public source do not");
+    expect(text).not.toContain("--- EVIDENCE RECOVERY ---");
+  });
+
+  it("does not apply build-stage caps to ordinary Scout project discovery", async () => {
+    const execClient = await connectedClient({
+      runExecute: async () => ({
+        ok: true,
+        result: '{"projects":[{"name":"example"}]}',
+        truncated: false,
+        logs: [],
+        operationSummary: {
+          total: 1,
+          ok: 1,
+          error: 0,
+          softEmpty: 0,
+          candidateEvidence: 1,
+          priorArtCandidates: 1
+        },
+        evidenceSummary: {
+          kind: "service-data",
+          skillRead: false,
+          skillRuns: 0,
+          artifactReads: 0
+        }
+      })
+    });
+    const result = await execClient.callTool({
+      name: "execute",
+      arguments: { code: "async () => 1" }
+    });
+    const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+    expect(text).toContain("--- CANDIDATE EVIDENCE ---");
+    expect(text).not.toContain("--- PRIOR-ART CANDIDATES ---");
+  });
+
+  it.each([
+    ["skills.stellar-dev.dapp", "dapp"],
+    ["skills.stellar-dev.dapp", "sdk-integration"],
+    ["skills.stellar-dev.standards", "protocol"],
+    ["skills.stellar-dev.data", "infrastructure"]
+  ] as const)("recognizes the exact %s build-authority role %s", async (skillId, role) => {
+    const execClient = await connectedClient({
+      runExecute: async () => ({
+        ok: true,
+        result: '{"repos":[{"name":"example"}]}',
+        truncated: false,
+        logs: [],
+        operationSummary: { total: 1, ok: 1, error: 0, softEmpty: 0, priorArtCandidates: 1 },
+        evidenceSummary: {
+          kind: "skill-content",
+          skillRead: true,
+          buildAuthoritySkillIds: [skillId],
+          buildAuthorityRoles: [role],
+          skillRuns: 0,
+          artifactReads: 0
+        }
+      })
+    });
+    const result = await execClient.callTool({ name: "execute", arguments: { code: "async () => 1" } });
+    expect((result.content as Array<{ text: string }>)[0]?.text).toContain("--- PRIOR-ART CANDIDATES ---");
+  });
+
+  it("does not treat a landscape skill as build authority", async () => {
+    const execClient = await connectedClient({
+      runExecute: async () => ({
+        ok: true,
+        result: '{"repos":[{"name":"example"}]}',
+        truncated: false,
+        logs: [],
+        operationSummary: { total: 1, ok: 1, error: 0, softEmpty: 0, priorArtCandidates: 1 },
+        evidenceSummary: {
+          kind: "skill-content",
+          skillRead: true,
+          buildAuthoritySkillIds: [],
+          buildAuthorityRoles: [],
+          skillRuns: 0,
+          artifactReads: 0
+        }
+      })
+    });
+    const result = await execClient.callTool({ name: "execute", arguments: { code: "async () => 1" } });
+    expect((result.content as Array<{ text: string }>)[0]?.text).not.toContain("--- PRIOR-ART CANDIDATES ---");
   });
 
   it("threads fresh execute context per call so a cached runner cannot capture one owner", async () => {

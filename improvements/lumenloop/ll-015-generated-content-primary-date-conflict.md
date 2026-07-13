@@ -1,12 +1,13 @@
 ---
 id: ll-015
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - July 10 weekly roundup says Protocol 27 activated on July 9
   - linked official Stellar post and Horizon boundary establish July 8 activation
   - Solo scratchpad 575 GT-23 primary 3264 and blind 3267
+  - reported upstream: https://github.com/lumenloop/lumenloop-backend/issues/28
 ---
 
 ## Finding

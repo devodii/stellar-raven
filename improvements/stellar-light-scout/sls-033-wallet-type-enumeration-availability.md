@@ -1,7 +1,7 @@
 ---
 id: sls-033
 service: stellar-light-scout
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - paginated q=wallet returned 164 keyword rows but independent exact raw-type projections returned 60 and then 59 Wallet-typed records within one hour
@@ -9,6 +9,7 @@ evidence:
   - StellarTerm exact project response was typed DEX, not Wallet
   - Solo scratchpad 575 GT-20 primary process 3256 and independent blind process 3257
   - GT-56 recurrence: current wallet comparison required separate end-user wallet, hardware-wallet, connectivity-protocol, Wallet SDK, Wallets Kit, and smart-account-tooling types; directory/module presence did not establish custody, recovery, or capability
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellarlight/issues/519
 recurrences:
   - date: 2026-07-11
     evidence: GT-56 primary process 3394 and sealed blind process 3398 independently found that Ledger and Trezor must be typed as hardware wallet products while WalletConnect is a connectivity protocol/module, and that current custody/recovery claims require product-specific sources

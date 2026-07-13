@@ -1,7 +1,7 @@
 ---
 id: ll-001
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - eval/qa/results/2026-07-03T03-49-35-variantA.json
@@ -9,6 +9,7 @@ evidence:
   - live re-execution against local server confirmed slug/content mismatch
   - Solo project 49, todo 822, comments 2204-2210
   - live re-verified 2026-07-06 (eval round todo 846): slug stellar-weekly-roundup-week-29-2026 still fronts "week of May 29, 2026" content (created 2026-06-05) — the week-number/date mismatch persists; side drift: search_documents now requires a collection arg
+  - https://github.com/lumenloop/lumenloop-backend/issues/21 (filed 2026-07-13; public page rechecked HTTP 200 with "week of May 29, 2026" and publication date 2026-06-05)
 ---
 
 ## Finding

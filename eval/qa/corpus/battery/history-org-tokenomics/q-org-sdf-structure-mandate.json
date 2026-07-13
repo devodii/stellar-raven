@@ -5,7 +5,7 @@
     "scout.searchResearch"
   ],
   "golden": {
-    "answer": "The **Stellar Development Foundation (SDF)** is a Delaware **non-stock nonprofit corporation** that supports the public Stellar network. Its mission is to create equitable access to the global financial system. It has no shareholders or owners in the for-profit sense, is self-funded in part through XLM entrusted at inception, and pays applicable U.S. taxes. SDF is not Ripple and does not unilaterally operate or own Stellar; independent validators participate in the network. SDF discloses mandate XLM holdings through dated dashboards, mandate pages, and quarterly reports. Do not embed a durable reserve number in this organizational answer: totals are point-in-time and source/method scoped.",
+    "answer": "The **Stellar Development Foundation (SDF)** is a Delaware **non-stock nonprofit corporation** that supports the public Stellar network. Its mission is to create equitable access to the global financial system. SDF's current mandate says it is self-funded, pays taxes, and has no shareholders; independent organization directories corroborate the non-stock form. SDF is distinct from Ripple. SDF describes its role as supporting Stellar's development and growth, while official developer materials describe Stellar itself as a public, open-source, decentralized peer-to-peer network with validators. SDF discloses mandate XLM holdings through dated mandate pages and quarterly reports. Do not embed a durable reserve number in this organizational answer: totals are point-in-time and source/method scoped.",
     "keyFacts": [
       "Identifies SDF's nonprofit legal form, mission, and self-funding/no-shareholder structure.",
       "Separates SDF from Ripple and from unilateral control of the public network, and keeps reserve totals dated."
@@ -14,7 +14,7 @@
       "Do NOT call SDF for-profit, Ripple, or the unilateral owner/operator of Stellar.",
       "Do NOT repeat ~30B as a current reserve or treat named accounts/report rows as exhaustive without date and scope."
     ],
-    "notes": "GT-28 CORRECTION 2026-07-10: organizational/legal core confirmed. Remove the stale ~30B reserve; any holdings figure requires a dated dashboard/mandate/report and explicit scope.\nGT-28 independently confirmed by processes 3274/3275."
+    "notes": "GT-28 CORRECTION 2026-07-10: organizational/legal core confirmed. Remove the stale ~30B reserve; any holdings figure requires a dated dashboard/mandate/report and explicit scope.\nGT-28 independently confirmed by processes 3274/3275.\n2026-07-13 provenance repair: current SDF mandate/foundation pages support the mission, self-funding, tax, and no-shareholder claims; independent WEF/LobbyFacts records support the non-stock form; official developer material supports the public, decentralized network distinction."
   },
   "tags": {
     "category": "history-org-tokenomics",
@@ -23,55 +23,113 @@
   },
   "truth": {
     "domain": "real-world",
-    "status": "disputed",
-    "asOf": "2026-07-10",
+    "status": "confirmed",
+    "asOf": "2026-07-13",
     "sources": [
       {
         "class": "A",
         "ref": "https://stellar.org/foundation",
-        "note": "class inferred at migration"
+        "note": "Official SDF foundation overview accessed 2026-07-13."
       },
       {
         "class": "A",
         "ref": "https://stellar.org/foundation/mandate",
-        "note": "class inferred at migration"
+        "note": "Official live mandate and funding-structure page observed 2026-07-13."
       },
       {
         "class": "A",
         "ref": "https://stellar.org/quarterly-reports",
-        "note": "class inferred at migration"
+        "note": "Official quarterly-report index accessed 2026-07-13; supports dated rather than timeless holdings reporting."
+      },
+      {
+        "class": "A",
+        "ref": "https://developers.stellar.org/",
+        "note": "Official developer overview describes Stellar as an open-source, decentralized, peer-to-peer network and links validator-operation guidance; accessed 2026-07-13."
+      },
+      {
+        "class": "A",
+        "ref": "https://stellar.org/terms-of-service",
+        "note": "Current SDF self-identification as a Delaware nonprofit corporation"
+      },
+      {
+        "class": "D",
+        "ref": "https://www.lobbyfacts.eu/datacard/stellar-development-foundation?rid=244864450367-86",
+        "note": "Independent EU Transparency Register presentation describes SDF as a U.S. nonstock nonprofit"
+      },
+      {
+        "class": "D",
+        "ref": "https://www.weforum.org/organizations/stellar-development-foundation",
+        "note": "Independent World Economic Forum organization profile describes SDF as a U.S.-based non-stock nonprofit and states its mission; accessed 2026-07-13."
       }
     ],
     "corroboration": [
       {
-        "claim": "SDF is a Delaware non-stock nonprofit with no shareholders and an equitable-access mission; any XLM mandate holding is point-in-time, not a stable ~30B fact.",
-        "verdict": "disputed",
+        "claim": "SDF is a Delaware non-stock nonprofit with an equitable-access mission; its current mandate says it is self-funded, pays taxes, and has no shareholders.",
+        "verdict": "confirmed",
         "evidence": [
           {
             "class": "A",
-            "ref": "A: SDF foundation/mandate/legal statement and Q1 2026 report",
-            "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "ref": "https://stellar.org/foundation/mandate",
+            "observedAt": "2026-07-13"
+          },
+          {
+            "class": "D",
+            "ref": "https://www.lobbyfacts.eu/datacard/stellar-development-foundation?rid=244864450367-86",
+            "observedAt": "2026-07-13"
+          }
+        ]
+      },
+      {
+        "claim": "Official SDF material describes the foundation's role as supporting Stellar's development and growth, while official developer material describes Stellar as a public, open-source, decentralized peer-to-peer network with validator participation.",
+        "verdict": "confirmed",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://developers.stellar.org/",
+            "observedAt": "2026-07-13"
+          },
+          {
+            "class": "A",
+            "ref": "https://stellar.org/learn/the-power-of-stellar",
+            "observedAt": "2026-07-13",
+            "note": "Official network overview states SDF's support role and separately describes the network/ecosystem."
+          }
+        ]
+      },
+      {
+        "claim": "Any SDF XLM mandate holding is a dated, source-scoped observation rather than a stable reserve scalar.",
+        "verdict": "confirmed-as-of",
+        "evidence": [
+          {
+            "class": "A",
+            "ref": "https://stellar.org/foundation/mandate",
+            "observedAt": "2026-07-13"
           },
           {
             "class": "F",
-            "ref": "F: official dashboard and named-account Horizon reads",
+            "ref": "solo://proj/49/scratchpad/truth-maintenance-20--575",
             "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "note": "Official dashboard and named-account Horizon reads established point-in-time scope"
           }
-        ],
-        "note": "Legacy verdict: confirmed-core-contradicted-scalar."
+        ]
       }
     ],
     "verified": {
-      "date": "2026-07-11",
-      "by": "Golden-truth sweep import — The organizational/legal core is correct, but the undated ~30B SDF reserve is materially stale versus current official disclosures around 15.6B and does not belong in a durable structure answer.",
+      "date": "2026-07-13",
+      "by": "Todo 972 release-closeout golden-truth reconciliation after independent Fable and Sol reviews",
       "evidence": [
-        "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; live dashboard about 15.588B, April report about 16.4B with scope caveats."
+        "https://stellar.org/foundation/mandate",
+        "https://developers.stellar.org/",
+        "https://www.weforum.org/organizations/stellar-development-foundation",
+        "https://stellar.org/terms-of-service",
+        "https://www.lobbyfacts.eu/datacard/stellar-development-foundation?rid=244864450367-86",
+        "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol ship/hold reviews",
+        "Sibling sweep: q-org-sdf-mandate-buckets and q-org-sdf-enterprise-fund retain dated metric scope; no stable reserve scalar was reintroduced."
       ],
       "rootCause": [
         "Eval-side historical reserve rounding became an undated present-tense fact.",
-        "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md"
+        "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md",
+        "solo://proj/49/todo/golden-truth-review--972"
       ]
     },
     "origin": "raven-next q-org-sdf-structure-mandate"

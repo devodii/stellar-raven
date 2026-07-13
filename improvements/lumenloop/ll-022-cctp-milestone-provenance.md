@@ -1,12 +1,12 @@
 ---
 id: ll-022
 service: lumenloop
-status: proposed
+status: reported-upstream
 discovered: 2026-07-11
-intake: unclear
 evidence:
   - P4 N2 reconciliation: Circle release notes record Stellar mainnet support on 2026-05-18 and SDF publicly announced "Circle CCTP is Live on Stellar" on 2026-05-19; solo://proj/49/scratchpad/super-corpus-rebuild--585
   - the same reconciliation contradicts 2026-05-08 as the SDF/Circle public live-announcement date and preserves earlier technical/domain milestones as distinct facts
+  - reported upstream: https://github.com/lumenloop/lumenloop-backend/issues/38
 ---
 
 ## Finding

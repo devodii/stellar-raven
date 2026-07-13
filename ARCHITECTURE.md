@@ -94,7 +94,7 @@ The `search` tool handler is a pure function call: `searchCatalogPage(getCatalog
 kind?, service?, limit? })`. `getCatalog()` (`src/catalog/load.ts`) imports the generated
 `catalog/manifest.json` as a bundled JSON module and validates it once per isolate via
 `loadManifest` — a malformed manifest throws loudly at first use, never softens. The
-response is `{ hits, total, truncated, nextSteps }` (as both `text` and
+response is `{ hits, total, truncated, recovery, nextSteps }` (as both `text` and
 `structuredContent`): `total` counts every distinct catalog entry the consulted scorer
 tiers matched (post-filter, pre-paging), `truncated` = `total > hits.length` (retry with a
 higher `limit`, the other candidate family, or varied vocabulary), and
@@ -189,13 +189,35 @@ operation entries carry a manifest-validated `retrievalProfile` whose exact-ID `
 edges name bounded wider, cross-family, cited-research, or different-medium contingencies for
 `empty | weak | adjacent | ambiguous | partial` outcomes. Public `search` and in-sandbox
 `codemode.search` accept exact attempted operation ids in `recoverFrom` plus an optional `reason`
-and return `recovery` separately from `hits`; normal hit membership, score, and order are therefore
-unchanged. The host does not inspect arbitrary payload semantics, automatically execute a recovery,
+and return `recovery` separately from `hits`; omitted or empty `recoverFrom` always returns no
+recovery, and a reason without IDs never escalates. Normal hit membership, score, and order are
+therefore unchanged. The host does not inspect arbitrary payload semantics, automatically execute a recovery,
 or claim that a candidate is relevant. Model-facing instructions and adapter hints instead enforce
 the answer-level rule: a closed-world directory/index miss can be reported only at that source's
 scope, while an open-world identity/history/topic miss gets one broad pass; semantic candidates
 need exact identity (or canonical slug), source, and date before attribution. An execute run with
-service calls but zero data-bearing outcomes receives the same scoped recovery reminder.
+service calls but zero data-bearing outcomes receives the same scoped recovery reminder. Separately,
+the operation ledger counts calls to a small exact-ID set of semantic, research, A/V, and fallback-
+directory surfaces and appends a candidate-evidence reminder even when their envelopes are healthy;
+this is operation-class advice only and never inspects rows or declares their relevance.
+
+**Build-route prior-art preflight** is a separate, proactive composition rule, not an evidence-poor
+recovery edge or a scorer override. A request that is still designing a new contract, app,
+integration, protocol, or infrastructure component gets one bounded Scout repos/projects pass in
+the same execute script, alongside the relevant skill and official Docs example. The pass exists to
+surface requirements, pitfalls, and build-vs-integrate options before architecture is committed.
+Known-step implementation, deployment, and debugging stay on skills plus official Docs. Repository
+rank, stars, funding, and directory presence are discovery metadata only; prior art never supplies
+API, security, license, audit, maintenance, or production authority. The model-facing contract lives
+in the search/execute descriptions and generated workflow archetypes. The host also counts successful
+calls to the exact Scout repo/project operation set. When the same execute read an exact whole-skill
+manifest entry declaring a build-authority role (`contract`, `dapp`, `sdk-integration`, `protocol`,
+or `infrastructure`)—the narrow host-visible signal for this design-stage composition—it appends a
+compact answer-time reminder: no more than three candidates, with URLs, applicability,
+provenance/freshness, limitations, and explicit unknowns for unsupported reuse claims. Other skill
+reads are inert for this cue. An ordinary project-list or
+landscape query receives no build-stage cap. This reminder classifies operation composition, not
+payload relevance; the host neither auto-runs research nor blocks implementation.
 
 **Hit anatomy**: `{ id, service, kind, score, tier, description }`, plus a rendered **TypeScript
 signature** for operations *and runnable skills* (`renderSignature` — input/output

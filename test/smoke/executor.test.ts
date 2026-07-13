@@ -72,6 +72,8 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
       expect(outcome.evidenceSummary).toEqual({
         kind: "none",
         skillRead: false,
+        buildAuthoritySkillIds: [],
+        buildAuthorityRoles: [],
         skillRuns: 0,
         artifactReads: 0
       });
@@ -174,6 +176,8 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
     if (!b.ok) throw new Error(b.error);
     expect(a.sourceBasis?.calls.map((call) => call.op)).toEqual(["lumenloop.search_directory"]);
     expect(b.sourceBasis?.calls.map((call) => call.op)).toEqual(["lumenloop.get_categories"]);
+    expect(a.operationSummary?.candidateEvidence).toBe(1);
+    expect(b.operationSummary?.candidateEvidence).toBeUndefined();
 
     const idA = artifactIdFrom(a.result);
     const idB = artifactIdFrom(b.result);
@@ -190,6 +194,34 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
     expect(metaA?.opLedger).not.toContain("lumenloop.get_categories");
     expect(metaB?.opLedger).toContain("lumenloop.get_categories");
     expect(metaB?.opLedger).not.toContain("lumenloop.search_directory");
+  });
+
+  it("classifies successful Scout repo searches as prior-art evidence", async () => {
+    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+      const url = new URL(typeof input === "string" || input instanceof URL ? input : input.url);
+      if (!url.pathname.endsWith("/api/repos/search")) {
+        return Response.json({ error: `unexpected ${url.pathname}` }, { status: 500 });
+      }
+      return Response.json({
+        repos: [{ fullName: "example/escrow", url: "https://github.com/example/escrow" }],
+        meta: { counts: { returned: 1, total: 1 } }
+      });
+    });
+
+    const outcome = await run(`async () => {
+      const repos = await scout.searchRepos({ q: "escrow", limit: 1 });
+      return { ok: repos.ok };
+    }`);
+    expect(outcome.ok).toBe(true);
+    if (!outcome.ok) throw new Error(outcome.error);
+    expect(outcome.operationSummary).toMatchObject({
+      total: 1,
+      ok: 1,
+      error: 0,
+      softEmpty: 0,
+      priorArtCandidates: 1
+    });
+    expect(outcome.operationSummary?.candidateEvidence).toBeUndefined();
   });
 
   it("ownerless truncated results get a generic unavailable artifact line with no auth-mode wording", async () => {

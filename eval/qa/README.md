@@ -5,7 +5,7 @@ driving this MCP server end-to-end (**search → execute → answer**) produce a
 correct, current, non-fabricated answer** to a real Stellar-ecosystem question?
 
 The battery is **owned**: one hand-authored JSON file per case under `eval/qa/corpus/battery/`,
-484 cases, edited directly and reviewed like code. Provenance is first-class (`truth` block per
+490 cases as of 2026-07-13, edited directly and reviewed like code. Provenance is first-class (`truth` block per
 case), gospel changes are CI-linted at the moment of change, and the compiled artifacts are
 generated + byte-pinned. History — the vendored-corpus/override era, rubric evolution, and the
 run archaeology through 2026-07-10 — lives in
@@ -197,9 +197,20 @@ unsourced contradiction is not.
   passes (pairwise score disagreement 15.6%). Isolated single-run score movement at or below
   that scale is variance until confirmed by live transcript review or a repeated mechanism.
   Read `wrong` counts before `correct` counts; compare variants on the same sample.
-- **Denominator note**: the owned 484-case battery is the baseline denominator as of the
-  2026-07-11 re-anchor. The approximately 469-case pre-rebuild aggregate baselines are archival
-  (see the history doc); per-id comparisons remain valid for continuing cases (same rubric).
+- **Denominator note**: the owned battery is **490 cases as of 2026-07-13**. The 2026-07-11
+  baseline remains a historical 484-case denominator; its aggregates are not retroactively
+  relabeled. The approximately 469-case pre-rebuild aggregates are also archival (see the history
+  doc). Per-id comparisons remain valid for continuing cases under the same rubric/pack tuple.
+- **Deterministic sample history**: the sampler code and N=30 contract did not change. Six new
+  cases added three members to the Scout stratum and three to LumenLoop. Because the algorithm
+  uses even-spaced picks over each id-sorted service stratum, the 490-case compile retained 25
+  sample ids and replaced five: removed `q-defi-liquid-staking-whitespace`,
+  `q-hist-quantum-preparedness-plan`, `q-scf-current-hackathons-compare-live`,
+  `q-scf-rfps-hackathons-live`, and `q-ti-explain-repo-payload-status`; added
+  `q-defi-defindex-honest`, `q-hist-meridian-2026-corrected-venue`, `q-scf-current-round`,
+  `q-scf-sdf-bug-bounty`, and `q-ti-openzeppelin-relayer`. None of the six new cases itself
+  entered sample-30. Compare aggregate headline runs across the 484→490 boundary only on an
+  explicit common-id set, or disclose that sample membership changed.
 
 ## Current baseline of record
 
@@ -236,6 +247,29 @@ persistent partial mass is not simply answering-model-bound and no default-model
 Re-judges now persist as machine-readable artifacts: `eval/qa/re-judge.mjs <results> --ids a,b`
 or `--flips-vs <baseline-results>` re-judges identical saved input behind casesSha256 identity
 and rubric/pack tuple guards, writing `results/<stamp>-rejudge.json`.
+
+### 2026-07-13 release-closeout targeted diagnostics
+
+Three paid targeted probes exercised the six new cases and their nearest controls. They were
+**not** the deterministic sample-30 and are not a new headline baseline. All used
+`claude-sonnet-5` for answering and judging under v2.4/p3 against the dirty local runner; the
+result metadata records `serverRevision: null`. The owned corpus denominator is 490, while each
+row below keeps its explicit targeted N:
+
+| Results stamp | Scope | Raw QA | Offline plan regrade |
+|---|---:|---:|---:|
+| `2026-07-13T18-59-22-variantA.json` | evidence-poor retrieval, N=7 | 2 correct / 4 partial / 1 wrong | 6/7 required covered (86%); mean on-plan 0.94; progression used 1/3 |
+| `2026-07-13T19-09-10-variantA.json` | bounded same-model recovery follow-up, N=3 | 0 / 2 / 1 | 2/3 required covered (67%); mean on-plan 1.00; progression used 0/2 |
+| `2026-07-13T20-07-14-variantA.json` | prior-art preflight plus no-detour control, N=3 | 0 / 3 / 0 | 3/3 required covered (100%); mean on-plan 1.00; progression used 2/2 |
+
+Transcript review matters more than these tiny-N aggregates. The first probe passed the scoped
+closed-world and ambiguous-Strupey behaviors but exposed provenance/completeness failures. The
+second improved Tyler attribution yet still missed dated mutable claims and misread an `ok` empty
+lane. The third triggered prior-art for both substantial designs and avoided a detour on the WASM
+control, but all answers remained partial because the substantial cases mishandled evidence limits
+and the control omitted its answer-time as-of date. Post-probe guidance/golden hardening was **not
+paid-remeasured**; no claim of a measured post-hardening win follows. The plan sidecars are local
+evidence at the same stamps with `.plan.json` suffixes.
 
 ## Known limitations
 

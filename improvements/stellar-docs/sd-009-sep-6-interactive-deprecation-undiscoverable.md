@@ -8,9 +8,12 @@ evidence:
   - stellar/stellar-protocol ecosystem/sep-0006.md live source rechecked 2026-07-09: status is "Active (Interactive components are deprecated in favor of SEP-24)"
   - developers.stellar.org Anchors fundamentals page rechecked 2026-07-09: contrasts SEP-6 programmatic with SEP-24 hosted flows but never surfaces the deprecation status
   - upstream issue filed 2026-07-09: https://github.com/stellar/stellar-docs/issues/2575
+  - maintainer response 2026-07-13: https://github.com/stellar/stellar-docs/issues/2575#issuecomment-4962781289 — adding a six-year-old deprecation notice would be noise because the retired SEP-6 interactive components are not otherwise documented on the site
 recurrences:
   - date: 2026-07-10
     evidence: architecture A/B todo 903 — q-sep-6-24-deprecation remained wrong/partial across the two QA arms, and a fresh live stellarDocs search for `SEP-6 interactive deprecated SEP-24` returned no `deprecated` text
+  - date: 2026-07-13
+    evidence: post-comment raw Algolia re-check still returned no `deprecated` text for `SEP-6 interactive components deprecated SEP-24`; the exposed stellar-dev standards skill maps SEP-6 to programmatic and SEP-24 to hosted flows but also omits the canonical deprecation status
 ---
 
 ## Finding
@@ -51,7 +54,14 @@ separate architecture-specific defect.
 
 ## Recommendation
 
-Add one explicit sentence to the SEP-6 versus SEP-24 section: SEP-6 remains Active for programmatic
-flows, but its interactive components are deprecated in favor of SEP-24. Also ensure search records
-for SEP pages carry their `Status` metadata so queries about deprecation resolve to the canonical
-specification rather than relying on an incomplete prose summary.
+The Docs owner reasonably does not want a historical warning added to current
+beginner guidance for a mechanism the site never teaches. Do not keep pushing
+that prose change. The unresolved need is answering-time source coverage:
+prefer making canonical SEP status metadata retrievable, or adding a concise
+provenance-bearing status note to the upstream `stellar-dev-skill` standards
+reference that already routes agents to SEP-6/SEP-24. If neither surface should
+carry it, treat the QA row as a corpus/source-coverage diagnostic rather than
+ordinary agent-quality evidence until a general official-source mechanism can
+reach `stellar-protocol`. Track that placement decision in Solo todo 989 and
+scratchpad 625; if Docs declines/closes, create a successor skills/source
+finding rather than stretching this Docs finding.

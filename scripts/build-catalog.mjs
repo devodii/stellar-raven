@@ -27,6 +27,7 @@ import { tokenize } from "../src/catalog/vendor/search-scoring.ts";
 // so the exposed runnable surface cannot drift between emitters.
 import { RUNNERS } from "../src/skills/runners/index.ts";
 import { writeFileAtomic } from "./lib/shared.mjs";
+import { RETRIEVAL_PROFILES } from "./catalog-data/retrieval-profiles.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_PATH = join(ROOT, "catalog", "manifest.json");
@@ -142,13 +143,14 @@ function attachRoutingKeywords(entries, bodiesById) {
   return entries.map((entry) => {
     const bodies = bodiesById.get(entry.id);
     if (!bodies || bodies.length === 0) return entry;
-    // Explicit 128 cap (double the schema-keyword default 64): the broad
-    // Scout search ops carry the longest curated vocabularies and the
-    // default cap truncated their alphabetical tail — roomier like the docs
-    // title cap, still bounded: ≤128 short tokens/op.
+    // Explicit 256 cap (four times the schema-keyword default 64): upstream
+    // curates this field for routing, and new repeated vocabulary must not
+    // evict previously-visible terms from a broad operation. Scout 1.7.18's
+    // largest set is 149 tokens; 256 keeps it whole while still bounding the
+    // Worker-bundled manifest.
     const routingKeywords = extractKeywords(bodies.join("\n"), {
       exclude: [entry.id, entry.service, entry.kind, entry.description],
-      cap: 128
+      cap: 256
     });
     return routingKeywords.length > 0 ? { ...entry, routingKeywords } : entry;
   });
@@ -661,6 +663,17 @@ function skillEntryBase(manifestSource, syncedAt) {
   };
 }
 
+// Exact exposed skill IDs with a deliberately narrow, query-independent role
+// in a design-stage implementation review. Do not infer this from prose or
+// from "any skill read": landscape/content skills are valuable but must not
+// trigger the host's bounded prior-art composition cue.
+export const BUILD_AUTHORITY_SKILL_ROLES = Object.freeze({
+  "skills.stellar-dev.smart-contracts": ["contract"],
+  "skills.stellar-dev.dapp": ["dapp", "sdk-integration"],
+  "skills.stellar-dev.standards": ["protocol"],
+  "skills.stellar-dev.data": ["infrastructure"]
+});
+
 function buildSkills(manifest) {
   const entries = [];
   const syncedAt = manifest.synced_at;
@@ -688,6 +701,9 @@ function buildSkills(manifest) {
         id: skillId,
         kind: "skill",
         description: attrs.description || firstParagraph(bodyLines, 0) || skill.name,
+        ...(BUILD_AUTHORITY_SKILL_ROLES[skillId]
+          ? { buildAuthorityRoles: [...BUILD_AUTHORITY_SKILL_ROLES[skillId]] }
+          : {}),
         transport: { type: "file", path: `${skillDir}/SKILL.md` }
       });
 
@@ -853,6 +869,38 @@ export function attachRunnableSkills(entries, registry = RUNNERS) {
   });
 }
 
+/** Attach and fail-loud validate query-independent recovery edges. */
+export function attachRetrievalProfiles(entries, profiles = RETRIEVAL_PROFILES) {
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const profiled = new Set();
+  const out = entries.map((entry) => {
+    const profile = profiles[entry.id];
+    if (profile === undefined) return entry;
+    if (entry.kind !== "operation") {
+      throw new Error(`retrieval profile key "${entry.id}" is not an operation`);
+    }
+    profiled.add(entry.id);
+    const targets = new Set();
+    for (const edge of profile.recoverWith ?? []) {
+      const target = byId.get(edge.id);
+      if (!target || target.kind !== "operation") {
+        throw new Error(`retrieval profile "${entry.id}" references non-exposed operation "${edge.id}"`);
+      }
+      if (edge.id === entry.id) throw new Error(`retrieval profile "${entry.id}" contains a self-edge`);
+      if (targets.has(edge.id)) throw new Error(`retrieval profile "${entry.id}" repeats target "${edge.id}"`);
+      targets.add(edge.id);
+      if (!Array.isArray(edge.on) || edge.on.length === 0) {
+        throw new Error(`retrieval profile "${entry.id}" target "${edge.id}" has no trigger reasons`);
+      }
+    }
+    return { ...entry, retrievalProfile: profile };
+  });
+  for (const id of Object.keys(profiles)) {
+    if (!profiled.has(id)) throw new Error(`retrieval profile key "${id}" matched no exposed operation`);
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------------------
 // Assemble
 // ---------------------------------------------------------------------------
@@ -936,7 +984,7 @@ function main() {
   // Runnable attachment runs over the FULLY assembled set: its declared-op
   // guard needs every service's operation entries in scope, not just skills.
   const entries = applySkillsFormArm(
-    attachRunnableSkills(
+    attachRetrievalProfiles(attachRunnableSkills(
       [
         ...attachOperationKeywords(buildLumenloop(lumenloop)),
         // Scout ops: x-routing vocabulary → routingKeywords (lever 7) first,
@@ -952,7 +1000,7 @@ function main() {
         ),
         ...buildSkills(skillsManifest)
       ].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
-    ),
+    )),
     arm
   );
 

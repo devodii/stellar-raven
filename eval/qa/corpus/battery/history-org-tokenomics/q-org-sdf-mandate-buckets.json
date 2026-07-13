@@ -5,79 +5,83 @@
     "scout.searchResearch"
   ],
   "golden": {
-    "answer": "A grounded answer consults the live Stellar Scout directory or research data, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-10, the verified sources supported this observed answer:\n\nSDF organizes its work under mandate buckets funded from entrusted XLM rather than shareholder equity. The framework has changed: **2019** used Direct Development, Ecosystem Support, Use-Case Investment, and User Acquisition; the **2025-era** framing uses SDF Development, Stellar Growth, Product and Innovation, and Assets and Liquidity. The live page says allocation updates are in progress and its account/bucket rows can have different timestamps. Cite the applicable dated mandate, attach an as-of date to any balance, and do not invent an exact allocation split or mechanically sum asynchronous rows as one synchronized total.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
+    "answer": "A grounded answer consults the live Stellar Scout directory or research data, directly answers the question with source-supported content, and dates any version-, provider-, or availability-sensitive claim. As of 2026-07-13, the verified sources supported this observed answer:\n\nSDF organizes its work under mandate buckets funded from entrusted XLM rather than shareholder equity. The framework has changed: **2019** used Direct Development, Ecosystem Support, Use-Case Investment, and User Acquisition; the **2025-era** framing uses SDF Development, Stellar Growth, Product and Innovation, and Assets and Liquidity. The live page simultaneously says real-time public balances will be made available again “imminently” while rendering current-balance rows. Treat that as a dated page-state observation: it is fair to report that rows are visible, but not to call them a synchronized real-time feed. Cite the applicable dated mandate, attach an as-of date to any balance, and do not invent an exact allocation split or mechanically sum asynchronous rows as one synchronized total.\n\nThe dated example is illustrative: a later grounded answer should report what the same source basis supports at its own observation time while preserving the stable distinctions above.",
     "keyFacts": [
       "Presents specific source-supported content as a current or dated observation rather than as an unsupported memory claim.",
       "Makes the as-of date visible for every changeable roster, status, version, or measurement.",
-      "Separates the 2019 mandate bucket names from the 2025-era mandate bucket names."
+      "Separates the 2019 mandate bucket names from the 2025-era mandate bucket names.",
+      "Describes balance availability as a dated page-state observation rather than treating visible rows as a synchronized real-time feed."
     ],
     "avoid": [
       "Do NOT use the 2017 previous-mandate route as proof of the 2019 taxonomy.",
       "Do NOT invent precise allocations, sum mixed timestamps as one current total, or describe shareholder capital.",
-      "Do NOT present version-, provider-, interface-, or availability-sensitive observations as timeless; date the changeable part without weakening stable protocol or historical facts."
+      "Do NOT present version-, provider-, interface-, or availability-sensitive observations as timeless; date the changeable part without weakening stable protocol or historical facts.",
+      "Do NOT penalize an answer for accurately saying dated/current rows are visible; penalize only an unsupported claim that they constitute the promised synchronized real-time feed."
     ],
-    "notes": "GT-28 CORRECTION 2026-07-10: use /foundation/mandate/2019 for the 2019 taxonomy; /foundation/previous-mandate is the 2017 version. Current allocation updates are in progress and displayed rows are not one synchronized snapshot.\nGT-28 independently confirmed by processes 3274/3275; sd-012 owns current label/timestamp drift."
+    "notes": "GT-28 CORRECTION 2026-07-10: use /foundation/mandate/2019 for the 2019 taxonomy; /foundation/previous-mandate is the 2017 version. Current allocation updates are in progress and displayed rows are not one synchronized snapshot.\nGT-28 independently confirmed by processes 3274/3275; sd-012 owns current label/timestamp drift.\n2026-07-13: the live page's “imminently” sentence and simultaneously rendered rows are an internally mixed availability signal; grade dated descriptions of either visible state fairly while preserving the no-synchronized-total rule."
   },
   "tags": {
     "category": "history-org-tokenomics",
     "service": "scout",
-    "freshness": "live"
+    "freshness": "scheduled"
   },
   "truth": {
     "domain": "real-world",
     "status": "confirmed",
-    "asOf": "2026-07-10",
+    "asOf": "2026-07-13",
+    "reverifyBy": "2026-10-27",
     "sources": [
       {
         "class": "A",
         "ref": "https://stellar.org/foundation/mandate",
-        "note": "class inferred at migration"
+        "note": "Live current mandate page observed 2026-07-13; supplies 2025-era buckets and dated rendered balance rows."
       },
       {
         "class": "A",
         "ref": "https://stellar.org/foundation/mandate/2019",
-        "note": "class inferred at migration"
+        "note": "Historical 2019 mandate page accessed 2026-07-13; supplies the 2019 bucket taxonomy."
       },
       {
         "class": "A",
         "ref": "https://stellar.org/blog/foundation-news/an-updated-mandate-for-a-growing-stellar-ecosystem",
-        "note": "class inferred at migration"
+        "note": "First-party announcement of the updated mandate framing; accessed 2026-07-13."
       }
     ],
     "corroboration": [
       {
-        "claim": "2019 and 2025 mandate bucket names differ as stated; the current page says allocation updates are in progress and exposes mixed-timestamp rows.",
+        "claim": "2019 and 2025 mandate bucket names differ as stated; the current page says real-time balances will return imminently while rendering balance rows, so availability must be described as a dated page state.",
         "verdict": "confirmed-as-of",
         "evidence": [
           {
             "class": "A",
-            "ref": "A: current mandate and /foundation/mandate/2019",
-            "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "ref": "https://stellar.org/foundation/mandate",
+            "observedAt": "2026-07-13",
+            "note": "Current 2025-era bucket labels and the mixed page state: rendered balance rows alongside the promise that real-time balances will return imminently."
           },
           {
-            "class": "F",
-            "ref": "F: linked-account/dashboard reads",
-            "observedAt": "2026-07-11",
-            "note": "verbatim legacy evidence descriptor imported at migration"
+            "class": "A",
+            "ref": "https://stellar.org/foundation/mandate/2019",
+            "observedAt": "2026-07-13",
+            "note": "Historical 2019 taxonomy; prevents substituting the separate 2017 previous-mandate route."
           }
         ]
       }
     ],
     "verified": {
-      "date": "2026-07-11",
-      "by": "P4 conversions rework after independent Fable copy/quality review",
+      "date": "2026-07-13",
+      "by": "Todo 972 release-closeout golden-truth reconciliation after independent Fable and Sol reviews",
       "evidence": [
-        "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; blind caught the 2017/2019 route mismatch.",
-        "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
-        "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "https://stellar.org/foundation/mandate",
+        "https://stellar.org/foundation/mandate/2019",
+        "solo://proj/49/scratchpad/stellarorg-algolia-l--609 — independent Fable and Sol live-page reviews",
+        "Sibling sweep: q-org-sdf-structure-mandate and q-org-sdf-enterprise-fund preserve metric/source scope."
       ],
       "rootCause": [
         "Eval-side historical route/version confusion and detached timestamp semantics.",
         "improvements/stellar-docs/sd-012-mandate-wallet-label-drift.md",
         "eval-authoring",
-        "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+        "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+        "solo://proj/49/todo/golden-truth-review--972"
       ]
     },
     "origin": "raven-next q-org-sdf-mandate-buckets"

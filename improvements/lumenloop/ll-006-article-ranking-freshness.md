@@ -1,7 +1,7 @@
 ---
 id: ll-006
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - eval/qa/results/2026-07-03T16-06-45-variantA.json (q-eco-stellar-rwa-stablecoin-volume)
@@ -10,6 +10,7 @@ evidence:
   - live re-verified 2026-07-06 (eval round todo 846): exact query still surfaces Q2 2021 / Q4 2020 / Q2 2024 reviews at ranks 7/9/10 with article 5945 absent from the top 10, and the sim-order inversion (rank 6 sim 0.597 above ranks 1-5 at 0.544-0.531) still reproduces
   - GT-23 recurrence 2026-07-10: a date-bounded July 6-10 query returned July 10/8/9/6 and undated rows in semantic rather than chronological order
   - Solo scratchpad 575 GT-23 primary 3264 and blind 3267
+  - https://github.com/lumenloop/lumenloop-backend/issues/18 (filed 2026-07-13; production/configuration regression report against the public `lumenloop-mcp` owner)
 ---
 
 ## Finding

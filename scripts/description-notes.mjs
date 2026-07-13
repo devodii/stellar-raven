@@ -37,9 +37,11 @@
 // funding, award, live, history (all appear in scout/mixed-labeled queries).
 export const LUMENLOOP_DESCRIPTION_NOTES = {
   find_content_by_entity:
-    'Catalog note: entity_type "person" yields all-empty groups on this lane even for heavily covered people (live-verified 2026-07-03) — an empty person result is lane behavior, NOT evidence of absence. Use entity types project, organization, or token; for a person, use search_content_semantic with the person name instead.',
+    'Catalog note: entity_type "person" can return ok data with all-empty groups even for heavily covered people (live-verified 2026-07-03). This is a data-shaped empty, not a transport or soft-empty failure. It supports only the scoped statement that this exact lookup linked no content. For open-world person coverage, use search_content_semantic, then require exact identity plus source and date before attribution.',
   search_directory:
-    "Catalog note: prefer this lane plus find_content_about_project when a what is X or who builds X question wants narrative editorial context about a named ecosystem project; the scout project search returns structured fields only."
+    "Catalog note: prefer this lane plus find_content_about_project when a what is X or who builds X question wants narrative editorial context about a named ecosystem project; the scout project search returns structured fields only. A match_mode semantic row is a candidate, not exact identity proof.",
+  search_content_semantic:
+    "Catalog note: this is the wide-net recovery lane for open-world identity, history, event, and obscure-topic questions after directory, entity, or docs lookups are empty or off-target. Semantic rows are candidates, not attribution: require exact identity plus source and date, and discard merely adjacent results."
 };
 
 // ---------------------------------------------------------------------------
@@ -230,6 +232,12 @@ export const SCOUT_DESCRIPTION_NOTES = {
   // zero query hits in the routing corpus (2026-07-04).
   searchProjects:
     "Catalog note: results are structured directory facts, not editorial pieces — for articles, AV, interviews, or research summaries about a project, use the lumenloop semantic and directory ops.",
+  searchRepos:
+    "Catalog note: repoScore, stars, rank, and directory presence are discovery metadata, not API, security, license, audit, maintenance, or production evidence. Verify those claims at the repository and primary sources before reusing code.",
+  searchResearch:
+    "Catalog note: this is the broad Scout cited-research recovery lane for history, standards, incidents, audits, and unknown technical topics. Treat chunks as leads: preserve their source and date, and require an exact entity match before attribution.",
+  getBuilders:
+    "Catalog note: this is a bounded directory-membership surface, not an exhaustive biography or ecosystem-history index. An empty row set means no matching Scout builder record; for an open-world identity or history question, make one broad content or research pass before a wider negative conclusion.",
   getPartners:
     "Catalog note: this is the partner and service-provider DIRECTORY for anchors, asset issuers, on/off ramps, stablecoin and RWA providers, audit firms, infrastructure, tooling, protocols, wallets, and integration providers; filter by region, type, sector, accepting, or q. Use for regional partner listings including common region names and aliases such as Latin America/LatAm, MENA, Africa, Europe, and Asia-Pacific. Use searchProjects for built products, apps, protocols, and projects rather than service-provider listings.",
   getHackathon:

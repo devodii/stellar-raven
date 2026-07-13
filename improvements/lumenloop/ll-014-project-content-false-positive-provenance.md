@@ -1,13 +1,13 @@
 ---
 id: ll-014
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
-intake: unclear
 evidence:
   - live Soroswap project-content retrieval returned mixed valid and adjacent/false-positive rows across content types
   - repeated Soroswap semantic-similarity calls changed from an empty result to a ranked list during the same audit
   - Solo scratchpad 575 GT-18 primary process 3249 and independent blind process 3252
+  - https://github.com/lumenloop/lumenloop-backend/issues/30 (filed 2026-07-13)
 ---
 
 ## Finding

@@ -1,7 +1,7 @@
 ---
 id: ll-003
 service: lumenloop
-status: verified
+status: reported-upstream
 discovered: 2026-07-03
 evidence:
   - eval/qa/results/2026-07-03T03-49-35-variantA.json
@@ -11,6 +11,7 @@ evidence:
   - live re-verified 2026-07-06 (eval round todo 846): get_regions → 95 free-text values with duplicate casings/synonyms ('africa'/'Africa', 'mena'/'MENA', 'latam' vs 'Latin America & Caribbean') — still no canonical enum
   - live re-verified 2026-07-09: authenticated get_regions returned 95 values and the duplicate case pairs africa/Africa, asia/Asia, global/Global, and mena/MENA
   - live re-verified 2026-07-10 during GT-35: count remained 95 with the same four capitalization-only duplicate pairs and mixed country/macro-region aliases
+  - upstream issue filed 2026-07-13: https://github.com/lumenloop/lumenloop-backend/issues/23
 recurrences:
   - date: 2026-07-09
     evidence: authenticated POST /v1/tools/get_regions returned count 95 with four case-insensitive duplicate pairs (africa/Africa, asia/Asia, global/Global, mena/MENA)

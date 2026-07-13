@@ -11,6 +11,7 @@ import {
   loadManifest,
   searchCatalog,
   searchCatalogPage,
+  recoveryCandidates,
   renderSignature,
   COMPACT_OUTPUT_THRESHOLD,
   DEFAULT_SEARCH_LIMIT,
@@ -97,6 +98,40 @@ describe("searchCatalog — contract shape", () => {
     const before = JSON.stringify(catalog);
     searchCatalog(catalog, { query: "soroban storage" });
     expect(JSON.stringify(catalog)).toBe(before);
+  });
+});
+
+describe("recoveryCandidates — advisory contingency graph", () => {
+  it("keeps recovery separate from ranked hits and filters by reason", () => {
+    const before = searchCatalogPage(catalog, { query: "builder directory", limit: 5 });
+    const recovery = recoveryCandidates(catalog, ["scout.getBuilders"], "empty");
+    const after = searchCatalogPage(catalog, { query: "builder directory", limit: 5 });
+
+    expect(after).toEqual(before);
+    expect(recovery.map((candidate) => candidate.id)).toEqual([
+      "lumenloop.search_content_semantic",
+      "scout.searchResearch"
+    ]);
+    expect(recovery.every((candidate) => candidate.from === "scout.getBuilders")).toBe(true);
+    expect(recovery.map((candidate) => candidate.id)).not.toContain("scout.getBuilders");
+  });
+
+  it("deduplicates targets, excludes attempted ids, and observes its bound", () => {
+    const recovery = recoveryCandidates(
+      catalog,
+      ["scout.getBuilders", "lumenloop.find_content_by_entity"],
+      "weak",
+      2
+    );
+    expect(recovery).toHaveLength(2);
+    expect(new Set(recovery.map((candidate) => candidate.id)).size).toBe(2);
+    expect(recovery.map((candidate) => candidate.id)).not.toContain("scout.getBuilders");
+    expect(recovery.map((candidate) => candidate.id)).not.toContain("lumenloop.find_content_by_entity");
+  });
+
+  it("returns no candidates for zero or negative bounds", () => {
+    expect(recoveryCandidates(catalog, ["scout.getBuilders"], "empty", 0)).toEqual([]);
+    expect(recoveryCandidates(catalog, ["scout.getBuilders"], "empty", -1)).toEqual([]);
   });
 });
 

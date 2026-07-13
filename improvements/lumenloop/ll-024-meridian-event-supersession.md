@@ -1,11 +1,11 @@
 ---
 id: ll-024
 service: lumenloop
-status: proposed
+status: reported-upstream
 discovered: 2026-07-11
-intake: unclear
 evidence:
   - P4 N2 candidate contrasts older Meridian 2026 Abu Dhabi/Yas Marina Oct 21-22 records with the current Lisbon/Convento do Beato Oct 28-29 schedule announced as a change on 2026-04-01; solo://proj/49/scratchpad/super-corpus-rebuild--585
+  - https://github.com/lumenloop/lumenloop-backend/issues/33
 ---
 
 ## Finding

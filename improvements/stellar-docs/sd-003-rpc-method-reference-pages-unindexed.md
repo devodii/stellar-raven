@@ -11,12 +11,14 @@ evidence:
   - live re-verified 2026-07-06 (eval round todo 846): get_doc_page_sections on the getTransactions method page still returns the identical soft-empty ("auto-generated API-reference pages are not indexed")
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2566
   - live re-check 2026-07-09 (Solo scratchpad 565): `getTransactions limit 200 default 50 pagination` now ranks `/docs/data/apis/rpc/admin-guide/configuring` at #1 with the getTransactions transaction cap snippet, but `getTransactions API reference limit` still drifts to Horizon/API Explorer/structure pages and the generated method page remains unindexed; partial mitigation only
-  - pending upstream PR https://github.com/stellar/stellar-docs/pull/2572 tracked 2026-07-09 at head eb676939424ea6b783729de6e94fbf93665b12e6: open, review required, merge blocked, core checks and preview green; production/live Algolia proof unavailable, so issue #2566 remains open
+  - upstream PR https://github.com/stellar/stellar-docs/pull/2572 merged 2026-07-10 at final head fb4e8ecbb50218b52313c434a9d0d4e8571fdb3a; it added a per-method limits/defaults table to the indexed Pagination page after reverting the intermediate configurable-per-instance wording
 recurrences:
   - date: 2026-07-10
     evidence: architecture A/B todo 903 — both QA arms answered q-ti-rpc-gettransactions-pagination-xdr only partially; a fresh live execute re-check still returned soft-empty for the generated getTransactions method page, while the targeted admin query surfaced 200/default-50 and API-reference phrasing did not
   - date: 2026-07-10
     evidence: GT-30 blind process 3279 — indexed discovery did not reliably expose the exact getTransaction versus sendTransaction status contracts; direct method/source retrieval was required to correct PENDING attribution
+  - date: 2026-07-13
+    evidence: post-merge raw Algolia re-check — the Pagination page is crawled and `getTransactions`/default `50` appear, but the table's `1 to 200` range is absent from the method record; `getTransactions API reference limit` still ranks Horizon/noise ahead of the RPC structure page, and the generated method page remains outside the index
 ---
 
 ## Finding
@@ -26,12 +28,12 @@ Horizon-endpoint API-reference pages, so authoritative per-method limits
 remain unreliable through search. The live
 `/docs/data/apis/rpc/api-reference/methods/getTransactions` page states
 the limit "can range from 1 to 200 — an upper limit that is hardcoded in
-Stellar-RPC for performance reasons... defaults to 50". As of 2026-07-09,
-the indexed RPC admin config page can surface the getTransactions cap for a
-targeted limit/default query, but API-reference phrasing still drifts and the
-generated method page itself remains absent. The *indexed* RPC
-Structure→Pagination page documents only getEvents limits (1–10000, default
-100). The consequence is worse
+Stellar-RPC for performance reasons... defaults to 50". PR #2572 merged on
+2026-07-10 and added all three method rows to the rendered RPC
+Structure→Pagination page. The crawler does not preserve that table
+faithfully: the current `getTransactions` record carries the method name and
+default `50` but drops its `1 to 200` range. API-reference phrasing still
+drifts, and the generated method page itself remains absent. The consequence is worse
 than a zero-hit: consumers extrapolate from the getEvents numbers or
 from Horizon's (1–200, default 10) and get getTransactions wrong. This
 round it produced a two-sided failure — the QA agent claimed "default
@@ -73,12 +75,22 @@ API Explorer pages and contained neither; direct page-section lookup for the gen
 `getTransactions` method returned the documented `soft-empty`. This is a recurrence of the
 existing mechanism, not a new finding.
 
+Live 2026-07-13, after PR #2572 merged: the rendered Pagination page contains
+the new method/range/default table, but raw Algolia records flatten it
+incorrectly. The `getTransactions` hierarchy record exposes default `50` and
+the following prose while omitting the row's `1 to 200` range. A query for
+`getTransactions API reference limit` still ranks Horizon rate-limit and API
+Explorer material ahead of the RPC Pagination record. The PR is a useful
+partial mitigation, not live proof that the original trigger is fixed.
+
 ## Recommendation
 
-Two options, cheapest first: (1) add per-method limits/defaults to the
-indexed RPC Structure→Pagination page (a table of method → min/max/
-default fixes discoverability without touching the crawler); (2) include
-the auto-generated method/endpoint reference pages in the Algolia
-crawl — they are the only authoritative source for per-method numbers.
+The first recommended option—a per-method table on the indexed Pagination
+page—merged in PR #2572, but the crawler loses a load-bearing table cell.
+Cheapest next fix: make the general crawler/table extraction preserve headers
+and every cell, or render the three ranges/defaults in crawl-stable prose or a
+definition list. The broader alternative remains including the auto-generated
+method/endpoint reference pages in the Algolia crawl; they are the authoritative
+source for per-method numbers.
 Consumer-side, this gateway cannot work around the gap without shipping
 hardcoded limits that would rot.

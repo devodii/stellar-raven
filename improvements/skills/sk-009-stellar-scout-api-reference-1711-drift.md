@@ -1,13 +1,14 @@
 ---
 id: sk-009
 service: skills
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - live drift issue kalepail/stellar-raven#19: inventory/stellar-light.json refreshed to OpenAPI/status 1.7.11
   - live 2026-07-10 OpenAPI verification: projects/search adds semantic fallback metadata and Project tvlUSD/tvlAsOf; research adds source=cap
   - ecosystem-skills/skills/stellar-light/stellar-scout/references/api-reference.md at pinned upstream commit aea0c125325ceed746eefaa505e3bd45dabd5ca1
   - Solo scratchpad 575 drift verdict and independent read-only review by process 3209
+  - upstream issue filed 2026-07-13: https://github.com/Stellar-Light/stellar-scout/issues/11
 ---
 
 ## Finding

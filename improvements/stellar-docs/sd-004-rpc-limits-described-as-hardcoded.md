@@ -9,7 +9,11 @@ evidence:
   - Solo project 49, todo 828, scratchpad 521 (golden-truth deep-verification round)
   - live re-verified 2026-07-06 (eval round todo 846): the indexed RPC Structure→Pagination page still says the getEvents limit is "hardcoded in Stellar-RPC for performance reasons"; the method pages remain unindexed (sd-003) so their wording could not be re-fetched via search, but the sibling indexed page shows the same unfixed pattern
   - upstream issue filed 2026-07-07: https://github.com/stellar/stellar-docs/issues/2567
-  - pending upstream PR https://github.com/stellar/stellar-docs/pull/2572 tracked 2026-07-09 at head eb676939424ea6b783729de6e94fbf93665b12e6: branch wording now describes configurable defaults, but the PR remains open/review-required/merge-blocked; production proof is unavailable, so issue #2567 remains open
+  - upstream PR https://github.com/stellar/stellar-docs/pull/2572 merged 2026-07-10 at final head fb4e8ecbb50218b52313c434a9d0d4e8571fdb3a after reverting its intermediate configurable-per-instance wording; the live Pagination page still says the upper limits are hardcoded
+  - upstream issue https://github.com/stellar/stellar-docs/issues/2567 closed completed 2026-07-13 with maintainer guidance from ElliotFriend after confirmation with Shaptic: the limits are technically configurable but are not configured in practice, should not be, and may tighten later; advertising the settings would be counter-productive
+recurrences:
+  - date: 2026-07-13
+    evidence: closed-unfixed live re-check — the merged Pagination page and crawled record retain the hardcoded wording by explicit owner decision, while current stellar-rpc source continues to expose the max/default options
 ---
 
 ## Finding
@@ -38,14 +42,22 @@ events (10000/100) and ledgers (200/50).
 
 ## Consequence
 
-Consumers (and this repo's eval golden, before correction) repeat "hardcoded"
-as a source-level fact; self-hosted operators reading the docs won't discover
-they can raise the caps; and a technically-precise answer ("configurable,
-defaults 200/50") reads as contradicting the official docs.
+Consumers (and this repo's eval golden, before correction) can repeat
+"hardcoded" as a source-level implementation fact even though the options
+exist. The owner response adds an important operational distinction: these are
+the supported stock caps in practice, operators are not expected to change
+them, and documenting the tuning knobs as user guidance could be harmful. A
+grounded answer therefore needs to separate implementation configurability
+from supported provider/operator behavior instead of treating either as the
+whole truth.
 
 ## Recommendation
 
-Reword the method pages: "the default configuration caps this at 200
-(operators can adjust via `--max-transactions-limit`); public providers
-typically run the defaults." One sentence per method page fixes it; keeping
-"hardcoded" only where it is true (Horizon) preserves the useful distinction.
+No further request to advertise or recommend tuning the caps: the Docs owner
+explicitly declined that direction. If the wording is revisited, prefer
+"supported/effective upper limits" or "stock upper limits" over a claim about
+compile-time implementation, while keeping the configuration switches in the
+operator/source reference rather than application guidance. Consumer-side,
+grade the stock limits as the operational contract, retain source
+configurability as dated implementation context, and never recommend raising
+the caps without provider-specific support.

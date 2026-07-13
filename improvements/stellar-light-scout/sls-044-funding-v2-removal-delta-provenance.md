@@ -1,7 +1,7 @@
 ---
 id: sls-044
 service: stellar-light-scout
-status: proposed
+status: reported-upstream
 discovered: 2026-07-10
 evidence:
   - same funding-v2 methodology reported $40,456,895.13 / 399 projects on 2026-07-06
@@ -9,6 +9,7 @@ evidence:
   - it reported $39,851,645.13 / 391 projects on 2026-07-10
   - response now exposes computedAt, methodologyVersion, countBasis, and byRound
   - Solo scratchpad 575 GT-37 primary 3296 and blind 3298
+  - https://github.com/Stellar-Light/stellarlight/issues/520
 ---
 
 ## Finding
