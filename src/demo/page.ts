@@ -169,16 +169,18 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
 /* ---- locked state ---- */
 .gate{padding:34px 0 8px;max-width:660px}
 .gate h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,6vw,62px);
-  line-height:1.02;letter-spacing:-.022em;color:var(--fog);margin:16px 0 0}
+  line-height:1.02;letter-spacing:-.022em;color:var(--fog);margin:16px 0 0;text-wrap:balance}
 .gate h1 .r{color:var(--orange);text-shadow:0 0 36px rgba(255,85,0,.35)}
+.gate .lede{max-width:58ch;text-wrap:pretty}
 .gate .cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px}
-.gate .cta .hint{font-family:var(--mono);font-size:11.5px;color:var(--ash)}
+.gate .cta .hint{font-family:var(--mono);font-size:11.5px;color:var(--ash);text-wrap:balance}
 .gate .consent{margin-top:18px}
 .gate .consent-row{display:inline-flex;align-items:flex-start;gap:10px;cursor:pointer;
   font-family:var(--sans);font-size:11.5px;color:var(--ash);line-height:1.6}
 /* centre the box on the FIRST line, not the whole phrase: half the leftover of
    one line box (font-size:inherit so 1em is the row's 11.5px, not the control default). */
 .gate .consent-row input{flex:none;font-size:inherit;margin-top:calc((1.6em - 15px)/2);width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
+.gate .consent-row span{min-width:0;max-width:68ch;text-wrap:balance}
 .gate .consent-row a{color:var(--dim);text-decoration:underline;text-underline-offset:2px}
 .gate .consent-row a:hover{color:var(--orange)}
 /* CSS-only consent gate — no script on the locked page. The sign-in button is
@@ -195,6 +197,12 @@ details.tcard[open]>summary::before{transform:rotate(90deg)}
   .tcard .tlabel{display:none}
   .composer .btn-primary{padding:12px 14px}
   .site-foot{padding:8px 16px 24px}
+}
+@media (max-width:400px){
+  .gate .lede{font-size:15px}
+}
+@media (max-width:360px){
+  .gate h1{font-size:36px}
 }
 `;
 
@@ -720,7 +728,7 @@ const EXPLAINER =
   "Ask a question about Stellar and Raven will search across docs, ecosystem data, " +
   "and bundled playbooks, run focused lookups, then answer from what it found. " +
   "The playground shows the live trace, so you can see the sources behind each " +
-  "answer before connecting your own agent.";
+  "answer before connecting Raven to the agent you use.";
 const DEMO_TITLE = "Playground · Stellar Raven";
 const DEMO_DESCRIPTION = "Try Stellar Raven's live agent playground for Stellar ecosystem questions.";
 const DEMO_URL = `https://${HOST}/playground`;
@@ -778,7 +786,7 @@ function lockedBody(): string {
 <div class="cta"><a id="signin" class="btn btn-primary" href="/playground/login">Sign in to try it</a>\
 <span class="hint">WorkOS sign-in &middot; no service API keys &middot; rate-limited</span></div>\
 <div class="consent"><label class="consent-row"><input type="checkbox" id="tos-agree"/>\
-<span>By using Stellar Raven you acknowledge you have read and<br/>agreed to the \
+<span>By using Stellar Raven you acknowledge you have read and agreed to the \
 <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of Service</a> \
 and <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.\
 </span></label></div>\

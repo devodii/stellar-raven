@@ -819,9 +819,10 @@ main.auth{flex:1;display:flex;align-items:center;justify-content:center;padding:
 .wire{position:relative;width:52px;height:2px;background:linear-gradient(90deg,var(--line-2),var(--orange))}
 .wire::after{content:"";position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;
   transform:translate(-50%,-50%);background:var(--orange);box-shadow:0 0 12px rgba(255,85,0,.8)}
-.card h1{font-family:var(--display);font-weight:600;font-size:27px;line-height:1.15;letter-spacing:-.015em;
-  margin:0;color:var(--fog)}
-.card .sub{color:var(--dim);font-size:15px;margin:14px 0 0;line-height:1.55}
+.card h1{font-family:var(--display);font-weight:600;font-size:clamp(23px,7vw,27px);line-height:1.15;letter-spacing:-.015em;
+  max-width:18ch;margin:0 auto;color:var(--fog);text-wrap:balance;overflow-wrap:anywhere}
+.card .sub{color:var(--dim);font-size:15px;max-width:35ch;margin:14px auto 0;line-height:1.55;
+  text-wrap:balance}
 .card .sub b{color:var(--fog);font-weight:600}
 .panel-h{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
   color:var(--dim);padding:28px 34px 4px}
@@ -840,6 +841,7 @@ main.auth{flex:1;display:flex;align-items:center;justify-content:center;padding:
   color:var(--dim);line-height:1.5;margin:0 0 16px}
 /* centre the box on the first line, not the whole phrase (see the demo page). */
 .consent-row input{flex:none;font-size:inherit;margin-top:calc((1.5em - 15px)/2);width:15px;height:15px;accent-color:var(--orange);cursor:pointer}
+.consent-row span{min-width:0;max-width:48ch;text-wrap:balance}
 .consent-row a{color:var(--fog);text-decoration:underline;text-underline-offset:2px}
 .consent-row a:hover{color:var(--orange)}
 /* CSS-only gate (script-free page): the submit button is inert until #tos-agree
@@ -848,12 +850,17 @@ main.auth{flex:1;display:flex;align-items:center;justify-content:center;padding:
 .act:not(:has(#tos-agree:checked)) .btn-primary{opacity:.45;pointer-events:none;
   cursor:not-allowed;box-shadow:none;transform:none}
 .note{display:flex;gap:9px;align-items:center;font-size:12.5px;color:var(--dim);margin:16px 0 0;line-height:1.5}
+.note span{min-width:0;text-wrap:balance}
 .note svg{flex:none}
 .auth-brand{display:flex;align-items:baseline;justify-content:center;gap:11px;padding:30px 0 4px;
   position:relative;z-index:2}
 .auth-brand .rv{width:22px;height:22px;fill:var(--orange);filter:drop-shadow(0 0 12px rgba(255,85,0,.5));align-self:center}
 .auth-brand b{font-family:var(--display);font-weight:600;font-size:17px;color:var(--fog)}
 .auth-brand i{font-family:var(--mono);font-style:normal;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash)}
+@media (max-width:380px){
+  .card-top,.panel-h,.scopes,.act{padding-inline:22px}
+  .card h1{max-width:21ch}
+}
 `;
 
 const TICK =
@@ -905,7 +912,7 @@ export function consentPage(args: {
     <div class="conn"><div class="node client">${initial}</div><div class="wire"></div>
       <div class="node raven">${ravenSvg("rv")}</div></div>
     <h1>${clientName} wants to connect</h1>
-    <p class="sub">It will access <b>Stellar Raven</b> for you<br>once you sign in with WorkOS.</p>
+    <p class="sub">It will access <b>Stellar Raven</b> for you once you sign in with WorkOS.</p>
   </div>
   <div class="panel-h">This connection grants</div>
   <ul class="scopes">${scopeItems}</ul>
@@ -914,7 +921,7 @@ export function consentPage(args: {
       <input type="hidden" name="csrf_token" value="${escapeHtml(args.csrfToken)}"/>
       <label class="consent-row"><input type="checkbox" name="tos_agree" id="tos-agree"/>
         <span>I have read and agree to the
-        <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of Service</a><br>
+        <a href="https://stellar.org/terms-of-service" target="_blank" rel="noopener">Terms of Service</a>
         and <a href="https://stellar.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
       <button class="btn btn-primary" type="submit">Approve and continue ${ARROW}</button>
     </form>
@@ -994,4 +1001,3 @@ export const SITEMAP_HEADERS: Record<string, string> = {
   "content-type": "application/xml; charset=utf-8",
   "cache-control": "public, max-age=86400"
 };
-

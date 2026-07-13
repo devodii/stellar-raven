@@ -80,6 +80,7 @@ describe("demo page states", () => {
     // model for what is a free-form tool loop (search/execute interleave).
     expect(lockedHtml).not.toContain("stepline");
     expect(lockedHtml).not.toContain("step 1");
+    expect(lockedHtml).not.toMatch(/<br\s*\/?\s*>/i);
   });
 
   it("authenticated: composer + trace client wired to /playground/chat", () => {
