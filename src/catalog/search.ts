@@ -365,6 +365,9 @@ function scoreCandidates(
 ): { entry: CatalogEntry; score: number }[] {
   const scored: { entry: CatalogEntry; score: number }[] = [];
   for (const entry of catalog.entries) {
+    // Search-visibility seam (skills-form arms): searchable:false entries are
+    // exposed (exact-id describe/read/run) but never scored or counted here.
+    if (entry.searchable === false) continue;
     if (opts.kind && entry.kind !== opts.kind) continue;
     if (opts.service && entry.service !== opts.service) continue;
     const score = scoreFn(

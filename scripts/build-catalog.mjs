@@ -15,8 +15,9 @@
  * runs with `node` alone.
  */
 import { readFileSync, mkdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { createHash } from "node:crypto";
 // Loaded via native type stripping (Node >= 23.6) — the same way
 // eval/run-routing.mjs imports src/catalog/search.ts. Still zero deps.
 import { extractKeywords } from "../src/catalog/extract-keywords.ts";
@@ -754,6 +755,58 @@ function buildSkills(manifest) {
 }
 
 // ---------------------------------------------------------------------------
+// Skills-form experiment arms (skills program, Solo scratchpad 608 — R2
+// design). One categorical treatment over the ASSEMBLED entries: which
+// representation of the pinned skill store enters search. Everything else —
+// exposure, exact-id reads/runs, schemas, bundle, scoring constants — is a
+// control. Arm A is the shipped catalog and applies no change; the default
+// build (no --skills-form flag) is therefore byte-identical to before.
+// ---------------------------------------------------------------------------
+
+export const SKILLS_FORM_ARMS = ["A", "B", "C", "D"];
+
+export function applySkillsFormArm(entries, arm) {
+  if (arm === "A") return entries;
+  let treated = entries;
+  if (arm === "B" || arm === "D") {
+    // Sections (and file entries) stay exposed and exact-id readable but
+    // leave search. Parents stay searchable and byte-identical to A (in B).
+    treated = treated.map((e) =>
+      e.service === "skills" && e.kind === "skill-section" ? { ...e, searchable: false } : e
+    );
+  }
+  if (arm === "C") {
+    treated = treated.map((e) => (e.service === "skills" ? { ...e, searchable: false } : e));
+  }
+  if (arm === "D") {
+    // Parent keyword distillation: the whole skill's already-scrubbed
+    // Markdown (SKILL.md + exposed extra .md files) distilled once with the
+    // EXISTING extractor and default cap onto the parent's lever-4 keywords.
+    // No new scoring policy — the hazard to watch in ranked dumps is that
+    // parent bags ride full kind weight where A's sections were damped 0.75.
+    treated = treated.map((e) => {
+      if (e.service !== "skills" || e.kind !== "skill") return e;
+      const extraFiles = entries
+        .filter((s) => s.kind === "skill-section" && s.id.startsWith(`${e.id}#file:`))
+        .map((s) => s.transport.path);
+      const bodies = [e.transport.path, ...extraFiles].map(
+        (p) => parseFrontmatter(scrubRetiredSkillRefs(readText(p), p)).body
+      );
+      const keywords = extractKeywords(bodies.join("\n"), {
+        exclude: [e.id, e.description, "skills", "skill", "skill-section"]
+      });
+      return keywords.length > 0 ? { ...e, keywords } : e;
+    });
+  }
+  return treated;
+}
+
+/** SHA-256 hex of a stable JSON projection (audit output for arm runs). */
+function sha256Json(value) {
+  return createHash("sha256").update(JSON.stringify(value), "utf8").digest("hex");
+}
+
+// ---------------------------------------------------------------------------
 // Runnable skills — attach `runnable: true` + the runner's schemas to the
 // matching skill entries (research/skill-run-design.md §5: a contract
 // broadening on the EXISTING kind:"skill" entry, never a second entry/kind —
@@ -871,26 +924,43 @@ function main() {
   assertScoutExclusionsResolve(stellarLight.openapi);
   assertSideEffectingOpsExcluded(stellarLight.openapi);
 
+  // Experiment-arm selection (--skills-form A|B|C|D, default A = shipped;
+  // any non-A arm REQUIRES --out so a variant can never overwrite the
+  // shipped manifest).
+  const armIdx = process.argv.indexOf("--skills-form");
+  const arm = armIdx >= 0 ? process.argv[armIdx + 1] : "A";
+  if (!SKILLS_FORM_ARMS.includes(arm)) {
+    throw new Error(`--skills-form must be one of ${SKILLS_FORM_ARMS.join("|")}, got "${arm}"`);
+  }
+  const outIdx = process.argv.indexOf("--out");
+  const outPath = outIdx >= 0 ? resolve(process.argv[outIdx + 1]) : OUT_PATH;
+  if (arm !== "A" && outIdx < 0) {
+    throw new Error(`--skills-form ${arm} requires --out <path>: variant manifests never overwrite ${OUT_PATH}`);
+  }
+
   const stellarDocsEntries = buildStellarDocs(stellarDocsSpec);
   const scout = buildScout(stellarLight);
   // Runnable attachment runs over the FULLY assembled set: its declared-op
   // guard needs every service's operation entries in scope, not just skills.
-  const entries = attachRunnableSkills(
-    [
-      ...attachOperationKeywords(buildLumenloop(lumenloop)),
-      // Scout ops: x-routing vocabulary → routingKeywords (lever 7) first,
-      // then schema tokens → keywords with the routing tokens excluded.
-      ...attachOperationKeywords(attachRoutingKeywords(scout.entries, scout.routingExtras)),
-      // Docs ops carry page-title vocabulary (hundreds of distinct frequency-1
-      // tokens post-DF) — the default 64 cap truncates the alphabetical tail,
-      // so they get a roomier cap. Still bounded: 12 ops × ≤256 short tokens.
-      ...attachOperationKeywords(
-        stellarDocsEntries,
-        stellarDocsTitleExtras(stellarDocsEntries, stellarDocsTitles),
-        { cap: 256 }
-      ),
-      ...buildSkills(skillsManifest)
-    ].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+  const entries = applySkillsFormArm(
+    attachRunnableSkills(
+      [
+        ...attachOperationKeywords(buildLumenloop(lumenloop)),
+        // Scout ops: x-routing vocabulary → routingKeywords (lever 7) first,
+        // then schema tokens → keywords with the routing tokens excluded.
+        ...attachOperationKeywords(attachRoutingKeywords(scout.entries, scout.routingExtras)),
+        // Docs ops carry page-title vocabulary (hundreds of distinct frequency-1
+        // tokens post-DF) — the default 64 cap truncates the alphabetical tail,
+        // so they get a roomier cap. Still bounded: 12 ops × ≤256 short tokens.
+        ...attachOperationKeywords(
+          stellarDocsEntries,
+          stellarDocsTitleExtras(stellarDocsEntries, stellarDocsTitles),
+          { cap: 256 }
+        ),
+        ...buildSkills(skillsManifest)
+      ].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+    ),
+    arm
   );
 
   const ids = new Set();
@@ -918,8 +988,28 @@ function main() {
   // `docs.taxonomy` copy existed until 2026-07-03 but had no consumer —
   // neither the scorer, the adapters, nor codemode.catalog() read it.
   const catalog = sortKeysDeep({ version: 1, generatedAt, entries });
-  mkdirSync(dirname(OUT_PATH), { recursive: true });
-  writeFileAtomic(OUT_PATH, `${JSON.stringify(catalog, null, 2)}\n`);
+  mkdirSync(dirname(outPath), { recursive: true });
+  const manifestBytes = `${JSON.stringify(catalog, null, 2)}\n`;
+  writeFileAtomic(outPath, manifestBytes);
+
+  // Treatment audit (experiment validity record): identical inputs must be
+  // provable across arms — ops byte-identical, bundle pinned, only the
+  // skills search representation moving. Printed for every build; the arm
+  // harness records these lines with each result.
+  const searchableEntries = entries.filter((e) => e.searchable !== false);
+  const searchableCounts = { skill: 0, "skill-section": 0 };
+  for (const e of searchableEntries) {
+    if (e.service === "skills") searchableCounts[e.kind] += 1;
+  }
+  console.log(
+    `skills-form arm ${arm} -> ${outPath}\n` +
+      `  manifest sha256 ${sha256Json(catalog)}\n` +
+      `  searchable-projection sha256 ${sha256Json(searchableEntries.map((e) => e.id).sort())}\n` +
+      `  operation-records sha256 ${sha256Json(entries.filter((e) => e.kind === "operation"))}\n` +
+      `  bundle sha256 ${createHash("sha256").update(readFileSync(join(ROOT, "src", "skills", "bundle.json"))).digest("hex")}\n` +
+      `  searchable skills ${searchableCounts.skill} whole + ${searchableCounts["skill-section"]} sections ` +
+      `(exposed: 18 whole + 204 sections in every arm)`
+  );
 
   const counts = {};
   for (const entry of entries) {

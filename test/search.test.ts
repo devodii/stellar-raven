@@ -377,6 +377,28 @@ describe("searchCatalogPage — tier marker + total/truncated (todos 838/840)", 
     expect(page.truncated).toBe(true);
   });
 
+  it("excludes searchable:false entries from results and totals, keeping them exposed", () => {
+    // Skills-form arm seam (scratchpad 608): hidden entries stay in the
+    // catalog (exact-id describe/read) but never score, rank, or count.
+    const hidden = loadManifest({
+      version: 1,
+      generatedAt: "2026-01-01T00:00:00Z",
+      entries: [
+        op("alpha_handler", "alpha beta gamma delta epsilon zeta omega handler"),
+        { ...op("alpha_shadow", "alpha beta gamma delta epsilon zeta omega shadow"), searchable: false },
+        op("kappa_export", "kappa metrics exporter")
+      ]
+    });
+    const page = searchCatalogPage(hidden, { query: "alpha beta gamma delta epsilon", limit: 5 });
+    const ids = page.hits.map((h) => h.id);
+    expect(ids).toContain("lumenloop.alpha_handler");
+    expect(ids).not.toContain("lumenloop.alpha_shadow");
+    // total counts only searchable candidates (shadow matches lexically but is hidden).
+    expect(page.total).toBe(ids.length);
+    // Still exposed: the entry exists in the catalog for exact-id surfaces.
+    expect(hidden.entries.some((e) => e.id === "lumenloop.alpha_shadow")).toBe(true);
+  });
+
   it("is deterministic across repeated mixed-page interleaves", () => {
     const opts = { query: LONG_QUERY, limit: 5 } as const;
     const first = searchCatalogPage(tiny, opts);

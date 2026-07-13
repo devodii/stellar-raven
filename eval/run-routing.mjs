@@ -52,7 +52,13 @@ import { aggregate, gradeCase, tableRows } from "./lib/grade.mjs";
 const EVAL_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(EVAL_DIR, "..");
 const SEARCH_TS = join(REPO, "src", "catalog", "search.ts");
-const MANIFEST = join(REPO, "catalog", "manifest.json");
+// --manifest <path>: grade a variant manifest (skills-form arm builds) with
+// the same cases/gates machinery; default is the shipped catalog.
+const MANIFEST_FLAG = process.argv.indexOf("--manifest");
+const MANIFEST =
+  MANIFEST_FLAG >= 0 && process.argv[MANIFEST_FLAG + 1] && !process.argv[MANIFEST_FLAG + 1].startsWith("--")
+    ? resolve(process.argv[MANIFEST_FLAG + 1])
+    : join(REPO, "catalog", "manifest.json");
 const CASES = join(EVAL_DIR, "routing-cases.json");
 const SKILLS_CASES = join(EVAL_DIR, "skills-cases.json");
 const OVERLAY = join(EVAL_DIR, "build-question-overlay.json");
@@ -273,6 +279,7 @@ async function main() {
       {
         ranAt: new Date().toISOString(),
         gradingRule: "v3-manifest-exposed",
+        ...(MANIFEST_FLAG >= 0 ? { manifestOverride: MANIFEST } : {}),
         ...(gate ? { gate } : {}),
         casesFile: { generatedAt: compiled.generatedAt, source: compiled.source, counts: compiled.counts },
         overall: agg.overall,

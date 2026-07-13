@@ -90,6 +90,15 @@ export const catalogEntrySchema = z.object({
    */
   routingKeywords: z.array(z.string()).optional(),
   /**
+   * Search-visibility marker (skills program, Solo scratchpad 608): literal
+   * `false` ONLY — absence means searchable. An entry with `searchable:
+   * false` stays fully exposed (exact-id describe/read/run, codemode.catalog,
+   * super spec) but never enters search scoring or results. Built for the
+   * skills-form experiment arms; the shipped manifest carries the field only
+   * when a measured arm ships it.
+   */
+  searchable: z.literal(false).optional(),
+  /**
    * Runnable-skill marker (research/skill-run-design.md §5): literal `true`
    * ONLY on the kind:"skill" entries whose data-gathering core also ships as
    * a bundled host-side runner (src/skills/runners/), callable inside
