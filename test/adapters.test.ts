@@ -235,6 +235,37 @@ describe("stellarDocs adapter", () => {
     expect(headers["X-Algolia-Application-Id"]).toBe("TESTAPPID");
   });
 
+  it("resolves credentials from whatever env pair the transport names (_SITE, not just _DOCS)", async () => {
+    // The adapter is spec-driven: transport.applicationIdEnv/apiKeyEnv name
+    // the pair (3ef9131 generalization). Prove it with a synthetic entry on
+    // the OTHER prod pair, and that a missing named pair errs by name.
+    const docsEntry = entry("stellarDocs.search_docs");
+    const siteEntry: CatalogEntry = {
+      ...docsEntry,
+      id: "stellarOrg.search_site",
+      transport: {
+        ...docsEntry.transport!,
+        applicationIdEnv: "ALGOLIA_APPLICATION_ID_SITE",
+        apiKeyEnv: "ALGOLIA_API_KEY_SITE",
+        hosts: ["{ALGOLIA_APPLICATION_ID_SITE}-dsn.algolia.net"]
+      }
+    };
+    const siteEnv = { ALGOLIA_APPLICATION_ID_SITE: "SITEAPPID", ALGOLIA_API_KEY_SITE: "test-algolia-key-5678" };
+    const { fetchImpl, calls } = stubFetch(fixture("stellar-docs-success.json"), 200);
+    const r = await callStellarDocs(siteEntry, { query: "enterprise fund" }, siteEnv, fetchImpl);
+    expect(r.ok).toBe(true);
+    expect(calls[0]?.url).toContain("https://SITEAPPID-dsn.algolia.net/");
+    const headers = calls[0]?.init?.headers as Record<string, string>;
+    expect(headers["X-Algolia-Application-Id"]).toBe("SITEAPPID");
+    expect(headers["X-Algolia-API-Key"]).toBe("test-algolia-key-5678");
+
+    // The _DOCS pair must NOT satisfy a _SITE-declaring transport.
+    const wrongPair = await callStellarDocs(siteEntry, { query: "x" }, docsEnv, fetchImpl);
+    expect(wrongPair.ok).toBe(false);
+    if (wrongPair.ok) return;
+    expect(wrongPair.error.message).toContain("ALGOLIA_APPLICATION_ID_SITE");
+  });
+
   it("applies the URL-prefix client filter with overfetch for category ops", async () => {
     const { fetchImpl, calls } = stubFetch(fixture("stellar-docs-success.json"), 200);
     const r = await callStellarDocs(

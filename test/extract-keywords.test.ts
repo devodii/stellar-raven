@@ -1,11 +1,11 @@
 /**
  * extractKeywords tests (todo 810) — the build-time section-body distiller
  * behind the manifest's optional `keywords` field. Deterministic, stopword-
- * filtered, deduped against already-scored text, capped.
+ * filtered, deduped against already-scored text, capped. (How the scorer
+ * BLENDS the distilled fields is pinned in test/scoring.test.ts.)
  */
 import { describe, expect, it } from "vitest";
 import { extractKeywords, DEFAULT_KEYWORD_CAP } from "../src/catalog/extract-keywords.ts";
-import { scoreEntryWeighted } from "../src/catalog/scoring.ts";
 
 describe("extractKeywords", () => {
   it("is deterministic — same inputs, same array (order included)", () => {
@@ -56,102 +56,5 @@ describe("extractKeywords", () => {
     const kw = extractKeywords("call requireAuth() then emitEvent(topic, data)");
     expect(kw).toEqual(expect.arrayContaining(["require", "auth", "emit", "event", "topic"]));
     for (const t of kw) expect(t).toBe(t.toLowerCase());
-  });
-});
-
-describe("scoreEntryWeighted — low-weight keyword blend (lever 4)", () => {
-  const base = {
-    id: "skills.demo.widgets#tuning",
-    name: "widgets",
-    service: "skills",
-    kind: "skill-section",
-    description: "Tuning — how to tune widget output"
-  };
-
-  it("is a no-op for entries without keywords (undefined or empty)", () => {
-    const q = "tune widget output";
-    expect(scoreEntryWeighted({ ...base, keywords: [] }, q)).toBe(scoreEntryWeighted(base, q));
-    expect(scoreEntryWeighted({ ...base, keywords: undefined }, q)).toBe(
-      scoreEntryWeighted(base, q)
-    );
-  });
-
-  it("rescues an entry only matchable via keywords, at a damped score", () => {
-    const q = "widgets frobnicate flag";
-    const without = scoreEntryWeighted(base, q);
-    expect(without).toBeNull(); // coverage-gated: body terms invisible
-    const withKw = scoreEntryWeighted({ ...base, keywords: ["frobnicate", "flag"] }, q);
-    expect(withKw).not.toBeNull();
-    // Low-weight: the same vocabulary carried in the DESCRIPTION (full
-    // description weight) must outscore its keyword-carried form.
-    const inDescription = scoreEntryWeighted(
-      { ...base, description: `${base.description} frobnicate flag` },
-      q
-    );
-    expect(withKw!).toBeLessThan(inDescription!);
-  });
-
-  it("never lowers a score that already passed without keywords", () => {
-    const q = "tune widget output";
-    const plain = scoreEntryWeighted(base, q)!;
-    const withKw = scoreEntryWeighted({ ...base, keywords: ["frobnicate"] }, q)!;
-    expect(withKw).toBeGreaterThanOrEqual(plain);
-  });
-});
-
-describe("scoreEntryWeighted — routing-keyword blend (lever 7)", () => {
-  const op = {
-    id: "scout.getBuilders",
-    name: "getBuilders",
-    service: "scout",
-    kind: "operation",
-    description: "Search Stellar builders. The Stellar PEOPLE directory."
-  };
-
-  it("is a no-op for entries without routingKeywords (undefined or empty)", () => {
-    const q = "search stellar builders directory";
-    expect(scoreEntryWeighted({ ...op, routingKeywords: [] }, q)).toBe(scoreEntryWeighted(op, q));
-    expect(scoreEntryWeighted({ ...op, routingKeywords: undefined }, q)).toBe(
-      scoreEntryWeighted(op, q)
-    );
-  });
-
-  it("weights curated routing vocabulary above lever-4 keywords, at most description weight", () => {
-    const q = "builders recruiting latam";
-    const viaKeywords = scoreEntryWeighted({ ...op, keywords: ["recruiting", "latam"] }, q)!;
-    const viaRouting = scoreEntryWeighted({ ...op, routingKeywords: ["recruiting", "latam"] }, q)!;
-    const viaDescription = scoreEntryWeighted(
-      { ...op, description: `${op.description} recruiting latam` },
-      q
-    )!;
-    // The whole point of the field: hotter than schema-shrapnel keywords…
-    expect(viaRouting).toBeGreaterThan(viaKeywords);
-    // …but never hotter than the same vocabulary carried in the description
-    // (equal at the current blend of 1.0).
-    expect(viaRouting).toBeLessThanOrEqual(viaDescription);
-  });
-
-  it("rescues a gate-failed entry via routing vocabulary alone", () => {
-    const q = "widgets recruiting latam hiring"; // no token overlaps op's scored fields enough
-    const without = scoreEntryWeighted(op, q);
-    expect(without).toBeNull();
-    const withRouting = scoreEntryWeighted(
-      { ...op, routingKeywords: ["recruiting", "latam", "hiring", "widgets"] },
-      q
-    );
-    expect(withRouting).not.toBeNull();
-  });
-
-  it("blends both keyword fields additively without lowering the base", () => {
-    const q = "search stellar builders recruiting flag";
-    const plain = scoreEntryWeighted(op, q)!;
-    const both = scoreEntryWeighted(
-      { ...op, keywords: ["flag"], routingKeywords: ["recruiting"] },
-      q
-    )!;
-    const keywordsOnly = scoreEntryWeighted({ ...op, keywords: ["flag"] }, q)!;
-    const routingOnly = scoreEntryWeighted({ ...op, routingKeywords: ["recruiting"] }, q)!;
-    expect(both).toBeGreaterThanOrEqual(Math.max(keywordsOnly, routingOnly));
-    expect(both).toBeGreaterThanOrEqual(plain);
   });
 });

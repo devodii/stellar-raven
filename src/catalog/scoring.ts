@@ -6,10 +6,11 @@
  * every lever below is query-independent and applies uniformly to the whole
  * catalog. No per-question special cases, no query→service maps.
  *
- * Three levers, each fixing a measured, structural imbalance
- * (eval/README.md baseline: 203 skill-sections lexically crowding 57
- * operations; 40/338 questions gated to zero hits; single services flooding
- * all top-5 slots):
+ * Seven levers (numbered 1–7 below; lever 6 is query-side alias
+ * canonicalization, documented at QUERY_TOKEN_ALIASES), each fixing a
+ * measured, structural imbalance (eval/README.md baseline: 203
+ * skill-sections lexically crowding 57 operations; 40/338 questions gated
+ * to zero hits; single services flooding all top-5 slots):
  *
  *  1. Stopword GATE-RESCUE — when an entry fails the vendor scorer's
  *     token-coverage gate on the full query, it is rescored with general

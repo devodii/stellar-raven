@@ -19,10 +19,11 @@ describe("server instructions — Claude Code 2KB budget (todo 971)", () => {
     expect(BASE_SERVER_INSTRUCTIONS.length).toBeLessThanOrEqual(BUDGET);
   });
 
-  it("what survives truncation IS the whole contract — BASE ends on its final sentence", () => {
-    const survived = SERVER_INSTRUCTIONS.slice(0, CLAUDE_CODE_INSTRUCTIONS_CAP);
-    expect(survived).toContain(BASE_SERVER_INSTRUCTIONS);
-    expect(BASE_SERVER_INSTRUCTIONS.endsWith("mid-script.")).toBe(true);
+  it("what survives truncation IS the whole contract — BASE ends on a sentence boundary", () => {
+    // Budget + prefix invariants above/below make containment automatic; the
+    // check that isn't automatic is that BASE reads complete where the client
+    // cuts — it must end mid-nothing, not mid-sentence.
+    expect(BASE_SERVER_INSTRUCTIONS.endsWith(".")).toBe(true);
   });
 
   it("the surviving prefix carries every load-bearing rule", () => {

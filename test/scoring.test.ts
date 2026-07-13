@@ -1,24 +1,31 @@
 /**
- * Replica drift guard (todo 845): scoring.ts's `scoreEntryUngated` is a
- * line-for-line copy of the vendored scorer with EXACTLY ONE difference —
- * the coverage gate is absent. That gives a total-equality invariant this
- * suite pins:
+ * Scoring-layer contracts (src/catalog/scoring.ts).
  *
- *   ∀ (entry, query): scoreEntry(e, q) !== null
- *                     ⇒ scoreEntryUngated(e, q) === scoreEntry(e, q)
+ * 1. Replica drift guard (todo 845): scoring.ts's `scoreEntryUngated` is a
+ *    line-for-line copy of the vendored scorer with EXACTLY ONE difference —
+ *    the coverage gate is absent. That gives a total-equality invariant this
+ *    suite pins:
  *
- * If @cloudflare/codemode is ever re-vendored with changed field weights,
- * tokenization, phrase/prefix multipliers, or bonuses, every gate-passing
- * comparison here fails loudly instead of tier 2 silently desyncing from
- * tier 1. The full re-vendor checklist lives beside the replica in
- * src/catalog/scoring.ts.
+ *      ∀ (entry, query): scoreEntry(e, q) !== null
+ *                        ⇒ scoreEntryUngated(e, q) === scoreEntry(e, q)
+ *
+ *    If @cloudflare/codemode is ever re-vendored with changed field weights,
+ *    tokenization, phrase/prefix multipliers, or bonuses, every gate-passing
+ *    comparison here fails loudly instead of tier 2 silently desyncing from
+ *    tier 1. The full re-vendor checklist lives beside the replica in
+ *    src/catalog/scoring.ts.
+ *
+ * 2. Keyword blends (levers 4 + 7): how `scoreEntryWeighted` folds the
+ *    build-time `keywords` / `routingKeywords` fields into the vendor score.
+ *    (How those fields are DISTILLED at build time is pinned in
+ *    test/extract-keywords.test.ts.)
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { scoreEntry, type ScorableEntry } from "../src/catalog/vendor/search-scoring.ts";
-import { scoreEntryUngated } from "../src/catalog/scoring.ts";
+import { scoreEntryUngated, scoreEntryWeighted } from "../src/catalog/scoring.ts";
 import { loadManifest } from "../src/catalog/search.ts";
 import { lastIdSegment } from "../src/catalog/id.ts";
 
@@ -112,5 +119,102 @@ describe("ungated replica ⇔ vendored scorer drift guard (todo 845)", () => {
     // Zero matched tokens → BOTH null (the replica keeps that vendor rule).
     expect(scoreEntry(entry, "qqq www eee")).toBeNull();
     expect(scoreEntryUngated(entry, "qqq www eee")).toBeNull();
+  });
+});
+
+describe("scoreEntryWeighted — low-weight keyword blend (lever 4)", () => {
+  const base = {
+    id: "skills.demo.widgets#tuning",
+    name: "widgets",
+    service: "skills",
+    kind: "skill-section",
+    description: "Tuning — how to tune widget output"
+  };
+
+  it("is a no-op for entries without keywords (undefined or empty)", () => {
+    const q = "tune widget output";
+    expect(scoreEntryWeighted({ ...base, keywords: [] }, q)).toBe(scoreEntryWeighted(base, q));
+    expect(scoreEntryWeighted({ ...base, keywords: undefined }, q)).toBe(
+      scoreEntryWeighted(base, q)
+    );
+  });
+
+  it("rescues an entry only matchable via keywords, at a damped score", () => {
+    const q = "widgets frobnicate flag";
+    const without = scoreEntryWeighted(base, q);
+    expect(without).toBeNull(); // coverage-gated: body terms invisible
+    const withKw = scoreEntryWeighted({ ...base, keywords: ["frobnicate", "flag"] }, q);
+    expect(withKw).not.toBeNull();
+    // Low-weight: the same vocabulary carried in the DESCRIPTION (full
+    // description weight) must outscore its keyword-carried form.
+    const inDescription = scoreEntryWeighted(
+      { ...base, description: `${base.description} frobnicate flag` },
+      q
+    );
+    expect(withKw!).toBeLessThan(inDescription!);
+  });
+
+  it("never lowers a score that already passed without keywords", () => {
+    const q = "tune widget output";
+    const plain = scoreEntryWeighted(base, q)!;
+    const withKw = scoreEntryWeighted({ ...base, keywords: ["frobnicate"] }, q)!;
+    expect(withKw).toBeGreaterThanOrEqual(plain);
+  });
+});
+
+describe("scoreEntryWeighted — routing-keyword blend (lever 7)", () => {
+  const op = {
+    id: "scout.getBuilders",
+    name: "getBuilders",
+    service: "scout",
+    kind: "operation",
+    description: "Search Stellar builders. The Stellar PEOPLE directory."
+  };
+
+  it("is a no-op for entries without routingKeywords (undefined or empty)", () => {
+    const q = "search stellar builders directory";
+    expect(scoreEntryWeighted({ ...op, routingKeywords: [] }, q)).toBe(scoreEntryWeighted(op, q));
+    expect(scoreEntryWeighted({ ...op, routingKeywords: undefined }, q)).toBe(
+      scoreEntryWeighted(op, q)
+    );
+  });
+
+  it("weights curated routing vocabulary above lever-4 keywords, at most description weight", () => {
+    const q = "builders recruiting latam";
+    const viaKeywords = scoreEntryWeighted({ ...op, keywords: ["recruiting", "latam"] }, q)!;
+    const viaRouting = scoreEntryWeighted({ ...op, routingKeywords: ["recruiting", "latam"] }, q)!;
+    const viaDescription = scoreEntryWeighted(
+      { ...op, description: `${op.description} recruiting latam` },
+      q
+    )!;
+    // The whole point of the field: hotter than schema-shrapnel keywords…
+    expect(viaRouting).toBeGreaterThan(viaKeywords);
+    // …but never hotter than the same vocabulary carried in the description
+    // (equal at the current blend of 1.0).
+    expect(viaRouting).toBeLessThanOrEqual(viaDescription);
+  });
+
+  it("rescues a gate-failed entry via routing vocabulary alone", () => {
+    const q = "widgets recruiting latam hiring"; // no token overlaps op's scored fields enough
+    const without = scoreEntryWeighted(op, q);
+    expect(without).toBeNull();
+    const withRouting = scoreEntryWeighted(
+      { ...op, routingKeywords: ["recruiting", "latam", "hiring", "widgets"] },
+      q
+    );
+    expect(withRouting).not.toBeNull();
+  });
+
+  it("blends both keyword fields additively without lowering the base", () => {
+    const q = "search stellar builders recruiting flag";
+    const plain = scoreEntryWeighted(op, q)!;
+    const both = scoreEntryWeighted(
+      { ...op, keywords: ["flag"], routingKeywords: ["recruiting"] },
+      q
+    )!;
+    const keywordsOnly = scoreEntryWeighted({ ...op, keywords: ["flag"] }, q)!;
+    const routingOnly = scoreEntryWeighted({ ...op, routingKeywords: ["recruiting"] }, q)!;
+    expect(both).toBeGreaterThanOrEqual(Math.max(keywordsOnly, routingOnly));
+    expect(both).toBeGreaterThanOrEqual(plain);
   });
 });

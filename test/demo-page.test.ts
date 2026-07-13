@@ -13,8 +13,12 @@
  */
 import { describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { demoPage, DEMO_PAGE_HEADERS } from "../src/demo/page";
 import { DEMO_CAPS } from "../src/demo/budget";
+import { loadManifest, searchCatalogPage } from "../src/catalog/search";
 // The reusable ADR-0003 leak guard (backed by scripts/exposure.mjs data) —
 // the design requires running it over the rendered demo HTML.
 import { assertNoNonExposedRefsInText } from "../scripts/emitted-text-guard.mjs";
@@ -108,6 +112,30 @@ describe("demo page states", () => {
     expect(chatHtml).not.toContain("error.kind");
     expect(chatHtml).not.toContain("soft-empty");
     expect(chatHtml).not.toMatch(/denied/i);
+  });
+});
+
+describe("static example trace is truthful", () => {
+  // src/demo/page.ts claims its hard-coded sample is "a real
+  // searchCatalogPage page against the current catalog". Recompute it so a
+  // catalog or scoring change that moves the real page fails here with the
+  // fresh values to paste in, instead of the locked page silently lying.
+  it("sample hits/scores/total match the live engine on the current catalog", () => {
+    const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+    const catalog = loadManifest(
+      JSON.parse(readFileSync(join(ROOT, "catalog", "manifest.json"), "utf8"))
+    );
+    const page = searchCatalogPage(catalog, { query: "soroban smart contract deploy", limit: 4 });
+    expect(lockedHtml).toContain(`${page.hits.length} of ${page.total} matches`);
+    let cursor = -1;
+    for (const hit of page.hits) {
+      const rendered = lockedHtml.indexOf(`<span class="hid">${hit.id}</span>`);
+      expect(rendered, `sample is missing or misorders real hit ${hit.id}`).toBeGreaterThan(cursor);
+      cursor = rendered;
+      expect(lockedHtml, `stale score for ${hit.id}`).toContain(
+        `<span class="hscore">${hit.score}</span>`
+      );
+    }
   });
 });
 

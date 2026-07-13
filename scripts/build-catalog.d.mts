@@ -1,6 +1,7 @@
 // Ambient declaration for build-catalog.mjs (plain JS, no build step) so
-// test/catalog.test.ts can import its exported guard directly under
-// `tsc --noEmit`. Keep in sync with the exported surface of build-catalog.mjs.
+// test/catalog.test.ts can import its exported guards directly under
+// `tsc --noEmit`. Declares only the subset of exports the tests import,
+// not the module's full exported surface.
 export function assertNoNonExposedRefs(entries: readonly unknown[]): void;
 export function assertSideEffectingOpsExcluded(
   openapi: unknown,

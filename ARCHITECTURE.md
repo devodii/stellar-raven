@@ -70,9 +70,14 @@ by `createMcpHandler` (from `agents/mcp`) — no Durable Objects, no session sta
 registration and all model-facing prose live in `src/mcp/tools.ts`; the initialize-time
 `SERVER_INSTRUCTIONS` (workflow + envelope contract + generated source-family micro-map)
 ride along because clients surface them in the system prompt, where they outlive per-tool
-descriptions. The micro-map is generated from `scripts/catalog-data/workflow-archetypes.mjs`
-by `scripts/build-micro-map.mjs`; it orients agents to the Lumenloop, Scout, Stellar Docs,
-and skills families without adding per-operation cards or changing the catalog shape.
+descriptions. Claude Code truncates injected server instructions at 2,048 characters
+(measured in production, todo 971), so `BASE_SERVER_INSTRUCTIONS` — everything before the
+micro-map — must stay a complete, self-sufficient contract within a 2,000-character budget
+(guarded by `test/mcp-instructions.test.ts`); the micro-map after it is bonus for
+full-injection clients only. The micro-map is generated from
+`scripts/catalog-data/workflow-archetypes.mjs` by `scripts/build-micro-map.mjs`; it orients
+agents to the Lumenloop, Scout, Stellar Docs, and skills families without adding
+per-operation cards or changing the catalog shape.
 
 Every handled `/mcp` invocation emits one `mcp_request` summary after its response status is
 known. Its `accessMode` avoids Cloudflare's automatic redaction of fields named `auth`. OAuth
@@ -167,16 +172,30 @@ way:
 - *Tiered gate-rescue backfill* — tier 1 is the pipeline above (levers 1–4). Only when it leaves
   the page short (fewer than `limit` gate-passing candidates exist — measured on long
   extended-lane questions that gate to zero) does tier 2 re-run the same pipeline under the
-  ungated scorer (lever 5) and append its novel hits **strictly below** every tier-1 hit. Tier-2
-  hits never displace or outrank a tier-1 hit, so a full page is byte-identical to the
-  pre-tiering behavior; a page mixing tiers is score-sorted within each tier but **not across
-  the seam** — the two scorers use different math, so a tier-2 raw score can exceed the tier-1
-  scores ranked above it. Every hit therefore carries `tier: "gated" | "backfill"`, and `score`
-  is documented as comparable only among same-tier hits within one response. Behavior changes
-  only for long multi-clause queries that previously returned a short (or empty) page.
+  ungated scorer (lever 5) and add its novel hits to complete membership. A full page is
+  byte-identical to the pre-tiering behavior; a mixed page is then stably interleaved: a tier-2
+  hit is promoted above adjacent tier-1 hits only while its score is at least
+  `TIER_INTERLEAVE_MARGIN` (1.6×) times theirs, otherwise gated hits rank first. The drift guard
+  in `test/scoring.test.ts` proves the ungated scorer equals the gated scorer wherever the gate
+  passes, so `score` is one common scale across the seam. Every hit carries
+  `tier: "gated" | "backfill"`, and hit order is the ranking to trust. Behavior changes only for
+  long multi-clause queries that previously returned a short (or empty) page.
 - `total` counts the distinct candidates the consulted tiers accepted (post kind/service
   filter, pre diversity/paging): tier-1 candidates alone when tier 1 filled the page, plus the
   novel ungated candidates when the backfill ran; `truncated` = `total > hits.length`.
+
+**Evidence-poor recovery** is query-independent and deliberately outside the scorer. Selected
+operation entries carry a manifest-validated `retrievalProfile` whose exact-ID `recoverWith`
+edges name bounded wider, cross-family, cited-research, or different-medium contingencies for
+`empty | weak | adjacent | ambiguous | partial` outcomes. Public `search` and in-sandbox
+`codemode.search` accept exact attempted operation ids in `recoverFrom` plus an optional `reason`
+and return `recovery` separately from `hits`; normal hit membership, score, and order are therefore
+unchanged. The host does not inspect arbitrary payload semantics, automatically execute a recovery,
+or claim that a candidate is relevant. Model-facing instructions and adapter hints instead enforce
+the answer-level rule: a closed-world directory/index miss can be reported only at that source's
+scope, while an open-world identity/history/topic miss gets one broad pass; semantic candidates
+need exact identity (or canonical slug), source, and date before attribution. An execute run with
+service calls but zero data-bearing outcomes receives the same scoped recovery reminder.
 
 **Hit anatomy**: `{ id, service, kind, score, tier, description }`, plus a rendered **TypeScript
 signature** for operations *and runnable skills* (`renderSignature` — input/output
@@ -322,6 +341,9 @@ Every service call resolves — never throws — to `{ ok: true, data }` or
 two-way: `"error"` (call failed / bad args) or `"soft-empty"` (the service answered with
 nothing — *not* evidence of absence) (`src/adapters/types.ts`). There is no `"denied"`:
 exposure is filtered at build time (ADR-0003), so nothing callable can be policy-refused.
+An `ok: true` envelope whose payload arrays are empty is data-shaped empty, not a `soft-empty`
+error; both are still inconclusive for a wider real-world claim unless the question is explicitly
+closed to that named corpus or directory.
 
 The observed LLM failure mode is reading payload fields one level too shallow
 (`r.projects` instead of `r.data.projects`), which yields `undefined` and — after a

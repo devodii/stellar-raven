@@ -130,21 +130,22 @@ function attachOperationKeywords(entries, extraBodiesById = new Map(), { cap } =
 /**
  * Attach `routingKeywords` (scoring.ts lever 7) to operation entries from
  * upstream-curated routing vocabulary (`bodiesById`: Scout's x-routing
- * purpose/useWhen/exampleQuestions/keywords, collected by buildScout). Same
- * noise controls as attachOperationKeywords — the service-wide document-
- * frequency filter drops vocabulary shared across the service's ops, and
- * extractKeywords dedups against the entry's already-scored fields — but the
- * result lands in its own field so scoring can weight curated routing
- * vocabulary above schema shrapnel. Run BEFORE attachOperationKeywords so
- * the schema pass can exclude these tokens.
+ * purpose/useWhen/exampleQuestions/keywords, collected by buildScout).
+ * Deliberately NO document-frequency filter (unlike attachOperationKeywords):
+ * the vocabulary is curated per-op upstream, so cross-op overlap is signal,
+ * not schema shrapnel. extractKeywords still dedups against the entry's
+ * already-scored fields, and the result lands in its own field so scoring
+ * can weight curated routing vocabulary above schema keywords. Run BEFORE
+ * attachOperationKeywords so the schema pass can exclude these tokens.
  */
 function attachRoutingKeywords(entries, bodiesById) {
   return entries.map((entry) => {
     const bodies = bodiesById.get(entry.id);
     if (!bodies || bodies.length === 0) return entry;
-    // Default 64 cap binds exactly on the broad search ops (searchProjects/
-    // searchRepos/searchResearch carry the longest curated vocabularies) —
-    // roomier like the docs title cap, still bounded: ≤128 short tokens/op.
+    // Explicit 128 cap (double the schema-keyword default 64): the broad
+    // Scout search ops carry the longest curated vocabularies and the
+    // default cap truncated their alphabetical tail — roomier like the docs
+    // title cap, still bounded: ≤128 short tokens/op.
     const routingKeywords = extractKeywords(bodies.join("\n"), {
       exclude: [entry.id, entry.service, entry.kind, entry.description],
       cap: 128
@@ -647,7 +648,7 @@ function buildStellarDocs(spec) {
 // Ecosystem skills mirror — skill + per-##-section + per-extra-file entries
 // ---------------------------------------------------------------------------
 
-function skillEntryBase(sourceId, skillName, manifestSource, syncedAt) {
+function skillEntryBase(manifestSource, syncedAt) {
   return {
     service: "skills",
     inputSchema: null,
@@ -683,7 +684,7 @@ function buildSkills(manifest) {
 
       // 1) the whole-skill entry
       entries.push({
-        ...skillEntryBase(source.id, skill.name, source, syncedAt),
+        ...skillEntryBase(source, syncedAt),
         id: skillId,
         kind: "skill",
         description: attrs.description || firstParagraph(bodyLines, 0) || skill.name,
@@ -713,7 +714,7 @@ function buildSkills(manifest) {
           exclude: [sectionId, description, "skills", "skill-section"]
         });
         entries.push({
-          ...skillEntryBase(source.id, skill.name, source, syncedAt),
+          ...skillEntryBase(source, syncedAt),
           id: sectionId,
           kind: "skill-section",
           description,
@@ -748,7 +749,7 @@ function buildSkills(manifest) {
           exclude: [fileEntryId, fileDescription, "skills", "skill-section"]
         });
         entries.push({
-          ...skillEntryBase(source.id, skill.name, source, syncedAt),
+          ...skillEntryBase(source, syncedAt),
           id: fileEntryId,
           kind: "skill-section",
           description: fileDescription,
@@ -773,45 +774,24 @@ function buildSkills(manifest) {
 // creation, so B is a no-op here. Arm A (sections back in search) is kept
 // buildable for future rounds; C (all skills out of search) is banked with
 // its +30/−1 offline evidence for a possible follow-up from the B baseline.
+// Arm D (parent keyword distillation) was eliminated offline in the same
+// round (scratchpad 608 P3) and is no longer buildable.
 // ---------------------------------------------------------------------------
 
-export const SKILLS_FORM_ARMS = ["A", "B", "C", "D"];
+const SKILLS_FORM_ARMS = ["A", "B", "C"];
 
-export function applySkillsFormArm(entries, arm) {
+function applySkillsFormArm(entries, arm) {
   if (arm === "B") return entries; // shipped default
-  let treated = entries;
   if (arm === "A") {
     // Legacy pre-2026-07-13 representation: sections re-enter search.
-    treated = treated.map((e) => {
+    return entries.map((e) => {
       if (e.service !== "skills" || e.kind !== "skill-section") return e;
       const { searchable, ...rest } = e;
       return rest;
     });
   }
-  if (arm === "C") {
-    treated = treated.map((e) => (e.service === "skills" ? { ...e, searchable: false } : e));
-  }
-  if (arm === "D") {
-    // Parent keyword distillation: the whole skill's already-scrubbed
-    // Markdown (SKILL.md + exposed extra .md files) distilled once with the
-    // EXISTING extractor and default cap onto the parent's lever-4 keywords.
-    // No new scoring policy — the hazard to watch in ranked dumps is that
-    // parent bags ride full kind weight where A's sections were damped 0.75.
-    treated = treated.map((e) => {
-      if (e.service !== "skills" || e.kind !== "skill") return e;
-      const extraFiles = entries
-        .filter((s) => s.kind === "skill-section" && s.id.startsWith(`${e.id}#file:`))
-        .map((s) => s.transport.path);
-      const bodies = [e.transport.path, ...extraFiles].map(
-        (p) => parseFrontmatter(scrubRetiredSkillRefs(readText(p), p)).body
-      );
-      const keywords = extractKeywords(bodies.join("\n"), {
-        exclude: [e.id, e.description, "skills", "skill", "skill-section"]
-      });
-      return keywords.length > 0 ? { ...e, keywords } : e;
-    });
-  }
-  return treated;
+  // Arm C: all skills out of search.
+  return entries.map((e) => (e.service === "skills" ? { ...e, searchable: false } : e));
 }
 
 /** SHA-256 hex of a stable JSON projection (audit output for arm runs). */
@@ -1011,6 +991,10 @@ function main() {
   // harness records these lines with each result.
   const searchableEntries = entries.filter((e) => e.searchable !== false);
   const searchableCounts = { skill: 0, "skill-section": 0 };
+  const exposedCounts = { skill: 0, "skill-section": 0 };
+  for (const e of entries) {
+    if (e.service === "skills") exposedCounts[e.kind] += 1;
+  }
   for (const e of searchableEntries) {
     if (e.service === "skills") searchableCounts[e.kind] += 1;
   }
@@ -1021,7 +1005,7 @@ function main() {
       `  operation-records sha256 ${sha256Json(entries.filter((e) => e.kind === "operation"))}\n` +
       `  bundle sha256 ${createHash("sha256").update(readFileSync(join(ROOT, "src", "skills", "bundle.json"))).digest("hex")}\n` +
       `  searchable skills ${searchableCounts.skill} whole + ${searchableCounts["skill-section"]} sections ` +
-      `(exposed: 18 whole + 204 sections in every arm; shipped default B = 18 + 0)`
+      `(exposed in every arm: ${exposedCounts.skill} whole + ${exposedCounts["skill-section"]} sections)`
   );
 
   const counts = {};
