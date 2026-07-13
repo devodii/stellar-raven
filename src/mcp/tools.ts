@@ -223,15 +223,21 @@ Every service call resolves (never throws) to either { ok: true, data } or { ok:
 
 /**
  * MCP initialize-time instructions (SDK ServerOptions.instructions) — clients
- * like Claude Desktop surface this in the system prompt, where it outlives
- * per-tool descriptions over a long session. Kept to the workflow/envelope
- * contract plus the generated source-family micro-map.
+ * that inject them surface this in the system prompt, where it outlives
+ * per-tool descriptions over a long session. HARD BUDGET: Claude Code — the
+ * largest agentic-client population — truncates injected instructions at
+ * exactly 2,048 characters (measured in production 2026-07-13, todo 971:
+ * the old 2,160-char BASE cut off mid-sentence and the micro-map below it
+ * never arrived at all). BASE must therefore be a complete, self-sufficient
+ * workflow/envelope contract within that budget; test/mcp-instructions
+ * enforces the cap and the load-bearing phrases. The micro-map rides after
+ * BASE for clients that inject instructions in full.
  */
 export const BASE_SERVER_INSTRUCTIONS = `Unified Stellar-ecosystem gateway: \`search\` (ranked discovery over every service operation and skill) and \`execute\` (sandboxed JavaScript composing the discovered operations).
 
-Workflow: plan candidate source families first, \`search\` once per candidate family with targeted vocabulary, read the hits' TypeScript signatures, then write ONE \`execute\` script composing several operations (Promise.all for independent calls, then targeted follow-ups parameterized by their results). Oversized output types are stubbed in search hits — \`codemode.describe("<exact id>")\` inside \`execute\` is the canonical full-detail step (full signature + schemas + a usage line). For list/directory rows, filter raw rows or nested field variants before projecting compact columns so missing convenience fields do not become false negatives. Skills are operational playbooks (tested procedures — read sections via \`codemode.skill.read(id, { sections })\`, keys in the hit's \`availableSections\`); a few skills are also runnable — \`codemode.skill.run("<exact id>", input)\` (the callable line their hit signatures show) executes the skill's data-gathering pipeline in one call and resolves to the ordinary service-call envelope with a \`data.calls\` audit of its constituent calls.
+Workflow: plan candidate source families first, \`search\` once per candidate family with targeted vocabulary, read the hits' TypeScript signatures, then write ONE \`execute\` script composing several operations (Promise.all for independent calls, then targeted follow-ups parameterized by their results). Oversized output types are stubbed in search hits — call \`codemode.describe("<exact id>")\` inside \`execute\` for the full signature and schemas. Filter raw list rows (and nested field variants) before projecting compact columns so missing convenience fields do not become false negatives. Skills are operational playbooks — read sections via \`codemode.skill.read(id, { sections })\` (keys in the hit's \`availableSections\`); runnable skills expose \`codemode.skill.run("<exact id>", input)\` (the callable line in their hit signature), returning the ordinary envelope plus a \`data.calls\` audit.
 
-Interpreting \`execute\` results: every service call resolves (never throws) to { ok: true, data } or { ok: false, error: { kind, message, hint? } }. Payload fields live under .data — \`r.data.projects\`, never \`r.projects\`; reading a payload field on the envelope throws an Error naming the correct path, \`r.data\` on a failed call is undefined and logs a one-line \`[envelope]\` warning naming the error, and writes to the envelope are allowed. error.kind is two-way: "error" (call failed) or "soft-empty" (the service answered with nothing — inconclusive, NOT evidence of absence). Truncated execute results include a source-basis block; when it lists an artifact id, use \`codemode.artifact.info(id)\` or \`codemode.artifact.read(id)\` in a later execute call and return only a compact projection. Operation and skill ids are exact-match — never guess them; discover via \`search\` or \`codemode.search\` mid-script.`;
+Interpreting \`execute\` results: every service call resolves (never throws) to { ok: true, data } or { ok: false, error: { kind, message, hint? } }. Payload fields live under .data — \`r.data.projects\`, never \`r.projects\`; reading a payload field on the envelope throws an Error naming the correct path; \`r.data\` on a failed call is undefined. error.kind is two-way: "error" (call failed) or "soft-empty" (the service answered with nothing — inconclusive, NOT evidence of absence). Truncated execute results include a source-basis block; when it lists an artifact id, use \`codemode.artifact.info(id)\` or \`codemode.artifact.read(id)\` in a later execute call and return only a compact projection. Operation and skill ids are exact-match — never guess them; discover via \`search\` or \`codemode.search\` mid-script.`;
 
 export const SERVER_INSTRUCTIONS = `${BASE_SERVER_INSTRUCTIONS}\n\n${MICRO_MAP}`;
 
