@@ -590,15 +590,15 @@
         "lastChecked": "2026-07-13",
         "reSwept": {
           "date": "2026-07-13",
-          "reason": "Release closeout rechecked the split legal-form, mandate, and public-network claims against the SCP/Mazieres/Tier-1 siblings; the historical SCP dispute remains separate.",
+          "reason": "SDF organizational audit rechecked the dated Mazières page-data/title qualification against the SCP, legal-form, and Tier-1 siblings; the historical SCP dispute remains separate.",
           "verdict": "consistent"
         },
-        "note": "SCP was authored by David Mazières and rolled out in 2015 using FBA. The causal interpretation of the 2014 fork is disputed: SDF attributed it to weaknesses in the inherited system, while Ripple rejected that conclusion. SDF structure/leadership and not-PoS/no-validator-reward facts remain separate from this historical dispute.",
+        "note": "SCP was authored by David Mazières and rolled out in 2015 using FBA. The causal interpretation of the 2014 fork is disputed: SDF attributed it to weaknesses in the inherited system, while Ripple rejected that conclusion. Mazières's founder/professor/paper facts remain stable, while the Founder and Chief Scientist team-page data is dated and distinguished from the rendered card. SDF structure and not-PoS/no-validator-reward facts remain separate.",
         "memberContentSha256": {
           "q-edge-deep-full-history-report": "c931e1b6ccb77f853748ba2ed7a260880f8e41ba512a75fd157ceb3f8998700f",
           "q-edge-noinfo-stellar-pos-staking-rewards": "23b7f3e25cbbd6121be7c3fd8029e7eb3ddef8a7ae7aea767b161fc0a2aa46e6",
           "q-hist-scp-rewrite-2015": "c06de93ce3c86bcfe0712bd9869c79f94abad80d5637555f7049ff278f9c2c00",
-          "q-org-mazieres-chief-scientist": "5d539b82c1b3ba20e2055319cef40ff5644ec621fd7927ef5ab66e69f4727391",
+          "q-org-mazieres-chief-scientist": "ec9d723c25189ef38ed6730bab1485345ef5df7f5f00df5196de1613cb061a65",
           "q-org-sdf-structure-mandate": "dd8699bba90b591c74502a8899216a9b778542337f9321963ca6f288881e6528",
           "q-protocol-tier1-requirements": "0bdabb60adf8cd44f5aa74372939d42d3e5f33fc1eb50ed417b88a1915bd1388"
         }
@@ -1278,11 +1278,11 @@
           "q-org-sdf-mandate-buckets",
           "q-org-sdf-structure-mandate"
         ],
-        "verdict": "reopen",
+        "verdict": "consistent",
         "lastChecked": "2026-07-13",
         "reSwept": {
           "date": "2026-07-13",
-          "reason": "Release closeout rechecked mandate page-state wording and legal-form provenance against holdings/sales siblings; no stable reserve scalar or synchronized-total claim was introduced.",
+          "reason": "SDF organizational audit rechecked mandate page-state wording and legal-form provenance against holdings/sales siblings; the prior member-content marker was mechanical and no contradiction remains.",
           "verdict": "consistent"
         },
         "note": "SDF sells existing XLM through named exchanges/direct sales for operations and mandate work without a price guarantee. The 2019 no-additional-burn statement and current no-new-plan sweep are dated evidence. Current mandate/dashboard/report balances are source-, method-, and timestamp-scoped; ~30B is not a current durable reserve fact and named mixed-timestamp accounts are non-exhaustive.",
@@ -1291,10 +1291,6 @@
           "q-hot-sdf-xlm-holdings-sales": "08cc3c38fcce042ae08d3a9dabf3cf1054b5d97a3af14853004c62d741c4a763",
           "q-org-sdf-mandate-buckets": "9bcfac37b0a61526b963ec80de34476ecd4b2412e7dfc38ebc08bc9fe6b15170",
           "q-org-sdf-structure-mandate": "dd8699bba90b591c74502a8899216a9b778542337f9321963ca6f288881e6528"
-        },
-        "reopened": {
-          "date": "2026-07-14",
-          "reason": "member-content-changed"
         }
       },
       {
@@ -1305,16 +1301,16 @@
           "q-org-mazieres-chief-scientist"
         ],
         "verdict": "consistent",
-        "lastChecked": "2026-07-11",
+        "lastChecked": "2026-07-13",
         "reSwept": {
-          "date": "2026-07-11",
-          "reason": "P4 member absorbed or replaced; survivor claims rechecked",
+          "date": "2026-07-13",
+          "reason": "SDF organizational audit rechecked founder, SCP-authorship, leadership-page rendering, and separately dated CEO claims after the Mazières freshness repair.",
           "verdict": "consistent"
         },
-        "note": "Current SDF and Stanford records identify David Mazières as founder/co-founder and Chief Scientist; the SCP paper is single-authored. Denelle Dixon remains the separately dated CEO/Executive Director. Historical McCaleb/Kim roles do not create an exclusive founder list.",
+        "note": "SDF page data and Stanford records identify David Mazières as founder/co-founder; the SCP paper is single-authored. The Founder and Chief Scientist page-data title is dated because the rendered Leadership card shows only his name. Denelle Dixon remains the separately dated CEO/Executive Director. Historical McCaleb/Kim roles do not create an exclusive founder list.",
         "memberContentSha256": {
           "q-hist-scp-rewrite-2015": "c06de93ce3c86bcfe0712bd9869c79f94abad80d5637555f7049ff278f9c2c00",
-          "q-org-mazieres-chief-scientist": "5d539b82c1b3ba20e2055319cef40ff5644ec621fd7927ef5ab66e69f4727391"
+          "q-org-mazieres-chief-scientist": "ec9d723c25189ef38ed6730bab1485345ef5df7f5f00df5196de1613cb061a65"
         }
       },
       {

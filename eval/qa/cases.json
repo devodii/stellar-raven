@@ -1,7 +1,7 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "3b18de5e049632c97848bf02c6a0c2128a52db3156217b9c36fc2017555ff0c8",
+  "corpusContentSha256": "96c399b1228094a148a850d0a137e1bfe7ba7791e5b442af39155ce2cbf78665",
   "counts": {
     "total": 490,
     "byCategory": {
@@ -25,8 +25,8 @@
     },
     "byFreshness": {
       "live": 153,
-      "scheduled": 130,
-      "stable": 207
+      "scheduled": 131,
+      "stable": 206
     },
     "traps": {
       "ambiguous": 2,
@@ -19506,76 +19506,86 @@
         "scout.searchResearch"
       ],
       "golden": {
-        "answer": "**David Mazières** is an SDF/Stellar **founder or co-founder** (SDF's current team page uses “Founder”) and **Chief Scientist**. He authored the 2015 single-author Stellar Consensus Protocol paper, which introduced Federated Byzantine Agreement, and he is a Stanford computer-science professor. He is not SDF's CEO; that current leadership role should be verified from SDF's team page. Early sources describe McCaleb, Joyce Kim, Mazières, network development, and foundation leadership with different scopes, so do not force an exclusive founder list.",
+        "answer": "**David Mazières** is an SDF/Stellar **founder or co-founder**, the single author of the 2015 Stellar Consensus Protocol paper that introduced Federated Byzantine Agreement, and a Stanford computer-science professor. When observed on 2026-07-13, SDF's team-page data described him as **“Founder and Chief Scientist,”** but the rendered Leadership card showed only his name. Treat that title as a dated first-party page-data observation, not as a visibly displayed or timeless current role. He is not SDF's CEO. Early sources describe McCaleb, Joyce Kim, Mazières, network development, and foundation leadership with different scopes, so do not force an exclusive founder list.",
         "keyFacts": [
-          "Identifies Mazières as SDF/Stellar founder/co-founder and Chief Scientist.",
+          "Identifies Mazières as SDF/Stellar founder/co-founder and treats Founder and Chief Scientist as a dated, source-qualified title rather than a timeless current role.",
           "Credits him as author of the SCP paper and a Stanford CS professor."
         ],
         "avoid": [
-          "Do NOT deny Mazières founder/co-founder status or call him SDF's CEO.",
+          "Do NOT deny Mazières founder/co-founder status, call him SDF's CEO, or present Chief Scientist as a visibly displayed timeless current title.",
           "Do NOT describe the single-author SCP paper as merely lead-authored or impose an exclusive founder list."
         ],
-        "notes": "GT-28 CORRECTION 2026-07-10: current SDF and Stanford sources identify Mazières as founder/co-founder and Chief Scientist; the SCP paper is single-authored. Current-role wording is leadership-change sensitive.\nGT-28 independently confirmed by processes 3274/3275; existing ll-005 owns the empty-person-result recurrence."
+        "notes": "GT-28 CORRECTION 2026-07-10: first-party SDF page data and Stanford sources identify Mazières as founder/co-founder; the SCP paper is single-authored. 2026-07-13/14 freshness repair: the team-page payload still described him as Founder and Chief Scientist, but the rendered Leadership card displayed only his name, so the title is dated and qualified. Existing ll-005 owns the empty-person-result recurrence."
       },
       "tags": {
         "category": "history-org-tokenomics",
         "service": "scout",
-        "freshness": "stable"
+        "freshness": "scheduled"
       },
       "truth": {
-        "domain": "real-world",
+        "domain": "mixed",
         "status": "confirmed",
+        "asOf": "2026-07-13",
+        "reverifyBy": "2027-01-19",
         "sources": [
           {
             "class": "A",
             "ref": "https://stellar.org/foundation/team",
-            "note": "class inferred at migration"
+            "note": "First-party team page observed 2026-07-13: embedded page data described Mazières as Founder and Chief Scientist, while the rendered Leadership card showed only his name."
           },
           {
             "class": "D",
             "ref": "https://www.scs.stanford.edu/~dm/home/papers/stellar-consensus-sosp15.pdf",
-            "note": "class inferred at migration"
+            "note": "Single-author SCP paper naming David Mazières and his Stellar Development Foundation affiliation; accessed 2026-07-13."
           },
           {
             "class": "D",
             "ref": "https://fdc.stanford.edu/people/david-mazieres",
-            "note": "class inferred at migration"
+            "note": "Independent Stanford profile identifies Mazières as a Stanford computer-science professor and SDF co-founder; accessed 2026-07-13."
           }
         ],
         "corroboration": [
           {
-            "claim": "David Mazières is identified as SDF/Stellar founder or co-founder and Chief Scientist, authored the single-author SCP paper, and is a Stanford CS professor.",
-            "verdict": "confirmed",
+            "claim": "SDF's team-page data described David Mazières as Founder and Chief Scientist when observed on 2026-07-13, but the rendered Leadership card did not visibly display that title.",
+            "verdict": "confirmed-as-of",
             "evidence": [
               {
                 "class": "A",
-                "ref": "A: current SDF team/Meridian and SCP paper",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
-              },
+                "ref": "https://stellar.org/foundation/team",
+                "observedAt": "2026-07-13",
+                "note": "Direct page-source and rendered-DOM comparison; the role remains page-data-only and is therefore dated."
+              }
+            ]
+          },
+          {
+            "claim": "David Mazières is an SDF co-founder, authored the single-author SCP paper, and is a Stanford computer-science professor.",
+            "verdict": "confirmed",
+            "evidence": [
               {
-                "class": "A",
-                "ref": "A/D: Stanford profile/CV and independent historical sweep",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "class": "D",
+                "ref": "https://fdc.stanford.edu/people/david-mazieres",
+                "observedAt": "2026-07-13",
+                "note": "Independent institutional profile identifies his Stanford role and SDF co-founder status."
               },
               {
                 "class": "D",
-                "ref": "A/D: Stanford profile/CV and independent historical sweep",
-                "observedAt": "2026-07-11",
-                "note": "verbatim legacy evidence descriptor imported at migration"
+                "ref": "https://www.scs.stanford.edu/~dm/home/papers/stellar-consensus-sosp15.pdf",
+                "observedAt": "2026-07-13",
+                "note": "The paper is single-authored by David Mazières and states his SDF affiliation."
               }
             ]
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "Golden-truth sweep import — The inherited answer's denial of founder status contradicts current first-party SDF and Stanford records identifying David Mazières as founder/co-founder and Chief Scientist.",
+          "date": "2026-07-13",
+          "by": "SDF organizational source audit after independent Sol and Fable review",
           "evidence": [
-            "Solo scratchpad 575 GT-28 primary 3274 and blind 3275; both independently rejected the exclusive McCaleb/Kim founder list."
+            "https://stellar.org/foundation/team page source and rendered Leadership card observed 2026-07-13.",
+            "https://fdc.stanford.edu/people/david-mazieres and https://www.scs.stanford.edu/~dm/home/papers/stellar-consensus-sosp15.pdf.",
+            "solo://proj/49/scratchpad/sdf-organizational-s--630"
           ],
           "rootCause": [
-            "Eval-side founder-list simplification contradicted first-party records.",
+            "The golden treated embedded team-page title data as visibly displayed current wording and marked the mixed claim stable.",
             "improvements/lumenloop/ll-005-person-entity-empty-lane.md"
           ]
         },

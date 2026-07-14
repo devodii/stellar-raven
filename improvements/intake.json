@@ -131,5 +131,6 @@
     ,"sd-037": { "repo": "stellar/stellar-protocol", "reason": "SLP proposal-family discoverability is rooted in the normative stellar-protocol limits/ source and needs canonical family metadata/cross-links." }
     ,"sk-011": { "repo": "stellar/stellar-dev-skill", "reason": "The served upstream zk-proofs skill needs Protocol 25 status correction." }
     ,"sk-012": { "repo": "stellar/stellar-dev-skill", "reason": "The served upstream agentic-payments skill needs current MPP Session terminology." }
+    ,"sls-055": { "repo": "Stellar-Light/stellarlight", "reason": "Scout research omits canonical non-blog SDF organizational pages, leaving current legal-structure, fund-scope, mandate, leadership, and report claims without quotable coverage." }
   }
 }
