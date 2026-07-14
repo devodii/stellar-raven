@@ -19,6 +19,8 @@ recurrences:
     evidence: GT-42 primary/blind independently confirmed current normal P23 simulation uses archivedSorobanEntries with restorePreamble nil and one submitted invoke, while adjacent docs still imply separate restore/retry
   - date: 2026-07-13
     evidence: structured HTTP probe returned 200 and still found both "Contract Data Automatic Restoration" and the underqualified "will fail immediately" wording
+  - date: 2026-07-14
+    evidence: live page still contains both the auto-restoration section and unqualified failure sentence; retained locally because the open issue showed no maintainer action and did not warrant a follow-up comment
 probe:
   type: http-text
   url: https://developers.stellar.org/docs/learn/fundamentals/contract-development/storage/state-archival
@@ -27,9 +29,6 @@ probe:
     contains:
       - Contract Data Automatic Restoration
       - will fail immediately
-recurrences:
-  - date: 2026-07-14
-    evidence: live page still contains both the auto-restoration section and unqualified failure sentence; follow-up https://github.com/stellar/stellar-docs/issues/2568#issuecomment-4971407165
 ---
 
 ## Finding

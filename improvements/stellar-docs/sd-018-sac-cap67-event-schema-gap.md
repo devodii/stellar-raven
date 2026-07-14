@@ -1,13 +1,15 @@
 ---
 id: sd-018
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Document the SAC and CAP-67 asset event schema
 evidence:
   - token-interface page presents generic SEP-41 transfer/mint topic shapes
   - CAP-0067 and released/current rs-soroban-env append sep0011_asset to direct SAC transfer/mint events
   - current host test_transfer_with_issuer passed and asserts the asset-appended shape
   - Solo scratchpad 575 GT-42 primary 3308 and blind 3315
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2593
 ---
 
 ## Finding

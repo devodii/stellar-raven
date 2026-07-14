@@ -3,6 +3,7 @@ id: sd-016
 service: stellar-docs
 status: verified
 discovered: 2026-07-10
+upstreamTitle: Make network limit tables dated and source-linked
 evidence:
   - current Networks and Fees pages state 100 smart-contract transactions per ledger
   - live CONFIG_SETTING_CONTRACT_EXECUTION_LANES reports ledgerMaxTxCount 2000, last modified at ledger 60993066
@@ -20,8 +21,10 @@ also differs from the live ledger field.
 
 ## Recommendation
 
-Generate current network-limit tables from live, network-specific ledger and
-CONFIG_SETTING reads, include source ledger/as-of timestamps, and explain that
-resource budgets can constrain effective throughput below the count ceiling.
-Keep durable formulas/field meanings in prose and avoid presenting a current
-validator-controlled setting as a permanent protocol constant.
+Label current network-limit scalars with a source ledger/as-of timestamp and
+link the RPC/ledger read that operators can repeat. Where maintainable, check
+the hand-maintained value against a dated network-specific fixture in CI.
+Explain that resource budgets can constrain effective throughput below the
+count ceiling, and avoid presenting a validator-controlled setting as a
+permanent protocol constant. Do not require the page to generate live tables
+at request time.

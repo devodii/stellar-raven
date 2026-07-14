@@ -180,7 +180,7 @@
           "q-soroban-constructor-lifecycle",
           "q-ti-rpc-gettransactions-pagination-xdr"
         ],
-        "verdict": "consistent",
+        "verdict": "reopen",
         "lastChecked": "2026-07-13",
         "reSwept": {
           "date": "2026-07-13",
@@ -202,7 +202,11 @@
           "q-sor-contract-trustlines-c-address": "e89a7f3dc71cb6b24ba93e21f71b6dac7e6d1bd7c5967ab5012dcd36992ad184",
           "q-soroban-auth-delegation-p27": "75f17e6e074bf7ca4aefa81ff0ff8ff76faf2998b41126c0d03d00af83df2b13",
           "q-soroban-constructor-lifecycle": "405a6636719fc5a4eb436f61a59706057238708350257fc8435bee4ab09edf46",
-          "q-ti-rpc-gettransactions-pagination-xdr": "8c2451208994b1b0c36bf93b9553b3f20f62b087828f33f04792223d2c76a432"
+          "q-ti-rpc-gettransactions-pagination-xdr": "f850792c240b69efc83e0a9dab8f56ec45b890eca9f6d3689a1f43ae9b8a5105"
+        },
+        "reopened": {
+          "date": "2026-07-14",
+          "reason": "member-content-changed"
         }
       },
       {
@@ -531,7 +535,7 @@
           "q-ti-rpc-gettransactions-pagination-xdr",
           "q-ti-self-host-retention-backfill"
         ],
-        "verdict": "consistent",
+        "verdict": "reopen",
         "lastChecked": "2026-07-13",
         "reSwept": {
           "date": "2026-07-13",
@@ -549,8 +553,12 @@
           "q-soroban-publish-events": "6e05c8521d7b29746cd47c26faddfeee7270201975b896fd8a91ec272cd4e92c",
           "q-ti-enumerate-holders-airdrop": "761e51b39e0fad7844582671923a3f450ceca9a4f0816b081ce02a0a9ce5811e",
           "q-ti-historical-pointintime-balances": "7e3f5cee601cf6016d15bb9551d72f85a482c86242a12423ae0787b1f5dc88a2",
-          "q-ti-rpc-gettransactions-pagination-xdr": "8c2451208994b1b0c36bf93b9553b3f20f62b087828f33f04792223d2c76a432",
+          "q-ti-rpc-gettransactions-pagination-xdr": "f850792c240b69efc83e0a9dab8f56ec45b890eca9f6d3689a1f43ae9b8a5105",
           "q-ti-self-host-retention-backfill": "079bd59085acf1b6e57bf8dd58cc41b7d30f0568a7eda93ab8976efb657bf7f6"
+        },
+        "reopened": {
+          "date": "2026-07-14",
+          "reason": "member-content-changed"
         }
       },
       {

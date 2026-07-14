@@ -170,5 +170,9 @@ next follow-up instead of relying on memory.
 - Every retired finding has a complete `improvements/resolved.json` receipt, a commit-pinned source,
   an upstream resolution comment when applicable, and no stale intake/probe/golden/research refs.
 - Open upstream PRs/issues have deterministic next actions or scheduled follow-up.
+- Every newly recorded GitHub issue, PR, or comment URL was read back successfully before being
+  accepted as evidence; dangling refs and unposted drafts were removed or corrected.
+- Filing waves were paced for owner-readable, deduplicated issues. Untouched open issues stayed
+  silent unless the `improvements-pipeline` comment budget allowed a substantive response.
 - `npm run secrets:scan -- --tree` runs before any commit that includes generated artifacts
   or copied upstream content.

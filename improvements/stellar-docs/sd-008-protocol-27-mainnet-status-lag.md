@@ -13,6 +13,8 @@ evidence:
 recurrences:
   - date: 2026-07-13
     evidence: structured HTTP probe returned 200 and still rendered Protocol 27 as Testnet while retaining Protocol 26 as the Mainnet heading
+  - date: 2026-07-14
+    evidence: live table still labels P27 Testnet and P26 Mainnet; retained locally because the issue contained only bot activity and did not warrant a follow-up comment
 probe:
   type: http-text
   url: https://developers.stellar.org/docs/networks/software-versions
@@ -21,9 +23,6 @@ probe:
     contains:
       - Protocol 27 (Testnet, June 18, 2026)
       - Protocol 26 (Mainnet, May 6, 2026)
-recurrences:
-  - date: 2026-07-14
-    evidence: live table still labels P27 Testnet and P26 Mainnet; maintainer-ownership follow-up https://github.com/stellar/stellar-docs/issues/2574#issuecomment-4971408775
 ---
 
 ## Finding

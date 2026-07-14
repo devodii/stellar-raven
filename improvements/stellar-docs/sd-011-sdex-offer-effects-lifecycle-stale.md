@@ -1,13 +1,16 @@
 ---
 id: sd-011
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
+upstreamTitle: Clarify unused SDEX offer effects and authoritative result XDR
 evidence:
   - stellar/go protocols/horizon/effects source at aab2ea4 marks offer-created/updated/removed effect types unused
   - live successful manage-buy-offer operation 272376861589106689 returned zero effects while TransactionResult XDR contained the updated OfferEntry
   - removed offer 1848272936 returned 404 while its offer-trades endpoint retained two trades
+  - rechecked 2026-07-14: current Effect Types docs still list the three offer effects, while current stellar/go keeps types 30/31/32 commented as unused
   - Solo scratchpad 575 GT-17 primary process 3247 and independent blind process 3248
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2604
 ---
 
 ## Finding
@@ -18,11 +21,10 @@ offer lifecycle tracking. Current `stellar/go` marks effect types 30/31/32
 unused, and a live successful offer update returned no Horizon effects even
 though its transaction result carried the updated `OfferEntry`.
 
-The same documentation context does not clearly teach the full current-state
-versus history boundary: an immediately filled offer may receive no real Core
-offer ID, Horizon trade resources can use a synthetic operation-derived ID, and
-a removed offer can 404 while `/offers/{id}/trades` still returns history.
-Classic offers do not expire at the protocol level.
+The missing operational boundary is narrow: these effect types are not a
+current lifecycle feed. Transaction result XDR/meta records the offer outcome,
+while Horizon's open-offer and trade resources answer separate current-state
+and history questions.
 
 ## Evidence
 
@@ -44,18 +46,7 @@ This is a docs-content/behavior gap, not an Algolia ranking issue.
 
 ## Recommendation
 
-Update the SDEX offer lifecycle and Horizon effect documentation to:
-
-- explicitly mark offer-created/updated/removed effects unused in current
-  Horizon;
-- make transaction result XDR/meta the authoritative source for create,
-  update, delete, and claimed-offer transitions;
-- distinguish current open-offer endpoints from trade history;
-- document immediate fills and synthetic trade offer IDs;
-- show cursor/reconnect handling and path-payment trade correlation; and
-- state that Classic offers do not expire, while client cancellation and
-  Horizon retention/indexing are separate concerns.
-
-Add a runnable example that creates or updates an offer, decodes the result,
-reconciles current `/offers` state, and follows `/trades` history without
-depending on unused effect types.
+In the Effect Types table, mark offer-created/updated/removed as unused rather
+than listing them as emitted effects. Add one adjacent lifecycle note that
+directs readers to transaction result XDR/meta for the operation outcome, and
+to open-offer/trade resources for current state and retained trade history.

@@ -327,6 +327,7 @@ For each miss/wrong/partial (and each surprising pass), classify and route:
 | Eval-side gap: stale golden, mislabeled case, missing lane coverage | golden disagrees with live truth from the service's own mouth | Solo todo (goldens live in this repo); the fix lands directly in the owned case file (`eval/qa/corpus/battery/<category>/<id>.json`) **via the `golden-truth` skill** (`.agents/skills/golden-truth/SKILL.md` — gospel changes need multi-source triangulation, never a single source class) with `truth.verified` updated in the same diff (the CI gospel-change lint enforces it); freshness-drifting truth moves to the live-data lane as behavioral golden |
 | **Upstream data/content gap**: missing fields, unordered arrays, empty lanes, extraction quality, stale skill content | correct agent + correct plumbing still can't answer from what the service returns | **`improvements/` finding** |
 | **Upstream semantics/spec gap**: response contracts, error shapes, vocabulary, index tokenization/ranking | the service works but its self-description or behavior misleads any consumer, not just us | **`improvements/` finding** |
+| Corpus-coverage diagnostic: canonical truth exists elsewhere and no tested surface undertakes to host it | the answer is verifiable from its canonical owner, while the miss only proves that one corpus/index does not carry it | keep truth and provenance in the golden; record a local coverage/monitoring result, not a manufactured Docs/site issue |
 
 Anti-overfitting rules bind here: zero-hit routing cases stay failing until a *general*
 mechanism fixes them; no query→service maps, no per-question vocabulary. If the only fix
@@ -382,6 +383,10 @@ Charter: `improvements/README.md`. One file per finding in the matching collecti
 collection's `<prefix>-NNN` sequence. Frontmatter + three sections.
 For lifecycle, intake, probe, index, and lint maintenance details, use the
 `improvements-pipeline` skill.
+
+Before choosing a collection, classify web failures as Docs content, Docs search/Algolia, broader
+site content, broader site search/Algolia, or canonical-source defects. Search absence is not enough:
+the proposed owner must actually undertake to expose the fact.
 
 ```
 ---

@@ -1,8 +1,9 @@
 ---
 id: sd-033
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Document Python SDK support for Stellar RPC
 evidence:
   - current developers.stellar.org client SDKs page says the Python SDK communicates with Horizon and lists only a Horizon networking API
   - stellar/stellar-docs main commit 45770fa8 contains the same Horizon-only Python section
@@ -10,6 +11,7 @@ evidence:
   - current StellarCN/py-stellar-base README lists a Stellar RPC networking layer and Horizon/RPC transaction submission and queries
   - current official Stellar event and transaction guides already use stellar_sdk.soroban_rpc Python APIs
   - Solo scratchpad 575 GT-55 primary candidate and author repro process 3397
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2600
 ---
 
 ## Finding

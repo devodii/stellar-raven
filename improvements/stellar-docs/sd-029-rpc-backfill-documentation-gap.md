@@ -1,13 +1,15 @@
 ---
 id: sd-029
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Document Stellar RPC BACKFILL startup behavior
 evidence:
   - current RPC admin and data-lake pages inspected 2026-07-11 do not explain the v25.1+ BACKFILL startup path and prerequisites
   - stellar-rpc v27.1.1 options.go defaults BACKFILL=false and SERVE_LEDGERS_FROM_DATASTORE=false
   - stellar-rpc v27.1.1 service.go and backfill.go synchronously materialize an approximate trailing window before normal ingestion
   - narrow config and ingest source tests recorded in Solo scratchpad 575 GT-54 blind process 3386
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2602
 ---
 
 ## Finding

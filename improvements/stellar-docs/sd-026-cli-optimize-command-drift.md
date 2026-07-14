@@ -1,13 +1,15 @@
 ---
 id: sd-026
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Replace the deprecated stellar contract optimize workflow
 evidence:
   - current documentation still demonstrates standalone stellar contract optimize
   - Stellar CLI 27 marks the standalone command deprecated
   - contract build optimization is enabled by default; --optimize is redundant and --optimize=false disables it
   - Solo scratchpad 575 GT-48 primary 3333 and blind 3342
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2601
 ---
 
 ## Finding

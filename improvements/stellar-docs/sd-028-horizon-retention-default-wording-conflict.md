@@ -1,13 +1,15 @@
 ---
 id: sd-028
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Correct the Horizon history retention default
 evidence:
   - official Horizon configuring and ingestion pages inspected 2026-07-11 disagree on whether HISTORY_RETENTION_COUNT defaults to 0 or 518400
   - stellar-horizon v27.0.0 internal/flags.go sets history-retention-count to 0 and defines 0 as unlimited
   - stellar-horizon v27.0.0 reaper source skips automatic history deletion when the count is 0
   - Solo scratchpad 575 GT-54 primary process 3383 and pre-read-locked blind process 3386
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2599
 ---
 
 ## Finding

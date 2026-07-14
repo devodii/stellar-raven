@@ -3,6 +3,7 @@ id: sd-020
 service: stellar-docs
 status: verified
 discovered: 2026-07-11
+upstreamTitle: Update SAC executable identity and admin introspection terminology
 evidence:
   - current SAC docs retain obsolete contract-ID/executable XDR terminology
   - current stellar-xdr uses ENVELOPE_TYPE_CONTRACT_ID with nested FROM_ASSET and CONTRACT_EXECUTABLE_STELLAR_ASSET

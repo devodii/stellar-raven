@@ -1,13 +1,15 @@
 ---
 id: sd-036
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Fix CAP-0075 protocol-version and field-selector contradictions
 evidence:
   - CAP-0075 at stellar/stellar-protocol commit fbf05c9d3220b711e181577e7dca19844c765c3c
   - shipped host interface at stellar/rs-soroban-env commit 1d0a2c6a522b1e6bfafed23c047372832a7976a7
   - research/audits/2026-07-11-gt31-protocol-caps-reserves.md
   - Solo scratchpad 575 GT-31 primary process 3280, blind process 3282, and queued author process 3403
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-protocol/issues/1980
 ---
 
 ## Finding

@@ -1,13 +1,15 @@
 ---
 id: sd-017
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
+upstreamTitle: Align Horizon lifecycle and deprecation wording
 evidence:
   - APIs Overview and Stellar Lab surfaces describe Horizon as considered deprecated
   - Stellar Stack and the 2026 policy correction describe Horizon as nearing EOL/not yet deprecated
   - current Horizon endpoints remain operational and some have no direct RPC equivalent
   - Solo scratchpad 575 GT-32 primary 3281 and independent blind 3284
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2592
 ---
 
 ## Finding

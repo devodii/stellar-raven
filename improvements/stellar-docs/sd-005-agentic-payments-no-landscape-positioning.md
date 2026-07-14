@@ -16,7 +16,7 @@ recurrences:
   - date: 2026-07-11
     evidence: P4 H2/N2 review again found that the surfaced material needs an explicit anti-conflation statement: x402 has no SEP number, SEP-41 is the token interface used by Stellar payment flows, and MPP Session is channel-backed rather than a separate settlement rail. solo://proj/49/scratchpad/super-corpus-rebuild--585
   - date: 2026-07-14
-    evidence: public search still found no AP2/ACP positioning; cautious scope follow-up https://github.com/stellar/stellar-docs/issues/2565#issuecomment-4971403928
+    evidence: public search still found no AP2/ACP positioning; retained locally because the open issue showed no maintainer action and did not warrant a follow-up comment
 ---
 
 ## Finding

@@ -3,6 +3,7 @@ id: sd-021
 service: stellar-docs
 status: verified
 discovered: 2026-07-11
+upstreamTitle: Fix the Protocol 25 BN254 CAP link and Poseidon API distinctions
 evidence:
   - Software Versions P25 BN254 item links CAP-79 instead of CAP-74
   - ZK docs blur host permutation names with higher-level Poseidon hash APIs

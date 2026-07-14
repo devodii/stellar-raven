@@ -105,6 +105,10 @@
       "repo": "stellar/stellar-docs",
       "reason": "The Indexers page describes Alchemy's Stellar Data API as a future launch after the provider's official indexed-data product became live."
     },
+    "sd-011": {
+      "repo": "stellar/stellar-docs",
+      "reason": "Current SDEX documentation can lead readers to rely on unused offer lifecycle effects instead of transaction result XDR and current-state resources."
+    },
     "sls-020": {
       "repo": "Stellar-Light/stellar-scout",
       "reason": "Current security-program migration and supersession facts are absent from research retrieval, allowing stale SDF landing content to double-count or misroute disclosure programs."

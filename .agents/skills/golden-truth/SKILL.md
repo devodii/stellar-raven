@@ -41,6 +41,16 @@ of change.
 The classification is recorded per case as `truth.domain` (`real-world | corpus-grounded |
 mixed`). Most questions mix domains — classify per CLAIM, not per case.
 
+An index or corpus miss does not by itself create a documentation obligation. First identify the
+canonical owner of the fact and whether the tested surface undertakes to explain or index it. A case
+may intentionally measure cross-source corpus coverage while the truthful answer remains canonical
+elsewhere; record that as a coverage diagnostic rather than manufacturing a Docs defect.
+
+An upstream maintainer's decline is evidence about placement, scope, or editorial policy—not proof
+that the declined fact is false. Preserve independently corroborated truth, and add a symmetric
+grader caution when needed so an answer is not penalized either for accurately stating the canonical
+fact or for using the owner's accurate operational phrasing without claiming a stronger invariant.
+
 ## Step 2 — know your source classes (independence is between CLASSES)
 
 Tool names below are examples from current agent environments, not a Claude-only contract.

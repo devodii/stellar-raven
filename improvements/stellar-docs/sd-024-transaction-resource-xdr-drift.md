@@ -1,13 +1,15 @@
 ---
 id: sd-024
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Update transaction resource fields and enforcement phases
 evidence:
   - current transaction-resource documentation/indexed prose uses readBytes and refundableFee
   - Protocol 27 XDR exposes diskReadBytes and resourceFee naming
   - current Core/RPC/CLI evidence distinguishes validation, preflight, and apply-time enforcement
   - Solo scratchpad 575 GT-47 blind process 3334
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2596
 ---
 
 ## Finding

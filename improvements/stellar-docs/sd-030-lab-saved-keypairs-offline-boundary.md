@@ -1,13 +1,16 @@
 ---
 id: sd-030
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Disclose plaintext browser storage for Lab saved keypairs
 evidence:
   - Lab Saved Keypairs docs inspected 2026-07-11 restrict the feature to Testnet and Futurenet and say never Mainnet
   - current stellar/laboratory localStorageSavedKeypairs source serializes saved keypair objects into browser localStorage
   - current Laboratory tests persist the S-secret value in the saved object
+  - rechecked 2026-07-14: the current page says browser local storage but does not state that it is plaintext JSON; current Laboratory source serializes saved keypairs with JSON.stringify
   - Solo scratchpad 575 GT-54 primary process 3383 and pre-read-locked blind process 3386
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2605
 ---
 
 ## Finding
@@ -17,13 +20,8 @@ boundary prominent enough for a secret-bearing browser tool. Current Laboratory
 source serializes saved keypair objects to browser `localStorage` as
 plaintext JSON, and current tests place the `S...` secret in that object.
 The Saved Keypairs page correctly restricts use to Testnet/Futurenet and says
-never Mainnet, but readers can still mistake “saved locally” or a self-hosted
-Lab instance for encrypted custody or an air-gapped signer.
-
-Self-hosting changes who serves the UI; it does not by itself remove RPC/Horizon,
-simulation/submission, package/runtime or other network dependencies. Source
-inspection of client-side signing also cannot prove the universal negative that
-no deployment/runtime ever transmits a secret.
+never Mainnet, but it does not state the concrete storage property: the secret
+is persisted as plaintext browser storage, not encrypted custody.
 
 ## Evidence
 
@@ -39,12 +37,7 @@ flows, which avoid placing a production seed in Lab.
 
 ## Recommendation
 
-Add a high-visibility warning beside Saved Keypairs and raw-secret signing:
-
-- storage is browser `localStorage`, not encrypted custody;
-- use throwaway Testnet/Futurenet material only and never Mainnet authority;
-- clearing/browser-profile/extension behavior can affect persistence and backup;
-- “local” or “self-hosted” is not synonymous with offline/air-gapped;
-- for a real air gap, export unsigned XDR to a separately trusted offline or
-  hardware signer and return only the signature/signed envelope;
-- do not promise universal non-egress without an audited deployment/runtime.
+Add one warning beside the existing Saved Keypairs network restriction: an
+`S...` secret is stored as plaintext JSON in browser `localStorage`, not
+encrypted custody. Keep the existing Testnet/Futurenet-only and never-Mainnet
+guidance.

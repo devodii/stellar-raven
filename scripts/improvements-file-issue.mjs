@@ -27,7 +27,7 @@ if (!GITHUB_REPO_RE.test(repo)) {
   console.error(`invalid repo '${repo}'; expected owner/repo`);
   process.exit(2);
 }
-const title = `${finding.frontmatter.id}: ${oneLineTitle(finding)}`;
+const title = issueTitle(finding);
 const body = renderBody(finding);
 
 if (args.dryRun) {
@@ -86,6 +86,14 @@ function resolveRepo(finding) {
 }
 
 const url = result.stdout.trim();
+const verify = spawnSync("gh", ["issue", "view", url, "--json", "url", "--jq", ".url"], {
+  encoding: "utf8",
+});
+if (verify.status !== 0 || verify.stdout.trim() !== url) {
+  process.stderr.write(verify.stderr ?? "");
+  console.error(`issue was created at ${url}, but GitHub read-back failed; local finding was not mutated`);
+  process.exit(1);
+}
 console.log(url);
 writeFindingFrontmatter(finding, {
   status: "reported-upstream",
@@ -104,7 +112,7 @@ if (indexResult.status !== 0) {
 function renderBody(finding) {
   const fm = finding.frontmatter;
   const sourceUrl = `https://github.com/${RAVEN_REPO}/blob/main/${finding.relPath}`;
-  const sourceCommit = latestSourceCommit(finding.relPath);
+  const sourceCommit = latestMatchingSourceCommit(finding);
   const immutableSourceUrl = sourceCommit
     ? `https://github.com/${RAVEN_REPO}/blob/${sourceCommit}/${finding.relPath}`
     : null;
@@ -139,20 +147,47 @@ function renderBody(finding) {
     "",
     handoffUrl,
     "",
-    "Include the finding id, resolving issue/PR, deployed version or timestamp, and the smallest live recheck. Raven independently verifies the upstream surface before changing the finding to `fixed-upstream`; issue closure or a merged PR alone is not treated as proof. After a distinct reviewer repeats the live check, the active finding is retired to Raven's resolved ledger while the immutable snapshot remains available.",
+    "Include the finding id, resolving issue/PR, deployed version or timestamp, and the smallest live recheck. Raven independently verifies the upstream surface before changing the finding to `fixed-upstream`; issue closure or a merged PR alone is not treated as proof. After a distinct reviewer repeats the live check, the active finding is retired to Raven's resolved ledger; a commit-pinned snapshot is preserved when available.",
     "",
   ].join("\n");
 }
 
-function latestSourceCommit(relPath) {
-  const result = spawnSync("git", ["log", "-1", "--format=%H", "--", relPath], { encoding: "utf8" });
-  return result.status === 0 ? result.stdout.trim() : "";
+function latestMatchingSourceCommit(finding) {
+  const result = spawnSync("git", ["log", "-1", "--format=%H", "--", finding.relPath], {
+    encoding: "utf8",
+  });
+  const commit = result.status === 0 ? result.stdout.trim() : "";
+  if (!commit) return "";
+  const blob = spawnSync("git", ["show", `${commit}:${finding.relPath}`], {
+    encoding: "utf8",
+    maxBuffer: 4 * 1024 * 1024,
+  });
+  return blob.status === 0 && blob.stdout === finding.raw ? commit : "";
+}
+
+function issueTitle(finding) {
+  const explicit = String(finding.frontmatter.upstreamTitle ?? "").trim();
+  if (explicit) {
+    if (explicit.length < 20 || explicit.length > 120) {
+      console.error(`${finding.frontmatter.id}: upstreamTitle must be 20-120 characters`);
+      process.exit(2);
+    }
+    return explicit;
+  }
+  if (["proposed", "verified"].includes(finding.frontmatter.status)) {
+    console.error(
+      `${finding.frontmatter.id}: add a reader-first upstreamTitle (20-120 characters) before filing`,
+    );
+    process.exit(2);
+  }
+  // Historical reported records predate upstreamTitle; keep dry-run rendering available.
+  return `${finding.frontmatter.id}: ${oneLineTitle(finding)}`;
 }
 
 function scrub(text) {
   return String(text)
     .split("\n")
-    .filter((line) => !/\b(Solo|scratchpad|todo \d+|workflow\s+wf_[\w-]+|comment \d+)/i.test(line))
+    .filter((line) => !/\b(Solo|scratchpad|todo \d+|(?:workflow\s+)?wf_[\w-]+|comment \d+)/i.test(line))
     .join("\n")
     .replace(/solo:\/\/\S+/gi, "[internal coordination record]")
     .replace(/\/Users\/[^\s)]+/g, "[local path elided]");

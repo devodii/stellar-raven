@@ -1,14 +1,16 @@
 ---
 id: sd-031
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
+upstreamTitle: Fix the removed stellar network container command
 evidence:
   - live developers.stellar.org/docs/tools/lab/quickstart-with-lab rendered stellar network container start testnet on 2026-07-11
   - live Stellar Docs exact-phrase search returned that invalid command from the current page
   - stellar/stellar-docs main commit 45770fa8 retains the command in docs/tools/lab/quickstart-with-lab.mdx and the current Spanish docs retain stellar network container start local
   - local Stellar CLI 27.0.0 rejected network container and exposed stellar container start NETWORK with local, testnet, futurenet, and pubnet
   - Solo scratchpad 575 GT-55 primary process 3392 and pre-read-sealed blind process 3393
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2598
 ---
 
 ## Finding

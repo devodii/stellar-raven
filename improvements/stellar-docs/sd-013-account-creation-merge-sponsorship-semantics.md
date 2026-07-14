@@ -1,13 +1,15 @@
 ---
 id: sd-013
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
+upstreamTitle: Document sponsored account creation and merge sponsorship blockers
 evidence:
   - official Create Account and Account Merge documentation/result-code pages
   - CAP-0033 sponsored-reserve semantics
   - current stellar-core CreateAccountOpFrame and MergeOpFrame behavior
   - Solo scratchpad 575 GT-29 primary 3276 and independent blind 3278
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2590
 ---
 
 ## Finding

@@ -43,6 +43,13 @@ for (const file of listFindingFiles()) {
     errors.push(String(err.message ?? err));
     continue;
   }
+  const topLevelKeys = [...finding.frontmatterRaw.matchAll(/^([A-Za-z0-9_-]+):/gm)]
+    .map((match) => match[1]);
+  for (const key of new Set(topLevelKeys)) {
+    if (topLevelKeys.filter((candidate) => candidate === key).length > 1) {
+      errors.push(`${path.relative(process.cwd(), file)}: duplicate frontmatter field '${key}'`);
+    }
+  }
   findings.push(finding);
   const fm = finding.frontmatter;
   const label = path.relative(process.cwd(), file);
@@ -93,7 +100,10 @@ for (const file of listFindingFiles()) {
 validateIndexFreshness(findings);
 validateResolvedLedger(findings);
 const intake = validateIntake(findings);
-if (live && intake) validateLiveRepos(intake);
+if (live && intake) {
+  validateLiveRepos(intake);
+  validateLiveGithubRefs(findings);
+}
 
 if (errors.length) {
   console.error(`improvements lint failed (${errors.length}):`);
@@ -280,6 +290,31 @@ function validateLiveRepos(intake) {
     }
     if (/^HTTP\/\S+\s+30[1278]\b/m.test(output) || /^location:/im.test(output)) {
       errors.push(`improvements/intake.json: stale repo string '${repo}' appears renamed or redirected`);
+    }
+  }
+}
+
+function validateLiveGithubRefs(findings) {
+  const refs = new Map();
+  const re = /https:\/\/github\.com\/([^/\s)]+)\/([^/\s)]+)\/(?:issues|pull)\/(\d+)(?:#issuecomment-(\d+))?/gi;
+  for (const finding of findings) {
+    for (const match of finding.raw.matchAll(re)) {
+      const [, owner, repo, number, commentId] = match;
+      const url = match[0];
+      const endpoint = commentId
+        ? `/repos/${owner}/${repo}/issues/comments/${commentId}`
+        : `/repos/${owner}/${repo}/issues/${number}`;
+      if (!refs.has(endpoint)) refs.set(endpoint, url);
+    }
+  }
+
+  for (const [endpoint, url] of [...refs.entries()].sort()) {
+    const result = spawnSync("gh", ["api", endpoint, "--jq", ".html_url"], {
+      encoding: "utf8",
+      maxBuffer: 1024 * 1024,
+    });
+    if (result.status !== 0 || !result.stdout.trim()) {
+      errors.push(`dangling or inaccessible GitHub evidence ref '${url}'`);
     }
   }
 }

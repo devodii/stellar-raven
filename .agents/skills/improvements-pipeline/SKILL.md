@@ -45,6 +45,25 @@ stranger can reproduce. Use the next id in the service prefix sequence:
 - `stellar-docs` -> `sd-NNN`
 - `skills` -> `sk-NNN`
 
+For a web-surface finding, classify the failing surface before choosing a collection or owner:
+
+- `docs-content` — canonical developer documentation is wrong, stale, contradictory, or omits a
+  fact its existing page actually undertakes to explain;
+- `docs-search` — the Docs Algolia/crawler/ranking layer fails even though suitable canonical
+  content exists;
+- `site-content` — a broader `stellar.org` page makes a stale or incorrect claim, or an existing
+  site section has a clear reader-facing omission;
+- `site-search` — the broader site's Algolia/search layer fails over suitable site content; and
+- `canonical-source` — the defect belongs in the specification, implementation, product, or other
+  authority that owns the fact, not in Docs or the marketing site.
+
+Keep these as routing categories, not speculative empty directories. Create a new service collection
+only when the first verified finding has an identified owner, reproducible evidence, and a lifecycle
+that cannot be represented by an existing collection. Search absence alone is not a content defect:
+identify the canonical source, show why the selected surface undertakes to expose that truth, and
+name the smallest reader-facing correction. A maintainer's refusal is evidence about placement and
+scope, not evidence that the underlying fact is false.
+
 Use the standard frontmatter plus `Finding`, `Evidence`, and `Recommendation` sections. Keep
 `discovered` as `YYYY-MM-DD`. Evidence must be a non-empty list. If evidence contains a GitHub issue
 or PR URL, the status must be `reported-upstream`, `declined-upstream`, or `fixed-upstream`; otherwise
@@ -73,6 +92,11 @@ npm run improvements:file -- --file improvements/<collection>/<finding>.md --dry
 npm run improvements:file -- --file improvements/<collection>/<finding>.md
 ```
 
+Before the write, read the rendered issue as an upstream maintainer: the title and first paragraph
+must state the affected surface and concrete defect without eval IDs, internal workflow language, or
+a clipped transcript sentence. Put the smallest correction before optional context. Corpus/eval
+provenance belongs in compact evidence, not in the owner-facing ask.
+
 The generated issue body must retain all five sections: `Finding`, `Evidence`, `Recommendation`,
 `Source Record`, and `Resolution Handoff`. `Source Record` links the exact public
 `improvements/...` file on `kalepail/stellar-raven` and, when committed, its immutable blob snapshot;
@@ -83,6 +107,10 @@ link. An upstream maintainer who prefers a patch can use
 `.github/PULL_REQUEST_TEMPLATE/upstream-improvement-handoff.md` for an evidence-only PR. The filing
 script refuses to re-file `reported-upstream`, `declined-upstream`, or `fixed-upstream` records: search and dedupe first,
 and use a successor finding when the remaining defect is materially different.
+
+An immutable snapshot is valid only when the committed blob exactly matches the finding being
+rendered. If the finding has uncommitted edits, publish the commit first or omit the snapshot; never
+label an older version of the record immutable evidence for the current filing.
 
 A finding can legitimately become `fixed-upstream` before anyone files it. If the original trigger no
 longer reproduces, do not create a ceremonial issue merely to make every record have a URL. Add dated
@@ -149,9 +177,20 @@ or when a user asks whether previous improvements were resolved.
    comments, review decision, unresolved requested changes, failing checks, and last update.
    For PRs this repo opened, also check whether it needs author action, review response,
    rebase, CI fix, or abandonment.
-   Confirm that either the issue body or a durable tracking comment links the exact originating
-   `improvements/...` source record. If missing, add one concise backlink comment; do not rewrite
-   maintainer-authored issue prose merely to normalize the template.
+   Confirm that every GitHub URL recorded as evidence resolves to the intended issue, PR, or comment.
+   A locally printed URL is not durable evidence until it has been read back from GitHub. Remove or
+   correct dangling refs; never describe an unposted draft as a public comment.
+
+   **Silence is the default on untouched open issues.** Do not add reminder, status-chasing,
+   backlink-only, recurrence-only, or "still reproducible" comments when there is no indication that
+   anyone has attempted to act on the issue. Keep routine recurrences local. Comment only for:
+   - substantive maintainer activity that needs a direct response;
+   - a claimed or deployed fix that needs a verification result;
+   - materially new evidence, a regression, or a correction that changes the proposed action; or
+   - author-owned PR work such as requested changes, CI repair, or rebase.
+
+   Missing source-record links on an already-filed untouched issue do not override this no-noise
+   rule. Preserve the backlink locally and ensure future filings contain it in the original body.
 4. Re-run the original trigger:
    - finding with `probe` frontmatter: `npm run improvements:probes` or a targeted equivalent.
    - eval-origin finding: use the stored transcript only to reconstruct the original claim,
@@ -162,8 +201,8 @@ or when a user asks whether previous improvements were resolved.
 5. Classify the outcome:
    - `fixed`: live trigger no longer reproduces; update status to `fixed-upstream`, add dated
      evidence, and note the resolving issue/PR.
-   - `still-repro`: keep status, add a recurrence with date and evidence, and comment/follow up
-     upstream if the ref claims to be fixed.
+   - `still-repro`: keep status and add a local recurrence with date and evidence. Comment upstream
+     only if the ref claims to be fixed or the new evidence materially changes the requested action.
    - `closed-unfixed`: keep or return to `reported-upstream` while the GitHub ref remains in
      evidence, record why closure did not resolve it, and open a successor or follow-up ref
      only when the owner path is clear.
@@ -215,8 +254,12 @@ npm run improvements:lint -- --live
 npm run improvements:probes
 ```
 
-Use Solo timers for unresolved follow-up instead of memory. A timer body should include the
-finding ids, upstream refs, scratchpad id, and the exact re-check to run.
+Use Solo timers for a concrete future verification event instead of memory. Do not schedule a timer
+whose only outcome would be another reminder on an untouched issue. A timer body should include the
+finding ids, upstream refs, scratchpad id, and the exact re-check or maintainer signal to inspect.
+When an authorized filing or verification lane is blocked by an upstream capacity or rate limit,
+use a repeating 10-minute retry timer until the service recovers; cancel it immediately after a
+successful probe. A longer watchdog deadline is not the retry cadence.
 
 ## Probes and recurrences
 
@@ -242,7 +285,9 @@ or collide with active IDs, evidence or recurrence fields are missing, the gener
 the committed file, intake services do not cover the four collections exactly, an override points to a
 missing finding id, a repo string is not `owner/repo`, or a finding cannot resolve to a repo, mixed
 rule, or explicit unclear marker. `npm run improvements:lint -- --live` additionally checks each
-distinct intake repo with GitHub and fails on stale, inaccessible, or redirected repo strings.
+distinct intake repo and every recorded GitHub issue/PR/comment evidence URL. The base lint also
+rejects duplicate top-level frontmatter keys so a later block cannot silently shadow earlier
+evidence. Live lint fails on stale, inaccessible, redirected, or dangling refs.
 
 ## Intake maintenance
 

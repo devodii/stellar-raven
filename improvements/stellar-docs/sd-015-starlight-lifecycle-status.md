@@ -1,13 +1,15 @@
 ---
 id: sd-015
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
+upstreamTitle: Label Starlight as archived experimental prior art
 evidence:
   - current Stellar glossary Starlight entry
   - archived stellar-deprecated/starlight repository and experimental README
   - 2021/2022 SDF Starlight experiment posts
   - Solo scratchpad 575 GT-29 primary 3276 and independent blind 3278
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2591
 ---
 
 ## Finding

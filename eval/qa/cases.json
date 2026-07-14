@@ -1,7 +1,7 @@
 {
   "$comment": "Generated owned QA battery. Regenerate with npm run eval:qa:compile.",
   "schema": "qa-case-v1",
-  "corpusContentSha256": "d4c84ecca0b595278a12b662b9bc6e0bf1f393256a57603a8e0a597bd3fb33a6",
+  "corpusContentSha256": "ba7803773104410433f7162d3b4b5e78d0e354f083aa21f153ac8687776aeafa",
   "counts": {
     "total": 490,
     "byCategory": {
@@ -6274,7 +6274,7 @@
           "Do NOT describe ACP as a Stellar/blockchain settlement mechanism or MPP as a Stripe/Tempo chain.",
           "Do NOT present the observed live result set as a complete or permanent roster; explicitly historical facts remain historical."
         ],
-        "notes": "VERIFIED 2026-06-22: developers.stellar.org/docs/build/agentic-payments documents EXACTLY TWO Stellar-settlement patterns side-by-side — x402 (Coinbase, per-request, Soroban authorization entries, facilitator verify/settle) and MPP (Machine Payments Protocol: direct on-chain settlement via Soroban SAC transfers, supporting one-time charge payments AND high-frequency off-chain payment channels). AP2 (Google Agent Payments Protocol) and ACP are general/coordination standards NOT documented as Stellar-native settlement. The AP2 'routes the actual payment through x402' framing is reasonable coordination-vs-settlement industry framing but NOT a Stellar-docs claim — DEMOTED from must_have to should_have. Freshness:true (fast-moving). 2026-06-29 RE-VERIFIED: both source docs pages (agentic-payments, agentic-payments/x402) resolve 200; AP2=Google Agent Payments Protocol composing with x402 corroborated by independent writeups (The Graph, foojay.io). No fabricated SEP/contract/project names — SEP-41 is real. Confidence stays medium (fast-moving standards space).\nAlso good if the answer: Distinguishes Stellar-settlement standards (x402, MPP) from general/coordination standards (AP2, ACP). | Notes AP2 is a coordination layer that can route the underlying payment through a settlement protocol like x402 (industry framing, not a Stellar-docs claim).\nGolden cites: At least one primary developers.stellar.org agentic-payments docs page (x402 + MPP).\nAdded 2026-07-10 after GT-12 primary + blind agreement. Grade protocol layer, optionality, and maturity precisely. The safe comparison is general protocol versus Stellar implementation/token substrate—not a binary list of 'Stellar standards' and 'coordination standards'."
+        "notes": "VERIFIED 2026-06-22: developers.stellar.org/docs/build/agentic-payments documents EXACTLY TWO Stellar-settlement patterns side-by-side — x402 (Coinbase, per-request, Soroban authorization entries, facilitator verify/settle) and MPP (Machine Payments Protocol: direct on-chain settlement via Soroban SAC transfers, supporting one-time charge payments AND high-frequency off-chain payment channels). AP2 (Google Agent Payments Protocol) and ACP are general/coordination standards NOT documented as Stellar-native settlement. The AP2 'routes the actual payment through x402' framing is reasonable coordination-vs-settlement industry framing but NOT a Stellar-docs claim — DEMOTED from must_have to should_have. Freshness:true (fast-moving). 2026-06-29 RE-VERIFIED: both source docs pages (agentic-payments, agentic-payments/x402) resolve 200; AP2=Google Agent Payments Protocol composing with x402 corroborated by independent writeups (The Graph, foojay.io). No fabricated SEP/contract/project names — SEP-41 is real. Confidence stays medium (fast-moving standards space).\nAlso good if the answer: Distinguishes Stellar-settlement standards (x402, MPP) from general/coordination standards (AP2, ACP). | Notes AP2 is a coordination layer that can route the underlying payment through a settlement protocol like x402 (industry framing, not a Stellar-docs claim).\nGolden cites: At least one primary developers.stellar.org agentic-payments docs page (x402 + MPP).\nAdded 2026-07-10 after GT-12 primary + blind agreement. Grade protocol layer, optionality, and maturity precisely. The safe comparison is general protocol versus Stellar implementation/token substrate—not a binary list of 'Stellar standards' and 'coordination standards'. Coverage diagnostic 2026-07-14: the exposed Stellar agentic-payments skill supports x402/MPP, not AP2/ACP. Do not penalize a source-faithful limitation as a factual error or turn that absence alone into a Docs finding; any asserted AP2/ACP characterization still requires primary sourcing."
       },
       "tags": {
         "category": "defi-ecosystem",
@@ -6403,18 +6403,19 @@
           }
         ],
         "verified": {
-          "date": "2026-07-11",
-          "by": "P4 conversions rework after independent Fable copy/quality review",
+          "date": "2026-07-14",
+          "by": "P4 conversions rework plus independent Terra coverage-placement verification",
           "evidence": [
             "Solo scratchpad 575: GT-12 primary process 3237 and blind process 3241",
             "Primary x402, MPP, AP2/FIDO, ACP, SEP-41, and current Stellar integration records rechecked 2026-07-10",
             "Preserved main's 2026-07-10 observation date and prior evidence; this rewording does not claim a 2026-07-11 re-observation.",
             "Independent Fable review: /private/tmp/claude-501/-Users-kalepail-Desktop-stellar-raven-codemode/228cd755-2832-4a13-8e47-9a25e851db2a/scratchpad/p4/conversions-copy-review.md",
-            "solo://proj/49/scratchpad/super-corpus-rebuild--585"
+            "solo://proj/49/scratchpad/super-corpus-rebuild--585",
+            "Independent Terra review 2026-07-14 rechecked current Stellar agentic-payments Docs/skill plus primary AP2 and ACP sources; solo://proj/49/scratchpad/docs-and-site-improv--639#golden-review"
           ],
           "rootCause": [
             "eval-side protocol-layer conflation: external standard identity, network method, settlement substrate, and optional composition were merged",
-            "improvements/stellar-docs/sd-005 — Stellar agentic-payments documentation taxonomy/content gap",
+            "coverage diagnostic: the exposed Stellar agentic-payments skill does not cover external AP2/ACP, which does not by itself establish a Stellar Docs content obligation",
             "eval-authoring",
             "solo://proj/49/scratchpad/super-corpus-rebuild--585"
           ]
@@ -41225,7 +41226,7 @@
           "Do NOT hard-code Horizon's 200 limit as the RPC getEvents limit.",
           "Do NOT expect *Xdr names in xdrFormat=json or double-decode SDK-parsed XDR values."
         ],
-        "notes": "GT-53 CORRECTION 2026-07-11: getTransactions has stock 50/default and 200/max options, but providers may configure them. First-page startLedger is inclusive; continuation uses cursor without startLedger. The old Horizon-only premise is false.\nAlso good if the answer: Mentions that RPC/Horizon are not perfect substitutes and some Horizon endpoints/effects require XDR decoding or an indexer. | Recommends idempotent processing keyed by transaction hash/ledger/index to survive retries.\nGolden cites: Primary RPC pagination docs and Horizon-to-RPC migration/XDR docs.\nPreserve the 2026-07-03 sd-003/sd-004 correction: docs/search missed the RPC method page and docs call configurable defaults hardcoded. GT-53 adds exact cursor exclusivity and XDR/JSON types. Do not penalize provider-configurability precision or a dated live limit that differs from stock defaults."
+        "notes": "GT-53 CORRECTION 2026-07-11: getTransactions has stock 50/default and 200/max options, but providers may configure them. First-page startLedger is inclusive; continuation uses cursor without startLedger. The old Horizon-only premise is false.\nAlso good if the answer: Mentions that RPC/Horizon are not perfect substitutes and some Horizon endpoints/effects require XDR decoding or an indexer. | Recommends idempotent processing keyed by transaction hash/ledger/index to survive retries.\nGolden cites: Primary RPC pagination docs and Horizon-to-RPC migration/XDR docs.\nPreserve the 2026-07-03 sd-003/sd-004 correction: docs/search missed the RPC method page and docs call configurable defaults hardcoded. GT-53 adds exact cursor exclusivity and XDR/JSON types. Do not penalize provider-configurability precision or a dated live limit that differs from stock defaults. Per stellar-docs#2567, grade either the documented effective stock 50/200 cap or a dated source-level configurable-default qualifier as correct, provided the answer does not call the cap compile-time immutable or recommend raising it."
       },
       "tags": {
         "category": "tooling-infra",
@@ -41357,8 +41358,8 @@
           }
         ],
         "verified": {
-          "date": "2026-07-13",
-          "by": "Golden-truth sweep plus truth-maintenance live source-surface recovery",
+          "date": "2026-07-14",
+          "by": "Golden-truth sweep plus independent Terra owner-policy and source verification",
           "evidence": [
             "eval/qa/results/2026-07-03T16-06-45-variantA.json (q-ti-rpc-gettransactions-pagination-xdr)",
             "Live 2026-07-03: developers.stellar.org/docs/data/apis/rpc/api-reference/methods/getTransactions — limit 'can range from 1 to 200 — an upper limit that is hardcoded in Stellar-RPC for performance reasons', default 50",
@@ -41366,7 +41367,8 @@
             "Solo scratchpad 575, GT-53 primary 3372 and pre-read-locked blind 3378, independently reconciled 2026-07-11.",
             "Live scout.searchResearch reachability for the official getTransactions and pagination pages, 2026-07-13",
             "Live scout.explainRepo answer grounded in stellar/stellar-rpc options.go and main.go for configurable 50/200 defaults, 2026-07-13",
-            "solo://proj/49/scratchpad/truth-maintenance-20--627#fable-open-questions-audit"
+            "solo://proj/49/scratchpad/truth-maintenance-20--627#fable-open-questions-audit",
+            "Independent Terra review 2026-07-14 rechecked stellar-docs#2567, current RPC pagination docs, and stellar-rpc configuration source; solo://proj/49/scratchpad/docs-and-site-improv--639#golden-review"
           ],
           "rootCause": [
             "improvements/stellar-docs/sd-003 (verified, awaiting upstream) — RPC method reference pages unindexed in Algolia; the upstream fix that would have prevented both the agent's and the golden author's error. When sd-003 is fixed-upstream, this override's facts should be re-verified against the then-indexed page but the correction itself remains valid.",

@@ -26,6 +26,14 @@ that collection.
   ecosystem-skills. Recommendations target the source repos; never edit the mirror
   in this repo to "fix" a finding.
 
+Web findings are classified before filing as `docs-content`, `docs-search`, `site-content`,
+`site-search`, or `canonical-source`. The two search categories include the corresponding Algolia
+or crawler layer. These are routing categories, not automatic directories: a missing search result
+does not establish that Docs or `stellar.org` should own the content, and empty collections are not
+created without a verified finding and identified owner. Facts owned by a SEP, CAP, implementation,
+or product repository are corrected there. A dedicated site collection should be added only when a
+verified site finding cannot be represented honestly by an existing service lifecycle.
+
 ## Record format
 
 One file per finding. YAML-ish frontmatter, then three short sections.
@@ -36,6 +44,7 @@ id: <collection>-NNN
 service: lumenloop | stellar-light-scout | stellar-docs | skills
 status: proposed | verified | reported-upstream | declined-upstream | fixed-upstream
 discovered: YYYY-MM-DD
+upstreamTitle: <reader-first issue title; required before filing>
 evidence:
   - eval/qa/results/<results-file stamp>
   - live verification note
@@ -99,6 +108,11 @@ smallest live recheck. Raven independently verifies the live surface before mark
 Before a resolved file is retired, Raven posts the dated live result and its commit-pinned source
 snapshot on the upstream ref. Future filing bodies include both the active `main` link and an
 immutable snapshot so the source remains auditable after the active queue is drained.
+
+Untouched open issues stay quiet. Routine live recurrences remain in the local finding and do not
+justify reminder, status-chasing, or backlink-only comments. Follow up only on substantive owner
+activity, a claimed fix that needs verification, materially new evidence that changes the action, or
+author-owned PR work. Every newly recorded GitHub URL is read back before it is accepted as evidence.
 
 Do not file an issue solely for bookkeeping when a live recheck already proves the defect fixed.
 `fixed-upstream` without an issue URL is valid when its evidence records that dated recheck; add an
