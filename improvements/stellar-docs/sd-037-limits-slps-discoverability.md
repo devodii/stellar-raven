@@ -1,7 +1,7 @@
 ---
 id: sd-037
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
 upstreamTitle: Add SLPs to the canonical proposal index and repository overview
 evidence:
@@ -9,6 +9,7 @@ evidence:
   - the P4 N2 YieldBlox reconciliation relies on SLP-0006 for the affected-account/quarantine context, showing practical retrieval impact
   - live recheck 2026-07-14: stellar-protocol root README describes only CAPs and SEPs and has badges only for those families; limits/ contains SLP-0001 through SLP-0006 but limits/README.md has no proposal index
   - live Algolia recheck 2026-07-14: SLP-0004 and SLP-0006 queries route to the SEP overview rather than a canonical SLP family page
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-protocol/issues/1981
 ---
 
 ## Finding

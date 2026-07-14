@@ -1,7 +1,7 @@
 ---
 id: sd-012
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 upstreamTitle: Align Lumens mandate account labels with the current SDF mandate
 evidence:
@@ -9,6 +9,7 @@ evidence:
   - Lumens documentation retains older wallet/bucket labels
   - live recheck 2026-07-14: the mandate page names SDF Development, Stellar Growth, Product and Innovation, and Assets and Liquidity, while the Lumens page still presents Direct Development, Developer Support, Currency Support, and other older account labels as current
   - Solo scratchpad 575 GT-27 primary 3270 and blind 3272
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2610
 ---
 
 ## Finding

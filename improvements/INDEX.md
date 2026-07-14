@@ -49,16 +49,16 @@ Total findings: 83
 | sd-009 | The docs omit SEP-6's canonical interactive-component deprecation status                       | declined-upstream | 2026-07-09 | 2           |
 | sd-010 | The rendered Indexers page now describes Alchemy's live Stellar Data API accurately,           | reported-upstream | 2026-07-09 | 3           |
 | sd-011 | The current Stellar documentation surface can lead a bot author to rely on                     | reported-upstream | 2026-07-10 | 0           |
-| sd-012 | Official Stellar documentation and the current SDF mandate page expose different               | verified          | 2026-07-10 | 0           |
+| sd-012 | Official Stellar documentation and the current SDF mandate page expose different               | reported-upstream | 2026-07-10 | 0           |
 | sd-013 | The account lifecycle documentation presents the ordinary unsponsored path as                  | reported-upstream | 2026-07-10 | 0           |
-| sd-014 | Official documentation exposes bucketListHash, txSetHash,                                      | verified          | 2026-07-10 | 0           |
+| sd-014 | Official documentation exposes bucketListHash, txSetHash,                                      | reported-upstream | 2026-07-10 | 0           |
 | sd-015 | The current glossary describes Starlight in present tense as Stellar's Layer 2                 | reported-upstream | 2026-07-10 | 0           |
-| sd-016 | Official network-capacity tables contain hand-maintained current scalars that                  | verified          | 2026-07-10 | 0           |
+| sd-016 | Official network-capacity tables contain hand-maintained current scalars that                  | reported-upstream | 2026-07-10 | 0           |
 | sd-017 | Official Docs publish incompatible lifecycle labels for Horizon. Some surfaces                 | reported-upstream | 2026-07-10 | 0           |
 | sd-018 | The generic token-interface event documentation does not call out the current                  | reported-upstream | 2026-07-11 | 0           |
 | sd-019 | The JavaScript persistent-entry extension guide says a single                                  | reported-upstream | 2026-07-11 | 0           |
-| sd-020 | SAC documentation and derived guidance retain design-era XDR names and omit the                | verified          | 2026-07-11 | 0           |
-| sd-021 | Current official P25/ZK documentation links the wrong CAP for BN254 and does                   | verified          | 2026-07-11 | 1           |
+| sd-020 | SAC documentation and derived guidance retain design-era XDR names and omit the                | reported-upstream | 2026-07-11 | 0           |
+| sd-021 | Current official P25/ZK documentation links the wrong CAP for BN254 and does                   | reported-upstream | 2026-07-11 | 1           |
 | sd-022 | Current introductory wording turns the default no-allocator configuration into                 | reported-upstream | 2026-07-11 | 0           |
 | sd-023 | The getEvents and getTransaction pages still present universal time-based                      | reported-upstream | 2026-07-11 | 0           |
 | sd-024 | The transaction-resource documentation retains older resource-field names and                  | reported-upstream | 2026-07-11 | 0           |
@@ -74,7 +74,7 @@ Total findings: 83
 | sd-034 | The current Stellar smart-wallet guide still routes a greenfield reader to                     | reported-upstream | 2026-07-11 | 0           |
 | sd-035 | Two current Docs tutorial surfaces still teach the legacy Wallets Kit v1 package               | reported-upstream | 2026-07-11 | 0           |
 | sd-036 | The current Final CAP-0075 source contains two internally reproducible protocol                | reported-upstream | 2026-07-11 | 0           |
-| sd-037 | The canonical stellar-protocol repository contains six Stellar Limits                          | verified          | 2026-07-11 | 0           |
+| sd-037 | The canonical stellar-protocol repository contains six Stellar Limits                          | reported-upstream | 2026-07-11 | 0           |
 
 ## lumenloop
 

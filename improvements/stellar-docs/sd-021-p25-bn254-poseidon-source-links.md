@@ -1,7 +1,7 @@
 ---
 id: sd-021
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
 upstreamTitle: Fix the Protocol 25 BN254 CAP link and Poseidon API distinctions
 evidence:
@@ -11,6 +11,7 @@ evidence:
   - live recheck 2026-07-14: both Mainnet and Testnet Protocol 25 sections still link BN254 Elliptic Curve Operations to CAP-79; zk.mdx still calls poseidon and poseidon2 host functions without distinguishing the raw hazmat permutation APIs
   - Solo scratchpad 575 GT-43 primary 3311 and blind 3320
   - P4 H2 recurrence 2026-07-11: the served ZK material still describes CAP-0074/CAP-0075 as proposed or gated after Protocol 25, while the official CAP index and v25 release notes mark the changes Final/shipped; solo://proj/49/scratchpad/super-corpus-rebuild--585
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2614
 recurrences:
   - date: 2026-07-11
     evidence: H2 independently reproduced the stale P25 BN254/Poseidon status language and the resulting incorrect advice to wait for BN254 before using Noir or RISC Zero toolchains.

@@ -1,7 +1,7 @@
 ---
 id: sd-014
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 upstreamTitle: Document Stellar transaction inclusion verification boundaries
 evidence:
@@ -11,6 +11,7 @@ evidence:
   - live recheck 2026-07-14: current stellar-docs search and repository code search expose the component concepts but no transaction-inclusion-proof guide or compact-proof claim boundary
   - Solo scratchpad 575 GT-29 primary 3276 and independent blind 3278
   - GT-41 recurrence: document timestamping guidance required historical transaction/result and ledger-close evidence because the current Manage Data entry is mutable
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2611
 ---
 
 ## Finding

@@ -1,7 +1,7 @@
 ---
 id: sd-016
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-10
 upstreamTitle: Make network limit tables dated and source-linked
 evidence:
@@ -10,6 +10,7 @@ evidence:
   - live Testnet Horizon reports max_tx_set_size 200 while the Networks table states 100 operations per ledger
   - live recheck 2026-07-14T20:00Z: Mainnet execution-lanes XDR still decodes to ledger_max_tx_count 2000; latest Testnet ledger reports max_tx_set_size 200; rendered Networks page still says 100 and 1 respectively
   - Solo scratchpad 575 GT-32 primary 3281 and independent blind 3284
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2612
 ---
 
 ## Finding

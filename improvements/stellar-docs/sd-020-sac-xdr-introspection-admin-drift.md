@@ -1,7 +1,7 @@
 ---
 id: sd-020
 service: stellar-docs
-status: verified
+status: reported-upstream
 discovered: 2026-07-11
 upstreamTitle: Update SAC executable identity and admin introspection terminology
 evidence:
@@ -11,6 +11,7 @@ evidence:
   - live SAC simulation confirms public name identity and mutable C-address admin
   - live recheck 2026-07-14: stellar-transaction.mdx still shows CONTRACT_EXECUTABLE_TOKEN and CONTRACT_ID_FROM_ASSET while current stellar-xdr names CONTRACT_EXECUTABLE_STELLAR_ASSET and ENVELOPE_TYPE_CONTRACT_ID/FROM_ASSET
   - Solo scratchpad 575 GT-43 primary 3311 and blind 3320
+  - upstream issue filed 2026-07-14: https://github.com/stellar/stellar-docs/issues/2613
 ---
 
 ## Finding
