@@ -17,6 +17,7 @@ import {
   DEMO_TEMPERATURE,
   demoOpenAiApiModeFromOverride,
   demoOpenAiProviderOptions,
+  demoGatewayTransportSettings,
   demoReasoningEffortFromOverride,
   demoReasoningEffortOverride,
   demoModelsFromOverride,
@@ -28,7 +29,7 @@ describe("demo model config", () => {
   it("uses the gauntlet winner with a fast fallback, conservative sampling, and configured default reasoning", () => {
     expect(DEMO_PRIMARY_MODEL).toBe("openai/gpt-5.4");
     expect(DEMO_FALLBACK_MODEL).toBe("openai/gpt-5.4-mini");
-    expect(DEMO_GROK_CONTROL_MODEL).toBe("xai/grok-4.3");
+    expect(DEMO_GROK_CONTROL_MODEL).toBe("xai/grok-4.5");
     expect(DEMO_KIMI_CONTROL_MODEL).toBe("@cf/moonshotai/kimi-k2.7-code");
     expect(DEMO_MODEL).toBe(DEMO_PRIMARY_MODEL);
     expect(DEMO_MODELS).toEqual([
@@ -69,7 +70,7 @@ describe("demo model config", () => {
     expect(demoReasoningEffortOverride(" low ")).toBe("low");
   });
 
-  it("builds OpenAI provider options only for OpenAI gateway slugs", () => {
+  it("builds OpenAI-wire reasoning options for OpenAI and provider-native Grok slugs", () => {
     expect(demoOpenAiProviderOptions("openai/gpt-5.4", "low")).toEqual({
       providerOptions: {
         openai: {
@@ -78,8 +79,28 @@ describe("demo model config", () => {
       }
     });
     expect(demoOpenAiProviderOptions("openai/gpt-5.4", undefined)).toEqual({});
-    expect(demoOpenAiProviderOptions("xai/grok-4.3", "low")).toEqual({});
+    expect(demoOpenAiProviderOptions("xai/grok-4.5", "medium")).toEqual({
+      providerOptions: {
+        openai: {
+          reasoningEffort: "medium"
+        }
+      }
+    });
     expect(demoOpenAiProviderOptions("@cf/openai/gpt-oss-120b", "low")).toEqual({});
+  });
+
+  it("pins Grok to the stored-key gateway transport rather than the unified catalog", () => {
+    expect(demoGatewayTransportSettings("xai/grok-4.5")).toEqual({
+      transport: "gateway",
+      byokAlias: "default",
+      resume: false
+    });
+    expect(demoGatewayTransportSettings("grok/grok-4.5")).toEqual({
+      transport: "gateway",
+      byokAlias: "default",
+      resume: false
+    });
+    expect(demoGatewayTransportSettings("openai/gpt-5.4")).toEqual({ resume: false });
   });
 
   it("defaults OpenAI API mode to responses unless chat is explicitly requested", () => {

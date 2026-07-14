@@ -6,17 +6,16 @@
     "lumenloop.search_documents"
   ],
   "golden": {
-    "answer": "SDF and Circle publicly announced CCTP live on Stellar on May 19, 2026. Circle's release notes separately record Stellar mainnet support on May 18, 2026; that technical-support milestone is not the public-announcement date. May 8 is contradicted as the announcement date. CCTP moves native USDC across supported chains by burning on the source chain and minting on the destination after attestation; it does not create wrapped USDC.",
+    "answer": "SDF and Circle publicly announced CCTP live on Stellar on May 19, 2026. CCTP moves native USDC across supported chains by burning on the source chain and minting on the destination after attestation; it does not create wrapped USDC.",
     "keyFacts": [
-      "Public live announcement: May 19, 2026; Circle mainnet-support milestone: May 18, 2026.",
-      "CCTP uses native burn-and-mint USDC transfers rather than wrapped USDC.",
-      "May 8, 2026 is contradicted as the SDF/Circle CCTP-live announcement date."
+      "SDF and Circle's public CCTP-live announcement date is May 19, 2026.",
+      "CCTP uses native burn-and-mint USDC transfers rather than wrapped USDC."
     ],
     "avoid": [
       "Do NOT state May 8, 2026 as the SDF/Circle public live-announcement date without a primary source explaining a different milestone.",
       "Do NOT describe CCTP as locking USDC and issuing a wrapped token on Stellar."
     ],
-    "notes": "Corrected-fact encoding: the July recon/timeline lead said May 8, but the live SDF page date and Circle's official-post snowflake both resolve to May 19. Existing corpus material may separately identify an earlier technical/domain deployment; do not merge milestones."
+    "notes": "Corrected-fact encoding: the July recon/timeline lead said May 8, but the live SDF page date and Circle's official-post snowflake both resolve to May 19. Circle's May 18 mainnet-support milestone and the contradicted May 8 date are validation context, not completeness requirements for this question; penalize them only when a candidate asserts or merges the wrong milestone."
   },
   "tags": {
     "category": "history-org-tokenomics",
@@ -110,8 +109,8 @@
       }
     ],
     "verified": {
-      "date": "2026-07-11",
-      "by": "P4 N2 primary+blind (Solo 3417/3423)",
+      "date": "2026-07-14",
+      "by": "P4 N2 primary+blind facts (Solo 3417/3423) + Terra scope audit (Solo 3633)",
       "evidence": [
         "solo://proj/49/process/3417",
         "solo://proj/49/process/3423",
@@ -122,10 +121,14 @@
         "https://developers.circle.com/cctp/references/stellar",
         "https://stellar.org/blog/foundation-news/bringing-stellar-to-the-regions-that-matter",
         "https://www.crossmint.com/announcement/cctp-stellar",
-        "Sibling sweep: q-cctp-v2-usdc-stellar and q-tool-cctp-stellar-integration contain no conflicting announcement-date claim."
+        "solo://proj/49/process/3633",
+        "solo://proj/49/scratchpad/633#GPT-5.6-Terra-G3-classification",
+        "eval/local-lanes/playground-semantic/overfit-audit-g3-itemkeys/2026-07-14T14-54-38-868Z-39ac21e3-5a0c-4a3b-b4fd-a3c14e61b97f-playground-semantic.json",
+        "Sibling sweep: q-cctp-v2-usdc-stellar, q-defi-bridge-evm-to-stellar-axelar, q-token-circle-usdc-on-stellar, q-tool-cctp-stellar-integration, and q-tool-js-sdk-package contain no conflicting announcement-date claim."
       ],
       "rootCause": [
-        "eval-authoring"
+        "eval-authoring",
+        "solo://proj/49/scratchpad/633#GPT-5.6-Terra-G3-classification"
       ]
     },
     "origin": "authored 2026-07 (2026-events)"

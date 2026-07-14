@@ -167,6 +167,26 @@ describe("demo tools at the worker boundary", () => {
     expect(signature.split("\n").at(-1)).toContain('codemode.skill.run("skills.lumenloop.stellar-ecosystem-digest"');
   });
 
+  it("keeps canonical operation payload keys visible when demo signatures are clipped", async () => {
+    const { search } = makeTools();
+    const result = (await search.execute({
+      query: "lumenloop.search_content_semantic",
+      kind: "operation",
+      limit: 5
+    })) as {
+      hits: Array<{
+        id: string;
+        signature?: string;
+        outputKeys?: string[];
+        outputItemKeys?: Record<string, string[]>;
+      }>;
+    };
+    const semantic = result.hits.find((hit) => hit.id === "lumenloop.search_content_semantic");
+    expect(semantic?.signature).toContain("[middle clipped for the demo]");
+    expect(semantic?.outputKeys).toEqual(["counts", "items", "meta"]);
+    expect(semantic?.outputItemKeys?.items).toContain("dateField");
+  });
+
   it("enables the main MCP's in-execute codemode discovery path", async () => {
     const { execute, budgetReport } = makeTools();
     const result = (await execute.execute({
@@ -249,6 +269,40 @@ describe("demo tools at the worker boundary", () => {
     expect(result).toContain("hasOutputSchema");
     expect(result).toContain("call it exactly as the signature");
     expect(budgetReport()).toMatchObject({ executeCalls: 1 });
+  });
+
+  it("shares candidate guidance with MCP but suppresses it for build-stage prior art", async () => {
+    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+      const url = new URL(typeof input === "string" || input instanceof URL ? input : input.url);
+      if (!url.pathname.endsWith("/api/projects/search")) {
+        return Response.json({ error: `unexpected ${url.pathname}` }, { status: 500 });
+      }
+      return Response.json({
+        projects: [{ name: "Example", slug: "example" }],
+        meta: { counts: { returned: 1, total: 1 } }
+      });
+    });
+
+    const { execute } = makeTools();
+    const ordinary = (await execute.execute({
+      code: `async () => {
+        const projects = await scout.searchProjects({ query: "example", limit: 1 });
+        return { ok: projects.ok };
+      }`
+    })) as string;
+    expect(ordinary).toContain("--- CANDIDATE EVIDENCE ---");
+    expect(ordinary).toContain("These rows are candidates, not identity or absence proof");
+
+    const build = (await execute.execute({
+      code: `async () => {
+        const [skill, projects] = await Promise.all([
+          codemode.skill.read("skills.stellar-dev.smart-contracts", {}),
+          scout.searchProjects({ query: "example", limit: 1 })
+        ]);
+        return { skillOk: skill.ok, projectsOk: projects.ok };
+      }`
+    })) as string;
+    expect(build).not.toContain("--- CANDIDATE EVIDENCE ---");
   });
 
   it("adds a demo-only advisory when execute output is truncated", async () => {

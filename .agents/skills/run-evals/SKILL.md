@@ -175,8 +175,8 @@ npm run eval:qa:selftest        # only if judging — scored fixtures + promptSh
 Compiles are deterministic and never touch the hand-authored files: the owned QA battery
 (`eval/qa/corpus/battery/**`), the routing supplements (`eval/skills-cases.json`,
 `eval/build-question-overlay.json`), and the frozen live contracts
-(`eval/qa/corpus/live/live-cases.json` — the membership-frozen 10-case
-`live-data-canonical-v2` contract — and the two-case opt-in `live-digest-supplement-v2`).
+(`eval/qa/corpus/live/live-cases.json` — the membership-frozen 15-case
+`live-data-canonical-v3` contract — and the two-case opt-in `live-digest-supplement-v2`).
 Both live contracts are membership- and digest-pinned by `eval:selftest`; change their case
 content only with a recorded provenance note, contract-version bump, and digest update.
 Generated files (`routing-cases.json`, `qa/cases.json`, `qa/sample.json`,

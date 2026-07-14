@@ -79,7 +79,7 @@ Total findings: 131
 | sls-052 | The 1.7.16 structural fix (sls-051) moved routing vocabulary out of operation                          | fixed-upstream    | 2026-07-12 | 0           |
 | sls-053 | The Scout ecosystem-skills directory (GET /api/skills) still advertises the                            | fixed-upstream    | 2026-07-12 | 0           |
 | sls-054 | The live sls-050 changelog entry contradicts itself about the project rename-continuity response shape | fixed-upstream    | 2026-07-13 | 0           |
-| sls-055 | Scout research does not reliably expose quotable canonical SDF organizational pages                    | reported-upstream | 2026-07-13 | 0           |
+| sls-055 | Scout research does not reliably expose quotable canonical SDF organizational pages                    | reported-upstream | 2026-07-13 | 2           |
 
 ## stellar-docs
 
@@ -131,7 +131,7 @@ Total findings: 131
 | ll-002 | The Messari "State of Stellar Q1 2026" AV/research item carries only ~702 chars of | reported-upstream | 2026-07-03 | 0           |
 | ll-003 | Region vocabulary is free-text rather than a controlled list. The live-lane eval   | reported-upstream | 2026-07-03 | 2           |
 | ll-004 | Partner items were hidden from /v1/tools even for a partner-tier caller, so a      | fixed-upstream    | 2026-07-03 | 0           |
-| ll-005 | findcontentbyentity advertises entitytype: "person" in its input schema enum,      | reported-upstream | 2026-07-03 | 3           |
+| ll-005 | findcontentbyentity advertises entitytype: "person" in its input schema enum,      | reported-upstream | 2026-07-03 | 4           |
 | ll-006 | searchcontentsemantic over articles has no freshness weighting, so                 | reported-upstream | 2026-07-03 | 0           |
 | ll-007 | Event summary prose can contradict the structured startat field. The               | reported-upstream | 2026-07-03 | 2           |
 | ll-008 | Directory records carry misleading region/coverage values, two live instances:     | reported-upstream | 2026-07-03 | 0           |
@@ -143,7 +143,7 @@ Total findings: 131
 | ll-014 | Project-content and similarity retrieval do not expose enough match provenance     | reported-upstream | 2026-07-10 | 0           |
 | ll-015 | Lumenloop's stellar-weekly-roundup-week-jul-3-2026 repeatedly dates Protocol       | reported-upstream | 2026-07-10 | 0           |
 | ll-016 | Historical retrieval can collapse disputed causal narratives into one factual      | reported-upstream | 2026-07-10 | 0           |
-| ll-017 | Person-oriented semantic and A/V searches do not expose enough match provenance    | reported-upstream | 2026-07-10 | 2           |
+| ll-017 | Person-oriented semantic and A/V searches do not expose enough match provenance    | reported-upstream | 2026-07-10 | 5           |
 | ll-018 | The SCF submissions operation applies fuzzy matching even when the caller supplies | reported-upstream | 2026-07-10 | 0           |
 | ll-019 | The A/V passage contract is internally inconsistent beyond the already-filed       | reported-upstream | 2026-07-11 | 0           |
 | ll-020 | Lumenloop's Protocol 27 editorial retrieval leaves a pre-vote scheduling item as   | reported-upstream | 2026-07-11 | 0           |

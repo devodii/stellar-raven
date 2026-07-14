@@ -113,6 +113,8 @@ describe("recoveryCandidates — advisory contingency graph", () => {
       "scout.searchResearch"
     ]);
     expect(recovery.every((candidate) => candidate.from === "scout.getBuilders")).toBe(true);
+    expect(recovery[0]?.outputKeys).toEqual(["counts", "items", "meta"]);
+    expect(recovery[0]?.outputItemKeys?.items).toContain("dateField");
     expect(recovery.map((candidate) => candidate.id)).not.toContain("scout.getBuilders");
   });
 
@@ -598,6 +600,16 @@ describe("searchCatalog — signatures", () => {
     const hit = hits.find((h) => h.id === "scout.searchProjects");
     expect(hit?.signature).toContain("type SearchProjectsInput");
     expect(hit?.signature).toMatch(/q\?: string/);
+  });
+
+  it("carries canonical payload keys outside the rendered signature", () => {
+    const hit = searchCatalog(catalog, { query: "lumenloop.search_content_semantic" }).find(
+      (candidate) => candidate.id === "lumenloop.search_content_semantic"
+    );
+    expect(hit?.outputKeys).toEqual(["counts", "items", "meta"]);
+    expect(hit?.outputItemKeys).toEqual({
+      items: ["collection", "date", "dateField", "snippet", "source", "sourceField", "title", "url"]
+    });
   });
 });
 

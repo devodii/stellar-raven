@@ -8,7 +8,7 @@ export type DemoOpenAiApiMode = "chat" | "responses";
 
 export const DEMO_PRIMARY_MODEL = "openai/gpt-5.4";
 export const DEMO_FALLBACK_MODEL = "openai/gpt-5.4-mini";
-export const DEMO_GROK_CONTROL_MODEL = "xai/grok-4.3";
+export const DEMO_GROK_CONTROL_MODEL = "xai/grok-4.5";
 export const DEMO_KIMI_CONTROL_MODEL = "@cf/moonshotai/kimi-k2.7-code";
 export const DEMO_MODELS: readonly DemoModelConfig[] = [
   { model: DEMO_PRIMARY_MODEL, role: "primary" },
@@ -62,7 +62,14 @@ export function demoOpenAiApiModeFromOverride(override: string | undefined): Dem
 }
 
 export function demoOpenAiProviderOptions(model: string, reasoningEffort: DemoReasoningEffort | undefined) {
-  if (!reasoningEffort || !model.startsWith("openai/")) return {};
+  // The provider-native Grok gateway transport uses the OpenAI-compatible
+  // chat wire format too, including reasoning_effort.
+  if (
+    !reasoningEffort ||
+    !(model.startsWith("openai/") || model.startsWith("xai/") || model.startsWith("grok/"))
+  ) {
+    return {};
+  }
   return {
     providerOptions: {
       openai: {
@@ -70,6 +77,17 @@ export function demoOpenAiProviderOptions(model: string, reasoningEffort: DemoRe
       }
     }
   } as const;
+}
+
+export function demoGatewayTransportSettings(model: string) {
+  if (model.startsWith("xai/") || model.startsWith("grok/")) {
+    return {
+      transport: "gateway",
+      byokAlias: "default",
+      resume: false
+    } as const;
+  }
+  return { resume: false } as const;
 }
 
 export function demoWorkersAiReasoningEffort(

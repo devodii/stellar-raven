@@ -19,10 +19,12 @@
  * treated as that call erroring — fields are never guessed.
  *
  * Live payload shapes this projection matches (captured 2026-07-06, fixtures
- * in test/fixtures/skill-runners/): both content ops return type-keyed maps
- * (entity mode adds proposals/scf_submissions keys, which are NOT digest
- * output types and are dropped); entity rows carry no summary (projected "");
- * list_documents rows sit under `items` and may lack start_at (null).
+ * in test/fixtures/skill-runners/): semantic search is adapter-normalized to
+ * one `items` list with a canonical `collection` per row; entity mode remains
+ * a distinct type-keyed contract and adds proposals/scf_submissions keys,
+ * which are NOT digest output types and are dropped. Entity rows carry no
+ * summary (projected ""); list_documents rows sit under `items` and may lack
+ * start_at (null).
  *
  * The runner never authors `calls` — the host ledger owns the audit trail.
  * Defaults are applied in the first lines of run(); schema `default` is
@@ -63,17 +65,26 @@ const itemDate = (row: Record<string, unknown>): string | null =>
   str(row["publishing_date"]) ?? str(row["start_at"]) ?? str(row["created_at"]);
 
 /**
- * Flatten a type-keyed content map into the shape-stable item list:
- * digest-output types only, url/id-deduped, date-desc (undated rows last).
- * Returns null on unexpected shape (none of the expected type keys present).
+ * Project either operation's authored contract into the digest item list:
+ * normalized semantic rows or the distinct entity operation's type-keyed
+ * map. Digest-output types only, url/id-deduped, date-desc (undated last).
  */
 function projectItems(data: unknown): DigestItem[] | null {
   const row = rec(data);
-  if (!row || !CONTENT_TYPES.some((t) => t in row)) return null;
+  if (!row) return null;
+  const normalized = arr(row["items"]);
+  const hasEntityCollections = CONTENT_TYPES.some((t) => t in row);
+  if (!normalized && !hasEntityCollections) return null;
   const items: DigestItem[] = [];
   const seen = new Set<string>();
-  for (const type of CONTENT_TYPES) {
-    for (const raw of arr(row[type]) ?? []) {
+  const groups: Array<{ type: ContentType; rows: unknown[] }> = normalized
+    ? CONTENT_TYPES.map((type) => ({
+        type,
+        rows: normalized.filter((raw) => rec(raw)?.["collection"] === type)
+      }))
+    : CONTENT_TYPES.map((type) => ({ type, rows: arr(row[type]) ?? [] }));
+  for (const { type, rows } of groups) {
+    for (const raw of rows) {
       const r = rec(raw);
       if (!r) continue;
       const title = str(r["title"]) ?? "";

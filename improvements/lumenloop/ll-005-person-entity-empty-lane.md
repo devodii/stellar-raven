@@ -9,6 +9,8 @@ evidence:
   - Solo project 49, todo 825 (skills-harvest verification pass)
   - live re-verified 2026-07-06 (eval round todo 846): person probe (Denelle Dixon) still ok:true with all 5 groups empty while the organization control returns 5/5/5/5/5 — silent person-lane emptiness unchanged
   - live re-verified 2026-07-10 during GT-35: Tyler van der Hoeven exact person, exact any-type, and Tyler person probes returned all-empty groups; kalepail returned one record misclassified as project
+  - live re-verified 2026-07-14: Justin Rice exact person lookup returned ok=true with all content groups empty while the semantic-content control returned exact-name dated event rows
+  - 2026-07-14 normalized semantic fallback made the exact playground question recover despite the unchanged empty person-entity lane
   - https://github.com/lumenloop/lumenloop-backend/issues/19 (filed 2026-07-13)
 recurrences:
   - date: 2026-07-10
@@ -17,6 +19,8 @@ recurrences:
     evidence: targeted QA q-edge-lumenloop-person-entity-empty reproduced ok=true with all groups empty for Denelle Dixon while broad semantic search returned populated exact-name content
   - date: 2026-07-13
     evidence: post-fix QA performed the broad pass but called the ok=true empty payload a lane defect, showing the catalog mitigation must explicitly distinguish data-shaped empty from transport and soft-empty failure
+  - date: 2026-07-14
+    evidence: Justin Rice exact-person live probe again returned ok=true with all groups empty; the paired broad semantic control returned exact-name historical event rows
 ---
 
 ## Finding

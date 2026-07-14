@@ -4,8 +4,10 @@
  *
  * Envelope mapping (the doc's "normalize per-tool, never assume data.results"):
  *  - HTTP 2xx + success:true + meta.format "json" | "blocks" → { ok, data }
- *    (data shape is per-tool by design — bare arrays, {count,projects}, …;
- *    we deliberately do NOT reshape it, the catalog descriptions document it).
+ *    (data shape is per-tool by design — bare arrays, {count,projects}, …).
+ *    The one authored exception is search_content_semantic, whose type-keyed
+ *    rows are normalized into the catalog-documented {items,counts,meta}
+ *    contract so callers cannot erase stronger evidence by guessing a key.
  *  - meta.format "text" → data is { text } and is soft-empty/guidance by
  *    contract ("not evidence") → kind "soft-empty" with the text as message.
  *  - success:false → kind "error" with upstream code/details/hint preserved.
@@ -22,6 +24,7 @@ import {
   type AdapterResult,
   type FetchLike
 } from "./types.ts";
+import { normalizeLumenloopOutput } from "./lumenloop-shape.ts";
 
 const SERVICE = "lumenloop";
 
@@ -111,10 +114,10 @@ export async function callLumenloop(
     }
 
     // "json" (per-tool shape) and "blocks" ({content:[{type,text},…]}) are
-    // both evidence — pass data through untouched. Upstream meta.format is
+    // both evidence. Upstream meta.format is
     // consumed HERE (the text→soft-empty branch above) and not forwarded:
     // the envelope is exactly { ok: true, data }.
-    return okResult(body.data);
+    return okResult(normalizeLumenloopOutput(entry.id, body.data));
   } catch (e) {
     return caughtResult(SERVICE, e);
   }

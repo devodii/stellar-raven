@@ -93,7 +93,9 @@ export function demoStepSignals(steps: ReadonlyArray<ObservedDemoStep>): DemoSte
       if (result.toolName === "search" && isSearchOutput(result.output)) {
         searchResults += 1;
         searchHits += result.output.hits.length;
-        evidenceState = "navigation-only";
+        // Discovery after execute must not erase the latest execute evidence.
+        // A later execute may still replace the state below.
+        if (evidenceState === "none") evidenceState = "navigation-only";
         continue;
       }
       if (result.toolName !== "execute") continue;
@@ -146,6 +148,7 @@ export function prepareDemoStep({
     operations.ok === 0 &&
     (operations.error > 0 || operations.softEmpty > 0);
   const noHostEvidence = budget?.latestExecuteEvidence === "none";
+  const narrowRecovery = budget?.latestRecoveryHint ?? null;
 
   if (stepNumber === DEMO_CAPS.maxSteps - 1) {
     return {
@@ -157,6 +160,7 @@ export function prepareDemoStep({
   if (
     !operationRecovery &&
     !noHostEvidence &&
+    narrowRecovery === null &&
     signals.evidenceState !== "navigation-only" &&
     signals.evidenceState !== "needs-recovery"
   ) {
@@ -170,6 +174,8 @@ export function prepareDemoStep({
   const reason =
     noHostEvidence
       ? "The latest execute returned no host-observed service, skill-content, or artifact evidence; catalog/spec/search results and model-authored constants are navigation or unsupported data, not factual grounding."
+      : narrowRecovery
+        ? `The latest execute used only successful narrow, operation-scoped lookup(s) (${narrowRecovery.sourceOperations.join(", ")}). If the returned projection exactly answers the request or the question is closed-world, stop at that scope. If an open-world identity, history, or footprint remains empty, weak, adjacent, ambiguous, or partial, use one exact wider candidate (${narrowRecovery.candidates.map((candidate) => candidate.id).join(", ")}).`
       : operationRecovery && operations.softEmpty > 0 && operations.error > 0
       ? "The host-observed operations returned only errors or soft-empty results, with no successful operation evidence."
       : operationRecovery && operations.softEmpty > 0

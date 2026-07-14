@@ -68,11 +68,13 @@ describe("createDemoToolBudget", () => {
       operationOk: 0,
       operationError: 0,
       operationSoftEmpty: 0,
+      recoveryHintedExecutes: 0,
       latestOperationTotal: 0,
       latestOperationOk: 0,
       latestOperationError: 0,
       latestOperationSoftEmpty: 0,
-      latestExecuteEvidence: null
+      latestExecuteEvidence: null,
+      latestRecoveryHint: null
     });
   });
 });

@@ -28,6 +28,7 @@ import { tokenize } from "../src/catalog/vendor/search-scoring.ts";
 import { RUNNERS } from "../src/skills/runners/index.ts";
 import { writeFileAtomic } from "./lib/shared.mjs";
 import { RETRIEVAL_PROFILES } from "./catalog-data/retrieval-profiles.mjs";
+import { lumenloopOutputSchema } from "../src/adapters/lumenloop-shape.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_PATH = join(ROOT, "catalog", "manifest.json");
@@ -445,7 +446,7 @@ function buildLumenloop(inv) {
       kind: "operation",
       description: descriptionParts.join("\n\n"),
       inputSchema: tool.input_schema ?? null,
-      outputSchema: tool.output_schema ?? null,
+      outputSchema: lumenloopOutputSchema(`lumenloop.${tool.name}`, tool.output_schema ?? null),
       transport: { type: "http", method: "POST", path: `/v1/tools/${tool.name}`, base: origin },
       provenance: {
         source: inv.source.tools,

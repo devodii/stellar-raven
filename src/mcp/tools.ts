@@ -40,6 +40,7 @@ import type { BuildSourceBasisManifestInput, SourceBasisCall } from "../policy/s
 import { hashPrefix, logEvent, preview, CODE_LOG_MAX } from "../observability.ts";
 import { searchEventFields } from "../observability-search.ts";
 import { truncateForModel, truncateLogsForModel } from "../policy/truncate.ts";
+import { candidateEvidenceBlock, evidenceCheckpointBlock } from "../policy/evidence-checkpoint.ts";
 import { FAMILY_LINE, MICRO_MAP } from "./micro-map.ts";
 
 export { SEARCH_KINDS };
@@ -110,6 +111,18 @@ export const searchHitSchema = z.object({
     .describe(
       "Rendered TypeScript signature (operation hits and runnable-skill hits — a runnable skill's callable line is `codemode.skill.run(\"<id>\", input)`). The input type and callable line are always complete; an oversized OUTPUT type is compacted to a stub listing its top-level field names — the full shape comes from `codemode.describe(id)` inside `execute`."
     ),
+  outputKeys: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "Operation hits only: canonical top-level keys under a successful `r.data` payload. This structural summary survives UI signature clipping; use `codemode.describe(id)` for nested fields."
+    ),
+  outputItemKeys: z
+    .record(z.string(), z.array(z.string()))
+    .optional()
+    .describe(
+      "Operation hits only: array-valued `r.data` fields mapped to their documented item keys. This one-level structural summary survives UI signature clipping."
+    ),
   availableSections: z
     .array(z.string())
     .optional()
@@ -126,7 +139,15 @@ export const recoveryCandidateSchema = z.object({
   reasons: z.array(z.enum(RETRIEVAL_REASONS)),
   lane: z.string(),
   description: z.string(),
-  signature: z.string().optional()
+  signature: z.string().optional(),
+  outputKeys: z
+    .array(z.string())
+    .optional()
+    .describe("Canonical top-level keys under the recovery operation's successful `r.data` payload."),
+  outputItemKeys: z
+    .record(z.string(), z.array(z.string()))
+    .optional()
+    .describe("Array-valued recovery payload fields mapped to their documented item keys.")
 });
 
 export const rankedSearchOutputSchema = {
@@ -469,6 +490,7 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
         artifactReadCount: outcome.artifactReadCount ?? 0,
         artifactReadBytes: outcome.artifactReadBytes ?? 0,
         operationSummary: outcome.operationSummary ?? null,
+        recoveryHint: outcome.ok ? (outcome.recoveryHint ?? null) : null,
         sourceBasis: outcome.ok ? sourceBasisForTelemetry(outcome.sourceBasis) : null
       });
 
@@ -505,21 +527,22 @@ export function registerTools(server: McpServer, options: RegisterToolsOptions =
         outcome.operationSummary?.priorArtCandidates && outcome.evidenceSummary?.buildAuthoritySkillIds?.length
       );
 
-      const candidateEvidenceBlock =
-        outcome.operationSummary?.candidateEvidence && !hasPriorArtPreflight
-          ? `\n\n--- CANDIDATE EVIDENCE ---\nThis run used ${outcome.operationSummary.candidateEvidence} semantic, research, A/V, or fallback-directory call(s). For an open-world answer, nearby or omitted rows do not prove identity or absence: require an exact identity or canonical slug plus source and date, date current or mutable claims by observation time, and keep any non-verification source-scoped. For a closed-world directory answer, inspect match_mode and report only that source's exact result.`
-          : "";
+      const candidateBlock = candidateEvidenceBlock(
+        outcome.operationSummary?.candidateEvidence,
+        hasPriorArtPreflight
+      );
 
       const priorArtEvidenceBlock =
         hasPriorArtPreflight
           ? `\n\n--- PRIOR-ART CANDIDATES ---\nThis build-stage run paired an implementation playbook with ${outcome.operationSummary?.priorArtCandidates} Scout project/repository discovery or detail call(s). These rows are decision input, not reuse clearance: return no more than three directly relevant candidates with exact URL, role/applicability, freshness/provenance, and limitations. License, audit, deployment, compatibility, security, maintenance, and production readiness remain unknown unless the returned evidence directly establishes each claim; rank, stars, funding, directory status, and public source do not.`
           : "";
+      const evidenceCheckpoint = evidenceCheckpointBlock(outcome.recoveryHint);
 
       return {
         content: [
           {
             type: "text" as const,
-            text: `${outcome.result}${recoveryBlock}${candidateEvidenceBlock}${priorArtEvidenceBlock}${logsBlock}`
+            text: `${outcome.result}${recoveryBlock}${candidateBlock}${priorArtEvidenceBlock}${evidenceCheckpoint}${logsBlock}`
           }
         ]
       };

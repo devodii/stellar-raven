@@ -1255,7 +1255,7 @@
       }
     },
     {
-      "description": "Search all content semantically. Embeds the query text and finds similar articles, AV, events, and tweets via pgvector cosine distance. Use this (not search_documents/list_documents) whenever the query is conceptual or phrased as a question, or when you do not know which collection holds the answer; reserve search_documents for exact title/URL keyword lookup. Supports date/source/type filters — use these for scoped research queries like \"find Stellar DeFi content from March\" or \"what did SDF post about privacy\".\n\nWhen to use: Meaning-based search across ALL published content types at once (articles, AV, events, research) — the default discovery tool for \"what has been said about X\". For exact-term lookup in one collection use search_documents; for content about one specific project use find_content_about_project. For \"latest/current\" ecosystem facts (protocol version, program/fund status, recent incidents or launches) prefer this over live web — results are dated and the corpus updates continuously; cite the date. Use web only for facts the corpus cannot hold, e.g. upstream package/registry pins (crates.io, npm, GitHub release tags).\n\nReturns: Results grouped by content type, each with AI summary, source url, date, and similarity score — never full text. Cite the returned url. response_format 'concise' (external default) omits long_summary; pass 'detailed' to include it.\n\nCatalog note: this is the wide-net recovery lane for open-world identity, history, event, and obscure-topic questions after directory, entity, or docs lookups are empty or off-target. Semantic rows are candidates, not attribution: require exact identity plus source and date, and discard merely adjacent results.",
+      "description": "Search all content semantically. Embeds the query text and finds similar articles, AV, events, and tweets via pgvector cosine distance. Use this (not search_documents/list_documents) whenever the query is conceptual or phrased as a question, or when you do not know which collection holds the answer; reserve search_documents for exact title/URL keyword lookup. Supports date/source/type filters — use these for scoped research queries like \"find Stellar DeFi content from March\" or \"what did SDF post about privacy\".\n\nWhen to use: Meaning-based search across ALL published content types at once (articles, AV, events, research) — the default discovery tool for \"what has been said about X\". For exact-term lookup in one collection use search_documents; for content about one specific project use find_content_about_project. For \"latest/current\" ecosystem facts (protocol version, program/fund status, recent incidents or launches) prefer this over live web — results are dated and the corpus updates continuously; cite the date. Use web only for facts the corpus cannot hold, e.g. upstream package/registry pins (crates.io, npm, GitHub release tags).\n\nReturns: Results grouped by content type, each with AI summary, source url, date, and similarity score — never full text. Cite the returned url. response_format 'concise' (external default) omits long_summary; pass 'detailed' to include it.\n\nCatalog note: this is the wide-net recovery lane for open-world identity, history, event, and obscure-topic questions after directory, entity, or docs lookups are empty or off-target. Raven normalizes every returned collection into one items array, globally sorted by the upstream similarity score; each row carries collection, while counts and meta preserve shape context. Filter items before projecting compact fields. Semantic rows are candidates, not attribution: require exact identity plus source and date, and discard merely adjacent results.",
       "id": "lumenloop.search_content_semantic",
       "inputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
@@ -1340,37 +1340,77 @@
         "accounts",
         "scf",
         "submissions",
-        "knowledge"
+        "knowledge",
+        "snippet"
       ],
       "kind": "operation",
       "outputSchema": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
         "additionalProperties": false,
         "properties": {
-          "articles": {
-            "description": "Article hits: AI summary, source url, date, similarity.",
-            "items": {},
+          "counts": {
+            "additionalProperties": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "description": "Upstream row count for every returned collection.",
+            "type": "object"
+          },
+          "items": {
+            "description": "All upstream candidate rows in one globally similarity-sorted list. Each row carries its original collection.",
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "collection": {
+                  "description": "The upstream result collection, for example articles, events, av, or research.",
+                  "type": "string"
+                },
+                "date": {
+                  "description": "Best available upstream item timestamp. Interpret it using dateField; it is not automatically a publication or observation date.",
+                  "type": "string"
+                },
+                "dateField": {
+                  "description": "Exact upstream field copied into date, such as publishing_date, start_at, or created_at.",
+                  "type": "string"
+                },
+                "snippet": {
+                  "description": "Canonical concise text selected from upstream snippet/summary/description fields when present.",
+                  "type": "string"
+                },
+                "source": {
+                  "description": "Canonical source label selected from upstream source/domain/channel/platform fields when present.",
+                  "type": "string"
+                },
+                "sourceField": {
+                  "description": "Exact upstream field copied into source.",
+                  "type": "string"
+                },
+                "title": {
+                  "description": "Canonical display title selected from upstream title/name fields when present.",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "Canonical item URL selected from upstream url/link fields when present.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "collection"
+              ],
+              "type": "object"
+            },
             "type": "array"
           },
-          "av": {
-            "description": "Video/audio hits.",
-            "items": {},
-            "type": "array"
-          },
-          "events": {
-            "description": "Event hits.",
-            "items": {},
-            "type": "array"
-          },
-          "research": {
-            "description": "Research hits.",
-            "items": {},
-            "type": "array"
-          },
-          "text": {
-            "description": "Present instead of the data fields when the tool reports a plain-text message."
+          "meta": {
+            "additionalProperties": true,
+            "description": "Non-collection upstream metadata preserved without reshaping.",
+            "type": "object"
           }
         },
+        "required": [
+          "items",
+          "counts",
+          "meta"
+        ],
         "type": "object"
       },
       "provenance": {

@@ -52,6 +52,7 @@ import {
   truncateLogsForModel
 } from "../policy/truncate.ts";
 import type { BuildSourceBasisManifestInput, SourceBasisCall } from "../policy/source-basis.ts";
+import { candidateEvidenceBlock, evidenceCheckpointBlock } from "../policy/evidence-checkpoint.ts";
 import { DEMO_CAPS, createDemoToolBudget, type DemoToolBudget } from "./budget.ts";
 import type { DemoFrame } from "./frames.ts";
 
@@ -395,6 +396,8 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
       budget.latestExecuteEvidence =
         outcome.evidenceSummary?.kind ??
         (latest.ok > 0 ? "service-data" : latest.total > 0 ? "service-inconclusive" : "none");
+      budget.latestRecoveryHint = outcome.ok ? (outcome.recoveryHint ?? null) : null;
+      if (budget.latestRecoveryHint) budget.recoveryHintedExecutes += 1;
       // Same model-boundary budgets as the MCP handler: logs and error text
       // are model-authored channels and get the result's ~6k-token cap each
       // (rationale in src/policy/truncate.ts and src/mcp/tools.ts).
@@ -425,6 +428,7 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
         operationSummary: outcome.operationSummary ?? null,
         evidenceSummary: outcome.evidenceSummary ?? null,
         evidenceOutcome: evidenceOutcome(outcome),
+        recoveryHint: outcome.ok ? (outcome.recoveryHint ?? null) : null,
         sourceBasis: outcome.ok ? sourceBasisSignals(outcome.sourceBasis) : null
       });
 
@@ -441,9 +445,17 @@ export function buildDemoTools(opts: { env: Env; emit: (f: DemoFrame) => void; b
         outcome.evidenceSummary,
         outcome.ok && outcome.truncated
       );
+      const evidenceCheckpoint = outcome.ok ? evidenceCheckpointBlock(outcome.recoveryHint) : "";
+      const hasPriorArtPreflight = Boolean(
+        outcome.operationSummary?.priorArtCandidates &&
+          outcome.evidenceSummary?.buildAuthoritySkillIds?.length
+      );
+      const candidateBlock = outcome.ok
+        ? candidateEvidenceBlock(outcome.operationSummary?.candidateEvidence, hasPriorArtPreflight)
+        : "";
 
       const text = outcome.ok
-        ? `${outcome.result}\n\n${evidenceBlock}${truncationAdvisory}${logsBlock}`
+        ? `${outcome.result}\n\n${evidenceBlock}${candidateBlock}${evidenceCheckpoint}${truncationAdvisory}${logsBlock}`
         : `Execution failed: ${shapedError ? shapedError.text : outcome.error}\n\n${evidenceBlock}${logsBlock}`;
       emit({ type: "tool-result", id, tool: "execute", ok: outcome.ok, output: text });
       return text;

@@ -60,7 +60,10 @@ in-script discovery helpers (`codemode.search/describe/catalog/spec`) as `/mcp`;
 boundary is enforced by the outer step, tool-call, output, code-size, timeout, auth, and rate caps.
 A narrow AI SDK `prepareStep` policy reserves the final step for tool-free synthesis and asks for
 recovery only after structural navigation/failure/truncation signals or a host-observed execute
-ledger containing errors/soft-empty outcomes with no successful service operation.
+ledger containing errors/soft-empty outcomes with no successful service operation. It also carries
+forward a conditional evidence checkpoint when the latest successful execute used only narrow,
+operation-scoped lookups. The checkpoint names exact catalog recovery candidates but preserves the
+closed-world stopping rule; a later search cannot erase already-grounded execute evidence.
 
 The retired page URLs `/demo` and `/demo/` return a permanent redirect to `/playground`.
 No legacy login or chat subroutes exist under that prefix.
@@ -200,7 +203,25 @@ need exact identity (or canonical slug), source, and date before attribution. An
 service calls but zero data-bearing outcomes receives the same scoped recovery reminder. Separately,
 the operation ledger counts calls to a small exact-ID set of semantic, research, A/V, and fallback-
 directory surfaces and appends a candidate-evidence reminder even when their envelopes are healthy;
-this is operation-class advice only and never inspects rows or declares their relevance.
+this is operation-class advice only and never inspects rows or declares their relevance. The same
+formatter is used by `/mcp` and `/playground`. At the adapter boundary,
+`lumenloop.search_content_semantic` is forward-normalized from upstream collection arrays to one
+`{ items, counts, meta }` contract: every item carries its source `collection`, and items are stably
+sorted by the upstream numeric similarity score. Cross-collection rows also expose conservative
+canonical aliases for title, URL, snippet, source, and date while retaining all original fields;
+`dateField` and `sourceField` identify the exact upstream fields selected so callers do not promote
+a generic timestamp or source label into a stronger provenance claim. Its manifest and super-spec
+schemas are generated from the same authored contract. Ranked operation hits and recovery
+candidates carry schema-derived `outputKeys` and one-level `outputItemKeys` outside the rendered
+signature, so the playground's signature clipping cannot hide the documented projection shape.
+This prevents a model-authored projection from silently erasing a stronger row or guessing legacy
+payload fields, without inspecting query semantics or claiming an identity match. When a
+successful run used only `emptyScope: "operation"` lookups and no semantic, research, A/V, corpus,
+or other candidate-evidence operation, the same ledger derives a conditional evidence checkpoint
+from those operations' existing `recoverWith` edges. `/mcp` appends that checkpoint to the execute
+result; `/playground` also carries it into the next-step system note. The model still inspects the
+returned projection and may stop immediately for exact evidence or a named-source closed-world
+question; the host does not reclassify payloads or auto-execute the suggested operation.
 
 **Build-route prior-art preflight** is a separate, proactive composition rule, not an evidence-poor
 recovery edge or a scorer override. A request that is still designing a new contract, app,

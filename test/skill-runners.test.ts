@@ -173,14 +173,14 @@ describe("stellar-ecosystem-digest runner", () => {
   it("dedups by url across types and by id when url is absent", async () => {
     const map = digestHappy();
     map["lumenloop.search_content_semantic"] = okData({
-      articles: [
-        { id: "1", title: "A", url: "https://dup", publishing_date: "2026-07-01", summary: "s" },
-        { id: "2", title: "A again", url: "https://dup", publishing_date: "2026-07-02", summary: "s" }
+      items: [
+        { id: "1", collection: "articles", title: "A", url: "https://dup", publishing_date: "2026-07-01", summary: "s" },
+        { id: "2", collection: "articles", title: "A again", url: "https://dup", publishing_date: "2026-07-02", summary: "s" },
+        { id: 9, collection: "research", title: "R", summary: "s", created_at: "2026-06-30" },
+        { id: 9, collection: "research", title: "R copy", summary: "s", created_at: "2026-06-30" }
       ],
-      research: [
-        { id: 9, title: "R", summary: "s", created_at: "2026-06-30" },
-        { id: 9, title: "R copy", summary: "s", created_at: "2026-06-30" }
-      ]
+      counts: { articles: 2, research: 2 },
+      meta: {}
     });
     const out = asRecord(await stellarEcosystemDigest.run({ subject: "x" }, stubFacade(map)));
     expect(out.items).toHaveLength(2);
@@ -242,7 +242,18 @@ describe("stellar-ecosystem-digest runner", () => {
   it("truncates item summaries to ≤ 200 chars", async () => {
     const map = digestHappy();
     map["lumenloop.search_content_semantic"] = okData({
-      articles: [{ id: "1", title: "t", url: "https://u", publishing_date: "2026-07-01", summary: "s".repeat(5000) }]
+      items: [
+        {
+          id: "1",
+          collection: "articles",
+          title: "t",
+          url: "https://u",
+          publishing_date: "2026-07-01",
+          summary: "s".repeat(5000)
+        }
+      ],
+      counts: { articles: 1 },
+      meta: {}
     });
     const out = asRecord(await stellarEcosystemDigest.run({ subject: "x" }, stubFacade(map)));
     expect(out.items[0].summary).toHaveLength(200);

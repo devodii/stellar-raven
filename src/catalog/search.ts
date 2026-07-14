@@ -3,7 +3,7 @@
  *
  *   loadManifest(json: unknown): Catalog
  *   searchCatalog(catalog, { query, kind?, service?, limit? }): SearchHit[]
- *   type SearchHit = { id, service, kind, score, tier, description, signature? }
+ *   type SearchHit = { id, service, kind, score, tier, description, signature?, outputKeys? }
  *
  * (`tier` — todo 838 — is an additive metadata field on the hit, not a
  * contract-shape change. `searchCatalogPage` — todo 840 — is a NEW export
@@ -68,6 +68,15 @@ export type SearchHit = {
    */
   signature?: string;
   /**
+   * Top-level keys on a successful operation's `r.data` payload. Kept as a
+   * separate structural field so UI-specific prose/signature clipping cannot
+   * hide the canonical projection contract. Omitted for non-object outputs
+   * and non-callable entries; use `codemode.describe(id)` for nested shapes.
+   */
+  outputKeys?: string[];
+  /** Array-valued payload fields mapped to their documented item keys. */
+  outputItemKeys?: Record<string, string[]>;
+  /**
    * Skill hits only: section keys readable via `codemode.skill.read(id,
    * { sections })` — `##`-heading slugs first, then `file:<relpath>` keys.
    * Omitted when the skill has no section entries (sectionless bodies).
@@ -84,6 +93,8 @@ export type RecoveryCandidate = {
   lane: string;
   description: string;
   signature?: string;
+  outputKeys?: string[];
+  outputItemKeys?: Record<string, string[]>;
 };
 
 export type SearchOptions = {
@@ -259,6 +270,26 @@ export function loadManifest(json: unknown): Catalog {
 /** Last id segment (after the final "."), used as the high-weight name field. */
 function entryName(entry: CatalogEntry): string {
   return lastIdSegment(entry.id);
+}
+
+function outputKeysOf(entry: CatalogEntry): string[] {
+  if (entry.kind !== "operation") return [];
+  const schema = entry.outputSchema as { properties?: Record<string, unknown> } | undefined;
+  return schema?.properties ? Object.keys(schema.properties).sort() : [];
+}
+
+function outputItemKeysOf(entry: CatalogEntry): Record<string, string[]> {
+  if (entry.kind !== "operation") return {};
+  const schema = entry.outputSchema as {
+    properties?: Record<string, { type?: unknown; items?: { properties?: Record<string, unknown> } }>;
+  } | undefined;
+  const out: Record<string, string[]> = {};
+  for (const [key, property] of Object.entries(schema?.properties ?? {})) {
+    if (property.type !== "array" || !property.items?.properties) continue;
+    const itemKeys = Object.keys(property.items.properties).sort();
+    if (itemKeys.length > 0) out[key] = itemKeys;
+  }
+  return out;
 }
 
 /**
@@ -541,6 +572,10 @@ export function searchCatalogPage(catalog: Catalog, opts: SearchOptions): Search
     // id, two affordances (read + run).
     const signature = renderSignature(entry, { compactOversizedOutput: true });
     if (signature) hit.signature = signature;
+    const outputKeys = outputKeysOf(entry);
+    if (outputKeys.length > 0) hit.outputKeys = outputKeys;
+    const outputItemKeys = outputItemKeysOf(entry);
+    if (Object.keys(outputItemKeys).length > 0) hit.outputItemKeys = outputItemKeys;
     if (entry.kind === "skill") {
       const sections = sectionKeysOf(catalog, entry.id);
       if (sections.length > 0) hit.availableSections = sections;
@@ -584,6 +619,8 @@ export function recoveryCandidates(
       const target = byId.get(edge.id);
       if (!target || target.kind !== "operation") continue;
       const signature = renderSignature(target, { compactOversizedOutput: true });
+      const outputKeys = outputKeysOf(target);
+      const outputItemKeys = outputItemKeysOf(target);
       out.push({
         from,
         id: target.id,
@@ -592,7 +629,9 @@ export function recoveryCandidates(
         reasons: [...edge.on],
         lane: source.retrievalProfile.lane,
         description: target.description,
-        ...(signature ? { signature } : {})
+        ...(signature ? { signature } : {}),
+        ...(outputKeys.length > 0 ? { outputKeys } : {}),
+        ...(Object.keys(outputItemKeys).length > 0 ? { outputItemKeys } : {})
       });
       selected.add(edge.id);
       if (out.length >= limit) return out;

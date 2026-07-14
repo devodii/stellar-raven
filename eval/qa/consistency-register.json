@@ -2766,16 +2766,16 @@
           "q-tool-cctp-stellar-integration"
         ],
         "verdict": "consistent",
-        "lastChecked": "2026-07-11",
+        "lastChecked": "2026-07-14",
         "reSwept": {
-          "date": "2026-07-11",
-          "reason": "new P4 numeric/dated topic cluster",
+          "date": "2026-07-14",
+          "reason": "golden scope audit removed unasked milestone context from required key facts; all CCTP siblings retain distinct, compatible announcement/support semantics",
           "verdict": "consistent"
         },
         "note": "The cases consistently distinguish Circle V2 technical-support milestones from the 2026-05-19 SDF/Circle public-live announcement and from mutable fee/finality support.",
         "memberContentSha256": {
           "q-cctp-v2-usdc-stellar": "bc2b266ca61233c55be22097583ed08f2d78007ad79f98befd894f4d6be99988",
-          "q-hist-cctp-stellar-live-announcement": "1e75b5f2ecb51bc0e446f6dbc5c8dd1f1bcbaab29a7d32f8ac4f6342eac6b14f",
+          "q-hist-cctp-stellar-live-announcement": "6bb786283a9ec21438fab1cbbf9227794a6b8c1fbf3f3b66f2fda4f3fc1b0d5d",
           "q-token-circle-usdc-on-stellar": "7d72cec465a97dd62cfd56d5178df5cbaba1d1581dfcc100a3a511f8c078b58a",
           "q-tool-cctp-stellar-integration": "9ea1cf0497128126f3e0a77cbfe477b8a57c2c320aaf31be2ad7726b1665e2ec"
         }

@@ -88,6 +88,30 @@ describe("prepareDemoStep", () => {
     );
   });
 
+  it("conditionally surfaces exact recovery candidates after narrow-only success", () => {
+    const budget = createDemoToolBudget();
+    budget.executeCalls = 1;
+    budget.latestOperationTotal = 2;
+    budget.latestOperationOk = 2;
+    budget.latestExecuteEvidence = "service-data";
+    budget.latestRecoveryHint = {
+      sourceOperations: ["scout.getBuilders", "lumenloop.find_content_by_entity"],
+      candidates: [
+        {
+          id: "lumenloop.search_content_semantic",
+          relation: "broader-semantic",
+          reasons: ["empty", "weak", "adjacent", "ambiguous"]
+        }
+      ]
+    };
+    const prepared = prepareDemoStep({ steps: [], stepNumber: 2, budget });
+    expect(prepared?.system).toContain("only successful narrow, operation-scoped lookup");
+    expect(prepared?.system).toContain("If the returned projection exactly answers");
+    expect(prepared?.system).toContain("question is closed-world, stop at that scope");
+    expect(prepared?.system).toContain("lumenloop.search_content_semantic");
+    expect(prepared?.system).toContain("remaining execute budget (2)");
+  });
+
   it("recovers when the latest execute has no host-observed evidence", () => {
     const budget = createDemoToolBudget();
     budget.executeCalls = 1;
@@ -117,6 +141,15 @@ describe("demo step signals and telemetry", () => {
       demoStepSignals([
         step("search", { hits: [{ id: "stellarDocs.search_docs" }] }),
         step("execute", '{"hits":[{"url":"https://developers.stellar.org"}]}')
+      ])
+    ).toMatchObject({ evidenceState: "grounded", searchResults: 1, executeResults: 1 });
+  });
+
+  it("does not let a later discovery search erase grounded execute evidence", () => {
+    expect(
+      demoStepSignals([
+        step("execute", '{"project":"Soroswap"}'),
+        step("search", { hits: [{ id: "lumenloop.search_content_semantic" }] })
       ])
     ).toMatchObject({ evidenceState: "grounded", searchResults: 1, executeResults: 1 });
   });

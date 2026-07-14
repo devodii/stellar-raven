@@ -95,10 +95,11 @@ describe("artifact store", () => {
   it("roundtrips JSON, strings, undefined, and fallback text without guessing", async () => {
     const bucket = new MemoryR2Bucket() as unknown as R2Bucket;
     const owner = "oauth-peppered-subject";
+    const observedAt = new Date("2026-07-07T12:30:00.000Z");
 
     const jsonPut = await put(bucket, owner, input());
     if (!jsonPut.ok) throw new Error("unexpected skip");
-    await expect(read(bucket, owner, jsonPut.artifact.id)).resolves.toMatchObject({
+    await expect(read(bucket, owner, jsonPut.artifact.id, observedAt)).resolves.toMatchObject({
       ok: true,
       value: { rows: [{ id: 1, name: "Blend" }] }
     });
@@ -109,7 +110,7 @@ describe("artifact store", () => {
       input({ body: "plain string result", mime: "text/plain; charset=utf-8" })
     );
     if (!stringPut.ok) throw new Error("unexpected skip");
-    await expect(read(bucket, owner, stringPut.artifact.id)).resolves.toMatchObject({
+    await expect(read(bucket, owner, stringPut.artifact.id, observedAt)).resolves.toMatchObject({
       ok: true,
       value: "plain string result"
     });
@@ -120,7 +121,7 @@ describe("artifact store", () => {
       input({ body: "undefined", mime: "application/x.raven.undefined" })
     );
     if (!undefinedPut.ok) throw new Error("unexpected skip");
-    const undefinedRead = await read(bucket, owner, undefinedPut.artifact.id);
+    const undefinedRead = await read(bucket, owner, undefinedPut.artifact.id, observedAt);
     if (!undefinedRead.ok) throw new Error("expected undefined artifact read");
     expect(undefinedRead.value).toBeUndefined();
 
@@ -133,7 +134,7 @@ describe("artifact store", () => {
       })
     );
     if (!fallbackPut.ok) throw new Error("unexpected skip");
-    await expect(read(bucket, owner, fallbackPut.artifact.id)).resolves.toMatchObject({
+    await expect(read(bucket, owner, fallbackPut.artifact.id, observedAt)).resolves.toMatchObject({
       ok: true,
       value: "[unserializable result: cyclic object value]"
     });
@@ -207,7 +208,12 @@ describe("artifact store", () => {
     const written = await put(bucket, "owner", input());
     if (!written.ok) throw new Error("unexpected skip");
 
-    const metadata = await info(bucket, "owner", written.artifact.id);
+    const metadata = await info(
+      bucket,
+      "owner",
+      written.artifact.id,
+      new Date("2026-07-07T12:30:00.000Z")
+    );
     expect(metadata).toEqual({ ok: true, artifact: written.artifact });
     if (!metadata.ok) throw new Error("expected info");
     expect(metadata.artifact).toMatchObject({

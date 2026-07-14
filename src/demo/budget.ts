@@ -13,6 +13,8 @@
  * (test/demo-budget.test.ts uses an in-memory KV fake).
  */
 
+import type { EvidenceRecoveryHint } from "../policy/evidence-checkpoint.ts";
+
 export const DEMO_CAPS = {
   /** stepCountIs(7) — bounded recovery room, with the final step reserved for synthesis. */
   maxSteps: 7,
@@ -61,6 +63,8 @@ export type DemoToolBudget = {
   operationOk: number;
   operationError: number;
   operationSoftEmpty: number;
+  /** Execute calls that surfaced conditional narrow-only recovery advice. */
+  recoveryHintedExecutes: number;
   latestOperationTotal: number;
   latestOperationOk: number;
   latestOperationError: number;
@@ -72,6 +76,7 @@ export type DemoToolBudget = {
     | "artifact-data"
     | "none"
     | null;
+  latestRecoveryHint: EvidenceRecoveryHint | null;
 };
 
 export function createDemoToolBudget(): DemoToolBudget {
@@ -88,11 +93,13 @@ export function createDemoToolBudget(): DemoToolBudget {
     operationOk: 0,
     operationError: 0,
     operationSoftEmpty: 0,
+    recoveryHintedExecutes: 0,
     latestOperationTotal: 0,
     latestOperationOk: 0,
     latestOperationError: 0,
     latestOperationSoftEmpty: 0,
-    latestExecuteEvidence: null
+    latestExecuteEvidence: null,
+    latestRecoveryHint: null
   };
 }
 

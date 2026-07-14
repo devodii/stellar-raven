@@ -224,6 +224,121 @@ describe("execute runner (real Dynamic Worker isolate)", () => {
     expect(outcome.operationSummary?.candidateEvidence).toBeUndefined();
   });
 
+  it("derives recovery advice for operation-scoped directories and suppresses it after a broad lane", async () => {
+    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+      const url = new URL(typeof input === "string" || input instanceof URL ? input : input.url);
+      if (url.pathname.endsWith("/api/builders")) {
+        return Response.json({
+          builders: [{ displayName: "Example Builder", githubUsername: "example" }],
+          meta: { counts: { returned: 1, total: 1 } }
+        });
+      }
+      if (url.pathname.endsWith("/v1/tools/search_directory")) {
+        return Response.json({
+          success: true,
+          data: { count: 1, projects: [{ slug: "example" }] },
+          error: null,
+          meta: { tool: "search_directory", format: "json" }
+        });
+      }
+      if (url.pathname.endsWith("/api/projects/search")) {
+        return Response.json({
+          projects: [{ name: "Example", slug: "example" }],
+          meta: { counts: { returned: 1, total: 1 } }
+        });
+      }
+      if (url.pathname.endsWith("/v1/tools/search_content_semantic")) {
+        return Response.json({
+          success: true,
+          data: {
+            articles: [{ id: "article", similarity: 0.8 }],
+            events: [],
+            av: [],
+            query: "Example Builder"
+          },
+          error: null,
+          meta: { tool: "search_content_semantic", format: "json" }
+        });
+      }
+      if (url.pathname.endsWith("/v1/tools/find_similar_projects_semantic")) {
+        return Response.json({
+          success: true,
+          data: { results: [{ slug: "neighbor", title: "Neighbor", similarity: 0.8 }] },
+          error: null,
+          meta: { tool: "find_similar_projects_semantic", format: "json" }
+        });
+      }
+      return Response.json({ error: `unexpected ${url.pathname}` }, { status: 500 });
+    });
+
+    const narrow = await run(`async () => {
+      const builders = await scout.getBuilders({ q: "Example Builder", limit: 1 });
+      return { ok: builders.ok };
+    }`);
+    expect(narrow.ok).toBe(true);
+    if (!narrow.ok) throw new Error(narrow.error);
+    expect(narrow.recoveryHint?.sourceOperations).toEqual(["scout.getBuilders"]);
+    expect(narrow.recoveryHint?.candidates.map((candidate) => candidate.id)).toEqual([
+      "lumenloop.search_content_semantic",
+      "scout.searchResearch",
+      "lumenloop.find_av_passages"
+    ]);
+
+    const lumenloopDirectory = await run(`async () => {
+      const directory = await lumenloop.search_directory({ query: "Example Builder", limit: 1 });
+      return { directoryOk: directory.ok };
+    }`);
+    expect(lumenloopDirectory.ok).toBe(true);
+    if (!lumenloopDirectory.ok) throw new Error(lumenloopDirectory.error);
+    expect(lumenloopDirectory.operationSummary?.candidateEvidence).toBe(1);
+    expect(lumenloopDirectory.recoveryHint?.sourceOperations).toEqual([
+      "lumenloop.search_directory"
+    ]);
+    expect(lumenloopDirectory.recoveryHint?.candidates.map((candidate) => candidate.id)).toEqual([
+      "lumenloop.search_content_semantic",
+      "scout.searchProjects",
+      "scout.searchResearch"
+    ]);
+
+    const scoutDirectory = await run(`async () => {
+      const projects = await scout.searchProjects({ query: "Example Builder", limit: 1 });
+      return { projectsOk: projects.ok };
+    }`);
+    expect(scoutDirectory.ok).toBe(true);
+    if (!scoutDirectory.ok) throw new Error(scoutDirectory.error);
+    expect(scoutDirectory.operationSummary?.candidateEvidence).toBe(1);
+    expect(scoutDirectory.recoveryHint?.sourceOperations).toEqual(["scout.searchProjects"]);
+    expect(scoutDirectory.recoveryHint?.candidates.map((candidate) => candidate.id)).toEqual([
+      "lumenloop.search_content_semantic",
+      "scout.searchResearch",
+      "scout.searchRepos"
+    ]);
+
+    const broadened = await run(`async () => {
+      const [builders, semantic] = await Promise.all([
+        scout.getBuilders({ q: "Example Builder", limit: 1 }),
+        lumenloop.search_content_semantic({ query: "Example Builder", limit: 1 })
+      ]);
+      return { buildersOk: builders.ok, semanticOk: semantic.ok };
+    }`);
+    expect(broadened.ok).toBe(true);
+    if (!broadened.ok) throw new Error(broadened.error);
+    expect(broadened.operationSummary?.candidateEvidence).toBe(1);
+    expect(broadened.recoveryHint).toBeUndefined();
+
+    const unprofiledSemantic = await run(`async () => {
+      const [builders, similar] = await Promise.all([
+        scout.getBuilders({ q: "Example Builder", limit: 1 }),
+        lumenloop.find_similar_projects_semantic({ slug: "example", limit: 1 })
+      ]);
+      return { buildersOk: builders.ok, similarOk: similar.ok };
+    }`);
+    expect(unprofiledSemantic.ok).toBe(true);
+    if (!unprofiledSemantic.ok) throw new Error(unprofiledSemantic.error);
+    expect(unprofiledSemantic.operationSummary?.candidateEvidence).toBeUndefined();
+    expect(unprofiledSemantic.recoveryHint).toBeUndefined();
+  });
+
   it("ownerless truncated results get a generic unavailable artifact line with no auth-mode wording", async () => {
     const outcome = await run(BIG_SECRET_RESULT_CODE);
     expect(outcome.ok).toBe(true);

@@ -614,7 +614,37 @@ describe("execute behavior", () => {
     expect(text).toContain("--- CANDIDATE EVIDENCE ---");
     expect(text).toContain("exact identity or canonical slug plus source and date");
     expect(text).toContain("date current or mutable claims by observation time");
+    expect(text).toContain("These rows are candidates, not identity or absence proof");
     expect(text).toContain("closed-world directory answer");
+    expect(text).not.toContain("--- EVIDENCE RECOVERY ---");
+  });
+
+  it("adds conditional exact-id recovery advice after successful narrow-only lookups", async () => {
+    const execClient = await connectedClient({
+      runExecute: async () => ({
+        ok: true,
+        result: '{"matchedBuilders":[],"matchedContent":[]}',
+        truncated: false,
+        logs: [],
+        operationSummary: { total: 2, ok: 2, error: 0, softEmpty: 0 },
+        recoveryHint: {
+          sourceOperations: ["scout.getBuilders", "lumenloop.find_content_by_entity"],
+          candidates: [
+            {
+              id: "lumenloop.search_content_semantic",
+              relation: "broader-semantic",
+              reasons: ["empty", "weak", "adjacent", "ambiguous"]
+            }
+          ]
+        }
+      })
+    });
+    const result = await execClient.callTool({ name: "execute", arguments: { code: "async () => 1" } });
+    const text = (result.content as Array<{ text: string }>)[0]?.text ?? "";
+    expect(text).toContain("--- EVIDENCE CHECKPOINT ---");
+    expect(text).toContain("successful narrow, operation-scoped lookup");
+    expect(text).toContain("closed-world question about the named source");
+    expect(text).toContain("lumenloop.search_content_semantic (broader-semantic");
     expect(text).not.toContain("--- EVIDENCE RECOVERY ---");
   });
 

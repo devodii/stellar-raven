@@ -28,6 +28,7 @@ import { DynamicWorkerExecutor } from "@cloudflare/codemode";
 import superSpecJson from "../../specs/super-spec.json";
 import bundleJson from "../skills/bundle.json";
 import { getCatalog } from "../catalog/load.ts";
+import { recoveryCandidates } from "../catalog/search.ts";
 import type { BuildAuthorityRole } from "../catalog/types.ts";
 import { buildSandbox, type ArtifactReadStats, type OpLedgerCall, type SandboxProvider } from "./providers.ts";
 import {
@@ -48,6 +49,7 @@ import {
 import { shapeLogs } from "./shape-logs.ts";
 import { put as putArtifact, type ArtifactMime } from "../artifacts/store.ts";
 import { logArtifactWrite } from "../observability.ts";
+import type { EvidenceRecoveryHint } from "../policy/evidence-checkpoint.ts";
 
 export type ExecuteOperationSummary = {
   total: number;
@@ -80,6 +82,8 @@ export type ExecuteOutcome =
       operationSummary?: ExecuteOperationSummary;
       /** Host-owned evidence classification; never inspects model-authored payload text. */
       evidenceSummary?: ExecuteEvidenceSummary;
+      /** Conditional wider-pass advice derived only from successful operation ids. */
+      recoveryHint?: EvidenceRecoveryHint;
       resultOriginalChars?: number;
       resultReturnedChars?: number;
       resultMaxTokens?: number;
@@ -139,6 +143,8 @@ const PRIOR_ART_EVIDENCE_OPS = new Set([
   "scout.explainRepo"
 ]);
 
+const BROAD_RETRIEVAL_LANES = new Set(["semantic", "research", "av", "corpus"]);
+
 function summarizeOperationLedger(calls: readonly OpLedgerCall[]): ExecuteOperationSummary {
   const summary: ExecuteOperationSummary = { total: calls.length, ok: 0, error: 0, softEmpty: 0 };
   let candidateEvidence = 0;
@@ -153,6 +159,41 @@ function summarizeOperationLedger(calls: readonly OpLedgerCall[]): ExecuteOperat
   if (candidateEvidence > 0) summary.candidateEvidence = candidateEvidence;
   if (priorArtCandidates > 0) summary.priorArtCandidates = priorArtCandidates;
   return summary;
+}
+
+function evidenceRecoveryHint(
+  calls: readonly OpLedgerCall[],
+  summary: ExecuteOperationSummary
+): EvidenceRecoveryHint | undefined {
+  if (summary.ok === 0) return undefined;
+  const successfulIds = [...new Set(calls.filter((call) => call.outcome === "ok").map((call) => call.op))];
+  const catalog = getCatalog();
+  const byId = new Map(catalog.entries.map((entry) => [entry.id, entry]));
+  // Candidate-evidence classification controls attribution guidance, not
+  // retrieval breadth. Directory candidates remain operation-scoped and may
+  // still need an exact wider recovery edge; the profile lane decides whether
+  // a genuinely broad semantic/research/A/V/corpus pass already ran.
+  // An unprofiled successful operation may itself be a wider/candidate lane.
+  // Stay silent instead of making the stronger (and potentially false) claim
+  // that the host observed narrow lookups only.
+  if (successfulIds.some((id) => !byId.get(id)?.retrievalProfile)) return undefined;
+  if (
+    successfulIds.some((id) => {
+      const lane = byId.get(id)?.retrievalProfile?.lane;
+      return lane !== undefined && BROAD_RETRIEVAL_LANES.has(lane);
+    })
+  ) {
+    return undefined;
+  }
+
+  const narrowIds = successfulIds.filter((id) => byId.get(id)?.retrievalProfile?.emptyScope === "operation");
+  if (narrowIds.length === 0) return undefined;
+  const candidates = recoveryCandidates(catalog, successfulIds, undefined, 3);
+  if (candidates.length === 0) return undefined;
+  return {
+    sourceOperations: narrowIds,
+    candidates: candidates.map(({ id, relation, reasons }) => ({ id, relation, reasons }))
+  };
 }
 
 export type SpecSearchOutcome =
@@ -291,6 +332,7 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
     });
     const logs = shapeLogs(outcome.logs, secrets);
     const operationSummary = summarizeOperationLedger(opLedger);
+    const recoveryHint = evidenceRecoveryHint(opLedger, operationSummary);
     const evidenceSummary: ExecuteEvidenceSummary = {
       kind:
         operationSummary.ok > 0
@@ -404,6 +446,7 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       logs,
       operationSummary,
       evidenceSummary,
+      ...(recoveryHint ? { recoveryHint } : {}),
       resultOriginalChars: result.originalChars,
       resultReturnedChars: text.length,
       resultMaxTokens: result.maxTokens,

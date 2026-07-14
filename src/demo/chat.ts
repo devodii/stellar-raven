@@ -43,6 +43,7 @@ import {
   DEMO_TEMPERATURE,
   demoOpenAiApiModeFromOverride,
   demoOpenAiProviderOptions,
+  demoGatewayTransportSettings,
   demoReasoningEffortFromOverride,
   demoReasoningEffortOverride,
   demoModelsFromOverride,
@@ -389,7 +390,12 @@ async function runTurn(
       reasoningEffort,
       reasoningEffortSource: reasoningEffortOverride ? "override" : "default",
       reasoningEffortOverride: reasoningEffortOverride ? DEMO_REASONING_EFFORT_OVERRIDE_VAR : undefined,
-      openAiReasoningEffortSent: selectedModel.startsWith("openai/") ? (openAiReasoningEffort ?? null) : undefined,
+      openAiReasoningEffortSent:
+        selectedModel.startsWith("openai/") ||
+        selectedModel.startsWith("xai/") ||
+        selectedModel.startsWith("grok/")
+          ? (openAiReasoningEffort ?? null)
+          : undefined,
       sessionAffinity: true,
       inputTokens: usage?.inputTokens,
       cacheReadTokens: usage?.cacheReadTokens,
@@ -409,6 +415,7 @@ async function runTurn(
       unknownServiceSearches: toolBudget.unknownServiceSearches,
       executeFailures: toolBudget.executeFailures,
       executeResultTruncated: toolBudget.executeResultTruncated,
+      recoveryHintedExecutes: toolBudget.recoveryHintedExecutes,
       operationSummary: demoOperationSummary(toolBudget),
       toolCounterScope: "turn",
       usageScope: "sum-per-model-attempt",
@@ -429,9 +436,20 @@ function modelSettings(model: string, sessionAffinity: string, reasoningEffort: 
       reasoning_effort: demoWorkersAiReasoningEffort(reasoningEffort)
     } as const;
   }
+  // Newly released xAI models can exist behind a gateway's stored Grok key
+  // before they enter Cloudflare's unified env.AI.run catalog. Force the
+  // provider-native gateway path for xAI/Grok slugs; omitting `byok: true` is
+  // intentional because that flag forwards a caller-supplied key, while this
+  // playground uses the gateway's stored default alias.
+  if (model.startsWith("xai/") || model.startsWith("grok/")) {
+    return {
+      ...demoGatewayTransportSettings(model),
+      extraHeaders: { "x-session-affinity": sessionAffinity }
+    } as const;
+  }
   return {
-    extraHeaders: { "x-session-affinity": sessionAffinity },
-    resume: false
+    ...demoGatewayTransportSettings(model),
+    extraHeaders: { "x-session-affinity": sessionAffinity }
   } as const;
 }
 

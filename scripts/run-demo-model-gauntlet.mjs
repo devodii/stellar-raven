@@ -12,7 +12,7 @@ const DEFAULT_MODELS = [
   "openai/gpt-5.4-mini",
   "anthropic/claude-haiku-4.5",
   "google/gemini-3.5-flash",
-  "xai/grok-4.3",
+  "xai/grok-4.5",
   "@cf/moonshotai/kimi-k2.7-code",
   "anthropic/claude-fable-5",
   "@cf/openai/gpt-oss-120b"

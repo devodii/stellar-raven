@@ -18,7 +18,7 @@ migration proof is [`reviewed/2026-07-super-corpus-migration.md`](./reviewed/202
 eval/qa/
   corpus/
     battery/<category>/<id>.json    # THE corpus — one hand-owned JSON per case, 10 category dirs
-    live/live-cases.json            # frozen contract live-data-canonical-v2 (10 cases)
+    live/live-cases.json            # frozen contract live-data-canonical-v3 (15 cases)
     live/live-digest-supplement-cases.json  # frozen contract live-digest-supplement-v2 (2 cases)
     migration-ledger.json           # permanent losslessness ledger (dispositions per source id)
   cases.json  sample.json           # GENERATED battery + stratified sample-30 (CI byte-pinned)

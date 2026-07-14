@@ -69,6 +69,36 @@ describe("lumenloop adapter", () => {
     expect(calls[0]?.init?.body).toBe(JSON.stringify({ query: "soroban defi", limit: 3 }));
   });
 
+  it("normalizes semantic collections into the documented ranked item contract", async () => {
+    const body = JSON.stringify({
+      success: true,
+      data: {
+        articles: [{ id: "article", similarity: 0.2 }],
+        events: [{ id: "event", similarity: 0.8 }],
+        av: [],
+        query: "Stellar smart contracts"
+      },
+      meta: { format: "json", tool: "search_content_semantic" }
+    });
+    const { fetchImpl } = stubFetch(body, 200);
+    const r = await callLumenloop(
+      entry("lumenloop.search_content_semantic"),
+      { query: "Stellar smart contracts", limit: 5 },
+      env,
+      fetchImpl
+    );
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.data).toEqual({
+      items: [
+        { id: "event", similarity: 0.8, collection: "events" },
+        { id: "article", similarity: 0.2, collection: "articles" }
+      ],
+      counts: { articles: 1, events: 1, av: 0 },
+      meta: { query: "Stellar smart contracts" }
+    });
+  });
+
   it("maps format:text under success:true to soft-empty (guidance, not evidence)", async () => {
     const { fetchImpl } = stubFetch(fixture("lumenloop-soft-empty.json"), 200);
     const r = await callLumenloop(

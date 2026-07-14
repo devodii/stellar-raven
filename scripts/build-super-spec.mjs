@@ -50,6 +50,7 @@ import { writeFileAtomic } from "./lib/shared.mjs";
 // the two model-facing surfaces cannot drift (native type stripping, as for
 // build-catalog.mjs's src/ imports).
 import { RUNNERS } from "../src/skills/runners/index.ts";
+import { lumenloopOutputSchema } from "../src/adapters/lumenloop-shape.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_PATH = join(ROOT, "specs", "super-spec.json");
@@ -149,6 +150,7 @@ function buildLumenloopPaths(inv, exposed) {
       descriptionParts.push(note);
       consumedNotes.add(tool.name);
     }
+    const outputSchema = lumenloopOutputSchema(id, tool.output_schema ?? null);
     const op = {
       operationId: id,
       summary: firstSentence(tool.description),
@@ -163,8 +165,8 @@ function buildLumenloopPaths(inv, exposed) {
       responses: {
         200: {
           description: tool.returns ? plainText(tool.returns) : "Tool result",
-          ...(tool.output_schema
-            ? { content: { "application/json": { schema: tool.output_schema } } }
+          ...(outputSchema
+            ? { content: { "application/json": { schema: outputSchema } } }
             : {})
         }
       },
