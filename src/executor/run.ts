@@ -50,7 +50,6 @@ import { shapeLogs } from "./shape-logs.ts";
 import { put as putArtifact, type ArtifactMime } from "../artifacts/store.ts";
 import { logArtifactWrite } from "../observability.ts";
 import type { EvidenceRecoveryHint } from "../policy/evidence-checkpoint.ts";
-import type { ObservationContext } from "../policy/observation-context.ts";
 
 export type ExecuteOperationSummary = {
   total: number;
@@ -93,8 +92,6 @@ export type ExecuteOutcome =
       sourceBasis?: BuildSourceBasisManifestInput;
       artifactReadCount?: number;
       artifactReadBytes?: number;
-      /** Host timing metadata, independent of returned service data. */
-      observationContext?: ObservationContext;
     }
   | {
       ok: false;
@@ -106,8 +103,6 @@ export type ExecuteOutcome =
       evidenceSummary?: ExecuteEvidenceSummary;
       artifactReadCount?: number;
       artifactReadBytes?: number;
-      /** Host timing metadata, independent of returned service data. */
-      observationContext?: ObservationContext;
     };
 
 export type ExecuteCallContext = {
@@ -131,8 +126,6 @@ export type ExecuteRunnerOptions = {
    * env/config; never controlled by model-authored sandbox code.
    */
   modelBoundaryMaxTokens?: number;
-  /** Injectable host clock for deterministic tests; called once per execute. */
-  clock?: () => Date;
 };
 
 const CANDIDATE_EVIDENCE_OPS = new Set([
@@ -275,15 +268,8 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
   const secrets = secretsFromEnv(env as unknown as Record<string, unknown>);
   const modelBoundaryMaxTokens =
     options.modelBoundaryMaxTokens ?? modelBoundaryMaxTokensFromEnv(env as unknown as Record<string, unknown>);
-  const clock = options.clock ?? (() => new Date());
 
   return async (code: string, context: ExecuteCallContext = {}): Promise<ExecuteOutcome> => {
-    // This is intentionally host-owned, query-independent, and captured once
-    // before any sandbox or service work. It is not source evidence.
-    const observationContext: ObservationContext = {
-      observedAt: clock().toISOString(),
-      catalogGeneratedAt: getCatalog().generatedAt
-    };
     // Providers are rebuilt per run so the skill-read flag is run-scoped
     // (never leaks across concurrent executes); the expensive derivations
     // (catalog view, resolved spec) are cached module-level in providers.ts.
@@ -373,8 +359,7 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
         operationSummary,
         evidenceSummary,
         artifactReadCount: artifactReadStats.count,
-        artifactReadBytes: artifactReadStats.bytes,
-        observationContext
+        artifactReadBytes: artifactReadStats.bytes
       };
     }
     const redactedResult = redactSecrets(outcome.result, secrets);
@@ -469,8 +454,7 @@ export function createExecuteRunner(env: Env, options: ExecuteRunnerOptions = {}
       resultApproxOriginalTokens: result.approxOriginalTokens,
       sourceBasis,
       artifactReadCount: artifactReadStats.count,
-      artifactReadBytes: artifactReadStats.bytes,
-      observationContext
+      artifactReadBytes: artifactReadStats.bytes
     };
   };
 }

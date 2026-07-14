@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildDemoTools } from "../../src/demo/tools";
 import { createDemoToolBudget, type DemoToolBudget } from "../../src/demo/budget";
 import type { DemoFrame } from "../../src/demo/frames";
-import type { ExecuteRunner } from "../../src/executor/run";
 
 type ToolWithExecute = {
   execute: (args: Record<string, unknown>) => Promise<unknown>;
@@ -13,13 +12,12 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function makeTools(budget?: DemoToolBudget, runExecute?: ExecuteRunner) {
+function makeTools(budget?: DemoToolBudget) {
   const frames: DemoFrame[] = [];
   const built = buildDemoTools({
     env: env as unknown as Env,
     emit: (frame) => frames.push(frame),
-    budget,
-    runExecute
+    budget
   });
   return {
     frames,
@@ -30,41 +28,6 @@ function makeTools(budget?: DemoToolBudget, runExecute?: ExecuteRunner) {
 }
 
 describe("demo tools at the worker boundary", () => {
-  it("renders the same compact host observation context and telemetry shape as MCP", async () => {
-    const observationContext = {
-      observedAt: "2026-07-14T15:30:00.000Z",
-      catalogGeneratedAt: "2026-07-14T00:00:00.000Z"
-    };
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    try {
-      const { execute, frames } = makeTools(undefined, async () => ({
-        ok: true,
-        result: '{"answer":"host data"}',
-        truncated: false,
-        logs: [],
-        observationContext
-      }));
-      const text = (await execute.execute({ code: "async () => 1" })) as string;
-      expect(text).toContain("--- OBSERVATION CONTEXT ---");
-      expect(text).toContain(JSON.stringify(observationContext));
-      const frame = frames.find((entry) => entry.type === "tool-result" && entry.tool === "execute");
-      expect(frame).toMatchObject({ ok: true, output: text });
-
-      const event = logSpy.mock.calls
-        .map(([line]) => {
-          try {
-            return JSON.parse(String(line)) as Record<string, unknown>;
-          } catch {
-            return null;
-          }
-        })
-        .find((entry) => entry?.evt === "demo-execute");
-      expect(event?.observationContext).toEqual(observationContext);
-    } finally {
-      logSpy.mockRestore();
-    }
-  });
-
   it("records truncated-search turn count and the shared bounded event fields", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
     try {
