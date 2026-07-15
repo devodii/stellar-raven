@@ -1,7 +1,7 @@
 # Per-user MCP Observability and Future Personalization
 
-Status: immediate code plan implemented locally 2026-07-11; production verification remains
-deploy-gated. The personalization system is deliberately deferred.
+Status: privacy-safe request attribution implemented and production-verified 2026-07-13. Product
+analytics and personalization remain deliberately deferred.
 
 Recorded: 2026-07-11 for Solo todo
 `solo://proj/49/todo/track-users-better-v--889`.
@@ -90,8 +90,8 @@ exists.
 Current structured events include:
 
 - `mcp_request`: access mode, privacy-safe user/client hashes, request/Ray ids, method, and status;
-- top-level `search`: the complete tool search query, filters, hit counts, top ids, response size,
-  truncation, and duration;
+- top-level `search`: a bounded query preview, exact-query hash and length, filters, hit counts, top
+  ids, response size, truncation, and duration;
 - `execute`: up to 4,000 characters of model-authored JavaScript, bounded result/error previews,
   sizes, truncation state, and duration;
 - `op`: operation id, outcome, and duration;
@@ -239,13 +239,47 @@ Observe the new contract for at least one normal investigation cycle. Then decid
 
 - whether child events need repeated identity fields;
 - whether `clientFamily` is reliable enough to retain;
-- whether full search-query logging should become sanitized preview + hash + length rather than raw
-  text;
+- whether the bounded search preview, hash, and length remain necessary and proportionate;
 - whether the existing 7-day Workers Logs window is insufficient enough to trigger the separate R2
   retention plan;
 - which aggregate metrics actually inform routing, quality, or support decisions.
 
 Do not expand retention or content collection merely because user attribution now exists.
+
+## Deferred adoption analytics
+
+Issue [`kalepail/stellar-raven#23`](https://github.com/kalepail/stellar-raven/issues/23) asked for
+durable traction reporting, including growth and per-user or per-organization usage. That is not a
+new observability mechanism: current request summaries already provide privacy-safe user/client
+joins inside the Workers Logs window, and
+[`observability-r2-retention.md`](./observability-r2-retention.md) covers raw history when an actual
+investigation needs more than seven days. Product analytics is a separate, still-deferred use case.
+
+If someone owns a recurring adoption decision or report, Workers Analytics Engine is the smallest
+plausible next step: it supports high-cardinality per-user/per-customer data and SQL queries, with
+three-month retention. Write content-minimal events or daily aggregates, not copied observability
+logs. Start with counts that answer a named decision:
+
+- active pseudonymous users and OAuth clients by day or week;
+- successful MCP requests, searches, executes, and upstream operations;
+- first-seen versus returning pseudonymous users only if the retention window is sufficient;
+- operation and service ids, latency, and outcomes rather than raw queries or code.
+
+Do not publish “top queries” from raw query previews or reversible short-query hashes. Do not infer
+organizations from user, client, network, geo, TLS, or user-agent data; Raven has no trustworthy org
+dimension today. `subjectHash` and `clientHash` remain pseudonymous personal data, not anonymous
+statistics, so any user-level dataset needs a named purpose, restricted access, retention and
+deletion rules, and an explicit decision about whether users must be informed or given controls.
+
+For year-over-year traction, export only coarse daily aggregates without user identifiers instead
+of retaining raw per-request history indefinitely. Do not build the dataset until a named owner will
+review it on a recurring cadence or a concrete product/funding decision needs it.
+
+Cloudflare references checked 2026-07-15:
+
+- https://developers.cloudflare.com/analytics/analytics-engine/
+- https://developers.cloudflare.com/analytics/analytics-engine/limits/
+- https://developers.cloudflare.com/workers/observability/metrics-and-analytics/
 
 ## Deferred personalization design
 
