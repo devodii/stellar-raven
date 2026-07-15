@@ -92,6 +92,9 @@ npm run improvements:file -- --file improvements/<collection>/<finding>.md --dry
 npm run improvements:file -- --file improvements/<collection>/<finding>.md
 ```
 
+The filer applies the `raven` label when the target repository exposes it. Do not hand-file merely
+to work around a missing label; the standardized body still identifies Raven as source.
+
 Before the write, read the rendered issue as an upstream maintainer: the title and first paragraph
 must state the affected surface and concrete defect without eval IDs, internal workflow language, or
 a clipped transcript sentence. Put the smallest correction before optional context. Corpus/eval

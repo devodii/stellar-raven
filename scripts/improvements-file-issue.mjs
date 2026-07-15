@@ -53,7 +53,7 @@ const dir = mkdtempSync(path.join(tmpdir(), "improvement-issue-"));
 const bodyFile = path.join(dir, "body.md");
 writeFileSync(bodyFile, body);
 
-const result = spawnSync("gh", [
+const issueArgs = [
   "issue",
   "create",
   "--repo",
@@ -62,7 +62,9 @@ const result = spawnSync("gh", [
   title,
   "--body-file",
   bodyFile,
-], { encoding: "utf8" });
+];
+if (repoHasLabel(repo, "raven")) issueArgs.push("--label", "raven");
+const result = spawnSync("gh", issueArgs, { encoding: "utf8" });
 
 if (result.status !== 0) {
   process.stderr.write(result.stderr);
@@ -83,6 +85,13 @@ function resolveRepo(finding) {
   }
   console.error(`${finding.frontmatter.id}: intake unresolved (${resolution.reason}); update improvements/intake.json`);
   process.exit(2);
+}
+
+function repoHasLabel(repo, label) {
+  const result = spawnSync("gh", ["label", "list", "--repo", repo, "--search", label, "--json", "name", "--jq", `map(select(.name == \"${label}\")) | length`], {
+    encoding: "utf8",
+  });
+  return result.status === 0 && Number(result.stdout.trim()) > 0;
 }
 
 const url = result.stdout.trim();

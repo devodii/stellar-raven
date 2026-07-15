@@ -101,6 +101,8 @@ Known channels (issue access confirmed 2026-07-09):
 Use `npm run improvements:file -- --file improvements/<collection>/<finding>.md --dry-run` to
 review the resolved owner and standardized body, then omit `--dry-run` to file it. The generated
 issue links the exact public finding and includes a resolution handoff back to this repository.
+The filer applies the `raven` label when the target repository provides it; every body retains Raven
+provenance when that label is unavailable.
 When upstream work is deployed, maintainers can open the **Upstream improvement ready for
 verification** issue form with the finding id, resolving issue/PR, deploy/version timestamp, and
 smallest live recheck. Raven independently verifies the live surface before marking a finding fixed.
