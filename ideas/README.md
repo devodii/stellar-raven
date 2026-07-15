@@ -15,3 +15,6 @@ Research notes and possible future work that are not committed product plans.
 - [ChatGPT Subscription Login for `/playground`](./playground-chatgpt-subscription-login.md) —
   optional user-funded playground inference via ChatGPT/Codex OAuth, with hosted-token custody,
   consistency, budget, and upstream-support gates recorded before any spike.
+- [Shareable Durable `/playground` Sessions](./shareable-durable-playground-sessions.md) — private
+  durable sessions, opt-in public read links, login-gated follow-ups, and atomic private forks on a
+  non-author's first send.
