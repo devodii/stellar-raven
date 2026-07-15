@@ -326,9 +326,13 @@ const DEMO_SCRIPT = DEMO_SCRIPT_CORE + `
     if (!jump.hidden) jump.textContent = busy ? "\u2193 streaming" : unseen ? "\u2193 new reply" : "\u2193 latest";
   }
   function pinBottom(){ window.scrollTo({ top: sc.scrollHeight, behavior: "instant" }); }
-  function anchorTurn(node){
+  function anchorTurn(node, first){
     suppressEngage = true;
-    window.scrollTo({ top: node.getBoundingClientRect().top + sc.scrollTop - 12, behavior: "instant" });
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({
+      top: node.getBoundingClientRect().top + sc.scrollTop - 12,
+      behavior: first && !reduceMotion ? "smooth" : "instant"
+    });
     requestAnimationFrame(function(){ suppressEngage = false; });
   }
   function grew(){
@@ -657,7 +661,7 @@ const DEMO_SCRIPT = DEMO_SCRIPT_CORE + `
     turnEl.style.minHeight = Math.max(0, window.innerHeight - composer.offsetHeight - 24) + "px";
     follow = false;
     var userBubble = addBubble("user", msg);
-    anchorTurn(userBubble);
+    anchorTurn(userBubble, history.length === 1);
     unseen = false;
     showPulse("sending");
     var res;
@@ -759,7 +763,7 @@ const DEMO_SCRIPT = DEMO_SCRIPT_CORE + `
 // hard-coded (Web Crypto is async, and these headers are a sync module const);
 // test/demo-page.test.ts recomputes it from the rendered page, so an edit to
 // DEMO_SCRIPT fails the suite with the new value to paste here.
-const DEMO_SCRIPT_SHA256 = "sha256-vDPW3EUh9/RE4nCnE6NN5qXzU6vGbl4pIzEnimCu+gU=";
+const DEMO_SCRIPT_SHA256 = "sha256-J8a/H9N+aCWIWwXf1IKq4BxIWw7z+EF+b9sFqmSB+I4=";
 
 export const DEMO_PAGE_HEADERS: Record<string, string> = {
   "content-type": "text/html; charset=utf-8",

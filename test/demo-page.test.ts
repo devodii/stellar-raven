@@ -97,6 +97,8 @@ describe("demo page states", () => {
     expect(chatHtml).not.toContain('id="log" aria-live="polite"');
     expect(chatHtml).toContain('id="jump"');
     expect(chatHtml).toContain('role="status"');
+    expect(chatHtml).toContain('first && !reduceMotion ? "smooth" : "instant"');
+    expect(chatHtml).toContain('history.length === 1');
     expect(chatHtml).toContain('behavior: "instant"');
     expect(chatHtml).toContain("preventScroll: true");
     expect(chatHtml).toContain(`maxlength="${DEMO_CAPS.maxUserMessageChars}"`);
