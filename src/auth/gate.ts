@@ -27,9 +27,14 @@ import { timingSafeEqualBytes } from "./timing";
 export { timingSafeEqualBytes };
 
 const DAY_SECONDS = 24 * 60 * 60;
-/** Our opaque access tokens live 90 days (prior-art default; refresh works too). */
-export const ACCESS_TOKEN_TTL_SECONDS = 90 * DAY_SECONDS;
-/** Dynamically registered MCP clients live a year. */
+/** Short-lived bearer token; compatible MCP clients refresh it automatically. */
+export const ACCESS_TOKEN_TTL_SECONDS = 60 * 60;
+/**
+ * Fixed authorization-grant lifetime. Refresh-token rotation does not extend
+ * this window, so clients reauthorize through WorkOS after 90 days.
+ */
+export const REFRESH_TOKEN_TTL_SECONDS = 90 * DAY_SECONDS;
+/** DCR metadata lifetime, independent of user grants and token lifetimes. */
 export const CLIENT_REGISTRATION_TTL_SECONDS = 365 * DAY_SECONDS;
 
 /** The single scope this server understands. */
@@ -50,6 +55,7 @@ export function oauthProviderOptions(
     tokenEndpoint: "/token",
     clientRegistrationEndpoint: "/register",
     accessTokenTTL: ACCESS_TOKEN_TTL_SECONDS,
+    refreshTokenTTL: REFRESH_TOKEN_TTL_SECONDS,
     clientRegistrationTTL: CLIENT_REGISTRATION_TTL_SECONDS,
     scopesSupported: [MCP_SCOPE],
     // OAuth 2.1 posture: S256 PKCE only.

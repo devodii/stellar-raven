@@ -19,6 +19,7 @@ import type { AuthRequest, OAuthHelpers } from "@cloudflare/workers-oauth-provid
 import {
   ACCESS_TOKEN_TTL_SECONDS,
   CLIENT_REGISTRATION_TTL_SECONDS,
+  REFRESH_TOKEN_TTL_SECONDS,
   allowDevUnauthenticated,
   isAdminAuthorized,
   isAuthServerMetadataAlias,
@@ -210,11 +211,17 @@ describe("allowDevUnauthenticated", () => {
 
 describe("OAuthProvider wiring (real @cloudflare/workers-oauth-provider)", () => {
   const mcpFetch = vi.fn(async () => new Response("mcp-ok"));
-  const provider = new OAuthProvider(oauthProviderOptions({ fetch: mcpFetch }));
+  const options = oauthProviderOptions({ fetch: mcpFetch });
+  const provider = new OAuthProvider(options);
 
-  it("pins prior-art token TTLs (access 90d, client registration 365d)", () => {
-    expect(ACCESS_TOKEN_TTL_SECONDS).toBe(90 * 24 * 60 * 60);
+  it("pins OAuth lifetimes (access 1h, refresh grant 90d, client registration 365d)", () => {
+    expect(ACCESS_TOKEN_TTL_SECONDS).toBe(60 * 60);
+    expect(REFRESH_TOKEN_TTL_SECONDS).toBe(90 * 24 * 60 * 60);
     expect(CLIENT_REGISTRATION_TTL_SECONDS).toBe(365 * 24 * 60 * 60);
+    expect(options.accessTokenTTL).toBe(ACCESS_TOKEN_TTL_SECONDS);
+    expect(options.refreshTokenTTL).toBe(REFRESH_TOKEN_TTL_SECONDS);
+    expect(options.clientRegistrationTTL).toBe(CLIENT_REGISTRATION_TTL_SECONDS);
+    expect(REFRESH_TOKEN_TTL_SECONDS).toBeGreaterThan(ACCESS_TOKEN_TTL_SECONDS);
   });
 
   it("unauthenticated POST /mcp → 401 with WWW-Authenticate resource_metadata pointer", async () => {

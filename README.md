@@ -34,6 +34,8 @@ restart it after changing them.
 Add `https://raven.stellar.buzz/mcp` in an MCP client that supports streamable HTTP and OAuth
 (Claude, Cursor, or any compatible client). The Worker is its own OAuth authorization server and
 hands sign-in to WorkOS AuthKit; clients should discover and complete that flow automatically.
+Access tokens last 1 hour, and compatible clients refresh them automatically within a fixed
+90-day authorization window before browser authorization is required again.
 
 Operational auth details live in [ARCHITECTURE.md](./ARCHITECTURE.md) and
 [`research/auth-workos.md`](./research/auth-workos.md). Vulnerability reporting and researcher

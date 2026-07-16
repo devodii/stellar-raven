@@ -655,8 +655,10 @@ auth gates, schemas, the shared sandbox, and artifact caps are the main limits.
 | Top-level `search` | Default 10, max 50. | `src/mcp/tools.ts`, `src/catalog/search.ts` |
 | `execute.code` length | No app-level max; schema requires only a non-empty string. | `src/mcp/tools.ts` |
 | Execute/search call count | No app-level per-session count cap. | `src/mcp/tools.ts`, `src/server.ts` |
-| OAuth access token TTL | 90 days. | `src/auth/gate.ts` |
-| Dynamic client registration TTL | 365 days. | `src/auth/gate.ts` |
+| OAuth access token TTL | 1 hour; compatible MCP clients refresh automatically while the grant remains valid. | `src/auth/gate.ts` |
+| OAuth refresh/grant TTL | 90 days fixed from authorization; refresh-token rotation does not extend the window. | `src/auth/gate.ts` |
+| Dynamic client registration TTL | 365 days; client metadata is independent of user grants and token lifetimes. | `src/auth/gate.ts` |
+| WorkOS identity revalidation | WorkOS participates during browser authorization only. WorkOS session changes do not synchronously revoke an existing Raven grant, so the fixed 90-day grant bounds that propagation gap. | `src/auth/workos.ts`, `src/auth/gate.ts` |
 | Artifact availability | Truncated result artifacts are available for OAuth subjects and loopback local dev (`dev-local`), not admin bypasses and not demo. | `src/server.ts`, `src/artifacts/store.ts` |
 | Artifact logical retention | 7 days; bucket lifecycle also expires objects after 7 days. | `src/artifacts/store.ts` |
 | Artifact stored body | Max 2 MiB. Larger truncated results still return source-basis advice, but no artifact is written. | `src/artifacts/store.ts` |
